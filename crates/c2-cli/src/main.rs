@@ -95,6 +95,19 @@ enum CensusCmd {
         /// turn (one-year holdouts ending at the last data day), and print a table by year.
         #[arg(long)]
         walk_forward: bool,
+        /// Signal family: `census` (stored lead-lag pairs) or `peers` (peer momentum).
+        #[arg(long, default_value = "census")]
+        family: String,
+        /// Trading days between rebalances (default: 1 for census pairs, 21 for peers).
+        #[arg(long)]
+        rebalance: Option<usize>,
+        /// Peer momentum: peers per stock, return lookback (days), correlation window (days).
+        #[arg(long, default_value_t = 20)]
+        peers: usize,
+        #[arg(long, default_value_t = 21)]
+        lookback: usize,
+        #[arg(long, default_value_t = 756)]
+        peer_window: usize,
     },
     /// Replication test: do stored pairs keep their sign in the next non-overlapping window?
     Replicate {
@@ -376,7 +389,13 @@ fn census(action: CensusCmd) -> Result<()> {
             println!("  oracle's 50 strongest lag-1 pairs screened in by the GPU pass: {}/{}", r.top50_found, r.top50_total);
             Ok(())
         }
-        CensusCmd::Holdout { name, start, picks, costs, random, all_windows, walk_forward } => {
+        CensusCmd::Holdout { name, start, picks, costs, random, all_windows, walk_forward, family, rebalance, peers, lookback, peer_window } => {
+            let fam = match family.as_str() {
+                "census" => c2_census::holdout::Family::CensusPairs,
+                "peers" => c2_census::holdout::Family::PeerMomentum { peers, lookback, window: peer_window },
+                other => anyhow::bail!("unknown family {other} (census or peers)"),
+            };
+            let rebalance = rebalance.unwrap_or(if family == "peers" { 21 } else { 1 });
             let store = c2_data::Store::open(&store_dir())?;
             let dir = run::run_dir(&name);
             let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
@@ -397,7 +416,7 @@ fn census(action: CensusCmd) -> Result<()> {
                     if e > last + 7 && y != y0 {
                         continue;
                     }
-                    let opt = c2_census::holdout::Options { start: s, end: e, picks, costs_bps: vec![0.0], random_runs: random, cash: 10_000.0, all_windows };
+                    let opt = c2_census::holdout::Options { family: fam, rebalance, start: s, end: e, picks, costs_bps: vec![0.0], random_runs: random, cash: 10_000.0, all_windows };
                     let Ok(r) = c2_census::holdout::holdout(&store, &plan, &dir, &opt) else { continue };
                     if r.pairs == 0 {
                         continue;
@@ -420,17 +439,19 @@ fn census(action: CensusCmd) -> Result<()> {
                 let mean = |v: &[f64]| v.iter().sum::<f64>() / v.len().max(1) as f64;
                 println!("Rank IC: t positive in {} of {years} years; combined across years z = {:.2}",
                     ic_ts.iter().filter(|&&t| t > 0.0).count(), stouffer(&ic_ts));
-                println!("Long-short top/bottom 10%: mean {:.2} bps/day gross, positive in {} of {years} years, combined z = {:.2}; turnover {:.0}% of the book per day, so costs of c bps per side take about {:.1} x c bps/day",
-                    mean(&ls_bps), ls_bps.iter().filter(|&&v| v > 0.0).count(), stouffer(&ls_ts), 100.0 * mean(&ls_turn), 2.0 * 2.0 * mean(&ls_turn));
+                println!("Long-short top/bottom 10%: mean {:.2} bps/day gross, positive in {} of {years} years, combined z = {:.2}; turnover {:.0}% of the book per rebalance, so costs of c bps per side take about {:.2} x c bps/day",
+                    mean(&ls_bps), ls_bps.iter().filter(|&&v| v > 0.0).count(), stouffer(&ls_ts), 100.0 * mean(&ls_turn), 2.0 * 2.0 * mean(&ls_turn) / rebalance as f64);
                 return Ok(());
             }
-            let opt = c2_census::holdout::Options { start: c2_data::parse_date(&start)?, end: i32::MAX, picks, costs_bps: costs, random_runs: random, cash: 10_000.0, all_windows };
+            let opt = c2_census::holdout::Options { family: fam, rebalance, start: c2_data::parse_date(&start)?, end: i32::MAX, picks, costs_bps: costs, random_runs: random, cash: 10_000.0, all_windows };
             let r = c2_census::holdout::holdout(&store, &plan, &dir, &opt)?;
             println!("Holdout {} .. {} ({} trading days), {:.0}s", c2_data::date_string(r.first_day), c2_data::date_string(r.last_day), r.days, t0.elapsed().as_secs_f64());
-            println!("Predictions from {} stored pairs (daily targets, lags >= 1) in {} census windows that ended before the holdout; {} stocks can be predicted",
+            println!("Family {family}, rebalanced every {rebalance} trading day(s): {} pairs from {} pre-holdout window(s); {} stocks can be picked",
                 r.pairs, r.windows_used, r.candidates);
-            println!("Picks beat the market next day: {:.1}% of {} picks (coin flip 50%)", 100.0 * r.hit_rate, r.hits);
-            println!("Daily rank correlation of prediction vs outcome (IC): mean {:+.4}, t = {:+.2}", r.ic_mean, r.ic_t);
+            println!("Picks beat the market over their holding period: {:.1}% of {} picks (coin flip 50%)", 100.0 * r.hit_rate, r.hits);
+            println!("Rank correlation of prediction vs outcome (IC): mean {:+.4}, t = {:+.2}", r.ic_mean, r.ic_t);
+            println!("Long-short top/bottom 10%: {:.2} bps/day gross, Sharpe {:.2}, t = {:.2}, book turnover {:.0}% per rebalance",
+                1e4 * r.ls_mean, r.ls_sharpe, r.ls_t, 100.0 * r.ls_turnover);
             println!("\n{:<44} {:>12} {:>9}", "", "final value", "return");
             for b in &r.benchmarks {
                 println!("{:<44} {:>12.0} {:>8.1}%", b.label, b.final_value, 100.0 * (b.final_value / 10_000.0 - 1.0));
@@ -438,7 +459,7 @@ fn census(action: CensusCmd) -> Result<()> {
             for (c, s, med, share) in &r.strategy {
                 let label = if *c == 0.0 { "no trading costs".to_string() } else { format!("{c} bps per trade") };
                 println!("{:<44} {:>12.0} {:>8.1}%   random guessers: median {:.0}, {:.1}% did at least as well (p = {:.3})",
-                    format!("Census picks, {label}"), s, 100.0 * (s / 10_000.0 - 1.0), med, 100.0 * share, share);
+                    format!("Picks, {label}"), s, 100.0 * (s / 10_000.0 - 1.0), med, 100.0 * share, share);
             }
             Ok(())
         }

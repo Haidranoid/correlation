@@ -10,6 +10,7 @@
 - **The test you specified:** predict the last year (2024-06-28..2025-06-27) using only correlations found before it, and trade $10,000.
 - **Before costs:** the picks ended at **$12,328 (+23.3%)**, against SPY's $11,361 (+13.6%) and QQQ's $11,432 (+14.3%).
 - **But that isn't skill:** **10% of random-guess accounts** (same turnover, same stock pool) did as well (p = 0.10). The picks beat the market on 49.9% of days. At 5 bps per trade the picks made +8.2%; at 20 bps, −27%.
+- **And it isn't stable:** the reduced smoke census, with the same rule and the same year, gave +10.8% (p = 0.39). Only the grid of horizons and windows differed.
 - **Every year from 2006 on, the same test:** the picks beat random guessers in 2 of 19 years, which is what chance gives.
 - **Pair by pair:** the strongest lagged pairs in one window keep their sign in the next window 50–53% of the time, the same as pairs picked from pure noise. Same-day co-movement, by contrast, persists almost perfectly.
 
@@ -358,8 +359,38 @@ Hit rate 49.9% of 4,996 picks; daily rank IC +0.0009 (t = 0.57).
 - The rank IC t-stat is positive in 18 of 19 years (combined z = 4.15), a weak but consistent ranking signal in vol-normalized residual returns.
 - Long-short top/bottom 10% in actual returns: **0.45 bps/day gross, positive in 12 of 19 years, combined z = 0.92 (not significant).** About 40% of the book changes daily, so any trading cost erases it.
 
+**Three caveats on these numbers:**
+1. **Configuration sensitivity.** The same holdout year, with the same rule, gave +10.8% (p = 0.39) on the smoke census and +23.3% (p = 0.10) on the full census. Only the set of horizons and window lengths differed. A result that moves that much with an arbitrary choice is noise. SPEC §7.4's ledger and deflated Sharpe ratio exist for exactly this; with every configuration counted, the 23.3% is not evidence.
+2. **The random baseline is generous to the strategy.** Picks are chosen by score size, and score size favors stocks with many strong stored pairs, which tend to be the volatile ones. Uniform random picks from the same pool don't share that tilt. In a strong year a volatility tilt beats a uniform draw on its own (note the picks swinging +92% / −35% while the random medians don't), so p = 0.10 overstates how unusual 23.3% is. A random guesser matched on volatility or pick frequency would be the stricter test.
+3. **What the rank IC (z = 4.15) is.** One reading is the documented next-day effect from large to small stocks. Another is mechanical: residuals from trailing betas keep a sliver of market exposure, and the equal-weight market is slightly autocorrelated at lag 1, which gives every residual pair a small positive lag-1 correlation with no pair-specific information. Both readings agree with the near-zero long-short result in actual returns. Either way, it isn't monetizable.
+
 ### Verdict from the first version
 - **The census works as designed:** fast, validated, resumable, honest nulls.
 - **The hypothesis does not hold on this data:** lead-lag correlations between individual US stocks, at any lag from a day to two years, collected over 20 years of rolling windows, do not predict the following year better than random guessing, before or after costs.
 - **What it does find:** strong, persistent same-day co-movement (useful for risk and diversification, not prediction), and a faint next-day ranking effect that is real in residual terms but not tradable.
 - **Two-year caveat:** this used Stooq's survivor-only data. Survivorship bias inflates both the picks and the random guessers equally, so the comparison with random stays fair.
+
+## Signal family C: peer ("connected-firm") momentum (`c2 census holdout --family peers`)
+
+**Why this test.** It's the published, economically motivated form of lead-lag: Ali & Hirshleifer (2020) found that connected firms' past returns predict a stock's next-month return. The census supplied the network, because same-day co-movement is the one structure that persists (100% sign replication).
+
+**Rule, fixed in advance:**
+- **Peers:** each stock's 20 strongest positive same-day correlates (census variable) over the 3 years before the holdout.
+- **Score:** the peers' mean log return over the last 21 trading days.
+- **Account:** top 20 stocks, rebalanced every 21 trading days.
+- **Comparisons:** the same $10,000 account, turnover-matched random guessers and benchmarks as before.
+
+**Harness regression check:** after refactoring the harness for rebalancing periods, the census family reproduced its earlier numbers exactly (+23.3%, p = 0.101, hit 49.9%, IC t +0.57).
+
+**2024-06-28..2025-06-27** (`research/peer_momentum_holdout.txt`):
+- picks +12.7% (SPY +13.6%, QQQ +14.3%)
+- random median +7.8%; **30% of random guessers did as well (p = 0.30)**
+- +11.4% at 5 bps and +7.7% at 20 bps (monthly rebalancing keeps costs small)
+- rank IC t −0.42; long-short t 0.20
+
+**Walk-forward, 18 years** (`research/peer_momentum_walkforward.txt`; 2006–07 was skipped because the 3-year peer window reaches back before the census variable starts):
+- The picks beat random guessers at p < 0.1 in **3 of 18 years**. Chance gives about 1.8 (binomial p ≈ 0.27).
+- **Rank IC positive in only 6 of 18 years, combined z = −2.79.** If anything a peer *reversal* in residual terms, concentrated in 2016–2023. That's the opposite of the published effect, consistent with anomalies fading after publication.
+- Long-short top/bottom 10% in actual returns: 0.51 bps/day, positive in 10 of 18 years, combined **z = 0.15**. Nothing tradable.
+
+**Conclusion.** Neither the statistical family (census lead-lag pairs) nor the economic-link-style family (peer momentum from the census co-movement network) beats random guessing on this data. No parameter variants were tried: trying several and reporting the best would be the overfitting the harness exists to prevent.
