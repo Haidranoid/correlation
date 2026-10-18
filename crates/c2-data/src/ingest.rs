@@ -67,6 +67,12 @@ fn parse_series(text: &str) -> (Vec<i32>, [Vec<f32>; 5]) {
 /// Parses every `data/daily/<market>/...` text file in the given zips and writes the store.
 /// `markets` limits which top-level markets are kept (e.g. `["us"]`).
 pub fn ingest_stooq(zips: &[&Path], markets: &[&str], out_dir: &Path) -> Result<IngestReport> {
+    ingest_stooq_until(zips, markets, out_dir, None)
+}
+
+/// `ingest_stooq`, dropping rows after `until` (days since 1970) if given: for testing updates
+/// and for reproducing what was known on an earlier date.
+pub fn ingest_stooq_until(zips: &[&Path], markets: &[&str], out_dir: &Path, until: Option<i32>) -> Result<IngestReport> {
     let start = Instant::now();
     let mut report = IngestReport::default();
     let mut all: Vec<Series> = Vec::new();
@@ -108,7 +114,14 @@ pub fn ingest_stooq(zips: &[&Path], markets: &[&str], out_dir: &Path) -> Result<
                 for (i, name, folder, ticker) in batch {
                     text.clear();
                     archive.by_index(*i)?.read_to_string(&mut text)?;
-                    let (date, [open, high, low, close, volume]) = parse_series(&text);
+                    let (mut date, [mut open, mut high, mut low, mut close, mut volume]) = parse_series(&text);
+                    if let Some(u) = until {
+                        let keep = date.partition_point(|&d| d <= u);
+                        date.truncate(keep);
+                        for c in [&mut open, &mut high, &mut low, &mut close, &mut volume] {
+                            c.truncate(keep);
+                        }
+                    }
                     let words = folder.split('/').nth(1).unwrap_or("");
                     let kind = if is_test_ticker(ticker) {
                         Kind::Test

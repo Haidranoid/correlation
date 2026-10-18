@@ -543,3 +543,23 @@ fn reversal_scores(var: &crate::variable::Variable, h0: usize, t: usize, days: &
     let n = candidates.len();
     (candidates, scores, n, 0)
 }
+
+/// Picks for the next holding period as of the last day in the data: what the strategy would buy
+/// at today's close. Uses only data through that day (every census window ends at or before it).
+/// Returns (ticker, score) for the top `picks` positive scores.
+pub fn current_picks(store: &Store, plan: &Plan, dir: &Path, family: Family, rebalance: usize, picks: usize) -> Result<Vec<(String, f64)>> {
+    let var = &plan.var;
+    let t = var.t;
+    let opt = Options { family, rebalance, start: var.days[t - 1], end: i32::MAX, picks, costs_bps: vec![0.0], random_runs: 0, cash: 10_000.0, all_windows: false };
+    let days = [t - 1];
+    let (candidates, scores, _, _) = match family {
+        Family::CensusPairs => census_scores(plan, dir, &opt, t, t, &days, rebalance)?,
+        Family::PeerMomentum { peers, lookback, window } => peer_scores(var, t, t, &days, rebalance, peers, lookback, window),
+        Family::Reversal { lookback, window } => reversal_scores(var, t, t, &days, rebalance, lookback, window),
+    };
+    let s = scores.into_iter().next().flatten().unwrap_or_default();
+    let mut order: Vec<usize> = (0..s.len()).filter(|&k| s[k] > 0.0).collect();
+    order.sort_by(|&a, &b| s[b].total_cmp(&s[a]));
+    order.truncate(picks);
+    Ok(order.into_iter().map(|k| (store.symbols[var.ids[candidates[k]]].ticker.clone(), s[k])).collect())
+}

@@ -2,6 +2,8 @@
 
 use std::time::Instant;
 
+mod update;
+
 use anyhow::Result;
 use c2_engine::{ColumnStats, cpu, pearson, reference_r, synth};
 use clap::{Parser, Subcommand};
@@ -36,6 +38,30 @@ enum Cmd {
         /// Markets to keep (top-level Stooq folders).
         #[arg(long, value_delimiter = ',', default_value = "us")]
         markets: Vec<String>,
+        /// Drop rows after this date (YYYY-MM-DD): reproduce what was known then, or test updates.
+        #[arg(long)]
+        until: Option<String>,
+    },
+    /// Ingest new zips from <data dir>/inbox, rerun the census if the data changed, and append
+    /// today's picks to the forward log. Run on a schedule by `c2 install-timer`.
+    Update {
+        /// Zip files to ingest instead of the inbox.
+        #[arg(long = "zip")]
+        zips: Vec<std::path::PathBuf>,
+        /// Use the reduced census grid (for testing).
+        #[arg(long)]
+        smoke: bool,
+        /// Skip rerunning the census.
+        #[arg(long)]
+        no_census: bool,
+    },
+    /// Score forward-log picks whose holding period has passed, against SPY.
+    ForwardReport,
+    /// Print (or with --enable, install and start) a systemd user timer that runs `c2 update` on
+    /// weekday evenings.
+    InstallTimer {
+        #[arg(long)]
+        enable: bool,
     },
     /// Print the store's acceptance numbers: symbol kinds, bad prints, decade quality table.
     DataCheck,
@@ -132,7 +158,10 @@ fn main() -> Result<()> {
     c2_engine::gpu::reexec_with_cuda_libraries();
     match Cli::parse().cmd {
         Cmd::Bench { n, rows, no_cpu } => bench(n, &rows, !no_cpu),
-        Cmd::Ingest { zips, markets } => ingest(zips, &markets),
+        Cmd::Ingest { zips, markets, until } => ingest(zips, &markets, until),
+        Cmd::Update { zips, smoke, no_census } => update::update(update::UpdateOptions { zips, smoke, no_census }),
+        Cmd::ForwardReport => update::forward_report(),
+        Cmd::InstallTimer { enable } => update::install_timer(enable),
         Cmd::DataCheck => data_check(),
         Cmd::Census { action } => census(action),
     }
@@ -314,7 +343,7 @@ fn store_dir() -> std::path::PathBuf {
     c2_data::data_dir().join("store")
 }
 
-fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String]) -> Result<()> {
+fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<String>) -> Result<()> {
     if zips.is_empty() {
         let home = std::env::var_os("HOME").map(std::path::PathBuf::from).unwrap_or_default();
         zips.push(home.join("programming/correlation/data/stooq/d_us_txt.zip"));
@@ -322,7 +351,8 @@ fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String]) -> Result<()> {
     let paths: Vec<&std::path::Path> = zips.iter().map(|p| p.as_path()).collect();
     let markets: Vec<&str> = markets.iter().map(|s| s.as_str()).collect();
     let dir = store_dir();
-    let r = c2_data::ingest::ingest_stooq(&paths, &markets, &dir)?;
+    let until = until.map(|u| c2_data::parse_date(&u)).transpose()?;
+    let r = c2_data::ingest::ingest_stooq_until(&paths, &markets, &dir, until)?;
     println!("Ingested {} files ({} empty) into {}: {} rows in {:.1}s", r.files, r.empty, dir.display(), r.rows, r.seconds);
     for (folder, n) in &r.by_folder {
         println!("  {folder:<22} {n:>6} files");

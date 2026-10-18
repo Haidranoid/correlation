@@ -200,10 +200,20 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
     std::fs::create_dir_all(dir.join("tasks"))?;
     let manifest = dir.join("manifest.json");
     let cfg = config_text(&plan.cfg);
+    let days = serde_json::json!([c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())]);
     if manifest.exists() {
         let old: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&manifest)?)?;
         if old["config"].as_str() != Some(cfg.as_str()) {
             bail!("run directory {} was started with a different config:\n  {}\nnow:\n  {}", dir.display(), old["config"], cfg);
+        }
+        // Progress is recorded by window position; new data changes the window list, so resuming
+        // would file records under the wrong windows.
+        if old["store_rows"].as_u64() != Some(store.rows() as u64) || old["variable_days"] != days || old["windows"].as_u64() != Some(plan.windows.len() as u64) {
+            bail!(
+                "the price data changed since census {} started (rows {} -> {}, days {} -> {}, windows {} -> {}); \
+                 start a new run with a different --name",
+                dir.display(), old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
+            );
         }
         return Ok(());
     }
@@ -214,12 +224,18 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
         .ok()
         .and_then(|o| String::from_utf8(o.stdout).ok())
         .unwrap_or_default();
+    let dirty = std::process::Command::new("git")
+        .args(["-C", env!("CARGO_MANIFEST_DIR"), "status", "--porcelain", "--untracked-files=no"])
+        .output()
+        .ok()
+        .map(|o| !o.stdout.is_empty());
     let m = serde_json::json!({
         "config": cfg,
+        "git_dirty": dirty,
         "store_symbols": store.symbols.len(),
         "store_rows": store.rows(),
         "symbols_tsv_fnv64": format!("{:016x}", fnv(&symbols)),
-        "variable_days": [c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())],
+        "variable_days": days,
         "variable_stocks": plan.var.n,
         "windows": plan.windows.len(),
         "tasks": plan.tasks.len(),

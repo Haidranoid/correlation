@@ -449,3 +449,30 @@ Null at every holding period in actual returns. The residual rank IC is consiste
 By year, the 5-day reversal was strong from 2008 to 2021: long-only picks beat random at p ≈ 0.000 in seven of those years (e.g. +64.4% vs +28.0% random in 2012–13). It **has faded since 2021**: long-only picks lost money in each year since, while the long-short stayed slightly positive. That is what published anomalies typically do.
 
 **What this means for the verdict.** The same harness, data and random guessers that find nothing in the census clearly detect a known effect, and track it fading. **The census's null result is not a blind spot of the test.**
+
+## M3 (first version): data updates and the forward log (`c2 update`, `c2 forward-report`, `c2 install-timer`)
+
+**What `c2 update` does:**
+1. Ingests any Stooq zip in `~/.local/share/correlation2/inbox/`. Downloading is manual for now, because Stooq requires a CAPTCHA since early 2026; MarketParquet would allow automatic fetching once it's validated (ANALYSIS.md).
+2. Archives the zip under `raw/stooq/<last data day>/`.
+3. If the store changed, reruns the full census as `main-<last data day>` (~6 min) and points `census/LATEST` at it.
+4. Appends the next period's picks for both families (census pairs daily, peer momentum monthly) to `forward_log.jsonl`: one line per data day and family, never rewritten, written before the outcomes exist.
+
+`c2 forward-report` scores entries whose holding period has passed, against SPY. `c2 install-timer` prints systemd user units for weekday evenings at 18:30 New York time (catching up after downtime); `c2 install-timer --enable` installs and starts them. **Not enabled; that's your decision.** Run it from `~/.local/bin/c2` so the unit points at the installed binary.
+
+**On "refine as new data arrives":** a full census takes ~6 minutes, so new data currently means a fresh dated run rather than appending windows to an old one. Each stored pair keeps its running sums (Σxy, Σx, Σy, Σx², Σy²), so a live tracker that updates current windows day by day can be added later.
+
+**Resume guard (bug fixed):** progress is recorded by window position. Re-ingesting newer data and resuming an old run would have filed records under the wrong windows without any error. Resume now refuses when the store's row count, the census variable's date range or the window count differ. The manifest also records `git_dirty`, so a binary built from uncommitted code is visible (the gap found earlier with run `main`).
+
+**End-to-end test** (all in a scratch data directory via `C2_DATA_DIR`; the real store and census untouched):
+
+| Step | Result |
+|---|---|
+| `c2 ingest --until 2025-03-31` | 26,015,779 rows; 417 symbols that listed later are empty |
+| Smoke census `smoke-base` | 876 windows |
+| `c2 update` with an empty inbox | "no new zips"; logged 20 census and 20 peer picks for the period after 2025-03-31 |
+| Copy of the full zip into the inbox, `c2 update --smoke` | ingested 26,656,424 rows; archived the zip; detected the change (last day 2025-03-31 → 2025-06-27); ran census `smoke-2025-06-27` (2 min); updated LATEST; logged picks for 2025-06-27. Original zip untouched |
+| Resume `smoke-base` on the new data | **Refused**: "the price data changed … (rows 26015779 -> 26656424, …, windows 146 -> 148); start a new run with a different --name" |
+| Windows, old vs new run | 146 → 148; first 77 identical. Ids of the longer windows shift by the added windows, so ids are run-specific; key windows by (length, start) for any future cross-run tracking |
+| `c2 forward-report` | 2025-03-31 census picks −0.30% vs SPY +0.28% (1 day); peer picks +4.21% vs SPY −0.87% (21 days); 2025-06-27 entries pending |
+| `c2 install-timer` | Prints both units (nothing installed) |
