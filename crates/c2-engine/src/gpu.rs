@@ -265,7 +265,9 @@ extern "C" __global__ void choose_thresholds(const unsigned int* hist, int nulls
         double analytic = pairs * erfc(atanh(r) * zs / sqrt(2.0));
         double expect = fmax(cn, analytic);
         if (!found && cr >= keep_real) { b_top = b; found = 1; }
-        if (use_fdr && cr > 0.0 && expect / cr <= q) b_fdr = b;
+        // At least 10 entries: tail counts are clumpy (one stock's outlier day makes a whole
+        // row extreme), so a handful of entries above an empty null tail is not evidence.
+        if (use_fdr && cr >= 10.0 && expect / cr <= q) b_fdr = b;
     }
     int b_real = b_top;
     if (b_fdr >= 0 && b_fdr < b_top) {

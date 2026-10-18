@@ -136,7 +136,9 @@ impl Plan {
                             .into_iter()
                             .map(|k| grid::observations(w.end - w.start, t.h1, t.h2, k))
                             .filter(|&m| m >= cfg.min_obs)
-                            .map(|m| m.div_ceil(32) * 32 + 64)
+                            // Each product also pays a fixed cost (writing and scanning the n x n result)
+                            // worth about 2,000 rows of INT8 arithmetic on the RTX 5080 (test-results.md, M0).
+                            .map(|m| m.div_ceil(32) * 32 + 2000)
                             .sum();
                         n * n * rows as f64 * (1 + cfg.nulls) as f64
                     })
@@ -382,6 +384,38 @@ fn exact(u: &UnitData, i: usize, j: usize, lag: usize, m: usize, seed: u32) -> (
     (c2_engine::pearson(sxy, sx, sy, sxx, syy, m as f64), [sxy, sx, sy, sxx, syy])
 }
 
+/// The false-discovery rule run with null 1 standing in for the real matrix (against the mean
+/// of the other nulls and the analytic floor): how often the rule fires with nothing there.
+/// Returns that cut-off in |r| if it fires.
+fn placebo_cutoff(h: &[u32], nh: usize, n: usize, m: usize, q: f64) -> Option<f64> {
+    if nh < 3 {
+        return None;
+    }
+    let others: Vec<usize> = (1..nh).filter(|&t| t != 2).collect();
+    let pairs = (n * n.saturating_sub(1)) as f64;
+    let zs = ((m as f64 - 3.0).max(1.0)).sqrt();
+    let (mut cr, mut cn, mut best) = (0f64, 0f64, None);
+    for b in (0..R_BINS).rev() {
+        cr += h[2 * R_BINS + b] as f64;
+        cn += others.iter().map(|&t| h[t * R_BINS + b] as f64).sum::<f64>() / others.len() as f64;
+        let r = (b as f64 / R_BINS as f64).min(0.999_999);
+        let analytic = pairs * erfc(r.atanh() * zs / std::f64::consts::SQRT_2);
+        if cr >= 10.0 && cn.max(analytic) / cr <= q {
+            best = Some(b as f64 / R_BINS as f64);
+        }
+    }
+    best
+}
+
+/// Complementary error function (Numerical Recipes erfcc; relative error < 1.2e-7).
+fn erfc(x: f64) -> f64 {
+    let z = x.abs();
+    let t = 1.0 / (1.0 + 0.5 * z);
+    let r = t * (-z * z - 1.265_512_23 + t * (1.000_023_68 + t * (0.374_091_96 + t * (0.096_784_18 + t * (-0.186_288_06
+        + t * (0.278_868_07 + t * (-1.135_203_98 + t * (1.488_515_87 + t * (-0.822_152_23 + t * 0.170_872_77))))))))).exp();
+    if x >= 0.0 { r } else { 2.0 - r }
+}
+
 /// Sum of histogram bins at or above |z| for `m` observations.
 fn tail(h: &[u32], z: f64, m: usize) -> u64 {
     let r = (z / ((m as f64 - 3.0).max(1.0)).sqrt()).tanh();
@@ -426,11 +460,13 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
         let h = &res.hist[li * nh * R_BINS..(li + 1) * nh * R_BINS];
         let real_h = &h[..R_BINS];
         let null_mean = |z: f64| (1..nh).map(|t| tail(&h[t * R_BINS..(t + 1) * R_BINS], z, *m) as f64).sum::<f64>() / (nh - 1).max(1) as f64;
+        let placebo = if *k > 0 { placebo_cutoff(h, nh, u.n, *m, cfg.fdr_q) } else { None };
         csv.push_str(&format!(
-            "{},{},{},{},{},{},{},{},{},{:.1},{:.1},{:.1},{},{},{},{},{}\n",
+            "{},{},{},{},{},{},{},{},{},{:.1},{:.1},{:.1},{},{},{},{},{},{}\n",
             res.window, u.h1, u.h2, k, u.n, m,
             tail(real_h, 3.0, *m), tail(real_h, 4.0, *m), tail(real_h, 5.0, *m), null_mean(3.0), null_mean(4.0), null_mean(5.0),
             fdr.map(|t| format!("{t:.4}")).unwrap_or_default(), stored, stored_null, rc, u8::from(rc > CAP_REAL),
+            placebo.map(|t| format!("{t:.4}")).unwrap_or_default(),
         ));
     }
     let np = u.np as i64;
@@ -463,7 +499,7 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
     }
 }
 
-pub const SUMMARY_HEADER: &str = "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null,screened,truncated\n";
+pub const SUMMARY_HEADER: &str = "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null,screened,truncated,placebo_fdr_r\n";
 
 /// Status shared with `c2 census status` and the GUI.
 fn write_status(dir: &Path, state: &str, done_units: usize, total_units: usize, cost_done: f64, cost_total: f64, rate: f64, started: Instant, note: &str) {

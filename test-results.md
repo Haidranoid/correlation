@@ -188,3 +188,41 @@ Window 2016-06-28..2022-06-27, daily, lags 0 and 1, 1,806 stocks, 1,510 days, 4,
 | max \|r − Python\|, CPU AVX-VNNI INT8 path | 1.98e-3 |
 | max \|GPU INT8 − CPU INT8\| | **0** (bit-identical) |
 | Python's 50 strongest lag-1 pairs caught by the GPU screening pass (\|z\| ≥ 3.5) | **50 / 50** |
+
+### Smoke runs: four problems found and fixed before the full census
+
+Smoke grid: horizons {1, 5, 21}, 1- and 3-year windows, 888 units.
+
+| Run | Change | Result |
+|---|---|---|
+| `smoke` | First version: per-lag GPU↔CPU round trips, FDR on \|z\| bins | 49 s, but **GPU utilization ~1%**; same-day matrices stored **~182,000 entries each (3.2 GB total)**; early windows had **0 stocks** |
+| `smoke-b` | Thresholds chosen on the GPU (`choose_thresholds` kernel), \|r\| histograms (1,024 bins), one sync per window, prep thread, buffers allocated once, same-day matrices top-100 only, FDR capped at 1,000 per matrix, 3-year warm-up, long-lived-stock calendar | 2 min (more windows now non-empty), **GPU 97–99%**, 249 MB, first window 299 stocks. But real lagged matrices showed **17× chance** at lag 1 |
+| `smoke-c` | **Sign-flip null** replaces the time-shift null | Real/chance at \|z\| ≥ 4 drops from 17× to **1.0–1.2×**. The 17× was volatility clustering |
+| `smoke-d` | FDR needs ≥ 10 entries above the cut-off; placebo rate recorded | FDR cut-offs fire in **0.0%** of lagged matrices; placebo 0–0.7% |
+
+**Why the time-shift null was wrong.**
+- In real data, leader day t and target day t+k fall in the same volatility regime: a turbulent week is turbulent for both. Shifting the target by months puts them in different regimes, so chance correlations look narrower than they really are.
+- A 1.4× wider spread turns a 1-in-16,000 event into 1-in-250: a 60× "excess" with no lead-lag at all.
+- The sign-flip null multiplies the target's observations by a random ±1 that is the same for every stock on that date. Volatility alignment is preserved exactly and only the relationship is destroyed.
+- Same-day (lag 0) matrices still show 39× chance: real co-movement, as expected.
+
+**Lag structure, smoke-c (leader and target both daily, \|z\| ≥ 4 summed over windows):**
+
+| Lag | Real | Time-shift null (wrong) | Sign-flip null | Real / sign-flip |
+|---|---|---|---|---|
+| 0 | 25,654,910 | 32,158 | 649,773 | 39.5 |
+| 1 | 562,463 | 32,880 | 467,399 | **1.20** |
+| 2 | 462,425 | 33,340 | 436,250 | 1.06 |
+| 5 | 300,624 | 33,006 | 322,193 | 0.93 |
+| 15 | 87,634 | 34,088 | 96,558 | 0.91 |
+| 63 | 57,340 | 117,980 | 58,540 | 0.98 |
+
+Only lag 1 keeps a small excess (1.2×). That fits the known next-day effect from large to small stocks (`research/results.txt` positive control). It is spread too thinly over pairs for any individual pair to pass the FDR rule.
+
+**How this squares with the earlier Python result:** `research/lag_spectrum.py` found that the lag structure of one period doesn't reappear in the next (top pairs ~coin-flip). The census now says the same thing from within each window: beyond lag 1, extreme lagged correlations occur at chance rates once volatility alignment is accounted for.
+
+**Other small things:**
+- The time-shift null's own tail jumped at a few lags (e.g. daily lag 63: 118k vs ~33k elsewhere). That was most likely shifts re-aligning quarterly earnings seasons. The sign-flip null makes it moot.
+- `tail()` in the summary uses `ceil` for the boundary bin while the histogram uses `floor`, so tail counts slightly undercount. Harmless for ratios.
+
+**Run directories left for you to delete if you like** (a safety check stopped me removing my own test output): `~/.local/share/correlation2/census/{smoke,smoke-b,smoke-c,smoke-d}`, about 250 MB each except `smoke` (3.2 GB).
