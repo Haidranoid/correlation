@@ -11,7 +11,10 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow.workspace = true
+c2-census.workspace = true
 c2-data.workspace = true
+ctrlc = { version = "3", features = ["termination"] }
+serde_json.workspace = true
 c2-engine.workspace = true
 clap.workspace = true
 half.workspace = true
@@ -19,4 +22,4 @@ rayon.workspace = true
 
 [features]
 default = ["cuda"]
-cuda = ["c2-engine/cuda"]
+cuda = ["c2-engine/cuda", "c2-census/cuda"]

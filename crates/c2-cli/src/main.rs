@@ -39,6 +39,44 @@ enum Cmd {
     },
     /// Print the store's acceptance numbers: symbol kinds, bad prints, decade quality table.
     DataCheck,
+    /// The correlation census: run, check on, pause or resume it, or validate the engine.
+    Census {
+        #[command(subcommand)]
+        action: CensusCmd,
+    },
+}
+
+#[derive(Subcommand)]
+enum CensusCmd {
+    /// Run or resume a census (Ctrl-C stops after committing; run again to resume).
+    Run {
+        /// Reduced grid (horizons 1, 5, 21; 1- and 3-year windows) for a quick end-to-end run.
+        #[arg(long)]
+        smoke: bool,
+        /// Run name (directory under <data dir>/census/).
+        #[arg(long, default_value = "main")]
+        name: String,
+    },
+    /// Show progress and ETA.
+    Status {
+        #[arg(long, default_value = "main")]
+        name: String,
+    },
+    /// Pause after the current window and release the GPU.
+    Pause {
+        #[arg(long, default_value = "main")]
+        name: String,
+    },
+    /// Continue a paused census.
+    Resume {
+        #[arg(long, default_value = "main")]
+        name: String,
+    },
+    /// Check the engine against research/census_oracle.json (exact r from Python).
+    Validate {
+        #[arg(long, default_value = "research/census_oracle.json")]
+        oracle: std::path::PathBuf,
+    },
 }
 
 fn main() -> Result<()> {
@@ -48,6 +86,7 @@ fn main() -> Result<()> {
         Cmd::Bench { n, rows, no_cpu } => bench(n, &rows, !no_cpu),
         Cmd::Ingest { zips, markets } => ingest(zips, &markets),
         Cmd::DataCheck => data_check(),
+        Cmd::Census { action } => census(action),
     }
 }
 
@@ -271,6 +310,15 @@ fn data_check() -> Result<()> {
         println!("Bad prints repaired since 2021-06-01, {label} ({} symbols): {}", ids.len(), panel.repair_bad_prints());
     }
 
+    // The census calendar (long-lived stocks) against SPY where both exist.
+    let tdays = Calendar::trading_days(&store)?;
+    let spy_first = cal.days[0];
+    let a: Vec<i32> = tdays.days.iter().copied().filter(|&d| d >= spy_first).collect();
+    let extra = a.iter().filter(|d| cal.days.binary_search(d).is_err()).count();
+    let missing = cal.days.iter().filter(|d| a.binary_search(d).is_err()).count();
+    println!("Trading calendar: {} days from {}; since SPY's first day ({}): {} days vs SPY's {}, {extra} extra, {missing} missing",
+             tdays.days.len(), c2_data::date_string(tdays.days[0]), c2_data::date_string(spy_first), a.len(), cal.days.len());
+
     println!("\n{:>7} {:>8} {:>11} {:>10} {:>9} {:>11}", "decade", "symbols", "rows", "0% days", "under $1", "close only");
     for r in c2_data::quality::decade_table(&store) {
         let pct = |a: usize, b: usize| 100.0 * a as f64 / b.max(1) as f64;
@@ -278,4 +326,75 @@ fn data_check() -> Result<()> {
                  pct(r.zero_return, r.with_prev), pct(r.under_1, r.rows), pct(r.close_only, r.rows));
     }
     Ok(())
+}
+
+fn census(action: CensusCmd) -> Result<()> {
+    use c2_census::run;
+    match action {
+        CensusCmd::Validate { oracle } => {
+            let store = c2_data::Store::open(&store_dir())?;
+            let r = c2_census::validate::validate(&store, &oracle)?;
+            println!("Oracle window: {} stocks ({} not in store: {:?}), {} days, {} pairs", r.universe, r.missing.len(), r.missing, r.days, r.pairs);
+            println!("  max |r - oracle|, exact f64 path:       {:.2e}", r.max_err_exact);
+            println!("  max |r - oracle|, GPU INT8 census path: {:.2e}", r.max_err_gpu_int8);
+            println!("  max |r - oracle|, CPU INT8 (AVX-VNNI):  {:.2e}", r.max_err_cpu_int8);
+            println!("  max |GPU INT8 - CPU INT8|:              {:.2e}", r.max_cpu_gpu_diff);
+            println!("  oracle's 50 strongest lag-1 pairs screened in by the GPU pass: {}/{}", r.top50_found, r.top50_total);
+            Ok(())
+        }
+        CensusCmd::Status { name } => {
+            let dir = run::run_dir(&name);
+            let s: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("status.json"))?)?;
+            let age = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH)?.as_secs().saturating_sub(s["updated_unix"].as_u64().unwrap_or(0));
+            println!("census {name}: {} (control: {}), {}/{} windows, {:.2}% of work, ETA {}, status written {age}s ago",
+                s["state"].as_str().unwrap_or("?"), run::control_state(&dir), s["units_done"], s["units_total"],
+                100.0 * s["fraction_done"].as_f64().unwrap_or(0.0), run::hms(s["eta_seconds"].as_f64().unwrap_or(-1.0)));
+            Ok(())
+        }
+        CensusCmd::Pause { name } => {
+            run::set_control(&run::run_dir(&name), "pause")?;
+            println!("pausing {name} after the current window (the GPU is released while paused)");
+            Ok(())
+        }
+        CensusCmd::Resume { name } => {
+            run::set_control(&run::run_dir(&name), "run")?;
+            println!("resuming {name}");
+            Ok(())
+        }
+        CensusCmd::Run { smoke, name } => {
+            let store = c2_data::Store::open(&store_dir())?;
+            let cfg = if smoke { c2_census::grid::Config::smoke() } else { c2_census::grid::Config::full() };
+            let dir = run::run_dir(&name);
+            let log_path = dir.clone();
+            let log = move |msg: &str| {
+                let line = format!("[{}] {msg}", hms_now());
+                println!("{line}");
+                if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(log_path.join("run.log")) {
+                    use std::io::Write;
+                    let _ = writeln!(f, "{line}");
+                }
+            };
+            std::fs::create_dir_all(&dir)?;
+            let t0 = Instant::now();
+            let plan = run::Plan::new(&store, cfg)?;
+            let units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
+            let sizes: Vec<usize> = plan.universes.iter().map(|u| u.len()).collect();
+            log(&format!("plan: {} stocks in the variable, {} windows (universe {}..{} stocks), {} tasks, {} units; built in {:.1}s",
+                plan.var.n, plan.windows.len(), sizes.iter().min().unwrap_or(&0), sizes.iter().max().unwrap_or(&0),
+                plan.tasks.len(), units, t0.elapsed().as_secs_f64()));
+            let stop = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+            let s2 = stop.clone();
+            ctrlc::set_handler(move || {
+                eprintln!("stopping after the current window...");
+                s2.store(true, std::sync::atomic::Ordering::Relaxed);
+            })?;
+            run::run(&store, &plan, &dir, &stop, &log)
+        }
+    }
+}
+
+fn hms_now() -> String {
+    let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
+    let local = secs as i64 - 4 * 3600;
+    format!("{:02}:{:02}:{:02}", (local / 3600).rem_euclid(24), (local / 60).rem_euclid(60), local.rem_euclid(60))
 }

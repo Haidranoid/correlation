@@ -60,8 +60,28 @@ pub fn reference_r(panel: &[f32], t: usize, i: usize, j: usize, lag: usize) -> f
     pearson(sxy, sx, sy, sxx, syy, rows as f64)
 }
 
-/// Quantize a volatility-normalized value (in sd units) to INT8.
+/// Quantize a volatility-normalized value (in sd units) to INT8. Rounds half to even, like the
+/// GPU kernels' `rintf`, so CPU and GPU panels are bit-identical.
 #[inline]
 pub fn quantize(v: f32) -> i8 {
-    (v * INT8_SCALE).round().clamp(-127.0, 127.0) as i8
+    quantize_scaled(v * INT8_SCALE)
+}
+
+/// Quantize a value already multiplied by its scale.
+#[inline]
+pub fn quantize_scaled(x: f32) -> i8 {
+    x.round_ties_even().clamp(-127.0, 127.0) as i8
+}
+
+/// Sign (+1 / -1) of observation `q` in the sign-flip null with `seed`; identical to the GPU's
+/// `flip_sign`. The same sign applies to every stock on an observation.
+#[inline]
+pub fn sign_flip(seed: u32, q: u32) -> f64 {
+    let mut h = seed ^ q.wrapping_mul(0x9E37_79B9);
+    h ^= h >> 16;
+    h = h.wrapping_mul(0x85EB_CA6B);
+    h ^= h >> 13;
+    h = h.wrapping_mul(0xC2B2_AE35);
+    h ^= h >> 16;
+    if h & 1 == 1 { -1.0 } else { 1.0 }
 }

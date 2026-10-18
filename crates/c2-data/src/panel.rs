@@ -20,6 +20,26 @@ impl Calendar {
         Ok(Calendar { days: store.dates(id).to_vec() })
     }
 
+    /// NYSE trading days from long-lived stocks: a day counts when at least 3 of 8 large caps
+    /// (histories from 1962-1984) traded. SPY alone would do, but Stooq's SPY starts 2005-02-25,
+    /// which leaves no warm-up year before a 2005 census start. Matches SPY's days exactly
+    /// where both exist (checked by `c2 data-check`).
+    pub fn trading_days(store: &Store) -> Result<Calendar> {
+        const REFERENCE: [&str; 8] = ["IBM", "GE", "KO", "XOM", "JNJ", "PG", "MMM", "AAPL"];
+        let mut count: std::collections::BTreeMap<i32, u32> = std::collections::BTreeMap::new();
+        let mut found = 0;
+        for t in REFERENCE {
+            if let Some(id) = store.id(t) {
+                found += 1;
+                for &d in store.dates(id) {
+                    *count.entry(d).or_default() += 1;
+                }
+            }
+        }
+        anyhow::ensure!(found >= 5, "only {found} of the calendar reference stocks are in the store");
+        Ok(Calendar { days: count.into_iter().filter(|&(_, c)| c >= 3).map(|(d, _)| d).collect() })
+    }
+
     /// Indices of the trading days in `[from, to]` (inclusive dates).
     pub fn range(&self, from: i32, to: i32) -> Range<usize> {
         self.days.partition_point(|&d| d < from)..self.days.partition_point(|&d| d <= to)

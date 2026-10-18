@@ -136,3 +136,55 @@ This matches ANALYSIS.md section 3 (computed from v1's Postgres) to within the e
 - Stooq prices are used as given (already split- and dividend-adjusted), and the raw store is never modified.
 - Cleaning (test tickers, bad prints) is applied when a panel is built, so it is switchable and logged.
 - Missing days stay NaN. Nothing is forward-filled.
+
+## M2a: correlation census engine (`crates/c2-census`)
+
+### Design choices
+
+**Census variable.** Market-residual daily log return divided by the stock's trailing 252-day residual volatility, with beta, volatility and liquidity all computed from days up to t−1, then clipped at ±5.
+- Values never change when later data arrives, so running sums stay in fixed units. That is what makes incremental refinement possible (owner requirement).
+- Horizon returns are sums of h daily values divided by √h.
+
+**Lags.**
+- The leader's return covers days (g−h₁, g] and the target's (g+lag−h₂, g+lag].
+- Lag 0 is the same-period reference. Predictive lags start at h₂. **Lags between 0 and h₂ are never computed**: they would let the two returns share days, which was v1's leak.
+- For h₁ = h₂ = 1, lag 1 is "next day" and lag 0 "same day", matching `research/lag_spectrum.py`.
+- Observations step by max(h₁, h₂), so they never overlap.
+
+**Universe per window.** At least 90% of days with a value, plus median price ≥ $5 and median dollar volume ≥ $5M over the window's last 252 days. Each window's universe is saved (`universes.bin`).
+
+**Nulls.** 3 per matrix. The target series is circularly shifted by a whole number of observations: within [m/4, 3m/4], at least one more than the largest lag, never 0. One null's strongest entries are stored too (flag `NULL`), so "real pairs replicate X% vs chance Y%" can be computed later.
+
+**Storage.** Per matrix:
+- the top 100 real entries by |z|
+- every real entry above the FDR threshold (Benjamini–Hochberg-style, q = 0.05 against the mean of the 3 null histograms)
+- the top 50 entries of null #0
+
+Each stored entry gets exact f64 recomputation plus its sufficient statistics (Σxy, Σx, Σy, Σx², Σy²). Records are 52 bytes; each matrix also gets a summary line with real and chance tail counts.
+
+**Pipeline.**
+- The CPU uploads each window's running-sum matrix once.
+- GPU kernels build every leader, target and null panel from it, quantize to INT8 and compute column sums.
+- cuBLASLt INT8 multiply, then the fused significance pass. Only histograms and screened entries (|z| ≥ 3.5) come back.
+- A separate finisher thread does FDR selection, exact recomputation and writing while the GPU continues.
+
+**Checkpoints.**
+- One unit = one window of one task (all its lags).
+- Records and summaries are appended, flushed and fsynced, then a line is written to `progress.log`. Resuming truncates to the last commit.
+- Ctrl-C and SIGTERM stop after the current unit. `c2 census pause` releases the GPU until `c2 census resume`.
+- `manifest.json` stores the config, the store fingerprint and the git commit. Resume refuses a changed config.
+
+**Problem found:** cuBLASLt's INT8 kernels returned `CUBLAS_STATUS_NOT_SUPPORTED` for 1,806 stocks. They need widths that are multiples of 4; the benchmark's 5,000 and 2,000 happened to qualify. Widths are now padded to a multiple of 16 with zero columns, which give r = 0 and are never stored.
+
+### Validation against Python (`c2 census validate`, oracle from `research/census_oracle.py`)
+
+Window 2016-06-28..2022-06-27, daily, lags 0 and 1, 1,806 stocks, 1,510 days, 4,049 pairs (2,000 random per lag plus the 50 strongest lag-1 pairs). Same standardization as the Python.
+
+| Check | Result |
+|---|---|
+| Oracle universe found in the new store | 1,806 / 1,806 |
+| max \|r − Python\|, exact f64 path | **3.6e-7** (from f32 price storage) |
+| max \|r − Python\|, GPU INT8 census path | 1.98e-3 (quantization; ~4% of r's sampling sd at 1,509 obs) |
+| max \|r − Python\|, CPU AVX-VNNI INT8 path | 1.98e-3 |
+| max \|GPU INT8 − CPU INT8\| | **0** (bit-identical) |
+| Python's 50 strongest lag-1 pairs caught by the GPU screening pass (\|z\| ≥ 3.5) | **50 / 50** |
