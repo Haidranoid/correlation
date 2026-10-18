@@ -13,6 +13,8 @@
 - **And it isn't stable:** the reduced smoke census, with the same rule and the same year, gave +10.8% (p = 0.39). Only the grid of horizons and windows differed.
 - **Every year from 2006 on, the same test:** the picks beat random guessers in 2 of 19 years, which is what chance gives.
 - **Pair by pair:** the strongest lagged pairs in one window keep their sign in the next window 50–53% of the time, the same as pairs picked from pure noise. Same-day co-movement, by contrast, persists almost perfectly.
+- **Longer holding periods:** with weekly and monthly targets the census was null too (2 of 19 and 1 of 17 years beating random).
+- **The test can detect a real signal:** a known anomaly (5-day short-term reversal) clearly beat random in 8 of 18 years (long-short 4.4 bps/day, z = 2.9), and the test tracked it fading after 2021. So the census's "no" is not a blind spot in the test.
 
 So on this data the hypothesis does not hold. Details and every table follow below.
 
@@ -27,6 +29,9 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census validate` | Engine vs the Python oracle |
 | `c2 census holdout --family peers [--walk-forward]` | The same test with peer momentum (monthly rebalance) |
 | `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
+| `c2 census holdout --family census --rebalance 5\|21` | Census pairs at weekly or monthly target horizons |
+| `c2 census holdout --family reversal --lookback 5` | Positive control (short-term reversal) |
+| `c2 update` / `c2 forward-report` / `c2 install-timer [--enable]` | Data refresh, forward-log scoring, the weekday timer |
 | `c2-gui` | The native GUI |
 
 **Also tested: peer momentum** (signal family C, the economic-link-style hypothesis from published research), using the census's same-day co-movement network:
@@ -36,12 +41,19 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 
 **Native GUI:** `c2-gui` (or **correlation2** in the app grid) has Status, Census, Holdout and Data tabs. Every tab was checked with screenshots, but you haven't tried it yet.
 
+**Data updates and the forward log (first version):**
+- `c2 update` ingests a Stooq zip dropped in `~/.local/share/correlation2/inbox/`, reruns the census if the data changed, and appends the next period's picks to an append-only forward log.
+- `c2 forward-report` scores those picks against SPY once their holding period has passed.
+- Tested end to end in a scratch data directory.
+- The timer is **not enabled**; run `c2 install-timer --enable` if you want it.
+- Fetching is still manual (Stooq needs a CAPTCHA) until a source like MarketParquet is validated.
+
 **Not done yet** (from SPEC.md):
-- scheduled data updates and the forward prediction log (needs a fresher data source; see ANALYSIS.md)
 - census CPU worker (the GPU finishes in 6 minutes, so it would add ~3%)
-- signal families B, D and E (cluster lead-lag, the size control, calibration anomalies)
-- survivorship-free data
 - idle-detection mode
+- signal families B and D (cluster lead-lag, the size control)
+- a random guesser matched on volatility (a stricter baseline)
+- survivorship-free data
 
 **Your call:**
 - **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
