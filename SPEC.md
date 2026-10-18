@@ -2,6 +2,37 @@
 
 Status: draft 1, 2026-10-18. Background and evidence: `ANALYSIS.md`. Reference experiment: `research/leadlag_holdout.py` and `research/results.txt`.
 
+## Status as of 2026-10-18 (first version built)
+
+Measurements, results and reasons are in `test-results.md`; read that first. This spec is the original plan. Where the build differs, measurement changed the plan and the reason is recorded there.
+
+**Built:**
+- **M0:** engine benchmarks; cuBLAS/cuBLASLt in five precisions; AVX-VNNI assembly kernel.
+- **M1:** Stooq ingest, store, calendar, quality checks.
+- **M2:** CPU/GPU engine validated against the Python oracle.
+- **M2a:** full census.
+- **The holdout harness:** $10,000 test, turnover-matched random guessers, walk-forward, long-short diagnostic; families A (census pairs at 1-, 5- and 21-day targets), C (peer momentum) and E (reversal, as a positive control); `replicate`.
+- **M3, first version:** `c2 update`, forward log, `forward-report`, `install-timer` (not enabled).
+- **M7, first version:** `c2-gui` with Status, Census, Holdout and Data tabs.
+
+**Changed by measurement:**
+- **No block-additive sums (§6A optimization 1).** Both devices are limited by writing results, not by arithmetic, so each window is recomputed directly with fused thresholding.
+- **Sign-flip null, not time-shift (§6A, §7.1).** The time-shift null misaligned volatility regimes and produced a false 17× excess.
+- **Thresholds chosen on the GPU,** using |r| histograms, with one host sync per window.
+- **FDR needs at least 10 entries,** with the analytic null as a floor and a placebo rate recorded.
+- **Calendar from long-lived stocks, not SPY.** Stooq's SPY starts on 2005-02-25 and misses 2011-02-17.
+- **Five crates, not seven.** The store lives in `c2-data`; census, holdout and analysis live in `c2-census`; `c2-update` lives in `c2-cli`.
+- **"Refine as new data arrives" currently means a dated rerun** (a full census takes ~6 minutes). Per-pair running sums are stored for a future live tracker.
+
+**Remaining:**
+- census CPU worker
+- idle mode
+- families B (cluster lead-lag) and D (size)
+- validated survivorship-free data source and automatic fetching
+- ledger with deflated Sharpe (§7.4)
+- locked-holdout counter (§7.5)
+- GUI explore/learn screens (§9)
+
 ## 1. Purpose
 
 correlation2 is a native desktop research tool that answers one question honestly and fast:

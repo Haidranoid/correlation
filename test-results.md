@@ -25,12 +25,12 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census run --name main` | Run or resume the census (Ctrl-C stops cleanly after the current window) |
 | `c2 census status` / `stop` / `pause` / `resume` | Check, stop, or pause (pausing frees the GPU) a running census |
 | `c2 census holdout [--start 2024-06-28] [--walk-forward]` | The $10,000 test, one year or every year |
-| `c2 census replicate` | Do stored pairs keep their sign in the next window? |
-| `c2 census validate` | Engine vs the Python oracle |
 | `c2 census holdout --family peers [--walk-forward]` | The same test with peer momentum (monthly rebalance) |
-| `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
 | `c2 census holdout --family census --rebalance 5\|21` | Census pairs at weekly or monthly target horizons |
 | `c2 census holdout --family reversal --lookback 5` | Positive control (short-term reversal) |
+| `c2 census replicate` | Do stored pairs keep their sign in the next window? |
+| `c2 census validate` | Engine vs the Python oracle |
+| `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
 | `c2 update` / `c2 forward-report` / `c2 install-timer [--enable]` | Data refresh, forward-log scoring, the weekday timer |
 | `c2-gui` | The native GUI |
 
@@ -57,8 +57,9 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 
 **Your call:**
 - **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
-- **Direction:** continue with the cluster or peer-momentum families, or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
-- **Cleanup:** delete the smoke test directories `~/.local/share/correlation2/census/smoke*` (a safety check stopped me removing them).
+- **Direction:** continue with the cluster lead-lag family (B), or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
+- **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
+- **Cleanup:** delete the smoke test directories `~/.local/share/correlation2/census/smoke`, `smoke-b`, `smoke-c` and `smoke-d` (about 930 MB in total; a safety check stopped me removing them).
 
 ---
 
@@ -287,7 +288,7 @@ Only lag 1 keeps a small excess (1.2×). That fits the known next-day effect fro
 - The time-shift null's own tail jumped at a few lags (e.g. daily lag 63: 118k vs ~33k elsewhere). That was most likely shifts re-aligning quarterly earnings seasons. The sign-flip null makes it moot.
 - `tail()` in the summary uses `ceil` for the boundary bin while the histogram uses `floor`, so tail counts slightly undercount. Harmless for ratios.
 
-**Run directories left for you to delete if you like** (a safety check stopped me removing my own test output): `~/.local/share/correlation2/census/{smoke,smoke-b,smoke-c,smoke-d}`, about 250 MB each except `smoke` (3.2 GB).
+**Run directories left for you to delete if you like** (a safety check stopped me removing my own test output): `~/.local/share/correlation2/census/{smoke,smoke-b,smoke-c,smoke-d}`, about 930 MB in total. The first 3.2 GB smoke run was already replaced by its re-run.
 
 ## M2: the $10,000 holdout harness (`c2 census holdout`, `c2 census replicate`)
 
@@ -343,7 +344,7 @@ Hit rate 50.2%; rank IC +0.0009 (t = 0.55).
 |---|---|
 | Grid | horizons {1, 5, 10, 21, 63} (15 leader/target pairs), rolling windows of 1, 2, 3 and 5 years stepped quarterly from 2005-01-03, plus full history; lags per SPEC 6A; 3 sign-flip nulls per matrix |
 | Size | 285 windows (283–2,345 stocks each), 75 tasks, **4,275 units, 83,879 real matrices (~335,000 matrix products including nulls)** |
-| Time | **5 min 47 s** (10:51:16 → 10:57:03), RTX 5080 at 97–99%. For reference, v1's approach was estimated at ~6 months in C for a smaller job |
+| Time | **5 min 47 s** (10:51:16 → 10:57:03 as written in `run.log`; those log times are one hour ahead of this machine's clock, since they were written as UTC−4 on a UTC−5 system, fixed since), RTX 5080 at 97–99%. For reference, v1's approach was estimated at ~6 months in C for a smaller job |
 | Storage | 630 MB of records (52 bytes each) + per-matrix summaries, in `~/.local/share/correlation2/census/main/` |
 | Code | Manifest names commit `74ba415`; the binary also had the then-uncommitted ≥10-entry FDR rule, placebo column and pidfile, all committed in `8c97929` |
 | ETA model | The first ETA read 6–8 min and then said "1 min left" at 10% of windows. The cost model under-weighted the fixed cost per product (writing and scanning the n × n result), giving it 64 rows instead of the ~2,000 measured. Fixed for future runs |
