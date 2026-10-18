@@ -11,6 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow.workspace = true
+c2-data.workspace = true
 c2-engine.workspace = true
 clap.workspace = true
 half.workspace = true

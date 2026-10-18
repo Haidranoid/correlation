@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/c2-engine", "crates/c2-cli"]
+members = ["crates/c2-data", "crates/c2-engine", "crates/c2-cli"]
 
 [workspace.package]
 version = "0.1.0"
@@ -9,13 +9,16 @@ rust-version = "1.90"
 publish = false
 
 [workspace.dependencies]
+c2-data = { path = "crates/c2-data" }
 c2-engine = { path = "crates/c2-engine" }
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 cudarc = { version = "0.19", default-features = false, features = ["std", "cublas", "cublaslt", "driver", "nvrtc", "dynamic-loading", "cuda-13020", "f16"] }
 gemm = "0.19"
 half = "2"
+memmap2 = "0.9"
 rayon = "1"
+zip = { version = "9", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 
 [profile.release]
 codegen-units = 1

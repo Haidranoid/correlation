@@ -101,3 +101,38 @@ The spec planned block-additive window sums to save arithmetic. Measurements sho
 | Libraries only in `~/model-lab/.../cuda-env/lib`, nothing set | `c2` re-runs itself with that directory on `LD_LIBRARY_PATH`; GPU used |
 | No CUDA libraries anywhere (simulated with `C2_CUDA_REEXEC=1`) | Prints `GPU unavailable, CPU only: CUDA libraries not found: cuBLAS, cuBLASLt, NVRTC (...)`; CPU continues |
 | Before the fix | cudarc panicked: `Unable to dynamically load the "cublas" shared library` |
+
+## M1: data layer (`crates/c2-data`)
+
+**What was built:**
+- **Parallel ingest straight from the Stooq zip.** The zip is memory-mapped and each rayon task opens its own reader; decompression uses zlib-rs.
+- **One memory-mapped columnar store** (`~/.local/share/correlation2/store/prices.bin`, 640 MB): per-symbol contiguous date/open/high/low/close/volume columns, each 64-byte aligned, plus `symbols.tsv`. Written via temp file + rename.
+- **SPY trading calendar**, dense panel builder, bad-print repair and the decade quality table.
+
+| Check | Result | Target / reference |
+|---|---|---|
+| Ingest time, `d_us_txt.zip` (11,550 files, 26,656,424 rows) | **1.1 s** wall, 1.5 GB peak RAM | v1's importer: minutes, with database round trips |
+| Files by folder | nasdaq stocks 4,756, nyse stocks 3,451, nysemkt stocks 316, nyse etfs 2,695, nasdaq etfs 332 | Same as the zip listing ✓ |
+| Empty files | 19 (all in stock folders) | — |
+| Symbols with data | 11,531: 8,503 stocks, 3,027 ETFs, 1 test ticker (ZVZZT, 777 rows) | ETFs 3,027 ✓ |
+| v1's symbol set (`^[A-Z0-9^_]{1,15}$`, i.e. no hyphenated tickers) | **11,431** | v1 database: 11,431 ✓ exact |
+| Bad prints since 2021-06-01, v1 symbol set | **69** | Python experiment: 69 ✓ exact |
+| Bad prints since 2021-06-01, all symbols | 70 | (one more among hyphenated tickers) |
+| `c2 data-check` (kinds, both bad-print panels, decade table) | 0.06 s | — |
+
+| Decade | Symbols | Rows | 0% days | Under $1 | Close only |
+|---|---|---|---|---|---|
+| 1960s | 2 | 3,973 | 22.5% | 0.0% | 4.7% |
+| 1970s | 40 | 79,879 | 29.2% | 47.7% | 9.9% |
+| 1980s | 199 | 309,692 | 16.8% | 19.1% | 2.2% |
+| 1990s | 309 | 666,256 | 10.2% | 5.4% | 0.9% |
+| 2000s | 3,014 | 3,574,941 | 3.0% | 1.0% | 1.5% |
+| 2010s | 6,064 | 10,592,071 | 2.9% | 0.5% | 1.6% |
+| 2020s | 11,531 | 11,429,612 | 2.3% | 2.5% | 2.7% |
+
+This matches ANALYSIS.md section 3 (computed from v1's Postgres) to within the extra hyphenated tickers. The 1960s and 1970s rows are identical.
+
+**Choices:**
+- Stooq prices are used as given (already split- and dividend-adjusted), and the raw store is never modified.
+- Cleaning (test tickers, bad prints) is applied when a panel is built, so it is switchable and logged.
+- Missing days stay NaN. Nothing is forward-filled.

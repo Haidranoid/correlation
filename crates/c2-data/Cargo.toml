@@ -1,0 +1,12 @@
+[package]
+name = "c2-data"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+memmap2.workspace = true
+rayon.workspace = true
+zip.workspace = true

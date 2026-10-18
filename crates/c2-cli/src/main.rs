@@ -28,6 +28,17 @@ enum Cmd {
         #[arg(long)]
         no_cpu: bool,
     },
+    /// Build the price store from Stooq bulk zips (default: v1's d_us_txt.zip).
+    Ingest {
+        /// Stooq zip files.
+        #[arg(long = "zip")]
+        zips: Vec<std::path::PathBuf>,
+        /// Markets to keep (top-level Stooq folders).
+        #[arg(long, value_delimiter = ',', default_value = "us")]
+        markets: Vec<String>,
+    },
+    /// Print the store's acceptance numbers: symbol kinds, bad prints, decade quality table.
+    DataCheck,
 }
 
 fn main() -> Result<()> {
@@ -35,6 +46,8 @@ fn main() -> Result<()> {
     c2_engine::gpu::reexec_with_cuda_libraries();
     match Cli::parse().cmd {
         Cmd::Bench { n, rows, no_cpu } => bench(n, &rows, !no_cpu),
+        Cmd::Ingest { zips, markets } => ingest(zips, &markets),
+        Cmd::DataCheck => data_check(),
     }
 }
 
@@ -206,6 +219,63 @@ fn bench_gpu(n: usize, rows: &[usize], pairs: &[(usize, usize)]) -> Result<()> {
                     "", "", secs * 1e3, (n * n * 4) as f64 / secs / 1e9, total, n * n, cnt[0]);
             }
         }
+    }
+    Ok(())
+}
+
+fn store_dir() -> std::path::PathBuf {
+    c2_data::data_dir().join("store")
+}
+
+fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String]) -> Result<()> {
+    if zips.is_empty() {
+        let home = std::env::var_os("HOME").map(std::path::PathBuf::from).unwrap_or_default();
+        zips.push(home.join("programming/correlation/data/stooq/d_us_txt.zip"));
+    }
+    let paths: Vec<&std::path::Path> = zips.iter().map(|p| p.as_path()).collect();
+    let markets: Vec<&str> = markets.iter().map(|s| s.as_str()).collect();
+    let dir = store_dir();
+    let r = c2_data::ingest::ingest_stooq(&paths, &markets, &dir)?;
+    println!("Ingested {} files ({} empty) into {}: {} rows in {:.1}s", r.files, r.empty, dir.display(), r.rows, r.seconds);
+    for (folder, n) in &r.by_folder {
+        println!("  {folder:<22} {n:>6} files");
+    }
+    Ok(())
+}
+
+fn data_check() -> Result<()> {
+    use c2_data::{Calendar, Kind, Panel, Store};
+    let store = Store::open(&store_dir())?;
+    println!("{} symbols, {} rows", store.symbols.len(), store.rows());
+    let mut kinds = std::collections::BTreeMap::new();
+    for s in &store.symbols {
+        *kinds.entry((s.kind.as_str(), s.exchange.as_str())).or_insert(0usize) += 1;
+    }
+    for ((kind, exch), n) in &kinds {
+        println!("  {kind:<6} {exch:<8} {n:>6}");
+    }
+    for s in store.symbols.iter().filter(|s| s.kind == Kind::Test) {
+        println!("  test ticker excluded: {} ({} rows)", s.ticker, s.rows);
+    }
+
+    // Bad prints since 2021-06-01 on the SPY calendar, all symbols and v1's symbol set
+    // (v1's importer kept only tickers matching ^[A-Z0-9^_]{1,15}$, so no hyphens).
+    let cal = Calendar::from_symbol(&store, "SPY")?;
+    let rows = cal.range(c2_data::parse_date("2021-06-01")?, i32::MAX);
+    let v1 = |t: &str| !t.is_empty() && t.len() <= 15 && t.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'^' || b == b'_');
+    for (label, ids) in [
+        ("all symbols", (0..store.symbols.len()).collect::<Vec<_>>()),
+        ("v1 symbol set", (0..store.symbols.len()).filter(|&i| v1(&store.symbols[i].ticker)).collect()),
+    ] {
+        let mut panel = Panel::build(&store, &cal, rows.clone(), &ids);
+        println!("Bad prints repaired since 2021-06-01, {label} ({} symbols): {}", ids.len(), panel.repair_bad_prints());
+    }
+
+    println!("\n{:>7} {:>8} {:>11} {:>10} {:>9} {:>11}", "decade", "symbols", "rows", "0% days", "under $1", "close only");
+    for r in c2_data::quality::decade_table(&store) {
+        let pct = |a: usize, b: usize| 100.0 * a as f64 / b.max(1) as f64;
+        println!("{:>6}s {:>8} {:>11} {:>9.1}% {:>8.1}% {:>10.1}%", r.decade, r.symbols, r.rows,
+                 pct(r.zero_return, r.with_prev), pct(r.under_1, r.rows), pct(r.close_only, r.rows));
     }
     Ok(())
 }
