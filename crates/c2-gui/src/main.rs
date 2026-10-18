@@ -3,6 +3,9 @@
 //! It drives the `c2` command (census runs happen in their own detached process, so closing the
 //! window never interrupts one) and reads its output files. Tabs:
 //!   Status   census progress and ETA; start, pause, resume, stop
+//!   Strongest  stocks ranked by significant lead-lag relationships; click one for its timeline
+//!   Stock    timeline of one stock's lead-lag partners (who moves before it, who after, by how
+//!            much), with each relationship's history across census windows
 //!   Census   real vs chance by lag for each horizon pair; a ticker's strongest stored pairs
 //!   Holdout  the $10,000 test for either signal family, with equity curves
 //!   Data     price store summary and the decade quality table
@@ -17,11 +20,14 @@ use c2_census::holdout::{Family, Options, Report};
 use c2_census::run::{self, FLAG_NULL, Plan};
 use c2_data::Store;
 use eframe::egui;
-use egui_plot::{Legend, Line, Plot, PlotPoints};
+use c2_census::analyze::ProfileRow;
+use egui_plot::{HLine, Legend, Line, MarkerShape, Plot, PlotPoint, PlotPoints, Points, Text, VLine};
 
 #[derive(PartialEq, Clone, Copy)]
 enum Tab {
     Status,
+    Strongest,
+    Stock,
     Census,
     Holdout,
     Data,
@@ -80,6 +86,47 @@ struct App {
     /// Self-check mode (`C2_GUI_SCREENSHOT=<path prefix>`, `C2_GUI_TAB=<tab>`): open a tab, wait
     /// for its data, save the window's pixels and exit.
     shot: Option<(String, u32, bool)>,
+    // Stock timeline tab.
+    tl: Timeline,
+    // Strongest tab.
+    rank_rx: Option<Receiver<Result<Vec<c2_census::analyze::RankRow>, String>>>,
+    rank: Vec<c2_census::analyze::RankRow>,
+    rank_filter: String,
+    /// 0 = count x strength (sum of |r|), 1 = significant (sum of |r| over significant ones),
+    /// 2 = strongest single |r|, 3 = most relationships.
+    rank_sort: usize,
+    rank_error: String,
+}
+
+/// Key of one relationship regardless of window: (partner, stock leads?, lag, h1, h2).
+type RelKey = (String, bool, u16, u8, u8);
+
+#[derive(Default)]
+struct Timeline {
+    input: String,
+    ticker: String,
+    rx: Option<Receiver<Result<Vec<ProfileRow>, String>>>,
+    rows: Vec<ProfileRow>,
+    error: String,
+    significant_only: bool,
+    /// "all", "recent", "full", or a window label.
+    window: String,
+    /// (h1, h2) or None for all.
+    horizons: Option<(u8, u8)>,
+    max_shown: usize,
+    show_r: bool,
+    selected: Option<RelKey>,
+}
+
+fn key(r: &ProfileRow) -> RelKey {
+    (r.partner.clone(), r.leads, r.lag, r.h1, r.h2)
+}
+
+/// Decimal year of the last date in a "first..last" window label.
+fn window_end_year(w: &str) -> f64 {
+    let last = w.split("..").nth(1).unwrap_or("");
+    let p: Vec<f64> = last.split('-').filter_map(|v| v.parse().ok()).collect();
+    if p.len() == 3 { p[0] + (p[1] - 1.0) / 12.0 + (p[2] - 1.0) / 365.0 } else { f64::NAN }
 }
 
 fn c2_binary() -> PathBuf {
@@ -135,7 +182,324 @@ impl App {
             holdout: None,
             holdout_started: None,
             shot: std::env::var("C2_GUI_SCREENSHOT").ok().map(|p| (p, 0, false)),
+            tl: Timeline { input: "NAD".into(), window: "all".into(), max_shown: 40, ..Default::default() },
+            rank_rx: None,
+            rank: Vec::new(),
+            rank_filter: String::new(),
+            rank_sort: 0,
+            rank_error: String::new(),
         }
+    }
+
+    fn strongest_tab(&mut self, ui: &mut egui::Ui) {
+        ui.heading("Strongest lead-lag relationships");
+        if self.rank.is_empty() && self.rank_rx.is_none() && self.rank_error.is_empty() {
+            if let Some(store) = self.store.clone() {
+                let (tx, rx) = channel();
+                self.rank_rx = Some(rx);
+                let dir = self.dir();
+                std::thread::spawn(move || {
+                    let _ = tx.send(c2_census::analyze::stock_ranking(&store, &dir).map_err(|e| format!("{e:#}")));
+                });
+            }
+        }
+        if let Some(rx) = &self.rank_rx {
+            if let Ok(res) = rx.try_recv() {
+                match res {
+                    Ok(r) => self.rank = r,
+                    Err(e) => self.rank_error = e,
+                }
+                self.rank_rx = None;
+            }
+        }
+        if self.rank_rx.is_some() {
+            ui.horizontal(|ui| {
+                ui.spinner();
+                ui.label("reading the census (about a second)…");
+            });
+            return;
+        }
+        if !self.rank_error.is_empty() {
+            ui.colored_label(egui::Color32::LIGHT_RED, &self.rank_error);
+            return;
+        }
+        let with_sig = self.rank.iter().filter(|r| r.significant > 0).count();
+        const SORTS: [&str; 4] = [
+            "number x strength (sum of |r|)",
+            "significant relationships (sum of |r| over those)",
+            "strongest single correlation",
+            "most relationships",
+        ];
+        ui.horizontal(|ui| {
+            ui.label("Find:");
+            ui.add(egui::TextEdit::singleline(&mut self.rank_filter).desired_width(80.0));
+            ui.label("Sort by:");
+            egui::ComboBox::from_id_salt("rank_sort").selected_text(SORTS[self.rank_sort]).show_ui(ui, |ui| {
+                for (k, s) in SORTS.iter().enumerate() {
+                    ui.selectable_value(&mut self.rank_sort, k, *s);
+                }
+            });
+        });
+        ui.label(format!(
+            "Stocks with both many stored lead-lag correlations and strong ones rank highest (score = sum of |r|). Most stored correlations are within \
+             what chance produces when 176 billion pairs are tested; {with_sig} stocks have relationships that passed the significance test ('sig.'), and \
+             'windows' counts how many separate census windows those come from (1 usually means one event, such as the 2020 crash). Click a stock for its timeline."
+        ));
+        let filter = self.rank_filter.trim().to_uppercase();
+        let mut rows: Vec<&c2_census::analyze::RankRow> = self
+            .rank
+            .iter()
+            .filter(|r| filter.is_empty() || r.ticker.contains(&filter))
+            .filter(|r| self.rank_sort != 1 || r.significant > 0)
+            .collect();
+        match self.rank_sort {
+            1 => rows.sort_by(|a, b| b.sig_sum_abs_r.total_cmp(&a.sig_sum_abs_r)),
+            2 => rows.sort_by(|a, b| b.max_abs_r.total_cmp(&a.max_abs_r)),
+            3 => rows.sort_by(|a, b| b.stored.cmp(&a.stored)),
+            _ => rows.sort_by(|a, b| b.sum_abs_r.total_cmp(&a.sum_abs_r)),
+        }
+        let mut open: Option<(String, bool)> = None;
+        egui::ScrollArea::vertical().id_salt("rank").show(ui, |ui| {
+            egui::Grid::new("rank_grid").striped(true).show(ui, |ui| {
+                for h in ["#", "stock", "score", "relationships", "mean |r|", "max |r|", "sig.", "windows", "strongest relationship", "z"] {
+                    ui.strong(h);
+                }
+                ui.end_row();
+                for (k, r) in rows.iter().take(1000).enumerate() {
+                    ui.label(format!("{}", k + 1));
+                    if ui.link(&r.ticker).clicked() {
+                        open = Some((r.ticker.clone(), self.rank_sort == 1));
+                    }
+                    ui.label(format!("{:.0}", if self.rank_sort == 1 { r.sig_sum_abs_r } else { r.sum_abs_r }));
+                    ui.label(r.stored.to_string());
+                    ui.label(format!("{:.3}", r.mean_abs_r));
+                    ui.label(format!("{:.3}", r.max_abs_r));
+                    ui.label(if r.significant > 0 { format!("{} ({}↗ {}↙)", r.significant, r.leads, r.follows) } else { "0".into() });
+                    ui.label(if r.significant > 0 { r.windows.to_string() } else { String::new() });
+                    let rel = if r.best_leads {
+                        format!("{} -> {}  {:+} days, r {:+.3}", r.ticker, r.best_partner, r.best_lag, r.best_r)
+                    } else {
+                        format!("{} -> {}  {:+} days, r {:+.3}", r.best_partner, r.ticker, -(r.best_lag as i64), r.best_r)
+                    };
+                    ui.label(rel);
+                    ui.label(format!("{:.1}", r.best_z));
+                    ui.end_row();
+                }
+            });
+        });
+        if let Some((t, sig)) = open {
+            self.tl.input = t;
+            self.tl.significant_only = sig;
+            self.tl.window = "all".into();
+            self.tl.horizons = None;
+            self.load_timeline();
+            self.tab = Tab::Stock;
+        }
+    }
+
+    fn load_timeline(&mut self) {
+        let Some(store) = self.store.clone() else { return };
+        let (tx, rx) = channel();
+        self.tl.rx = Some(rx);
+        self.tl.error.clear();
+        let (dir, ticker) = (self.dir(), self.tl.input.trim().to_uppercase());
+        self.tl.ticker = ticker.clone();
+        self.tl.selected = None;
+        std::thread::spawn(move || {
+            let _ = tx.send(c2_census::analyze::stock_profile(&store, &dir, &ticker, false).map_err(|e| format!("{e:#}")));
+        });
+    }
+
+    /// Rows passing the timeline's filters; with "all windows", the strongest window of each
+    /// relationship.
+    fn timeline_rows(&self) -> Vec<ProfileRow> {
+        let tl = &self.tl;
+        let last = tl.rows.iter().map(|r| window_end_year(&r.window)).fold(f64::MIN, f64::max);
+        let longest = tl.rows.iter().map(|r| r.window.clone()).max_by_key(|w| {
+            let y = |s: &str| s.split('-').next().and_then(|v| v.parse::<i32>().ok()).unwrap_or(0);
+            let mut it = w.split("..");
+            y(it.nth(1).unwrap_or("")) - y(w.split("..").next().unwrap_or(""))
+        });
+        let mut out: Vec<ProfileRow> = tl
+            .rows
+            .iter()
+            .filter(|r| !tl.significant_only || r.significant)
+            .filter(|r| tl.horizons.is_none_or(|h| (r.h1, r.h2) == h))
+            .filter(|r| match tl.window.as_str() {
+                "all" => true,
+                "recent" => (window_end_year(&r.window) - last).abs() < 1e-6,
+                "full" => Some(&r.window) == longest.as_ref(),
+                w => r.window == w,
+            })
+            .cloned()
+            .collect();
+        if tl.window == "all" {
+            let mut best: std::collections::HashMap<RelKey, ProfileRow> = std::collections::HashMap::new();
+            for r in out {
+                let e = best.entry(key(&r)).or_insert_with(|| r.clone());
+                if r.z.abs() > e.z.abs() {
+                    *e = r;
+                }
+            }
+            out = best.into_values().collect();
+        }
+        out.sort_by(|a, b| b.z.abs().total_cmp(&a.z.abs()));
+        out.truncate(tl.max_shown);
+        out
+    }
+
+    fn stock_tab(&mut self, ui: &mut egui::Ui) {
+        ui.heading("Stock timeline");
+        ui.horizontal(|ui| {
+            ui.label("Ticker:");
+            let resp = ui.add(egui::TextEdit::singleline(&mut self.tl.input).desired_width(80.0));
+            let enter = resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
+            if (ui.add_enabled(self.tl.rx.is_none() && self.store.is_some(), egui::Button::new("Show")).clicked() || enter) && self.tl.rx.is_none() {
+                self.load_timeline();
+            }
+            if self.tl.rx.is_some() {
+                ui.spinner();
+            }
+        });
+        if let Some(rx) = &self.tl.rx {
+            if let Ok(res) = rx.try_recv() {
+                match res {
+                    Ok(rows) => self.tl.rows = rows,
+                    Err(e) => {
+                        self.tl.rows.clear();
+                        self.tl.error = e;
+                    }
+                }
+                self.tl.rx = None;
+            }
+        }
+        if !self.tl.error.is_empty() {
+            ui.colored_label(egui::Color32::LIGHT_RED, &self.tl.error);
+            return;
+        }
+        if self.tl.rows.is_empty() {
+            ui.label("Enter a ticker to see which stocks tend to move before it and after it, at what delay, and by how much.");
+            return;
+        }
+        let t = self.tl.ticker.clone();
+        let total_sig = self.tl.rows.iter().filter(|r| r.significant).count();
+        // Filters.
+        let mut windows: Vec<String> = self.tl.rows.iter().map(|r| r.window.clone()).collect();
+        windows.sort_by(|a, b| window_end_year(a).total_cmp(&window_end_year(b)));
+        windows.dedup();
+        let mut horizons: Vec<(u8, u8)> = self.tl.rows.iter().map(|r| (r.h1, r.h2)).collect();
+        horizons.sort();
+        horizons.dedup();
+        ui.horizontal_wrapped(|ui| {
+            ui.checkbox(&mut self.tl.significant_only, format!("significant only ({total_sig})"));
+            let wl = |w: &str| match w {
+                "all" => "all windows (strongest of each)".to_string(),
+                "recent" => "most recent windows".to_string(),
+                "full" => "full history 2005-2025".to_string(),
+                w => w.to_string(),
+            };
+            ui.label("Window:");
+            egui::ComboBox::from_id_salt("tl_window").selected_text(wl(&self.tl.window)).show_ui(ui, |ui| {
+                for w in ["all", "recent", "full"].iter().map(|s| s.to_string()).chain(windows.iter().cloned()) {
+                    let label = wl(&w);
+                    ui.selectable_value(&mut self.tl.window, w, label);
+                }
+            });
+            let hl = |h: Option<(u8, u8)>| h.map(|(a, b)| if a == 1 && b == 1 { "daily".into() } else { format!("{a}-day -> {b}-day") }).unwrap_or_else(|| "all horizons".into());
+            ui.label("Returns:");
+            egui::ComboBox::from_id_salt("tl_horizons").selected_text(hl(self.tl.horizons)).show_ui(ui, |ui| {
+                ui.selectable_value(&mut self.tl.horizons, None, hl(None));
+                for h in &horizons {
+                    ui.selectable_value(&mut self.tl.horizons, Some(*h), hl(Some(*h)));
+                }
+            });
+            ui.add(egui::Slider::new(&mut self.tl.max_shown, 5..=200).text("shown"));
+            ui.checkbox(&mut self.tl.show_r, "plot r instead of % move");
+        });
+        let rows = self.timeline_rows();
+        ui.label(format!(
+            "{t} at day 0. Left: stocks that move first (before {t}); right: stocks that move after {t}. Height: the follower's typical move beyond \
+             the market per 1% move of the leader. Orange = passed the significance test; grey = within what chance produces."
+        ));
+        let y_of = |r: &ProfileRow| if self.tl.show_r { r.r as f64 } else { r.move_per_pct.unwrap_or(r.r as f64) };
+        let x_of = |r: &ProfileRow| if r.leads { r.lag as f64 } else { -(r.lag as f64) };
+        let selected = self.tl.selected.clone();
+        let orange = egui::Color32::from_rgb(255, 160, 40);
+        let grey = egui::Color32::from_rgb(140, 150, 170);
+        Plot::new("timeline")
+            .height(330.0)
+            .x_axis_label(format!("trading days relative to {t}'s move  (negative: moves before {t}; positive: moves after)"))
+            .y_axis_label(if self.tl.show_r { "r".to_string() } else { "% move per 1%".to_string() })
+            .legend(Legend::default())
+            .show(ui, |p| {
+                p.vline(VLine::new(t.clone(), 0.0).color(egui::Color32::WHITE).width(2.0));
+                p.hline(HLine::new("no move", 0.0).color(egui::Color32::DARK_GRAY));
+                let pts = |sig: bool| -> Vec<[f64; 2]> { rows.iter().filter(|r| r.significant == sig).map(|r| [x_of(r), y_of(r)]).collect() };
+                p.points(Points::new("within chance", PlotPoints::from(pts(false))).color(grey).radius(4.0).shape(MarkerShape::Circle).filled(true));
+                p.points(Points::new("significant", PlotPoints::from(pts(true))).color(orange).radius(6.0).shape(MarkerShape::Diamond).filled(true));
+                for (k, r) in rows.iter().enumerate() {
+                    let is_sel = selected.as_ref() == Some(&key(r));
+                    if k < 25 || r.significant || is_sel {
+                        let c = if is_sel { egui::Color32::YELLOW } else if r.significant { orange } else { grey };
+                        let anchor_v = if y_of(r) >= 0.0 { egui::Align2::CENTER_BOTTOM } else { egui::Align2::CENTER_TOP };
+                        // Alternate sides so partners at the same lag don't print on top of each other.
+                        let anchor = if k % 2 == 0 { egui::Align2::LEFT_CENTER } else { egui::Align2::RIGHT_CENTER };
+                        let _ = anchor_v;
+                        p.text(Text::new("", PlotPoint::new(x_of(r), y_of(r)), format!(" {} {:+}d ", r.partner, x_of(r) as i64)).color(c).anchor(anchor));
+                    }
+                }
+                p.text(Text::new("", PlotPoint::new(0.0, 0.0), t.clone()).color(egui::Color32::WHITE).anchor(egui::Align2::LEFT_BOTTOM));
+            });
+        ui.columns(2, |cols| {
+            let ui = &mut cols[0];
+            ui.strong("Relationships (click one to see its history)");
+            egui::ScrollArea::vertical().id_salt("tl_rows").max_height(260.0).show(ui, |ui| {
+                egui::Grid::new("tl_grid").striped(true).show(ui, |ui| {
+                    for h in ["", "relationship", "days", "move/1%", "r", "z", "chance", "window"] {
+                        ui.strong(h);
+                    }
+                    ui.end_row();
+                    for r in &rows {
+                        let k = key(r);
+                        let sel = self.tl.selected.as_ref() == Some(&k);
+                        if ui.selectable_label(sel, if r.significant { "★" } else { "·" }).clicked() {
+                            self.tl.selected = Some(k.clone());
+                        }
+                        let arrow = if r.leads { format!("{t} -> {}", r.partner) } else { format!("{} -> {t}", r.partner) };
+                        if ui.selectable_label(sel, arrow).clicked() {
+                            self.tl.selected = Some(k);
+                        }
+                        ui.label(format!("{:+}", if r.leads { r.lag as i64 } else { -(r.lag as i64) }));
+                        ui.label(r.move_per_pct.map(|m| format!("{m:+.2}%")).unwrap_or_default());
+                        ui.label(format!("{:+.3}", r.r));
+                        ui.label(format!("{:+.1}", r.z));
+                        ui.label(format!("{:.0} at |z|≥{}", r.chance, r.chance_z));
+                        ui.label(&r.window);
+                        ui.end_row();
+                    }
+                });
+            });
+            let ui = &mut cols[1];
+            match &self.tl.selected {
+                None => {
+                    ui.label("Select a relationship to see it across every census window: a persistent relationship shows up again and again with the same sign; a one-off event shows up once.");
+                }
+                Some(k) => {
+                    let (partner, leads, lag, h1, h2) = k.clone();
+                    let hist: Vec<&ProfileRow> = self.tl.rows.iter().filter(|r| key(r) == *k).collect();
+                    let arrow = if leads { format!("{t} -> {partner}") } else { format!("{partner} -> {t}") };
+                    ui.strong(format!("{arrow}, {lag} days ({h1}-day -> {h2}-day returns): r in each census window where it was among the strongest"));
+                    let same_sign = hist.iter().filter(|r| r.r.signum() == hist[0].r.signum()).count();
+                    ui.label(format!("stored in {} window(s); same sign in {same_sign}. Windows where it is absent: it was not among that window's strongest pairs.", hist.len()));
+                    let mut pts: Vec<[f64; 2]> = hist.iter().map(|r| [window_end_year(&r.window), r.r as f64]).collect();
+                    pts.sort_by(|a, b| a[0].total_cmp(&b[0]));
+                    Plot::new("history").height(220.0).x_axis_label("census window end (year)").y_axis_label("r").show(ui, |p| {
+                        p.hline(HLine::new("0", 0.0).color(egui::Color32::DARK_GRAY));
+                        p.points(Points::new("r by window", PlotPoints::from(pts)).radius(5.0).color(egui::Color32::YELLOW).filled(true));
+                    });
+                }
+            }
+        });
     }
 
     fn dir(&self) -> PathBuf {
@@ -577,10 +941,23 @@ impl eframe::App for App {
                         self.start_holdout();
                     }
                     Ok("data") => self.tab = Tab::Data,
+                    Ok("strongest") => self.tab = Tab::Strongest,
+                    Ok("stock") => {
+                        self.tab = Tab::Stock;
+                        if let Ok(t) = std::env::var("C2_GUI_TICKER") {
+                            self.tl.input = t;
+                        }
+                        if let Ok(w) = std::env::var("C2_GUI_WINDOW") {
+                            self.tl.window = w;
+                        }
+                        self.tl.significant_only = std::env::var("C2_GUI_SIGNIFICANT").is_ok();
+                        self.load_timeline();
+                    }
                     _ => self.tab = Tab::Status,
                 }
             }
-            let ready = self.holdout_rx.is_none() && self.pairs_rx.is_none();
+            let ready = self.holdout_rx.is_none() && self.pairs_rx.is_none() && self.tl.rx.is_none() && self.rank_rx.is_none()
+                && !(self.tab == Tab::Strongest && self.rank.is_empty());
             if ready && frames > 30 && !requested {
                 ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(Default::default()));
                 self.shot = Some((prefix.clone(), frames + 1, true));
@@ -603,6 +980,8 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("tabs").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.selectable_value(&mut self.tab, Tab::Status, "Status");
+                ui.selectable_value(&mut self.tab, Tab::Strongest, "Strongest");
+                ui.selectable_value(&mut self.tab, Tab::Stock, "Stock timeline");
                 ui.selectable_value(&mut self.tab, Tab::Census, "Census");
                 ui.selectable_value(&mut self.tab, Tab::Holdout, "Holdout");
                 ui.selectable_value(&mut self.tab, Tab::Data, "Data");
@@ -610,6 +989,8 @@ impl eframe::App for App {
         });
         egui::CentralPanel::default().show(ctx, |ui| match self.tab {
             Tab::Status => self.status_tab(ui),
+            Tab::Strongest => self.strongest_tab(ui),
+            Tab::Stock => self.stock_tab(ui),
             Tab::Census => self.census_tab(ui),
             Tab::Holdout => self.holdout_tab(ui),
             Tab::Data => self.data_tab(ui),

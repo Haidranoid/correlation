@@ -136,6 +136,18 @@ enum CensusCmd {
         #[arg(long, default_value_t = 756)]
         peer_window: usize,
     },
+    /// A stock's lead-lag relationships: who it leads and follows, at what lag, and by how much.
+    Stock {
+        ticker: String,
+        #[arg(long, default_value = "main")]
+        name: String,
+        /// Only pairs that passed the false-discovery test.
+        #[arg(long)]
+        significant: bool,
+        /// Most rows per direction.
+        #[arg(long, default_value_t = 25)]
+        limit: usize,
+    },
     /// Replication test: do stored pairs keep their sign in the next non-overlapping window?
     Replicate {
         #[arg(long, default_value = "main")]
@@ -493,6 +505,35 @@ fn census(action: CensusCmd) -> Result<()> {
                 println!("{:<44} {:>12.0} {:>8.1}%   random guessers: median {:.0}, {:.1}% did at least as well (p = {:.3})",
                     format!("Picks, {label}"), s, 100.0 * (s / 10_000.0 - 1.0), med, 100.0 * share, share);
             }
+            Ok(())
+        }
+        CensusCmd::Stock { ticker, name, significant, limit } => {
+            let store = c2_data::Store::open(&store_dir())?;
+            let t = ticker.trim().to_uppercase();
+            let rows = c2_census::analyze::stock_profile(&store, &run::run_dir(&name), &t, significant)?;
+            let sig = rows.iter().filter(|r| r.significant).count();
+            if significant {
+                println!("{t}: {sig} lead-lag relationships passed the significance test across all census windows");
+            } else {
+                println!("{t}: {} stored lead-lag relationships across all census windows, {sig} passed the significance test", rows.len());
+            }
+            for leads in [true, false] {
+                let part: Vec<_> = rows.iter().filter(|r| r.leads == leads).take(limit).collect();
+                println!("\n{t} {} (strongest first):", if leads { "leads" } else { "follows" });
+                if part.is_empty() {
+                    println!("  none");
+                }
+                for r in part {
+                    let (a, b) = if leads { (t.as_str(), r.partner.as_str()) } else { (r.partner.as_str(), t.as_str()) };
+                    let size = r.move_per_pct.map(|m| format!("{b} {m:+.2}% per 1% {a} move")).unwrap_or_else(|| "size n/a".into());
+                    let horizons = if r.h1 == 1 && r.h2 == 1 { "daily".to_string() } else { format!("{a} {}d -> {b} {}d returns", r.h1, r.h2) };
+                    println!("  {a} -> {b:<6} {:>3} days: {size}; r {:+.3}, z {:+.1}; chance made {:.0} pairs with |z| >= {} in that window{}   [{}, {horizons}, {} obs]",
+                        r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.window, r.obs);
+                }
+            }
+            println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % move is that relationship in price terms:");
+            println!("the follower's typical move beyond the market per 1% move of the leader, in that window. 'Chance made N' is how many pairs at");
+            println!("least that strong appeared in the same window when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
             Ok(())
         }
         CensusCmd::Replicate { name } => {

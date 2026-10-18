@@ -489,3 +489,24 @@ By year, the 5-day reversal was strong from 2008 to 2021: long-only picks beat r
 | Windows, old vs new run | 146 → 148; first 77 identical. Ids of the longer windows shift by the added windows, so ids are run-specific; key windows by (length, start) for any future cross-run tracking |
 | `c2 forward-report` | 2025-03-31 census picks −0.30% vs SPY +0.28% (1 day); peer picks +4.21% vs SPY −0.87% (21 days); 2025-06-27 entries pending |
 | `c2 install-timer` | Prints both units (nothing installed) |
+
+## Follow-up: browsing relationships by stock (after the user returned)
+
+**`c2 census stock TICKER [--significant]`** lists every stored lagged relationship involving a stock, as leader or follower, strongest first. Each row shows:
+- the partner and lag in days
+- the move in price terms: the follower's typical move beyond the market per 1% move of the leader, i.e. r × the ratio of the two stocks' return volatilities, so it has the same sign as r
+- the census r and z
+- whether it passed the significance test
+- how many pairs at least that strong pure chance produced in the same window
+
+The chance column is what separates real relationships from the many large-but-random ones.
+
+**GUI:**
+- **Strongest** lists stocks ranked by number × strength (sum of |r| over their stored relationships), with relationship count, mean and max |r|, significant count (leads/follows), and how many separate windows the significant ones come from. A sort control switches to significant-only, strongest single correlation, or most relationships. Clicking a stock opens its timeline.
+- **Stock timeline** puts the stock at day 0, partners that move before it on the left and partners that move after it on the right, placed at their lag. Height is the % move per 1% (or r). Significant relationships are orange; chance-level ones grey. Filters: significant only, window (all / most recent / full history / any single window), return horizons, number shown. Selecting a relationship plots its r in every census window where it was stored, so persistent relationships and one-off events look different.
+
+**What the significant relationships turned out to be.** 895 stored pairs passed the significance test (444 stocks); noise passed the same test at a similar matrix-level rate (82 placebo firings vs 47 real matrices). They fall into two groups:
+- **Municipal-bond closed-end funds** (Nuveen NAD, NAC, NZF, NEA, NVG, filed by Stooq as NYSE stocks) leading each other by 1 day over the full 2005–2025 history. This is persistent: thinly traded funds with similar holdings, catching up a day late. Real, but hard to trade.
+- **Clusters from the 2020 crash windows,** mostly at a 13-day lag: regional banks (BOH 110 pairs, COLB, CBSH, FHB) and utilities (SO, AWR, ATO, EVRG, CMS). The crash came in two waves about 13 trading days apart (late February and March 9–16, 2020). That really isn't chance within those windows, but it is a one-off event, not a repeatable relationship.
+
+**The number × strength ranking is led by very volatile stocks** (SAVA, RHP, TXT…), largely through long-horizon windows with few observations (33–50), where chance alone reaches |r| 0.5–0.8.
