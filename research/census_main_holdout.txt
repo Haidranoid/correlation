@@ -1,0 +1,12 @@
+Holdout 2024-06-28 .. 2025-06-27 (250 trading days), 1s
+Predictions from 81900 stored pairs (daily targets, lags >= 1) in 4 census windows that ended before the holdout; 2217 stocks can be predicted
+Picks beat the market next day: 49.9% of 4996 picks (coin flip 50%)
+Daily rank correlation of prediction vs outcome (IC): mean +0.0009, t = +0.57
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          11361     13.6%
+Buy and hold QQQ (Nasdaq-100)                       11432     14.3%
+Buy and hold all 2217 candidates                    10826      8.3%
+Census picks, no trading costs                      12328     23.3%   random guessers: median 10771, 10.1% did at least as well (p = 0.101)
+Census picks, 5 bps per trade                       10817      8.2%   random guessers: median 9454, 10.3% did at least as well (p = 0.103)
+Census picks, 20 bps per trade                       7303    -27.0%   random guessers: median 6394, 10.6% did at least as well (p = 0.106)

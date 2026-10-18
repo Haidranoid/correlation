@@ -1,0 +1,103 @@
+Replication in the next non-overlapping window (1s). 'Chance' rows are pairs picked from sign-flip null matrices.
+  h1   h2              lag    kind      pairs   same sign    mean |r| then   mean r next*
+   1    1  0 (same period)    real      24000      100.0%           0.8250         0.7843
+   1    1  0 (same period)  chance      12000       49.9%           0.2444        -0.0012
+   1    1           1 step    real      24000       52.7%           0.2311         0.0042
+   1    1           1 step  chance      12000       49.9%           0.2350        -0.0002
+   1    1        2-5 steps    real      96000       50.5%           0.2222         0.0008
+   1    1        2-5 steps  chance      48000       50.0%           0.2304         0.0002
+   1    1        21+ steps    real    1032000       50.2%           0.2124         0.0002
+   1    1        21+ steps  chance     516000       50.0%           0.2209         0.0001
+   1    1       6-20 steps    real     360000       50.2%           0.2121         0.0004
+   1    1       6-20 steps  chance     180000       50.2%           0.2202         0.0002
+   5    1  0 (same period)    real      24000       86.4%           0.5318         0.2130
+   5    1  0 (same period)  chance      12000       49.8%           0.4762        -0.0012
+   5    1           1 step    real      24000       50.0%           0.4595         0.0002
+   5    1           1 step  chance      12000       50.0%           0.4739         0.0010
+   5    1        2-5 steps    real      96000       50.2%           0.4538         0.0008
+   5    1        2-5 steps  chance      48000       50.0%           0.4693        -0.0005
+   5    1        21+ steps    real    1032000       50.1%           0.4520         0.0001
+   5    1        21+ steps  chance     516000       50.0%           0.4669         0.0001
+   5    1       6-20 steps    real     360000       50.0%           0.4458         0.0001
+   5    1       6-20 steps  chance     180000       50.1%           0.4604         0.0003
+   5    5  0 (same period)    real      24000      100.0%           0.8556         0.7886
+   5    5  0 (same period)  chance      12000       48.5%           0.4770        -0.0104
+   5    5           1 step    real      24000       50.5%           0.4478         0.0024
+   5    5           1 step  chance      12000       50.9%           0.4607         0.0012
+   5    5        2-5 steps    real      96000       50.4%           0.4391         0.0012
+   5    5        2-5 steps  chance      48000       50.5%           0.4519         0.0012
+   5    5        21+ steps    real      83000       49.9%           0.3851         0.0003
+   5    5        21+ steps  chance      41500       49.9%           0.3979         0.0003
+   5    5       6-20 steps    real     360000       50.3%           0.4573         0.0006
+   5    5       6-20 steps  chance     180000       50.2%           0.4708         0.0004
+  10    1  0 (same period)    real      16600       63.5%           0.5388         0.0605
+  10    1  0 (same period)  chance       8300       51.0%           0.5381         0.0036
+  10    1           1 step    real      16600       49.7%           0.5208        -0.0002
+  10    1           1 step  chance       8300       49.9%           0.5362         0.0009
+  10    1        2-5 steps    real      66400       49.5%           0.5162        -0.0008
+  10    1        2-5 steps  chance      33200       49.9%           0.5324         0.0001
+  10    1        21+ steps    real     713800       50.0%           0.5096        -0.0000
+  10    1        21+ steps  chance     356900       50.0%           0.5258         0.0001
+  10    1       6-20 steps    real     249000       50.1%           0.5090         0.0003
+  10    1       6-20 steps  chance     124500       50.0%           0.5246        -0.0006
+  10    5  0 (same period)    real      16600       98.0%           0.6820         0.4767
+  10    5  0 (same period)  chance       8300       51.3%           0.5387         0.0063
+  10    5           1 step    real      16600       50.8%           0.5129         0.0022
+  10    5           1 step  chance       8300       50.2%           0.5258        -0.0010
+  10    5        2-5 steps    real      66400       50.3%           0.5022         0.0010
+  10    5        2-5 steps  chance      33200       49.8%           0.5168        -0.0013
+  10    5        21+ steps    real      83000       50.3%           0.5265         0.0011
+  10    5        21+ steps  chance      41500       50.1%           0.5415        -0.0004
+  10    5       6-20 steps    real     249000       50.3%           0.5095         0.0006
+  10    5       6-20 steps  chance     124500       49.9%           0.5245        -0.0002
+  10   10  0 (same period)    real      16600       99.9%           0.8657         0.7909
+  10   10  0 (same period)  chance       8300       49.7%           0.5375        -0.0007
+  10   10           1 step    real      16600       50.4%           0.5075         0.0019
+  10   10           1 step  chance       8300       49.9%           0.5200         0.0003
+  10   10        2-5 steps    real      66400       50.3%           0.5002         0.0008
+  10   10        2-5 steps  chance      33200       49.9%           0.5147        -0.0002
+  10   10        21+ steps    real      50000       49.9%           0.4875         0.0004
+  10   10        21+ steps  chance      25000       50.5%           0.5009         0.0012
+  10   10       6-20 steps    real     249000       50.1%           0.5315         0.0009
+  10   10       6-20 steps  chance     124500       50.1%           0.5460         0.0002
+  21    1  0 (same period)    real      10000       51.0%           0.6192         0.0052
+  21    1  0 (same period)  chance       5000       48.8%           0.6324        -0.0042
+  21    1           1 step    real      10000       51.2%           0.6214         0.0074
+  21    1           1 step  chance       5000       50.0%           0.6383        -0.0018
+  21    1        2-5 steps    real      40000       50.6%           0.6224         0.0033
+  21    1        2-5 steps  chance      20000       50.1%           0.6391         0.0012
+  21    1        21+ steps    real     430000       50.3%           0.6141         0.0009
+  21    1        21+ steps  chance     215000       50.1%           0.6318         0.0004
+  21    1       6-20 steps    real     150000       49.9%           0.6141        -0.0002
+  21    1       6-20 steps  chance      75000       49.6%           0.6316        -0.0014
+  21    5  0 (same period)    real      10000       75.0%           0.6498         0.1574
+  21    5  0 (same period)  chance       5000       49.1%           0.6294        -0.0002
+  21    5           1 step    real      10000       50.6%           0.6163         0.0023
+  21    5           1 step  chance       5000       49.8%           0.6332        -0.0028
+  21    5        2-5 steps    real      40000       49.8%           0.6089        -0.0008
+  21    5        2-5 steps  chance      20000       49.5%           0.6246        -0.0019
+  21    5        21+ steps    real      50000       49.7%           0.6254        -0.0020
+  21    5        21+ steps  chance      25000       50.4%           0.6428         0.0013
+  21    5       6-20 steps    real     150000       50.7%           0.6148         0.0029
+  21    5       6-20 steps  chance      75000       49.6%           0.6314        -0.0006
+  21   10  0 (same period)    real      10000       92.0%           0.7189         0.4054
+  21   10  0 (same period)  chance       5000       50.1%           0.6290         0.0019
+  21   10           1 step    real      10000       48.9%           0.6107        -0.0028
+  21   10           1 step  chance       5000       48.3%           0.6277        -0.0028
+  21   10        2-5 steps    real      40000       49.4%           0.6072        -0.0020
+  21   10        2-5 steps  chance      20000       49.6%           0.6219        -0.0006
+  21   10        21+ steps    real      21000       49.8%           0.5600        -0.0012
+  21   10        21+ steps  chance      10500       50.7%           0.5748         0.0003
+  21   10       6-20 steps    real     103600       49.2%           0.5959        -0.0015
+  21   10       6-20 steps  chance      51800       50.3%           0.6119         0.0013
+  21   21  0 (same period)    real      10000       99.7%           0.8845         0.7875
+  21   21  0 (same period)  chance       5000       49.3%           0.6347        -0.0045
+  21   21           1 step    real      10000       49.1%           0.6056        -0.0019
+  21   21           1 step  chance       5000       51.4%           0.6197         0.0066
+  21   21        2-5 steps    real      40000       49.6%           0.6136        -0.0009
+  21   21        2-5 steps  chance      20000       50.5%           0.6274         0.0027
+  21   21        21+ steps    real      16800       49.8%           0.6235        -0.0029
+  21   21        21+ steps  chance       8400       50.3%           0.6375         0.0007
+  21   21       6-20 steps    real      68800       50.0%           0.5811         0.0004
+  21   21       6-20 steps  chance      34400       50.5%           0.5942         0.0013
+* sign(r then) x r next: positive means the relationship persisted in its original direction
