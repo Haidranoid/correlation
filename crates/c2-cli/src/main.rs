@@ -95,7 +95,8 @@ enum CensusCmd {
         /// turn (one-year holdouts ending at the last data day), and print a table by year.
         #[arg(long)]
         walk_forward: bool,
-        /// Signal family: `census` (stored lead-lag pairs) or `peers` (peer momentum).
+        /// Signal family: `census` (stored lead-lag pairs; the target horizon equals --rebalance),
+        /// `peers` (peer momentum) or `reversal` (own-stock short-term reversal, a positive control).
         #[arg(long, default_value = "census")]
         family: String,
         /// Trading days between rebalances (default: 1 for census pairs, 21 for peers).
@@ -393,9 +394,10 @@ fn census(action: CensusCmd) -> Result<()> {
             let fam = match family.as_str() {
                 "census" => c2_census::holdout::Family::CensusPairs,
                 "peers" => c2_census::holdout::Family::PeerMomentum { peers, lookback, window: peer_window },
-                other => anyhow::bail!("unknown family {other} (census or peers)"),
+                "reversal" => c2_census::holdout::Family::Reversal { lookback, window: peer_window },
+                other => anyhow::bail!("unknown family {other} (census, peers or reversal)"),
             };
-            let rebalance = rebalance.unwrap_or(if family == "peers" { 21 } else { 1 });
+            let rebalance = rebalance.unwrap_or(match family.as_str() { "peers" => 21, "reversal" => lookback, _ => 1 });
             let store = c2_data::Store::open(&store_dir())?;
             let dir = run::run_dir(&name);
             let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;

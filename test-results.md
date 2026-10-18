@@ -424,3 +424,28 @@ Hit rate 49.9% of 4,996 picks; daily rank IC +0.0009 (t = 0.57).
 **Self-check mode:** `C2_GUI_SCREENSHOT=<prefix> C2_GUI_TAB=status|census|holdout|data [C2_GUI_TICKER=AAPL] c2-gui` opens the tab, waits for its data, saves `<prefix>.rgba` and exits. `research/rgba_to_png.py <prefix>` converts the capture to PNG.
 
 **Also fixed:** census log times were written as UTC−4 while this machine is UTC−5, so `run.log` times from today's runs are one hour ahead of local time. Log lines now use the system's offset.
+
+## Closing two gaps: longer target horizons, and a positive control for the money test
+
+**1. Census pairs with weekly and monthly targets.** The first holdouts traded only daily-target pairs. The census also stored target horizons of 5, 10, 21 and 63 days, so I ran the same walk-forward with the target horizon equal to the holding period (`--rebalance 5` and `--rebalance 21`).
+- Timing: the target's return over (d, d+h₂] is predicted from the leader's move ending at d + h₂ − lag. lag ≥ h₂, so that is at or before d.
+- Pre-declared, one run each, no tuning. Files: `research/walkforward_census_5.txt`, `walkforward_census_21.txt`.
+
+| Target horizon | Years beating random at p < 0.1 | Rank IC (residual) | Long-short in actual returns |
+|---|---|---|---|
+| 1 day | 2 of 19 (chance ≈ 1.9) | z = 4.15 | 0.45 bps/day, z = 0.92 |
+| 5 days | 2 of 19 | z = 3.29 | −0.44 bps/day, z = −1.11 |
+| 21 days | 1 of 17 | z = 4.55 | 0.21 bps/day, z = 0.68 |
+
+Null at every holding period in actual returns. The residual rank IC is consistently positive at every horizon. It is the same small effect discussed above (large→small diffusion, or leftover market exposure), and it never turns into money.
+
+**2. A positive control for the money side.** Until now the holdout harness had only ever said "no", so a broken harness would have produced the same verdict. Own-stock short-term reversal (score = minus the stock's own log return over the last L days, the broadest known short-horizon anomaly) is the control (`--family reversal`).
+
+| Control | Years beating random at p < 0.1 | Rank IC | Long-short in actual returns |
+|---|---|---|---|
+| **5-day reversal, weekly** | **8 of 18** (chance ≈ 1.8) | positive 18/18, **z = 8.96** | **4.41 bps/day gross, positive 16/18, z = 2.94** |
+| 21-day reversal, monthly | 4 of 18 | positive 18/18, z = 13.04 | 0.91 bps/day, z = 1.15 |
+
+By year, the 5-day reversal was strong from 2008 to 2021: long-only picks beat random at p ≈ 0.000 in seven of those years (e.g. +64.4% vs +28.0% random in 2012–13). It **has faded since 2021**: long-only picks lost money in each year since, while the long-short stayed slightly positive. That is what published anomalies typically do.
+
+**What this means for the verdict.** The same harness, data and random guessers that find nothing in the census clearly detect a known effect, and track it fading. **The census's null result is not a blind spot of the test.**

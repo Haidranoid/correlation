@@ -22,6 +22,10 @@ use crate::run::{FLAG_NULL, Plan};
 pub enum Family {
     /// Family A: stored census lead-lag pairs (one-day targets).
     CensusPairs,
+    /// Positive control (family E): own-stock short-term reversal. Score = minus the stock's own
+    /// log return over the last `lookback` days. A broad, documented anomaly; if the harness can
+    /// find nothing here either, its other null results say less.
+    Reversal { lookback: usize, window: usize },
     /// Family C: peer ("connected-firm") momentum. Each stock's peers are its `peers` strongest
     /// same-day correlates over the `window` trading days before the holdout (the census showed
     /// these persist); its score is the peers' mean log return over the last `lookback` days.
@@ -123,6 +127,7 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
     let (candidates, scores, pairs_used, windows_used): (Vec<usize>, Vec<Option<Vec<f64>>>, usize, usize) = match opt.family {
         Family::CensusPairs => census_scores(plan, dir, opt, h0, t, &days, rebalance)?,
         Family::PeerMomentum { peers, lookback, window } => peer_scores(var, h0, t, &days, rebalance, peers, lookback, window),
+        Family::Reversal { lookback, window } => reversal_scores(var, h0, t, &days, rebalance, lookback, window),
     };
     let nc = candidates.len();
     anyhow::ensure!(nc >= 2 * opt.picks, "only {nc} stocks can be picked (history before the holdout too short?)");
@@ -375,9 +380,11 @@ fn census_scores(plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, da
         }
     }
     let windows_used = use_window.iter().filter(|&&u| u).count();
-    // Real stored pairs with a one-day target horizon and a predictive lag.
+    // Real stored pairs whose target horizon equals the holding period, at predictive lags.
+    let h2 = rebalance;
+    anyhow::ensure!(plan.cfg.horizons.contains(&h2), "the census has no target horizon of {h2} days (rebalance must be one of {:?})", plan.cfg.horizons);
     let mut pairs = Vec::new();
-    for task in plan.tasks.iter().filter(|t| t.h2 == 1 && t.length > 0) {
+    for task in plan.tasks.iter().filter(|t| t.h2 == h2 && t.length > 0) {
         let path = dir.join(format!("tasks/t{}.rec", task.id));
         for r in read_records(&path).with_context(|| format!("task {}", task.id))? {
             if r.flags & FLAG_NULL != 0 || r.lag == 0 || !use_window[r.window as usize] {
@@ -419,8 +426,10 @@ fn census_scores(plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, da
         .map(|(k, &d)| {
             (k % rebalance == 0).then(|| {
                 let mut s = vec![0.0; nc];
+                // The target's h2-day return starting at d+1 is (g + lag - h2, g + lag] with
+                // g = d + h2 - lag; lag >= h2, so the leader's move ends at or before d.
                 for p in &pairs {
-                    let g = d + 1 - p.lag;
+                    let g = d + h2 - p.lag;
                     if g + 1 >= p.h1 {
                         s[cand_pos[&p.target]] += p.r * leader_move(p.leader, g, p.h1);
                     }
@@ -438,24 +447,7 @@ fn census_scores(plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, da
 fn peer_scores(var: &crate::variable::Variable, h0: usize, t: usize, days: &[usize], rebalance: usize, peers: usize, lookback: usize, window: usize) -> Scores {
     let vt = var.t;
     let w0 = h0.saturating_sub(window);
-    let tail = (h0 - w0).min(crate::variable::LOOKBACK);
-    // Universe: >= 90% of window days with a value, median price >= $5 and dollar volume >= $5M
-    // over the last year before the holdout.
-    let candidates: Vec<usize> = (0..var.n)
-        .filter(|&j| {
-            let v = &var.v[j * vt + w0..j * vt + h0];
-            if v.iter().filter(|x| x.is_finite()).count() * 10 < (h0 - w0) * 9 {
-                return false;
-            }
-            let mut pc: Vec<f32> = var.close[j * vt + h0 - tail..j * vt + h0].iter().copied().filter(|x| x.is_finite()).collect();
-            let mut pv: Vec<f32> = var.dollar_volume[j * vt + h0 - tail..j * vt + h0].iter().copied().filter(|x| x.is_finite()).collect();
-            let med = |v: &mut Vec<f32>| {
-                let mid = v.len() / 2;
-                if v.is_empty() { 0.0 } else { *v.select_nth_unstable_by(mid, |a, b| a.total_cmp(b)).1 }
-            };
-            med(&mut pc) >= crate::variable::MIN_PRICE && med(&mut pv) >= crate::variable::MIN_DOLLAR_VOLUME
-        })
-        .collect();
+    let candidates = liquid_universe(var, h0, window);
     let (n, w) = (candidates.len(), h0 - w0);
     // Standardized panel (missing = 0) and the same-day correlation matrix.
     let mut z = vec![0f32; w * n];
@@ -501,4 +493,53 @@ fn peer_scores(var: &crate::variable::Variable, h0: usize, t: usize, days: &[usi
         })
         .collect();
     (candidates, scores, n * peers, 1)
+}
+
+/// Stocks with >= 90% of days with a census value over the `window` days before `h0`, and median
+/// price >= $5 and median dollar volume >= $5M over the last year before it.
+fn liquid_universe(var: &crate::variable::Variable, h0: usize, window: usize) -> Vec<usize> {
+    let vt = var.t;
+    let w0 = h0.saturating_sub(window);
+    let tail = (h0 - w0).min(crate::variable::LOOKBACK);
+    (0..var.n)
+        .filter(|&j| {
+            let v = &var.v[j * vt + w0..j * vt + h0];
+            if h0 == w0 || v.iter().filter(|x| x.is_finite()).count() * 10 < (h0 - w0) * 9 {
+                return false;
+            }
+            let mut pc: Vec<f32> = var.close[j * vt + h0 - tail..j * vt + h0].iter().copied().filter(|x| x.is_finite()).collect();
+            let mut pv: Vec<f32> = var.dollar_volume[j * vt + h0 - tail..j * vt + h0].iter().copied().filter(|x| x.is_finite()).collect();
+            let med = |v: &mut Vec<f32>| {
+                let mid = v.len() / 2;
+                if v.is_empty() { 0.0 } else { *v.select_nth_unstable_by(mid, |a, b| a.total_cmp(b)).1 }
+            };
+            med(&mut pc) >= crate::variable::MIN_PRICE && med(&mut pv) >= crate::variable::MIN_DOLLAR_VOLUME
+        })
+        .collect()
+}
+
+/// Positive-control scores: minus each stock's own log return over the last `lookback` days.
+fn reversal_scores(var: &crate::variable::Variable, h0: usize, t: usize, days: &[usize], rebalance: usize, lookback: usize, window: usize) -> Scores {
+    let vt = var.t;
+    let candidates = liquid_universe(var, h0, window);
+    let scores = days
+        .par_iter()
+        .enumerate()
+        .map(|(k, &d)| {
+            (k % rebalance == 0 && d < t).then(|| {
+                candidates
+                    .iter()
+                    .map(|&j| match d.checked_sub(lookback) {
+                        Some(a) => {
+                            let (p0, p1) = (var.close[j * vt + a], var.close[j * vt + d]);
+                            if p0.is_finite() && p1.is_finite() && p0 > 0.0 { -((p1 as f64 / p0 as f64).ln()) } else { 0.0 }
+                        }
+                        None => 0.0,
+                    })
+                    .collect()
+            })
+        })
+        .collect();
+    let n = candidates.len();
+    (candidates, scores, n, 0)
 }
