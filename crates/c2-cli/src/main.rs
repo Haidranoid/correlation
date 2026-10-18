@@ -136,6 +136,24 @@ enum CensusCmd {
         #[arg(long, default_value_t = 756)]
         peer_window: usize,
     },
+    /// Forecast a stock's price path from its leaders' recent moves.
+    Forecast {
+        ticker: String,
+        #[arg(long, default_value = "main")]
+        name: String,
+        /// Forecast as of this day (default: the last day of data). A past date shows what happened.
+        #[arg(long)]
+        as_of: Option<String>,
+        /// Use only relationships that passed the significance test.
+        #[arg(long)]
+        significant: bool,
+        /// Trading days ahead.
+        #[arg(long, default_value_t = 21)]
+        days: usize,
+        /// Use only relationships from census windows that ended within this many years.
+        #[arg(long)]
+        max_age_years: Option<f64>,
+    },
     /// A stock's lead-lag relationships: who it leads and follows, at what lag, and by how much.
     Stock {
         ticker: String,
@@ -504,6 +522,38 @@ fn census(action: CensusCmd) -> Result<()> {
                 let label = if *c == 0.0 { "no trading costs".to_string() } else { format!("{c} bps per trade") };
                 println!("{:<44} {:>12.0} {:>8.1}%   random guessers: median {:.0}, {:.1}% did at least as well (p = {:.3})",
                     format!("Picks, {label}"), s, 100.0 * (s / 10_000.0 - 1.0), med, 100.0 * share, share);
+            }
+            Ok(())
+        }
+        CensusCmd::Forecast { ticker, name, as_of, significant, days, max_age_years } => {
+            let store = c2_data::Store::open(&store_dir())?;
+            let t = ticker.trim().to_uppercase();
+            let as_of = match as_of { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
+            let f = c2_census::forecast::forecast(&store, &run::run_dir(&name), &t, as_of, &c2_census::forecast::Options {
+                significant_only: significant,
+                horizon: days,
+                max_age: max_age_years.map(|y| (y * 252.0) as usize),
+            })?;
+            println!("{t} as of {}: ${:.2}; {} relationships where {t} follows another stock{}; typical daily move {:.2}%", c2_data::date_string(f.as_of), f.last_price, f.relationships,
+                if significant { " (significant only)" } else { "" }, 100.0 * f.daily_sd);
+            println!("{:>5} {:>11} {:>12} {:>11} {:>12} {:>9}", "day", "predicted", "predicted $", "actual", "actual $", "covering");
+            for (j, (p, a)) in f.predicted_pct.iter().zip(&f.actual_pct).enumerate() {
+                if j < 5 || (j + 1) % 5 == 0 || j + 1 == f.predicted_pct.len() {
+                    let ad = a.map(|v| format!("{v:+.2}%")).unwrap_or_default();
+                    let ap = a.map(|v| format!("${:.2}", f.last_price * (1.0 + v / 100.0))).unwrap_or_default();
+                    println!("{:>5} {:>10.2}% {:>12} {:>11} {:>12} {:>9}", j + 1, p, format!("${:.2}", f.last_price * (1.0 + p / 100.0)), ad, ap, f.covering[j]);
+                }
+            }
+            println!("\nLargest shares of the forecast at day {}:", f.predicted_pct.len());
+            for c in f.contributions.iter().take(10) {
+                println!("  {:<6} leads by {:>3}d ({}d -> {}d returns, r {:+.3}{}): its move {:+.2}% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
+                    c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader_move_pct, c.implied_pct, c.share_pct, c.window);
+            }
+            match &f.skill {
+                Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, {}-day horizon): direction right {:.1}% of the time; \
+                    predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
+                    s.forecasts, s.horizon, 100.0 * s.hit_rate, s.corr, s.slope, s.mean_abs_predicted_pct, s.mean_abs_actual_pct),
+                None => println!("\nTrack record: too few past forecasts to judge."),
             }
             Ok(())
         }

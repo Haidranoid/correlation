@@ -503,10 +503,39 @@ The chance column is what separates real relationships from the many large-but-r
 
 **GUI:**
 - **Strongest** lists stocks ranked by number × strength (sum of |r| over their stored relationships), with relationship count, mean and max |r|, significant count (leads/follows), and how many separate windows the significant ones come from. A sort control switches to significant-only, strongest single correlation, or most relationships. Clicking a stock opens its timeline.
-- **Stock timeline** puts the stock at day 0, partners that move before it on the left and partners that move after it on the right, placed at their lag. Height is the % move per 1% (or r). Significant relationships are orange; chance-level ones grey. Filters: significant only, window (all / most recent / full history / any single window), return horizons, number shown. Selecting a relationship plots its r in every census window where it was stored, so persistent relationships and one-off events look different.
+- **Stock timeline** is drawn on a days-ahead axis only (the first version put leaders at negative days, which read as "correlation in the past"). A switch picks the direction: *what moves this stock later* (other stocks move today, this one follows k days later; these feed the forecast) or *what this stock moves later*. Partners are placed at their lag. Height is the % move per 1% (or r). Significant relationships are orange; chance-level ones grey. Filters: significant only, window (all / most recent / full history / any single window), return horizons, number shown. Selecting a relationship plots its r in every census window where it was stored, so persistent relationships and one-off events look different.
 
 **What the significant relationships turned out to be.** 895 stored pairs passed the significance test (444 stocks); noise passed the same test at a similar matrix-level rate (82 placebo firings vs 47 real matrices). They fall into two groups:
 - **Municipal-bond closed-end funds** (Nuveen NAD, NAC, NZF, NEA, NVG, filed by Stooq as NYSE stocks) leading each other by 1 day over the full 2005–2025 history. This is persistent: thinly traded funds with similar holdings, catching up a day late. Real, but hard to trade.
 - **Clusters from the 2020 crash windows,** mostly at a 13-day lag: regional banks (BOH 110 pairs, COLB, CBSH, FHB) and utilities (SO, AWR, ATO, EVRG, CMS). The crash came in two waves about 13 trading days apart (late February and March 9–16, 2020). That really isn't chance within those windows, but it is a one-off event, not a repeatable relationship.
 
 **The number × strength ranking is led by very volatile stocks** (SAVA, RHP, TXT…), largely through long-horizon windows with few observations (33–50), where chance alone reaches |r| 0.5–0.8.
+
+## Follow-up: forecasting a stock's price from its relationships (`c2 census forecast`, GUI Forecast tab)
+
+**Method.** As of a chosen day, take every stored relationship where another stock (the leader) moves first and the selected stock follows `lag` days later. Use the most recent census window that had ended by that day, optionally only windows from the last N years.
+- The leader's actual moves so far, over its h1-day return horizon, are scaled by beta = r × (follower volatility ÷ leader volatility) in that window. That gives a predicted h2-day move for the follower, landing `lag` days after the leader's move, spread evenly over its h2 days.
+- Each relationship covering a future day is a separate estimate of that day's return, so the forecast for the day is their **mean**. The means are accumulated into a price path.
+- The first draft **summed** the relationships and produced paths like −82% in a month for AAPL. Summing N estimates of the same thing multiplies the size by about N.
+
+**Track record built in.** The same forecast is remade every 21 trading days in the past, each time using only windows that had ended by then, and compared with what actually happened 21 days later. The CLI and the GUI both show it.
+
+**Results:**
+
+| | direction right | predicted vs actual correlation | typical size predicted vs actual |
+|---|---|---|---|
+| AAPL (200 forecasts) | 55.0% | +0.08 | 0.26% vs 6.30% |
+| BOH (206 forecasts) | 53.4% | +0.13 | 0.20% vs 5.94% |
+| NAD (95 forecasts) | 51.6% | −0.17 | 0.12% vs 2.41% |
+| 61 large caps pooled (13,700 forecasts) | 50.2% | mean per-stock +0.005 (sd 0.09); positive for 32 of 61 | 0.17% vs 5.64% |
+| same, windows from the last 3 years only | 49.6% | 0.000 | 0.23% vs 5.63% |
+
+The forecast line comes out nearly flat: hundreds to thousands of relationships per stock disagree and mostly cancel. The little that remains has no measurable skill. That matches the census (real ≈ chance), the replication test (50–53% same sign) and the holdout.
+
+**GUI Forecast tab:**
+- Controls: ticker (shared with the timeline tab), as-of date with month/year steps, days ahead (5–252), significant-only, window age, and share price or value of $X.
+- Plot: the forecast path, the actual path when the as-of date is in the past, and the stock's typical ±1 sd range for scale.
+- Below the plot:
+  - a bar chart of when the predicted moves land, with the number of relationships covering each day
+  - the track-record line, coloured yellow when it is within what luck produces
+  - the relationships with the largest share of the forecast
