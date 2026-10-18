@@ -607,7 +607,7 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             println!("\nLargest shares of the forecast at day {}:", f.predicted_pct.len());
             for c in f.contributions.iter().take(10) {
-                println!("  {:<6} leads by {:>3}d ({}d -> {}d returns, r {:+.3}{}): its move {:+.2}% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
+                println!("  {:<6} offset {:>3}d (moves {}d -> {}d, r {:+.3}{}): its move {:+.2}% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
                     c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader_move_pct, c.implied_pct, c.share_pct, c.window);
             }
             match &f.skill {

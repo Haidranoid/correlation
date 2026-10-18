@@ -440,7 +440,7 @@ impl App {
         if self.rank_rx.is_some() {
             ui.horizontal(|ui| {
                 ui.spinner();
-                ui.label("reading the census (about a second)…");
+                ui.label("reading the census (a second or two)…");
             });
             return;
         }
