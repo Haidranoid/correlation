@@ -69,6 +69,9 @@ pub struct Report {
     pub ls_sharpe: f64,
     pub ls_t: f64,
     pub ls_turnover: f64,
+    /// Daily account values for plotting: (day, picks at the first cost level, SPY, QQQ,
+    /// random guessers' median path at that cost).
+    pub curve: Vec<(i32, f64, f64, f64, f64)>,
 }
 
 struct Pair {
@@ -168,7 +171,25 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         value
     };
 
+    let path = |chosen: &dyn Fn(usize) -> Vec<usize>, cost: f64| -> Vec<f64> {
+        let (mut value, mut prev): (f64, Vec<usize>) = (opt.cash, Vec::new());
+        let mut out = Vec::with_capacity(days.len());
+        for (k, &d) in days.iter().enumerate() {
+            let now = chosen(k);
+            let w = 1.0 / opt.picks as f64;
+            let gross: f64 = now.iter().map(|&c| w * ret(candidates[c], d)).sum();
+            let kept = now.iter().filter(|c| prev.contains(c)).count();
+            let turnover = w * ((now.len() - kept) + (prev.len() - kept)) as f64;
+            value *= 1.0 + gross - turnover * cost / 1e4;
+            prev = now;
+            out.push(value);
+        }
+        out
+    };
+
     let mut strategy = Vec::new();
+    let mut median_path: Vec<f64> = Vec::new();
+    let mut paths_for_median: Vec<Vec<f64>> = Vec::new();
     for &c in &opt.costs_bps {
         let s = simulate(&|k| picks[k].clone(), c);
         // Random guessers with the strategy's turnover: each day they hold as many stocks as the
@@ -197,9 +218,30 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
                     }
                     chosen.push(set.clone());
                 }
-                simulate(&|k| chosen[k].clone(), c)
+                path(&|k| chosen[k].clone(), c)
+            })
+            .collect::<Vec<Vec<f64>>>()
+            .into_iter()
+            .enumerate()
+            .map(|(run, p)| {
+                if median_path.is_empty() {
+                    if run == 0 {
+                        paths_for_median.clear();
+                    }
+                    paths_for_median.push(p.clone());
+                }
+                *p.last().unwrap_or(&opt.cash)
             })
             .collect();
+        if median_path.is_empty() && !paths_for_median.is_empty() {
+            median_path = (0..days.len())
+                .map(|k| {
+                    let mut col: Vec<f64> = paths_for_median.iter().map(|p| p[k]).collect();
+                    col.sort_by(|a, b| a.total_cmp(b));
+                    col[col.len() / 2]
+                })
+                .collect();
+        }
         finals.sort_by(|a, b| a.total_cmp(b));
         let median = finals[finals.len() / 2];
         let share = finals.iter().filter(|&&f| f >= s).count() as f64 / finals.len() as f64;
@@ -225,6 +267,23 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         .sum::<f64>()
         / nc.max(1) as f64;
     benchmarks.push(Outcome { label: format!("Buy and hold all {nc} candidates"), final_value: opt.cash * hold_all });
+
+    // Daily curves for plotting: picks (first cost level), SPY, QQQ, random median.
+    let first_cost = opt.costs_bps.first().copied().unwrap_or(0.0);
+    let pick_path = path(&|k| picks[k].clone(), first_cost);
+    let bench_path = |ticker: &str| -> Vec<f64> {
+        let Some(id) = store.id(ticker) else { return vec![f64::NAN; days.len()] };
+        let (dates, close) = (store.dates(id), store.close(id));
+        let price = |day: i32| dates.binary_search(&day).ok().map(|k| close[k] as f64);
+        let base = price(var.days[days[0]]);
+        days.iter().map(|&d| match (base, price(var.days[d + 1])) { (Some(b), Some(p)) => opt.cash * p / b, _ => f64::NAN }).collect()
+    };
+    let (spy_path, qqq_path) = (bench_path("SPY"), bench_path("QQQ"));
+    let curve: Vec<(i32, f64, f64, f64, f64)> = days
+        .iter()
+        .enumerate()
+        .map(|(k, &d)| (var.days[d + 1], pick_path[k], spy_path[k], qqq_path[k], *median_path.get(k).unwrap_or(&f64::NAN)))
+        .collect();
 
     // Prediction quality on rebalance days, over the holding period: picks beating the market,
     // rank IC of scores vs forward census-variable sums, and a long-short decile diagnostic.
@@ -286,6 +345,7 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         ls_sharpe: ls_mean / ls_sd.max(1e-12) * (252.0 / rebalance as f64).sqrt(),
         ls_t: ls_mean / ls_sd.max(1e-12) * (ls.len() as f64).sqrt(),
         ls_turnover,
+        curve,
     })
 }
 

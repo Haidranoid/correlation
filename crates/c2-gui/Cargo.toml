@@ -1,0 +1,18 @@
+[package]
+name = "c2-gui"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "c2-gui"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+c2-census.workspace = true
+c2-data.workspace = true
+eframe = "0.33"
+egui_plot = "0.34"
+serde_json.workspace = true
