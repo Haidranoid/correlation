@@ -1,5 +1,45 @@
 # correlation2: test results and implementation choices
 
+## Where things stand (read this first)
+
+**The full correlation census has finished.** Every pair of liquid US stocks (283–2,345 per window), at every return horizon from 1 to 63 days, at lags from 1 day to 3 years, in rolling 1/2/3/5-year windows from 2005 to mid-2025. That's 83,879 real correlation matrices with 3 chance matrices each.
+- **Time:** 5 min 47 s on the RTX 5080, against v1's estimated ~6 months in C.
+- **Output:** `~/.local/share/correlation2/census/main/`.
+
+**The answer to the question:**
+- **The test you specified:** predict the last year (2024-06-28..2025-06-27) using only correlations found before it, and trade $10,000.
+- **Before costs:** the picks ended at **$12,328 (+23.3%)**, against SPY's $11,361 (+13.6%) and QQQ's $11,432 (+14.3%).
+- **But that isn't skill:** **10% of random-guess accounts** (same turnover, same stock pool) did as well (p = 0.10). The picks beat the market on 49.9% of days. At 5 bps per trade the picks made +8.2%; at 20 bps, −27%.
+- **Every year from 2006 on, the same test:** the picks beat random guessers in 2 of 19 years, which is what chance gives.
+- **Pair by pair:** the strongest lagged pairs in one window keep their sign in the next window 50–53% of the time, the same as pairs picked from pure noise. Same-day co-movement, by contrast, persists almost perfectly.
+
+So on this data the hypothesis does not hold. Details and every table follow below.
+
+**Commands** (the `c2` binary is installed at `~/.local/bin/c2`; rebuild with `cargo build --release` in `~/programming/correlation2`):
+
+| Command | What it does |
+|---|---|
+| `c2 census run --name main` | Run or resume the census (Ctrl-C stops cleanly after the current window) |
+| `c2 census status` / `stop` / `pause` / `resume` | Check, stop, or pause (pausing frees the GPU) a running census |
+| `c2 census holdout [--start 2024-06-28] [--walk-forward]` | The $10,000 test, one year or every year |
+| `c2 census replicate` | Do stored pairs keep their sign in the next window? |
+| `c2 census validate` | Engine vs the Python oracle |
+| `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
+
+**Not done yet** (from SPEC.md):
+- native GUI
+- scheduled data updates and the forward prediction log (needs a fresher data source; see ANALYSIS.md)
+- census CPU worker (the GPU finishes in 6 minutes, so it would add ~3%)
+- signal families B–E (cluster lead-lag, peer momentum, calibration anomalies)
+- survivorship-free data
+
+**Your call:**
+- **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
+- **Direction:** continue with the cluster or peer-momentum families, or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
+- **Cleanup:** delete the smoke test directories `~/.local/share/correlation2/census/smoke*` (a safety check stopped me removing them).
+
+---
+
 A running log of what was measured and what was chosen because of it, newest milestone last. Machine: Intel Core Ultra 9 285K (8 P-cores + 16 E-cores, AVX2/FMA/AVX-VNNI, no AVX-512), 64 GB RAM, NVIDIA RTX 5080 16 GB (compute capability 12.0, driver 595.99), Ubuntu 26.04, Rust 1.90. Raw outputs are in `research/` (`bench_m0.txt` and later files).
 
 ## Choices so far (summary)
