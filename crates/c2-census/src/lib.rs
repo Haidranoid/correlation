@@ -6,6 +6,8 @@ pub mod explain;
 pub mod forecast;
 pub mod grid;
 pub mod holdout;
+pub mod meta;
+pub mod moves;
 pub mod run;
 pub mod validate;
 pub mod variable;
