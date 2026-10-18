@@ -37,10 +37,6 @@ fn fingerprint(dir: &Path) -> Option<(usize, i32)> {
     Some((s.rows(), last))
 }
 
-fn latest_run() -> String {
-    std::fs::read_to_string(c2_data::data_dir().join("census/LATEST")).map(|s| s.trim().to_string()).unwrap_or_else(|_| "main".into())
-}
-
 pub fn update(opt: UpdateOptions) -> Result<()> {
     let data = c2_data::data_dir();
     let inbox = data.join("inbox");
@@ -104,7 +100,7 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
 /// Appends today's picks for each family (once per data day and family) from the latest finished
 /// census. Rows are never rewritten.
 fn forward_log(store: &Store) -> Result<()> {
-    let name = latest_run();
+    let name = run::latest_run();
     let dir = run::run_dir(&name);
     let status: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("status.json")).unwrap_or_default()).unwrap_or_default();
     if status["state"].as_str() != Some("finished") {

@@ -8,7 +8,7 @@ use c2_data::{Calendar, Kind, Panel, Store};
 use rayon::prelude::*;
 
 pub const LOOKBACK: usize = 252;
-const MIN_OBS: usize = 126;
+pub const MIN_OBS: usize = 126;
 const LIQUIDITY_EVERY: usize = 21;
 pub const MIN_PRICE: f32 = 5.0;
 pub const MIN_DOLLAR_VOLUME: f32 = 5e6;
@@ -24,6 +24,8 @@ pub struct Variable {
     pub v: Vec<f32>,
     pub close: Vec<f32>,
     pub dollar_volume: Vec<f32>,
+    /// Equal-weight mean daily log return of the liquid stocks, per row (kept for the explainer).
+    pub market: Vec<f64>,
 }
 
 impl Variable {
@@ -150,7 +152,7 @@ pub fn production(store: &Store, cal: &Calendar, from: i32) -> Result<Variable> 
         }
     });
 
-    Ok(Variable { days: panel.days, ids, t, n, v, close: panel.close, dollar_volume })
+    Ok(Variable { days: panel.days, ids, t, n, v, close: panel.close, dollar_volume, market })
 }
 
 /// The same standardization as `research/lag_spectrum.py` and `census_oracle.py`, for

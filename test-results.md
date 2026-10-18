@@ -539,3 +539,50 @@ The forecast line comes out nearly flat: hundreds to thousands of relationships 
   - a bar chart of when the predicted moves land, with the number of relationships covering each day
   - the track-record line, coloured yellow when it is within what luck produces
   - the relationships with the largest share of the forecast
+
+## Follow-up: your terms, a wider census, the Explainer, and Status statistics
+
+**Terminology now used in the app and CLI:**
+
+| Your term | Earlier name | Meaning |
+|---|---|---|
+| move length (A over 5 days, B over 5 days) | horizon h1 / h2, "returns" | how long a move is measured for each stock |
+| offset | lag | trading days from the end of A's move to the end of B's move |
+| correlation period (e.g. "756 days") | census window | the stretch of history a correlation is measured over: rolling 252/504/756/1260-trading-day periods, one starting every quarter, plus the whole 2005–2025 history (5,154 days) |
+
+**In your words.** Every relationship is now also counted straight from prices, on the same non-overlapping observations the census uses. The counts are: how often B rose after A rose by at least its typical (1 sd) move, how often after A fell by that much, and how often B rose overall. They are given both inside the correlation period and over the rest of the history. The second set is the honest check, because the first comes from the very period that made the pair look strong. For example, NZF → NAD daily over the full history: after NZF rose 1% or more, NAD rose next day 185 of 306 times (60%), against 51% normally.
+
+**Wider census (`main-2025-06-27`, now the default via `census/LATEST`):**
+- **Grid:** move lengths 1, 3, 5, 10, 21 and 63 trading days, with every combination including B longer than A. That is 36 pairs, up from 15.
+- **Code change:** the observation grid now starts at max(A, B) − 1, so B's move never reaches before the period. For the old pairs this is the same as before.
+- **Run:** 358.7 billion real correlations (plus 3× as many for the chance baseline) in 0h11m.
+- **Verification:** records for A 1 → B 5, A 3 → B 21 and A 5 → B 21 reproduce exactly from prices (`c2 census explain`): daily values identical, r within 2e-8 (float storage).
+- **Result:** unchanged.
+  - Across all lagged matrices: 1.02× as many real pairs as chance at |z| ≥ 4, and 1.05× at |z| ≥ 5.
+  - The significance test fired in 94 matrices, but on pure chance (the placebo) it fired in 163.
+  - No new move-length pair stands out. Ratios run 0.98–1.13. The only higher ratios come from 63-day pairs, which have just 12–25 matrices.
+
+**A bug found and fixed on the way:**
+- **What happened:** the first wide run crashed at 71%. The GPU kernels scan the padded matrix width (a multiple of 16), but the per-column target statistics for the padding columns were never cleared between work units. A narrower unit inherited stale statistics there, which produced a junk correlation in a padding column.
+- **Fix:** the statistics are now cleared every unit, and padding entries are filtered out.
+- **Effect on the first census (`main`):** it had the same stale values, but they only fed its real and chance histograms equally (both use the same target statistics). It never stored a padding pair, since that would have crashed. The new census supersedes it anyway.
+
+**Explainer tab and `c2 census explain`:** picks any A, B, move lengths, offset and correlation period, then recomputes from prices:
+- each day's return, market return, beta, residual, trailing sd and census value, compared with the census's own values (identical in every case tried)
+- every observation's raw and census-unit moves
+- the scatter, r, z and the stored record
+- the chance comparison for that matrix
+- the plain-terms counts
+- the % move per 1% used by the timeline and the forecast
+
+The Stock timeline and Forecast tabs open it with the relationship pre-filled.
+
+**Status tab additions:**
+- **Run history:** every census run with its kind, data through, start time, time spent computing (summed over sessions from `run.log`), correlations and GPU multiply-adds. Crashed runs show as interrupted.
+- **Last full census.**
+- **Data updates:** a note on updates, plus the update log. Incremental updates are not built: new data means a full rerun of about 11 minutes.
+- **Charts for the census in use:**
+  - strength of stored correlations, real vs chance
+  - real/chance by move lengths, by offset and by period length
+  - significant relationships by year
+  - per-stock average |r|, significant count and stored count

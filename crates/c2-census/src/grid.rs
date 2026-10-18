@@ -31,7 +31,7 @@ impl Config {
     /// The spec's full grid (SPEC.md section 6A).
     pub fn full() -> Config {
         Config {
-            horizons: vec![1, 5, 10, 21, 63],
+            horizons: vec![1, 3, 5, 10, 21, 63],
             lengths: vec![252, 504, 756, 1260],
             full_history: true,
             step: 63,
@@ -51,17 +51,9 @@ impl Config {
         Config { horizons: vec![1, 5, 21], lengths: vec![252, 756], full_history: false, ..Config::full() }
     }
 
-    /// (h1, h2) pairs: every leader horizon with every target horizon not longer than it.
+    /// (h1, h2) pairs: every leader horizon with every target horizon.
     pub fn horizon_pairs(&self) -> Vec<(usize, usize)> {
-        let mut out = Vec::new();
-        for &h1 in &self.horizons {
-            for &h2 in &self.horizons {
-                if h2 <= h1 {
-                    out.push((h1, h2));
-                }
-            }
-        }
-        out
+        self.horizons.iter().flat_map(|&h1| self.horizons.iter().map(move |&h2| (h1, h2))).collect()
     }
 }
 
@@ -82,7 +74,7 @@ pub fn lags(h2: usize) -> Vec<usize> {
 
 /// Number of observations for a window of `w` days at (h1, h2, lag).
 pub fn observations(w: usize, h1: usize, h2: usize, lag: usize) -> usize {
-    let (g0, step) = (h1 - 1, h1.max(h2));
+    let (g0, step) = (h1.max(h2) - 1, h1.max(h2));
     if g0 + lag >= w { 0 } else { (w - 1 - lag - g0) / step + 1 }
 }
 

@@ -80,27 +80,27 @@ enum CensusCmd {
         #[arg(long)]
         smoke: bool,
         /// Run name (directory under <data dir>/census/).
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// Show progress and ETA.
     Status {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// Pause after the current window and release the GPU.
     Pause {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// Continue a paused census.
     Resume {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// The $10,000 holdout test: predict the last year from census pairs found before it.
     Holdout {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
         /// First day treated as the future.
         #[arg(long, default_value = "2024-06-28")]
@@ -136,10 +136,34 @@ enum CensusCmd {
         #[arg(long, default_value_t = 756)]
         peer_window: usize,
     },
+    /// Recompute one relationship from prices step by step and compare with what the census stored.
+    Explain {
+        /// Stock A, which moves first.
+        leader: String,
+        /// Stock B, which follows.
+        follower: String,
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
+        name: String,
+        /// A's move length in trading days.
+        #[arg(long, default_value_t = 1)]
+        h1: usize,
+        /// B's move length in trading days.
+        #[arg(long, default_value_t = 1)]
+        h2: usize,
+        /// Offset in trading days from the end of A's move to the end of B's.
+        #[arg(long, default_value_t = 1)]
+        offset: usize,
+        /// Correlation period in trading days (252, 504, 756, 1260; 0 = full history).
+        #[arg(long, default_value_t = 0)]
+        period: usize,
+        /// Use the correlation period ending on or before this day (default: the latest).
+        #[arg(long)]
+        end: Option<String>,
+    },
     /// Forecast a stock's price path from its leaders' recent moves.
     Forecast {
         ticker: String,
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
         /// Forecast as of this day (default: the last day of data). A past date shows what happened.
         #[arg(long)]
@@ -157,7 +181,7 @@ enum CensusCmd {
     /// A stock's lead-lag relationships: who it leads and follows, at what lag, and by how much.
     Stock {
         ticker: String,
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
         /// Only pairs that passed the false-discovery test.
         #[arg(long)]
@@ -168,12 +192,12 @@ enum CensusCmd {
     },
     /// Replication test: do stored pairs keep their sign in the next non-overlapping window?
     Replicate {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// Stop a running census cleanly (it finishes the window in progress); `run` resumes it.
     Stop {
-        #[arg(long, default_value = "main")]
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
     /// Check the engine against research/census_oracle.json (exact r from Python).
@@ -525,6 +549,43 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             Ok(())
         }
+        CensusCmd::Explain { leader, follower, name, h1, h2, offset, period, end } => {
+            let store = c2_data::Store::open(&store_dir())?;
+            let t0 = Instant::now();
+            let plan = run::Plan::new(&store, c2_census::grid::Config::full())?;
+            let end = match end { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
+            let window = c2_census::explain::find_window(&plan, period, end).ok_or_else(|| anyhow::anyhow!("no {period}-day correlation periods"))?;
+            let req = c2_census::explain::Request { leader: leader.to_uppercase(), follower: follower.to_uppercase(), h1, h2, lag: offset, window, threshold: None };
+            let e = c2_census::explain::explain(&store, &plan, &run::run_dir(&name), &req)?;
+            println!("(census variable for all stocks built in {:.1}s)", t0.elapsed().as_secs_f64());
+            println!("correlation period: {} trading days, {} .. {}; {} stocks qualified; {} in: {}, {} in: {}", e.period_days, c2_data::date_string(e.period_first),
+                c2_data::date_string(e.period_last), e.universe, e.a.ticker, e.a.in_universe, e.b.ticker, e.b.in_universe);
+            println!("daily census values recomputed from prices vs the census: max difference {} {}, {} {}", e.a.ticker, e.a.max_diff, e.b.ticker, e.b.max_diff);
+            println!("{} observations ({}-day moves of {} ending {} trading days before the end of {}-day moves of {}):", e.n, h1, e.a.ticker, offset, h2, e.b.ticker);
+            for o in e.obs.iter().take(3) {
+                println!("  {} {} -> {}: {:+.2}% (x {:+.3});  {} {} -> {}: {:+.2}% (y {:+.3})", e.a.ticker, c2_data::date_string(e.days[o.a_end - h1]), c2_data::date_string(e.days[o.a_end]),
+                    100.0 * o.a_move.exp_m1(), o.x, e.b.ticker, c2_data::date_string(e.days[o.b_end - h2]), c2_data::date_string(e.days[o.b_end]), 100.0 * o.b_move.exp_m1(), o.y);
+            }
+            println!("r = {:+.6}, z = {:+.3}; r of raw % moves = {:+.4}; % move per 1% = {:+.3}", e.r, e.z, e.r_raw, e.move_per_pct);
+            match &e.stored {
+                Some(s) => println!("stored by the census: r = {:+.6} (difference {:.2e}), screening r {:+.4}, z {:+.3}, {}{}", s.record.r, (s.record.r as f64 - e.r).abs(), s.record.r_int8, s.record.z,
+                    if s.top { "among the strongest" } else { "" }, if s.significant { ", significant" } else { "" }),
+                None => println!("not stored by the census for this period (not among that matrix's strongest)"),
+            }
+            if e.matrix.found {
+                println!("matrix: {} stocks x {} stocks, {} observations; pairs at |z|>=3/4/5: real {:?}, chance (sign-flip) {:?}; significance cut-off |r| {}",
+                    e.matrix.stocks, e.matrix.stocks, e.matrix.obs, e.matrix.real, e.matrix.null, e.matrix.fdr_r.map(|v| format!("{v:.4}")).unwrap_or("none".into()));
+            }
+            println!("chance alone would give about {:.1} of {:.0} pairs at |z| >= {:.2}", e.chance_analytic, e.pairs_tested, e.z.abs());
+            if let Some(w) = &e.words {
+                let pc = |a: u32, b: u32| if b > 0 { format!("{a} of {b} ({:.0}%)", 100.0 * a as f64 / b as f64) } else { "no cases".into() };
+                for (label, c) in [("in the period", &w.period), ("rest of history", &w.rest)] {
+                    println!("{label}: after {} rose >= {:.2}%: {} rose {}; after it fell >= {:.2}%: {} rose {}; {} rose {} overall", e.a.ticker, 100.0 * w.up.exp_m1(), e.b.ticker,
+                        pc(c.a_up_b_up, c.a_up), -100.0 * w.down.exp_m1(), e.b.ticker, pc(c.a_down_b_up, c.a_down), e.b.ticker, pc(c.b_up, c.cases));
+                }
+            }
+            Ok(())
+        }
         CensusCmd::Forecast { ticker, name, as_of, significant, days, max_age_years } => {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
@@ -563,9 +624,9 @@ fn census(action: CensusCmd) -> Result<()> {
             let rows = c2_census::analyze::stock_profile(&store, &run::run_dir(&name), &t, significant)?;
             let sig = rows.iter().filter(|r| r.significant).count();
             if significant {
-                println!("{t}: {sig} lead-lag relationships passed the significance test across all census windows");
+                println!("{t}: {sig} lead-lag relationships passed the significance test across all correlation periods");
             } else {
-                println!("{t}: {} stored lead-lag relationships across all census windows, {sig} passed the significance test", rows.len());
+                println!("{t}: {} stored lead-lag relationships across all correlation periods, {sig} passed the significance test", rows.len());
             }
             for leads in [true, false] {
                 let part: Vec<_> = rows.iter().filter(|r| r.leads == leads).take(limit).collect();
@@ -576,14 +637,20 @@ fn census(action: CensusCmd) -> Result<()> {
                 for r in part {
                     let (a, b) = if leads { (t.as_str(), r.partner.as_str()) } else { (r.partner.as_str(), t.as_str()) };
                     let size = r.move_per_pct.map(|m| format!("{b} {m:+.2}% per 1% {a} move")).unwrap_or_else(|| "size n/a".into());
-                    let horizons = if r.h1 == 1 && r.h2 == 1 { "daily".to_string() } else { format!("{a} {}d -> {b} {}d returns", r.h1, r.h2) };
-                    println!("  {a} -> {b:<6} {:>3} days: {size}; r {:+.3}, z {:+.1}; chance made {:.0} pairs with |z| >= {} in that window{}   [{}, {horizons}, {} obs]",
-                        r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.window, r.obs);
+                    let moves = format!("{a} over {}d -> {b} over {}d", r.h1, r.h2);
+                    let words = r.words.map(|w| {
+                        let c = w.period;
+                        let rate = |x: u32, n: u32| if n > 0 { format!("{:.0}%", 100.0 * x as f64 / n as f64) } else { "-".into() };
+                        format!("; after {a} rose {:.1}%+, {b} rose {}/{} ({}) vs {} normally", 100.0 * w.up.exp_m1(), c.a_up_b_up, c.a_up, rate(c.a_up_b_up, c.a_up), rate(c.b_up, c.cases))
+                    }).unwrap_or_default();
+                    println!("  {a} -> {b:<6} offset {:>3} days: {size}; r {:+.3}, z {:+.1}; chance made {:.0} pairs with |z| >= {} in that period{}{words}   [{moves}; correlation period {} days to {}, {} observations]",
+                        r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.period_days, r.period_end, r.obs);
                 }
             }
             println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % move is that relationship in price terms:");
-            println!("the follower's typical move beyond the market per 1% move of the leader, in that window. 'Chance made N' is how many pairs at");
-            println!("least that strong appeared in the same window when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
+            println!("the follower's typical move beyond the market per 1% move of the leader, in that correlation period. 'Chance made N' is how many pairs");
+            println!("at least that strong appeared in the same period when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
+            println!("The offset runs from the end of the leader's move to the end of the follower's. `c2 census explain` shows any one step by step.");
             Ok(())
         }
         CensusCmd::Replicate { name } => {

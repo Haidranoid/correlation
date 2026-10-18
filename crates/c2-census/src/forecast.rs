@@ -31,6 +31,8 @@ struct Rel {
     /// Calendar row of the window's last day.
     window_end: usize,
     window: String,
+    window_id: usize,
+    period_days: usize,
 }
 
 pub struct Contribution {
@@ -41,6 +43,9 @@ pub struct Contribution {
     pub r: f32,
     pub significant: bool,
     pub window: String,
+    /// Census window (correlation period) id and its length in trading days.
+    pub window_id: usize,
+    pub period_days: usize,
     /// The leader's moves feeding this forecast, summed (in %).
     pub leader_move_pct: f64,
     /// What this relationship alone predicts for the stock over the horizon (in %).
@@ -157,6 +162,8 @@ fn prepare(store: &Store, dir: &Path, ticker: &str, significant_only: bool) -> R
                 significant: r.flags & FLAG_FDR != 0,
                 window_end: *we - 1,
                 window: label.clone(),
+                window_id: r.window as usize,
+                period_days: we - ws,
             })
         })
         .collect();
@@ -263,6 +270,8 @@ pub fn forecast(store: &Store, dir: &Path, ticker: &str, as_of: i32, opt: &Optio
             r: r.r,
             significant: r.significant,
             window: r.window.clone(),
+            window_id: r.window_id,
+            period_days: r.period_days,
             leader_move_pct: 100.0 * used.exp_m1(),
             implied_pct: 100.0 * own.exp_m1(),
             share_pct: 100.0 * share,

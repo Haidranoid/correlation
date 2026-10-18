@@ -101,6 +101,11 @@ impl Record {
     }
 }
 
+/// The census the GUI and CLI use by default: the name in `census/LATEST`, else "main".
+pub fn latest_run() -> String {
+    std::fs::read_to_string(c2_data::data_dir().join("census/LATEST")).map(|s| s.trim().to_string()).ok().filter(|s| !s.is_empty()).unwrap_or_else(|| "main".into())
+}
+
 pub fn run_dir(name: &str) -> PathBuf {
     c2_data::data_dir().join("census").join(name)
 }
@@ -383,7 +388,7 @@ fn prepare(plan: &Plan, task: &Task, pos: usize) -> Prepared {
 /// Exact Pearson r and sums for leader column `i`, target column `j` at `lag`; `seed` non-zero
 /// applies that sign-flip null to the target.
 fn exact(u: &UnitData, i: usize, j: usize, lag: usize, m: usize, seed: u32) -> (f64, [f64; 5]) {
-    let (s, g0, ld) = (u.h1.max(u.h2), u.h1 - 1, u.w + 1);
+    let (s, g0, ld) = (u.h1.max(u.h2), u.h1.max(u.h2) - 1, u.w + 1);
     let (pi, pj) = (&u.prefix[i * ld..(i + 1) * ld], &u.prefix[j * ld..(j + 1) * ld]);
     let (sh1, sh2) = ((u.h1 as f64).sqrt(), (u.h2 as f64).sqrt());
     let (mut sx, mut sy, mut sxx, mut syy, mut sxy) = (0.0, 0.0, 0.0, 0.0, 0.0);
@@ -488,6 +493,8 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
     let np = u.np as i64;
     let records: Vec<Record> = chosen
         .par_iter()
+        // Padding columns (>= n) are never real pairs.
+        .filter(|&&(_, idx, _, _, _)| ((idx % np) as usize) < u.n && ((idx / np) as usize) < u.n)
         .map(|&(li, idx, r8, null, flags)| {
             let (k, m, seeds) = &u.lags[li];
             let (i, j) = ((idx % np) as usize, (idx / np) as usize);
@@ -723,7 +730,7 @@ fn gpu_worker(
             continue;
         }
         let (n, np, ld) = (u.n, u.np, u.w + 1);
-        let (h1, h2, step, g0) = (u.h1, u.h2, u.h1.max(u.h2), u.h1 - 1);
+        let (h1, h2, step, g0) = (u.h1, u.h2, u.h1.max(u.h2), u.h1.max(u.h2) - 1);
         let m0 = u.lags[0].1;
         let kp = m0.div_ceil(32) * 32;
         st.memcpy_htod(&u.prefix, &mut b.pre.slice_mut(0..u.prefix.len()))?;
@@ -736,6 +743,12 @@ fn gpu_worker(
         // Leader panel once per unit; zero any padding columns left from a wider unit.
         st.memset_zeros(&mut b.x)?;
         st.memset_zeros(&mut b.y)?;
+        // The kernels scan the padded width np; build_panel only writes stats for the n real
+        // columns, so clear the rest or a narrower unit inherits the previous unit's stats in its
+        // padding columns (zero stats give r = 0 there).
+        for v in [&mut b.xs, &mut b.xq, &mut b.ys, &mut b.yq] {
+            st.memset_zeros(v)?;
+        }
         g.build_panel(&b.pre, ld, n, g0, step, 0, h1, m0, 0, 0, kp, &mut b.x, &mut b.xs, &mut b.xq)?;
         for (li, (k, m, seeds)) in u.lags.iter().enumerate() {
             let (k, m) = (*k, *m);
