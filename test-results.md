@@ -25,14 +25,23 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census holdout [--start 2024-06-28] [--walk-forward]` | The $10,000 test, one year or every year |
 | `c2 census replicate` | Do stored pairs keep their sign in the next window? |
 | `c2 census validate` | Engine vs the Python oracle |
+| `c2 census holdout --family peers [--walk-forward]` | The same test with peer momentum (monthly rebalance) |
 | `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
+| `c2-gui` | The native GUI |
+
+**Also tested: peer momentum** (signal family C, the economic-link-style hypothesis from published research), using the census's same-day co-movement network:
+- it beat random guessers in 3 of 18 years (chance gives about 1.8)
+- its ranking signal was, if anything, slightly reversed (z = −2.79)
+- nothing tradable
+
+**Native GUI:** `c2-gui` (or **correlation2** in the app grid) has Status, Census, Holdout and Data tabs. Every tab was checked with screenshots, but you haven't tried it yet.
 
 **Not done yet** (from SPEC.md):
-- native GUI
 - scheduled data updates and the forward prediction log (needs a fresher data source; see ANALYSIS.md)
 - census CPU worker (the GPU finishes in 6 minutes, so it would add ~3%)
-- signal families B–E (cluster lead-lag, peer momentum, calibration anomalies)
+- signal families B, D and E (cluster lead-lag, the size control, calibration anomalies)
 - survivorship-free data
+- idle-detection mode
 
 **Your call:**
 - **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
@@ -394,3 +403,24 @@ Hit rate 49.9% of 4,996 picks; daily rank IC +0.0009 (t = 0.57).
 - Long-short top/bottom 10% in actual returns: 0.51 bps/day, positive in 10 of 18 years, combined **z = 0.15**. Nothing tradable.
 
 **Conclusion.** Neither the statistical family (census lead-lag pairs) nor the economic-link-style family (peer momentum from the census co-movement network) beats random guessing on this data. No parameter variants were tried: trying several and reporting the best would be the overfitting the harness exists to prevent.
+
+## M7 (first version): native GUI (`c2-gui`)
+
+- **Built with** eframe/egui 0.33.3 (the newest version that supports Rust 1.90) and egui_plot 0.34, rendering with OpenGL by default.
+- **Launch:** `~/.local/bin/c2-gui`, or **correlation2** in the GNOME app grid (`~/.local/share/applications/correlation2.desktop`; delete that file to remove the launcher).
+- **Runs without CUDA.** Census runs are started as a separate detached `c2` process, so closing the window never interrupts one.
+
+| Tab | What it does | Verified (screenshots via the self-check mode) |
+|---|---|---|
+| Status | Census state, progress bar, ETA; Start/resume, Pause (frees the GPU), Resume, Stop | Shows the finished `main` census, 4,275 of 4,275 |
+| Census | Real vs chance by lag for any horizon pair, as a plot and a table; ticker lookup of a stock's strongest stored pairs | Daily table matches the CLI (lag 1: 1.20, 1.4% FDR); AAPL lookup returns pairs with windows, partners, lags, r and z |
+| Holdout | $10,000 test for either family, with stocks held, rebalance, costs and random-guesser count as inputs; results table; equity curves (picks, SPY, QQQ, random median) | Matches the CLI exactly (+23.3%, p = 0.101) |
+| Data | Price-store summary and decade quality table | Matches `c2 data-check` |
+
+**Bugs found by the screenshots and fixed:**
+- **Random-median curve stuck at $0:** the path was pre-filled with zeros, which blocked the real median from being computed.
+- **Date and cost fields cut off:** egui sizes grid columns from the previous frame, so the fields never grew. Fixed with a minimum column width.
+
+**Self-check mode:** `C2_GUI_SCREENSHOT=<prefix> C2_GUI_TAB=status|census|holdout|data [C2_GUI_TICKER=AAPL] c2-gui` opens the tab, waits for its data, saves `<prefix>.rgba` and exits. `research/rgba_to_png.py <prefix>` converts the capture to PNG.
+
+**Also fixed:** census log times were written as UTC−4 while this machine is UTC−5, so `run.log` times from today's runs are one hour ahead of local time. Log lines now use the system's offset.

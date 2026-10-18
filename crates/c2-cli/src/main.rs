@@ -558,8 +558,22 @@ fn running_pid(dir: &std::path::Path) -> Option<u32> {
     (pid != std::process::id() && exe.file_name()?.to_str()?.starts_with("c2")).then_some(pid)
 }
 
+/// Local time of day for log lines. The UTC offset comes from `date +%z` once (std has no time
+/// zones); falls back to UTC.
 fn hms_now() -> String {
+    static OFFSET: std::sync::OnceLock<i64> = std::sync::OnceLock::new();
+    let offset = *OFFSET.get_or_init(|| {
+        let z = std::process::Command::new("date").arg("+%z").output().ok().and_then(|o| String::from_utf8(o.stdout).ok()).unwrap_or_default();
+        let z = z.trim();
+        let sign = if z.starts_with('-') { -1 } else { 1 };
+        let digits: String = z.chars().filter(|c| c.is_ascii_digit()).collect();
+        if digits.len() == 4 {
+            sign * (digits[..2].parse::<i64>().unwrap_or(0) * 3600 + digits[2..].parse::<i64>().unwrap_or(0) * 60)
+        } else {
+            0
+        }
+    });
     let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
-    let local = secs as i64 - 4 * 3600;
+    let local = secs as i64 + offset;
     format!("{:02}:{:02}:{:02}", (local / 3600).rem_euclid(24), (local / 60).rem_euclid(60), local.rem_euclid(60))
 }
