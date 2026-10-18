@@ -1,0 +1,17 @@
+[package]
+name = "c2-engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[features]
+default = ["cuda"]
+cuda = ["dep:cudarc", "dep:half"]
+
+[dependencies]
+anyhow.workspace = true
+cudarc = { workspace = true, optional = true }
+gemm.workspace = true
+half = { workspace = true, optional = true }
+rayon.workspace = true

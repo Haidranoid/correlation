@@ -1,0 +1,3 @@
+# Built for this machine's CPU (Core Ultra 9 285K: AVX2, FMA, AVX-VNNI). The binary will not run on CPUs without them.
+[build]
+rustflags = ["-C", "target-cpu=native"]

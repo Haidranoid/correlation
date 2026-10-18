@@ -1,0 +1,21 @@
+[package]
+name = "c2-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "c2"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+c2-engine.workspace = true
+clap.workspace = true
+half.workspace = true
+rayon.workspace = true
+
+[features]
+default = ["cuda"]
+cuda = ["c2-engine/cuda"]

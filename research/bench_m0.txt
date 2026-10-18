@@ -1,0 +1,40 @@
+5000 stocks; times are per all-pairs product (one lag); error = max |r - f64 reference| over 2000 pairs
+
+GPU: NVIDIA GeForce RTX 5080 (14.7 of 16.6 GB free)
+  rows   mode         ms      TOPS      error
+    64   FP32      0.148      21.6     9.7e-8
+                   0.190   census pass (527 GB/s read; 25000000 of 25000000 entries histogrammed; 2695 with |z| >= 4)
+    64   TF32      0.123      25.9     1.3e-4
+    64   FP16      0.119      27.0     1.3e-4
+    64   BF16      0.119      26.8     9.9e-4
+    64   INT8      0.114      28.0     7.3e-3
+                   0.168   census pass (594 GB/s read; 25000000 of 25000000 entries histogrammed; 2688 with |z| >= 4)
+   256   FP32      0.429      29.9     1.4e-7
+   256   TF32      0.281      45.6     7.1e-5
+   256   FP16      0.171      74.7     7.2e-5
+   256   BF16      0.170      75.2     5.2e-4
+   256   INT8      0.120     106.3     3.7e-3
+   768   FP32      1.399      27.5     1.7e-7
+   768   TF32      0.801      47.9     3.7e-5
+   768   FP16      0.395      97.3     3.7e-5
+   768   BF16      0.395      97.2     2.8e-4
+   768   INT8      0.130     294.5     2.1e-3
+  1280   FP32      2.391      26.8     1.7e-7
+  1280   TF32      1.232      52.0     3.2e-5
+  1280   FP16      0.625     102.3     3.2e-5
+  1280   BF16      0.625     102.4     3.2e-4
+  1280   INT8      0.187     341.7     1.5e-3
+
+CPU (24 threads, gemm f32)
+  rows         ms      TOPS      error
+    64       3.11      1.03     9.7e-8
+   256      10.33      1.24     1.4e-7
+   768      29.23      1.31     1.7e-7
+  1280      45.19      1.42     8.5e-8
+
+CPU (24 threads, INT8 AVX-VNNI assembly micro-kernel)
+  rows         ms      TOPS      error    pack ms  no-store ms
+    64       1.78      1.79     7.3e-3       0.47         0.56
+   256       2.19      5.83     3.7e-3       0.94         1.63
+   768       4.76      8.07     2.1e-3       2.30         4.08
+  1280       7.88      8.12     1.5e-3       3.52         6.81

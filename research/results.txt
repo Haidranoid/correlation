@@ -1,0 +1,46 @@
+Loaded 11,431 symbols x 1024 trading days in 6s
+Stooq labels matched: 11,431 of 11,431 (8,403 stocks, 3,027 ETFs, 1 exchange test tickers dropped)
+Bad prints repaired: 69
+Universe (from training years only): 2,155 liquid US stocks (price >= $5, median dollar volume >= $5M, >= 95% of days traded)
+Training: 2021-06-28 .. 2024-06-27 (755 days)   Holdout: 2024-06-28 .. 2025-06-27 (250 days)
+
+== 1. Lead-lag correlations from the training years ==
+23,209,350 leader/target/lag combinations tested (5 lags) in 0.1s
+Stored the top 2,000: |r| from 0.142 to 0.212
+Chance level (timeline-shifted search, 3 runs): best |r| 0.189, 2,000th best 0.133
+Theory: 1 sd of r = 0.036; expected best of 23,209,350 by chance ~ 0.212
+Stored pairs stronger than the best chance result: 15 of 2,000
+Direction check: median |reverse r| / |forward r| = 0.17, chance pairs 0.15 (picking the strongest pairs makes the reverse look weak either way, so this only means something if the two differ)
+
+== 2. Do the stored correlations hold up in the holdout year? ==
+                             same sign  mean signed r
+stored pairs                     52.3%         0.0028
+random pairs (baseline)          49.6%         0.0000
+(1 sd of a single holdout r = 0.063)
+  target in least liquid third     658 pairs  same sign 51.7%  mean signed r +0.0025
+  target in middle third           638 pairs  same sign 52.4%  mean signed r +0.0032
+  target in most liquid third      704 pairs  same sign 52.8%  mean signed r +0.0027
+
+== 3. Positive control: do large caps lead small caps by a day? ==
+  training  big(t)->small(t+1) r = +0.197   small(t)->big(t+1) r = +0.010
+  holdout   big(t)->small(t+1) r = +0.081   small(t)->big(t+1) r = -0.032
+
+== 4. $10,000 for the holdout year ==
+Picks: top 20 predicted gainers among 1,099 stocks the stored pairs can predict, rebalanced every day at the close
+Picked stocks beat the market next day: 51.6% of 4,997 picks (coin flip = 50%)
+Daily rank correlation of prediction vs outcome (IC): mean +0.0034, t = +1.45
+
+                                   final value   return
+Buy and hold SPY (S&P 500)              11,361    13.6%
+Buy and hold QQQ (Nasdaq-100)           11,432    14.3%
+Buy and hold every candidate            10,902     9.0%
+Correlation picks, no trading costs      11,561    15.6%   random guessers: median 10,868, 24.5% did at least as well (p = 0.245)
+Correlation picks, 5 bps per trade       9,199    -8.0%   random guessers: median 8,502, 19.6% did at least as well (p = 0.196)
+Correlation picks, 20 bps per trade       4,629   -53.7%   random guessers: median 4,071, 8.3% did at least as well (p = 0.083)
+
+== 5. Speed ==
+Training search above: 2,155 stocks, 5 lags, 755 days in 0.1s on the CPU (numpy)
+Full v1 universe, one lag: 11,431 x 11,431 pairs over 755 days in 0.28s (0.71 TFLOP/s)
+v1 at its own 50 ms per correlation on 24 cores, same 5 lags: ~16 days
+
+Total runtime 8s

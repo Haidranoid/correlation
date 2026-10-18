@@ -1,0 +1,8 @@
+[package]
+name = "gpu_bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+cudarc = { version = "0.19", default-features = false, features = ["std", "cublas", "driver", "dynamic-loading", "cuda-13020"] }

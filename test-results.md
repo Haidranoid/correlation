@@ -1,0 +1,103 @@
+# correlation2: test results and implementation choices
+
+A running log of what was measured and what was chosen because of it, newest milestone last. Machine: Intel Core Ultra 9 285K (8 P-cores + 16 E-cores, AVX2/FMA/AVX-VNNI, no AVX-512), 64 GB RAM, NVIDIA RTX 5080 16 GB (compute capability 12.0, driver 595.99), Ubuntu 26.04, Rust 1.90. Raw outputs are in `research/` (`bench_m0.txt` and later files).
+
+## Choices so far (summary)
+
+| Area | Choice | Why (measured) |
+|---|---|---|
+| GPU arithmetic | INT8 tensor cores (cuBLASLt, INT32 sums) for screening; exact recompute for stored entries | 342 TOPS at 1,280 rows vs 27 TOPS FP32 (12.8×); error ≤ 7e-3 at 64 rows and 1.5e-3 at 1,280, about 1–6% of r's own sampling noise |
+| GPU window strategy | Recompute each window directly in INT8, not block-additive sums | At 64-row blocks every precision takes the same ~0.115 ms, the time to write 25M results; arithmetic is nearly free, so memory traffic decides |
+| CPU arithmetic | INT8 with a hand-written AVX-VNNI (`vpdpbusd`) assembly micro-kernel, `crates/c2-engine/src/vnni.rs` | 8.1–8.6 TOPS with results stored, 9.6 TOPS compute-only, vs 1.3–1.4 TOPS for the f32 `gemm` crate (6.3×). Bit-identical to the GPU's INT8 results |
+| CPU window strategy | Same as GPU: recompute each window directly, process 4 × 24 tiles in registers (fused), never store the full matrix | With VNNI the CPU is no longer compute-starved; storing the result (100 MB) costs 1.2 of 1.8 ms at 64 rows. Block-additive sums would need that storage, so they were dropped |
+| Significance pass | FP32 math, per-warp histogram aggregation, column-walking 2-D launch | 4–6× faster than the first version (0.17 ms vs 1.0 ms per 25M entries) |
+| CUDA libraries | Found automatically (re-run with `LD_LIBRARY_PATH`), CPU fallback if absent | cudarc panics on a missing library; now probed first |
+
+## M0: compute engine benchmarks
+
+Command: `c2 bench --n 5000` (5,000 synthetic stocks with market, sector and planted one-day lead structure, clipped at ±5 sd). Time is per all-pairs product for one lag. Error is the largest |r − f64 reference| over 2,000 sampled pairs (1,500 random, 500 planted leads), computed from the values the GPU actually received (rounded or quantized).
+
+### GPU: precision modes
+
+| Rows (days) | Mode | ms | TOPS | Max error |
+|---|---|---|---|---|
+| 64 | FP32 (cuBLAS SGEMM) | 0.148 | 21.6 | 9.7e-8 |
+| 64 | TF32 | 0.123 | 26.0 | 1.3e-4 |
+| 64 | FP16 | 0.119 | 26.8 | 1.3e-4 |
+| 64 | BF16 | 0.119 | 26.8 | 9.9e-4 |
+| 64 | INT8 | 0.115 | 27.9 | 7.3e-3 |
+| 256 | FP32 | 0.428 | 29.9 | 1.4e-7 |
+| 256 | TF32 | 0.281 | 45.5 | 7.1e-5 |
+| 256 | FP16 | 0.171 | 74.9 | 7.2e-5 |
+| 256 | BF16 | 0.171 | 75.0 | 5.2e-4 |
+| 256 | INT8 | 0.120 | 106.8 | 3.7e-3 |
+| 768 | FP32 | 1.350 | 28.4 | 1.7e-7 |
+| 768 | TF32 | 0.743 | 51.7 | 3.7e-5 |
+| 768 | FP16 | 0.395 | 97.2 | 3.7e-5 |
+| 768 | BF16 | 0.395 | 97.2 | 2.8e-4 |
+| 768 | INT8 | 0.130 | 295.3 | 2.1e-3 |
+| 1,280 | FP32 | 2.397 | 26.7 | 1.7e-7 |
+| 1,280 | TF32 | 1.266 | 50.6 | 3.2e-5 |
+| 1,280 | FP16 | 0.647 | 98.9 | 3.2e-5 |
+| 1,280 | BF16 | 0.626 | 102.3 | 3.2e-4 |
+| 1,280 | INT8 | **0.187** | **341.7** | 1.5e-3 |
+
+**Reading it:**
+- INT8 wins by a wide margin once a product covers a full window (256+ rows).
+- INT8's error comes from quantizing to 1/25 sd steps. It is 1–6% of the sampling noise of r itself (1/√rows) and shrinks as windows grow.
+- Anything the census stores is recomputed exactly, so INT8 only decides which pairs get screened in. The screening threshold is set a safety margin below the storage threshold.
+- FP16 is the fallback if more precision is ever needed during screening: about 3× slower than INT8, with 30× smaller error.
+- At 64 rows all modes cost the same ~0.115 ms: writing the 5,000 × 5,000 result (100 MB) at ~870 GB/s. So the GPU should never materialize small products it doesn't need. This drove the window-strategy choice in the summary table.
+
+### GPU: significance pass (r, |Fisher z| histogram, compaction above a threshold)
+
+| Version | INT8 product | FP32 product | Change |
+|---|---|---|---|
+| First (FP64 math, global grid-stride, plain shared atomics) | 0.999 ms (100 GB/s) | 0.769 ms (130 GB/s) | |
+| Optimized (FP32 math, column-walking 2-D grid, `__match_any_sync` warp aggregation) | **0.168 ms (594 GB/s)** | **0.195 ms (514 GB/s)** | 4–6× faster |
+
+Both versions histogram all 25,000,000 entries and flag the same entries (2,695 / 2,688 with \|z\| ≥ 4), so the optimization changed no results. The first version's main costs were FP64 math (1/64 rate on GeForce) and warps colliding on the same histogram bin.
+
+**Next step for this kernel:** a fused tensor-core GEMM + significance kernel (inline PTX `mma.sync`) that never writes the n × n matrix. It would remove both the 0.115 ms write and the 0.17 ms read per product.
+
+### CPU: f32 (`gemm` crate, AVX2/FMA, 24 threads)
+
+| Rows | ms | TOPS | Max error |
+|---|---|---|---|
+| 64 | 2.49–2.82 | 1.13–1.29 | 9.7e-8 |
+| 256 | 8.77 | 1.44 | 1.4e-7 |
+| 1,280 | 45.5 | 1.41 | 8.5e-8 |
+
+**Bug found and fixed:** the first CPU run had error ≈ 1.0 because the row and column strides were passed to `gemm::gemm` in swapped order. Corrected in `crates/c2-engine/src/cpu.rs`.
+
+### CPU: INT8 AVX-VNNI assembly micro-kernel (24 threads)
+
+**Design:**
+- **Tile:** 4 leaders × 24 targets per step, using all 16 ymm registers: 12 accumulators, 3 target loads, 1 broadcast.
+- **Signs:** `vpdpbusd` takes unsigned × signed bytes, so leaders are stored +128 and the result is corrected by 128 × target column sums.
+- **Packing:** panels are packed so the inner loop only reads sequentially.
+- **Cache blocking:** a target block stays in L1, a 256-leader chunk in L2.
+- **Threads:** rayon work-stealing across the 8 P-cores and 16 E-cores.
+
+| Rows | ms (stores result) | TOPS | Max error | One-off packing (ms) | Compute only, no store (ms) |
+|---|---|---|---|---|---|
+| 64 | 1.78 | 1.79 | 7.3e-3 | 0.47 | 0.56 |
+| 256 | 2.19 | 5.83 | 3.7e-3 | 0.94 | 1.63 |
+| 768 | 4.76 | 8.07 | 2.1e-3 | 2.30 | 4.08 |
+| 1,280 | 7.88 | 8.12 | 1.5e-3 | 3.52 | 6.81 (9.6 TOPS) |
+
+**Reading it:**
+- The errors are identical, to the digit, to the GPU's INT8 errors. Both compute exact integer sums of the same quantized values, so this cross-checks both implementations.
+- **Measurement bug found and fixed:** the first compute-only timing used one shared atomic counter for all 24 threads and read ~8 ms everywhere (contention, not arithmetic). It was replaced with `black_box`.
+- **Throughput share:** the GPU does a 1,280-row product in 0.187 ms against the CPU's 6.8 ms, so the CPU adds about 3% to census throughput. That's worth taking, since the GPU feeder needs only one thread.
+
+### Decision: drop block-additive sums
+The spec planned block-additive window sums to save arithmetic. Measurements show both devices have arithmetic to spare (INT8) and are limited by writing results. Additive sums require storing per-block matrices, so they would cost more than they save. **Both devices recompute each window directly and process results without storing the full matrix.**
+
+### CUDA library discovery
+
+| Situation | Behavior |
+|---|---|
+| Libraries only in `~/model-lab/.../cuda-env/lib`, nothing set | `c2` re-runs itself with that directory on `LD_LIBRARY_PATH`; GPU used |
+| No CUDA libraries anywhere (simulated with `C2_CUDA_REEXEC=1`) | Prints `GPU unavailable, CPU only: CUDA libraries not found: cuBLAS, cuBLASLt, NVRTC (...)`; CPU continues |
+| Before the fix | cudarc panicked: `Unable to dynamically load the "cublas" shared library` |

@@ -1,0 +1,6 @@
+GPU: NVIDIA GeForce RTX 5080
+  stocks    days   ms per lag    TFLOP/s    max error
+    2155     755         0.29       24.5      1.40e-9
+    5000     755         1.39       27.2      3.26e-9
+   11431     755         7.02       28.1      1.86e-9
+   11431    5000        41.89       31.2     8.73e-10
