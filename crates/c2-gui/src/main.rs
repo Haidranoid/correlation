@@ -728,18 +728,14 @@ fn timeline_view(data: &TimelineData, vk: &TimelineViewKey) -> TimelineView {
     rows.sort_by(|a, b| b.z.abs().total_cmp(&a.z.abs()).then_with(|| key(a).cmp(&key(b))));
     rows.truncate(max_shown);
     // The Forecast never uses the full-history period, and among a relationship's periods that
-    // end on the same day it uses the longest.
-    let mut longest: BTreeMap<(RelKey, &str), u32> = BTreeMap::new();
-    for r in data.rows.iter().filter(|r| rolling(r)) {
-        let e = longest.entry((key(r), r.period_end.as_str())).or_insert(0);
-        *e = (*e).max(r.period_days);
-    }
+    // end on the same day it uses the longest it can (`superseded`).
+    let longest = longest_same_day(data, significant_only);
     let unused = rows
         .iter()
         .map(|r| {
             if !rolling(r) {
                 Some(FULL_HISTORY_UNUSED)
-            } else if longest.get(&(key(r), r.period_end.as_str())).is_some_and(|&d| d > r.period_days) {
+            } else if superseded(&longest, r) {
                 Some(SHORTER_UNUSED)
             } else {
                 None
@@ -747,6 +743,25 @@ fn timeline_view(data: &TimelineData, vk: &TimelineViewKey) -> TimelineView {
         })
         .collect();
     TimelineView { rows: rows.into_iter().cloned().collect(), lengths, horizons: pairs, total_sig, recent_end, full_days, unused }
+}
+
+/// Per (relationship, last day): the longest rolling correlation period of that relationship
+/// ending that day that the Forecast could use: stored with a size and, with "significant
+/// relationships only", significant (what the Forecast chooses among, `forecast::rel_order`).
+fn longest_same_day(data: &TimelineData, significant_only: bool) -> BTreeMap<(RelKey, &str), u32> {
+    let mut longest: BTreeMap<(RelKey, &str), u32> = BTreeMap::new();
+    for r in data.rows.iter().filter(|r| !data.full_history.contains(&r.window_id) && r.move_per_pct.is_some() && (!significant_only || r.significant)) {
+        let e = longest.entry((key(r), r.period_end.as_str())).or_insert(0);
+        *e = (*e).max(r.period_days);
+    }
+    longest
+}
+
+/// True when a longer period of `r`'s relationship ends the same day (`longest_same_day`), so
+/// the Forecast never uses `r` (the rule `c2 census stock` and the Explainer's `forecast_use`
+/// follow).
+fn superseded(longest: &BTreeMap<(RelKey, &str), u32>, r: &ProfileRow) -> bool {
+    longest.get(&(key(r), r.period_end.as_str())).is_some_and(|&d| d > r.period_days)
 }
 
 /// Why the Forecast never uses a timeline row: the full-history period (its track record could
@@ -1106,7 +1121,17 @@ impl App {
             arrived
         };
         report("Strongest ranking", self.rank.poll(), self.rank.took);
-        report("Stock timeline", self.tl.job.poll(), self.tl.job.took);
+        // Self-checks also count the stock's rolling rows (where it follows) that a longer period
+        // of the same relationship supersedes, over all its rows, to compare with the CLI.
+        if report("Stock timeline", self.tl.job.poll(), self.tl.job.took)
+            && timing
+            && let Some((_, Ok(data))) = &self.tl.job.done
+        {
+            let longest = longest_same_day(data, false);
+            let follows: Vec<&ProfileRow> = data.rows.iter().filter(|r| !data.full_history.contains(&r.window_id) && !r.leads).collect();
+            let marked = follows.iter().filter(|r| superseded(&longest, r)).count();
+            eprintln!("c2-gui self-check: {marked} of {} rolling rows where the stock follows have a longer period ending the same day", follows.len());
+        }
         report("forecast data", self.fc.data.poll(), self.fc.data.took);
         // The as-of box shows the day of the forecast for the current choices (not an older one
         // that finished while those were being computed).
@@ -2650,12 +2675,19 @@ impl App {
                         // part of the predicted days inside the forecast's days ahead.
                         Ok(()) => ui.label(format!(
                             "How the Forecast tab uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move \
-                             lengths and offset; for each such relationship it uses the latest rolling period that ended by the as-of day): each of \
-                             {a}'s recent {}-day moves beyond the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s \
-                             move beyond the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{:.3} - 1 for {b} (the % per 1% \
-                             applies to log changes, so this is about X x {:.3} only for small moves), spread evenly over those days. Only the days that \
-                             fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. For \
-                             example a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}. The Stock timeline shows the same number as '% per 1%'.",
+                             lengths and offset; of periods ending on the same day it takes the longest, and no longer one of this relationship ends that \
+                             day{}): each of {a}'s recent {}-day moves beyond the market (the latest ending on the as-of day, then every {} before it) \
+                             predicts {b}'s move beyond the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{:.3} - 1 for {b} \
+                             (the % per 1% applies to log changes, so this is about X x {:.3} only for small moves), spread evenly over those days. Only \
+                             the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering \
+                             it. For example a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}. The Stock timeline shows the same number as '% per \
+                             1%'.",
+                            // Only when the pair didn't pass the significance test.
+                            if e.stored.as_ref().is_some_and(|st| !st.significant) {
+                                "; with \"significant relationships only\" it leaves this one out, since it didn't pass the significance test"
+                            } else {
+                                ""
+                            },
                             h1,
                             days_label(step),
                             days_label(h2),
@@ -3895,23 +3927,34 @@ mod tests {
 
     #[test]
     fn timeline_marks_the_rows_the_forecast_never_uses() {
-        let data = TimelineData {
+        let sized = |mut r: ProfileRow, significant: bool| {
+            r.move_per_pct = Some(0.1);
+            r.significant = significant;
+            r
+        };
+        let mut data = TimelineData {
             rows: vec![
                 row("NZF", 284, 5154, "2025-06-27", 12.6),
-                row("NVG", 280, 252, "2025-04-14", 9.5),
-                row("NVG", 283, 1260, "2025-04-14", 4.0),
+                sized(row("NVG", 280, 252, "2025-04-14", 9.5), true),
+                sized(row("NVG", 283, 1260, "2025-04-14", 4.0), false),
                 row("NVG", 100, 252, "2019-01-02", 9.0),
             ],
             full_history: HashSet::from([284]),
         };
-        let view = |w: &str| timeline_view(&data, &(0, false, false, w.to_string(), None, 40));
+        let view = |d: &TimelineData, w: &str, significant_only: bool| timeline_view(d, &(0, false, significant_only, w.to_string(), None, 40));
         // The full-history period: never.
-        assert_eq!(view("full").unused, [Some(FULL_HISTORY_UNUSED)]);
+        assert_eq!(view(&data, "full", false).unused, [Some(FULL_HISTORY_UNUSED)]);
         // A 252-day period ending the same day as a 1260-day one of the same relationship: the
         // forecast takes the longer one.
-        let v = view("252");
+        let v = view(&data, "252", false);
         assert_eq!((v.rows[0].window_id, v.unused[0]), (280, Some(SHORTER_UNUSED)));
-        assert_eq!(view("1260").unused, [None]);
+        assert_eq!(view(&data, "1260", false).unused, [None]);
+        // With "significant relationships only" the forecast chooses among significant periods,
+        // so the significant 252-day one is used.
+        assert_eq!(view(&data, "252", true).unused, [None]);
+        // A longer period without a size can't be used, so it supersedes nothing.
+        data.rows[2].move_per_pct = None;
+        assert_eq!(view(&data, "252", false).unused[0], None);
     }
 
     #[test]
