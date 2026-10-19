@@ -76,7 +76,8 @@ enum Cmd {
 enum CensusCmd {
     /// Run or resume a census (Ctrl-C stops after committing; run again to resume).
     Run {
-        /// Reduced grid (horizons 1, 5, 21; 1- and 3-year windows) for a quick end-to-end run.
+        /// Reduced grid (move lengths 1, 5 and 21 days; 252- and 756-day correlation periods) for a
+        /// quick end-to-end run.
         /// Only for a new run: an existing one always continues with its own settings.
         #[arg(long)]
         smoke: bool,
@@ -91,7 +92,7 @@ enum CensusCmd {
         #[arg(long)]
         name: Option<String>,
     },
-    /// Pause after the current window and release the GPU.
+    /// Pause after the correlation period in progress and release the GPU.
     Pause {
         /// Census to pause (default: the census running now if there is exactly one, else the
         /// default census named in census/LATEST).
@@ -121,21 +122,22 @@ enum CensusCmd {
         /// Random-guess accounts to compare against.
         #[arg(long, default_value_t = 1000)]
         random: usize,
-        /// Use pairs from every pre-holdout window, not just the latest of each length.
+        /// Use pairs from every correlation period that ended before the holdout, not just the
+        /// latest of each length.
         #[arg(long)]
         all_windows: bool,
         /// Walk forward: treat each year from this year's start month onward as the future in
         /// turn (one-year holdouts ending at the last data day), and print a table by year.
         #[arg(long)]
         walk_forward: bool,
-        /// Signal family: `census` (stored lead-lag pairs; the target horizon equals --rebalance),
+        /// Signal family: `census` (stored lead-lag pairs; B's move length equals --rebalance),
         /// `peers` (peer momentum) or `reversal` (own-stock short-term reversal, a positive control).
         #[arg(long, default_value = "census")]
         family: String,
         /// Trading days between rebalances (default: 1 for census pairs, 21 for peers).
         #[arg(long)]
         rebalance: Option<usize>,
-        /// Peer momentum: peers per stock, return lookback (days), correlation window (days).
+        /// Peer momentum: peers per stock, return lookback (days), correlation period (days).
         #[arg(long, default_value_t = 20)]
         peers: usize,
         #[arg(long, default_value_t = 21)]
@@ -185,7 +187,7 @@ enum CensusCmd {
         #[arg(long)]
         max_age_years: Option<f64>,
     },
-    /// A stock's lead-lag relationships: who it leads and follows, at what lag, and by how much.
+    /// A stock's lead-lag relationships: who it leads and follows, at what offset, and by how much.
     Stock {
         ticker: String,
         #[arg(long, default_value_t = c2_census::run::latest_run())]
@@ -197,12 +199,14 @@ enum CensusCmd {
         #[arg(long, default_value_t = 25)]
         limit: usize,
     },
-    /// Replication test: do stored pairs keep their sign in the next non-overlapping window?
+    /// Replication test: do stored pairs keep their sign in the next correlation period of the same
+    /// length (the one that starts after theirs ends)?
     Replicate {
         #[arg(long, default_value_t = c2_census::run::latest_run())]
         name: String,
     },
-    /// Stop a running census cleanly (it finishes the window in progress); `run` resumes it.
+    /// Stop a running census cleanly (it finishes the correlation period in progress); `run`
+    /// resumes it.
     Stop {
         /// Census to stop (default: the census running now if there is exactly one, else the
         /// default census named in census/LATEST).
@@ -272,7 +276,7 @@ fn max_error(cross: impl Fn(usize, usize) -> f64, xs: &[f32], ys: &[f32], kp: us
 
 fn bench(n: usize, rows: &[usize], with_cpu: bool) -> Result<()> {
     let pairs = sample_pairs(n);
-    println!("{n} stocks; times are per all-pairs product (one lag); error = max |r - f64 reference| over {} pairs\n", pairs.len());
+    println!("{n} stocks; times are per all-pairs product (one offset); error = max |r - f64 reference| over {} pairs\n", pairs.len());
 
     #[cfg(feature = "cuda")]
     if let Err(e) = bench_gpu(n, rows, &pairs) {
@@ -484,12 +488,12 @@ fn census(action: CensusCmd) -> Result<()> {
         CensusCmd::Validate { oracle } => {
             let store = c2_data::Store::open(&store_dir())?;
             let r = c2_census::validate::validate(&store, &oracle)?;
-            println!("Oracle window: {} stocks ({} not in store: {:?}), {} days, {} pairs", r.universe, r.missing.len(), r.missing, r.days, r.pairs);
+            println!("Oracle correlation period: {} stocks ({} not in store: {:?}), {} days, {} pairs", r.universe, r.missing.len(), r.missing, r.days, r.pairs);
             println!("  max |r - oracle|, exact f64 path:       {:.2e}", r.max_err_exact);
             println!("  max |r - oracle|, GPU INT8 census path: {:.2e}", r.max_err_gpu_int8);
             println!("  max |r - oracle|, CPU INT8 (AVX-VNNI):  {:.2e}", r.max_err_cpu_int8);
             println!("  max |GPU INT8 - CPU INT8|:              {:.2e}", r.max_cpu_gpu_diff);
-            println!("  oracle's 50 strongest lag-1 pairs screened in by the GPU pass: {}/{}", r.top50_found, r.top50_total);
+            println!("  oracle's 50 strongest offset-1 pairs screened in by the GPU pass: {}/{}", r.top50_found, r.top50_total);
             Ok(())
         }
         CensusCmd::SnapshotSymbols => {
@@ -510,10 +514,14 @@ fn census(action: CensusCmd) -> Result<()> {
             // The run's own settings, correlation periods, stocks and task numbering, on today's data.
             let meta = c2_census::meta::RunMeta::load(&dir)?;
             let plan = run::Plan::for_run(&store, &meta)?;
+            let gaps = gaps(&plan);
             if walk_forward {
                 let (y0, mo, d) = c2_data::civil_from_days(c2_data::parse_date(&start)?);
                 let last = *plan.var.days.last().unwrap();
-                println!("Walk-forward: each year treated as the future, predicted only from census windows that ended before it.");
+                println!("Walk-forward: each year treated as the future, predicted only from census correlation periods that ended before it.");
+                for line in gaps.lines("pairs with them are left out") {
+                    println!("{line}.");
+                }
                 println!("{:<24} {:>7} {:>9} {:>9} {:>10} {:>10} {:>10} {:>8} {:>8} {:>9} {:>8}", "holdout", "pairs", "SPY", "QQQ", "picks", "random med", "p (0 bps)", "hit %", "IC t", "LS bps/d", "LS t");
                 let mut beat = 0;
                 let mut years = 0;
@@ -540,8 +548,10 @@ fn census(action: CensusCmd) -> Result<()> {
                             continue;
                         }
                     };
+                    let period = format!("{}..{}", c2_data::date_string(r.first_day), c2_data::date_string(r.last_day));
                     if r.pairs == 0 {
                         no_pairs += 1;
+                        println!("{period:<24} no census pairs: none with B moving over {} from correlation periods that ended before it{}", days_text(rebalance), holdout_left_out(&r));
                         continue;
                     }
                     let pct = |v: f64| 100.0 * (v / 10_000.0 - 1.0);
@@ -549,9 +559,8 @@ fn census(action: CensusCmd) -> Result<()> {
                     let (_, strat, med, p) = r.strategy[0];
                     years += 1;
                     beat += usize::from(p < 0.1);
-                    println!("{:<24} {:>7} {:>8.1}% {:>8.1}% {:>9.1}% {:>9.1}% {:>10.3} {:>7.1}% {:>8.2} {:>9.2} {:>8.2}",
-                        format!("{}..{}", c2_data::date_string(r.first_day), c2_data::date_string(r.last_day)), r.pairs,
-                        bench(0), bench(1), pct(strat), pct(med), p, 100.0 * r.hit_rate, r.ic_t, 1e4 * r.ls_mean, r.ls_t);
+                    println!("{:<24} {:>7} {:>8.1}% {:>8.1}% {:>9.1}% {:>9.1}% {:>10.3} {:>7.1}% {:>8.2} {:>9.2} {:>8.2}{}",
+                        period, r.pairs, bench(0), bench(1), pct(strat), pct(med), p, 100.0 * r.hit_rate, r.ic_t, 1e4 * r.ls_mean, r.ls_t, holdout_left_out(&r));
                     ic_ts.push(r.ic_t);
                     ls_ts.push(r.ls_t);
                     ls_bps.push(1e4 * r.ls_mean);
@@ -564,8 +573,15 @@ fn census(action: CensusCmd) -> Result<()> {
                         None => anyhow::bail!("no year of the walk-forward could be tested: none had census pairs from correlation periods that ended before it"),
                     }
                 }
-                if !failed.is_empty() {
-                    println!("{} year(s) could not be tested (above); the summary covers the other {years}.", failed.len());
+                if !failed.is_empty() || no_pairs > 0 {
+                    let mut why = Vec::new();
+                    if !failed.is_empty() {
+                        why.push(format!("{} failed", failed.len()));
+                    }
+                    if no_pairs > 0 {
+                        why.push(format!("{no_pairs} had no census pairs"));
+                    }
+                    println!("{} year(s) could not be tested ({}, above); the summary covers the other {years}.", failed.len() + no_pairs, why.join(", "));
                 }
                 println!("Years where the picks beat random guessers at p < 0.1: {beat} of {years} (chance alone: about {:.1})  [{:.0}s]", 0.1 * years as f64, t0.elapsed().as_secs_f64());
                 let stouffer = |v: &[f64]| v.iter().sum::<f64>() / (v.len() as f64).sqrt();
@@ -579,12 +595,32 @@ fn census(action: CensusCmd) -> Result<()> {
             let opt = c2_census::holdout::Options { family: fam, rebalance, start: c2_data::parse_date(&start)?, end: i32::MAX, picks, costs_bps: costs, random_runs: random, cash: 10_000.0, all_windows };
             let r = c2_census::holdout::holdout(&store, &plan, &dir, &opt)?;
             println!("Holdout {} .. {} ({} trading days), {:.0}s", c2_data::date_string(r.first_day), c2_data::date_string(r.last_day), r.days, t0.elapsed().as_secs_f64());
-            println!("Family {family}, rebalanced every {rebalance} trading day(s): {} pairs from {} pre-holdout window(s); {} stocks can be picked",
-                r.pairs, r.windows_used, r.candidates);
-            println!("Picks beat the market over their holding period: {:.1}% of {} picks (coin flip 50%)", 100.0 * r.hit_rate, r.hits);
-            println!("Rank correlation of prediction vs outcome (IC): mean {:+.4}, t = {:+.2}", r.ic_mean, r.ic_t);
-            println!("Long-short top/bottom 10%: {:.2} bps/day gross, Sharpe {:.2}, t = {:.2}, book turnover {:.0}% per rebalance",
-                1e4 * r.ls_mean, r.ls_sharpe, r.ls_t, 100.0 * r.ls_turnover);
+            for line in gaps.lines("pairs with them are left out") {
+                println!("{line}.");
+            }
+            if r.periods_unavailable > 0 || r.pairs_skipped > 0 {
+                let mut parts = Vec::new();
+                if r.periods_unavailable > 0 {
+                    parts.push(format!("{} correlation period(s) that ended before the holdout but aren't covered by today's price data{}", r.periods_unavailable,
+                        if all_windows { "" } else { " (for each length the latest covered one is used)" }));
+                }
+                if r.pairs_skipped > 0 {
+                    parts.push(format!("{} stored pair(s) with a stock that is no longer in today's data", r.pairs_skipped));
+                }
+                println!("Left out: {}.", parts.join("; "));
+            }
+            if r.pairs == 0 {
+                // Census pairs only: nothing was predicted, so there is nothing to score.
+                println!("Family {family}, rebalanced every {rebalance} trading day(s): no census pairs. No stored relationship with B moving over {} comes from a correlation period that ended before the holdout, so nothing was predicted.",
+                    days_text(rebalance));
+            } else {
+                println!("Family {family}, rebalanced every {rebalance} trading day(s): {} pairs from {} correlation period(s) that ended before the holdout; {} stocks can be picked",
+                    r.pairs, r.windows_used, r.candidates);
+                println!("Picks beat the market over their holding period: {:.1}% of {} picks (coin flip 50%)", 100.0 * r.hit_rate, r.hits);
+                println!("Rank correlation of prediction vs outcome (IC): mean {:+.4}, t = {:+.2}", r.ic_mean, r.ic_t);
+                println!("Long-short top/bottom 10%: {:.2} bps/day gross, Sharpe {:.2}, t = {:.2}, book turnover {:.0}% per rebalance",
+                    1e4 * r.ls_mean, r.ls_sharpe, r.ls_t, 100.0 * r.ls_turnover);
+            }
             println!("\n{:<44} {:>12} {:>9}", "", "final value", "return");
             for b in &r.benchmarks {
                 println!("{:<44} {:>12.0} {:>8.1}%", b.label, b.final_value, 100.0 * (b.final_value / 10_000.0 - 1.0));
@@ -695,11 +731,13 @@ fn census(action: CensusCmd) -> Result<()> {
             let t = ticker.trim().to_uppercase();
             let as_of = match as_of { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
             let dir = run::run_dir(&name);
-            // The census variable with the run's own settings.
+            // The run's own census variable, from its reading plan, which also says what today's
+            // data can't reproduce of the run.
             let meta = c2_census::meta::RunMeta::load(&dir)?;
-            let cal = c2_data::Calendar::trading_days(&store)?;
-            let var = c2_census::variable::production(&store, &cal, meta.cfg.start)?;
-            let data = c2_census::forecast::prepare(&store, &var, &dir, &t)?;
+            let (data, gaps) = {
+                let plan = run::Plan::for_run(&store, &meta)?;
+                (c2_census::forecast::prepare(&store, &plan.var, &dir, &t)?, gaps(&plan))
+            };
             let f = c2_census::forecast::forecast_from(&data, as_of, &c2_census::forecast::Options {
                 significant_only: significant,
                 horizon: days,
@@ -707,6 +745,9 @@ fn census(action: CensusCmd) -> Result<()> {
             })?;
             println!("{t} as of {}: ${:.2}; {} relationships where {t} follows another stock{}; typical daily move relative to the market {:.2}%", c2_data::date_string(f.as_of),
                 f.last_price, f.relationships, if significant { " (significant only)" } else { "" }, 100.0 * f.daily_sd);
+            for line in gaps.lines("relationships with them are left out") {
+                println!("{line}.");
+            }
             println!("Moves are relative to the market; the $ columns are the price those moves give if the market is flat.");
             println!("{:>5} {:>11} {:>12} {:>11} {:>12} {:>9}", "day", "predicted", "if flat", "actual", "if flat", "covering");
             for (j, (p, a)) in f.predicted_pct.iter().zip(&f.actual_pct).enumerate() {
@@ -718,33 +759,41 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             println!("\nLargest shares of the forecast at day {}:", f.predicted_pct.len());
             for c in f.contributions.iter().take(10) {
-                println!("  {:<6} offset {:>3}d (moves {}d -> {}d, r {:+.3}{}): its move {:+.2}% x {:+.3}% per 1% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
-                    c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader_move_pct, c.move_per_pct, c.implied_pct, c.share_pct, c.window);
+                println!("  {} offset {}d (moves {}d -> {}d, r {:+.3}{}): {}'s moves landing in these days {:+.2}% -> {t} {:+.2}% (at {:+.3}% per 1%, applied to log changes; for small moves Y ≈ X x M); share {:+.3} pts   [{}]",
+                    c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader, c.leader_move_in_horizon_pct, c.implied_pct, c.move_per_pct, c.share_pct, c.window);
             }
+            println!("A leader's moves \"landing in these days\" are its market-relative moves whose predicted days fall in the days ahead; a move whose predicted days run past the last day counts in proportion to the days inside. The implied move is (1 + X/100)^M - 1: the % per 1% applies to log changes, so it is about X x M only for small moves.");
             match &f.skill {
-                Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, {}-day horizon), against {t}'s actual move relative to the market: \
+                Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, each {} trading days ahead), against {t}'s actual move relative to the market: \
                     direction right {:.1}% of the time (of {} with a direction); predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
                     s.forecasts, s.horizon, 100.0 * s.hit_rate, s.directional, s.corr, s.slope, s.mean_abs_predicted_pct, s.mean_abs_actual_pct),
                 None => println!("\nTrack record: too few past forecasts to judge."),
             }
             println!("\nRelative to the market means a stock's move minus its usual share of the market's move (beta x market), which is what the census correlates.");
-            println!("Each leader's moves are multiplied by that relationship's % per 1% (the same number `c2 census stock` shows).");
+            println!("Each relationship's % per 1% is the number `c2 census stock` shows for it; the forecast uses rolling correlation periods only, never the full-history one.");
             Ok(())
         }
         CensusCmd::Stock { ticker, name, significant, limit } => {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
             let dir = run::run_dir(&name);
-            // The census variable with the run's own settings.
+            // The run's own census variable, from its reading plan, which also says what today's
+            // data can't reproduce of the run.
             let meta = c2_census::meta::RunMeta::load(&dir)?;
-            let cal = c2_data::Calendar::trading_days(&store)?;
-            let var = c2_census::variable::production(&store, &cal, meta.cfg.start)?;
-            let rows = c2_census::analyze::stock_profile_with(&store, &var, &dir, &t, significant)?;
+            let (rows, gaps) = {
+                let plan = run::Plan::for_run(&store, &meta)?;
+                (c2_census::analyze::stock_profile_with(&store, &plan.var, &dir, &t, significant)?, gaps(&plan))
+            };
+            let full_history: std::collections::HashSet<u32> = meta.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
             let sig = rows.iter().filter(|r| r.significant).count();
+            let scope = if gaps.periods == 0 { "across all correlation periods".to_string() } else { format!("across the {} correlation periods that today's data covers", gaps.of - gaps.periods) };
             if significant {
-                println!("{t}: {sig} lead-lag relationships passed the significance test across all correlation periods");
+                println!("{t}: {sig} lead-lag relationships passed the significance test {scope}");
             } else {
-                println!("{t}: {} stored lead-lag relationships across all correlation periods, {sig} passed the significance test", rows.len());
+                println!("{t}: {} stored lead-lag relationships {scope}, {sig} passed the significance test", rows.len());
+            }
+            for line in gaps.lines("rows with one of them show no size") {
+                println!("{line}.");
             }
             for leads in [true, false] {
                 let part: Vec<_> = rows.iter().filter(|r| r.leads == leads).take(limit).collect();
@@ -761,14 +810,20 @@ fn census(action: CensusCmd) -> Result<()> {
                         let rate = |x: u32, n: u32| if n > 0 { format!("{:.0}%", 100.0 * x as f64 / n as f64) } else { "-".into() };
                         format!("; after {a} rose {:.1}%+, {b} rose {}/{} ({}) vs {} normally", 100.0 * w.up.exp_m1(), c.a_up_b_up, c.a_up, rate(c.a_up_b_up, c.a_up), rate(c.b_up, c.cases))
                     }).unwrap_or_default();
-                    println!("  {a} -> {b:<6} offset {:>3} days: {size}; r {:+.3}, z {:+.1}; chance made {:.0} pairs with |z| >= {} in that period{}{words}   [{moves}; correlation period {} days to {}, {} observations]",
-                        r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.period_days, r.period_end, r.obs);
+                    let period = if full_history.contains(&r.window_id) {
+                        format!("full-history correlation period, {} days to {} (not used by the forecast)", r.period_days, r.period_end)
+                    } else {
+                        format!("correlation period {} days to {}", r.period_days, r.period_end)
+                    };
+                    println!("  {a} -> {b:<6} offset {:>3} days: {size}; r {:+.3}, z {:+.1}; chance made {:.0} pairs with |z| >= {} in that period{}{words}   [{moves}; {period}, {} observations]",
+                        r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.obs);
                 }
             }
             println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % per 1% is that relationship in price terms:");
-            println!("the follower's move relative to the market per 1% move of the leader relative to the market, in that correlation period");
-            println!("(the multiplier `c2 census forecast` applies). The 'after ... rose' counts use plain price moves. 'Chance made N' is how many pairs");
-            println!("at least that strong appeared in the same period when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
+            println!("the follower's move relative to the market per 1% move of the leader relative to the market, in that correlation period.");
+            println!("For rows from rolling correlation periods it is the multiplier `c2 census forecast` applies; the forecast doesn't use the full-history period.");
+            println!("The 'after ... rose' counts use plain price moves. 'Chance made N' is how many pairs at least that strong appeared in the same period");
+            println!("when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
             println!("The offset runs from the end of the leader's move to the end of the follower's. `c2 census explain` shows any one step by step.");
             Ok(())
         }
@@ -779,10 +834,17 @@ fn census(action: CensusCmd) -> Result<()> {
             // The run's own settings, correlation periods, stocks and task numbering, on today's data.
             let meta = c2_census::meta::RunMeta::load(&dir)?;
             let plan = run::Plan::for_run(&store, &meta)?;
-            let table = c2_census::analyze::replicate_run(&store, &plan, &dir)?;
-            println!("Replication in the next non-overlapping window ({:.0}s). 'Chance' rows are pairs picked from sign-flip null matrices.", t0.elapsed().as_secs_f64());
-            println!("{:>4} {:>4} {:>16} {:>7} {:>10} {:>11} {:>16} {:>14}", "h1", "h2", "lag", "kind", "pairs", "same sign", "mean |r| then", "mean r next*");
-            for ((h1, h2, b, null), r) in &table {
+            let rep = c2_census::analyze::replication(&store, &plan, &dir)?;
+            println!("Replication in the next correlation period of the same length ({:.0}s). 'Chance' rows are pairs picked from sign-flip null matrices.", t0.elapsed().as_secs_f64());
+            for line in gaps(&plan).lines("records with them are left out") {
+                println!("{line}.");
+            }
+            if rep.records_unavailable > 0 || rep.records_missing_stock > 0 {
+                println!("Left out: {} stored record(s) whose correlation period, or the next one of its length, today's data doesn't cover ({} such rolling period(s)); {} with a stock no longer in today's data.",
+                    rep.records_unavailable, rep.periods_unavailable, rep.records_missing_stock);
+            }
+            println!("{:>4} {:>4} {:>16} {:>7} {:>10} {:>11} {:>16} {:>14}", "h1", "h2", "offset", "kind", "pairs", "same sign", "mean |r| then", "mean r next*");
+            for ((h1, h2, b, null), r) in &rep.table {
                 println!("{h1:>4} {h2:>4} {b:>16} {:>7} {:>10} {:>10.1}% {:>16.4} {:>14.4}",
                     if *null { "chance" } else { "real" }, r.pairs, 100.0 * r.same_sign as f64 / r.pairs.max(1) as f64,
                     r.abs_then / r.pairs.max(1) as f64, r.signed_next / r.pairs.max(1) as f64);
@@ -798,7 +860,7 @@ fn census(action: CensusCmd) -> Result<()> {
                     // SIGTERM: the census's handler commits the window in progress, then exits.
                     let sent = std::process::Command::new("kill").arg(pid.to_string()).status()?.success();
                     anyhow::ensure!(sent, "could not signal census {name}'s process (pid {pid})");
-                    println!("asked census {name} (pid {pid}) to stop; it commits the window in progress first. `c2 census run --name {name}` resumes.");
+                    println!("asked census {name} (pid {pid}) to stop; it first commits the correlation period in progress. `c2 census run --name {name}` resumes.");
                 }
                 None => println!("census {name} is not running"),
             }
@@ -817,7 +879,7 @@ fn census(action: CensusCmd) -> Result<()> {
             };
             let s: serde_json::Value = serde_json::from_str(&text)?;
             let age = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH)?.as_secs().saturating_sub(s["updated_unix"].as_u64().unwrap_or(0));
-            println!("census {name}: {} (control: {}), {}/{} windows, {:.2}% of work, ETA {}, status written {age}s ago",
+            println!("census {name}: {} (control: {}), {} of {} correlation-period computations, {:.2}% of the work, ETA {}, status written {age}s ago",
                 s["state"].as_str().unwrap_or("?"), run::control_state(&dir), s["units_done"], s["units_total"],
                 100.0 * s["fraction_done"].as_f64().unwrap_or(0.0), run::hms(s["eta_seconds"].as_f64().unwrap_or(-1.0)));
             Ok(())
@@ -827,7 +889,7 @@ fn census(action: CensusCmd) -> Result<()> {
             let dir = existing_run_dir(&name)?;
             run::set_control(&dir, "pause")?;
             match run::running_pid(&dir) {
-                Some(pid) => println!("pausing census {name} (pid {pid}) after the current window (the GPU is released while paused); `c2 census resume` continues it"),
+                Some(pid) => println!("pausing census {name} (pid {pid}) after the correlation period in progress (the GPU is released while paused); `c2 census resume` continues it"),
                 None => println!("census {name} is not running; when it next starts it waits, paused, until `c2 census resume --name {name}`"),
             }
             Ok(())
@@ -846,19 +908,28 @@ fn census(action: CensusCmd) -> Result<()> {
         }
         CensusCmd::Run { smoke, name } => {
             let dir = run::run_dir(&name);
-            // Fail before the plan is built. What keeps a second writer out is the lock that
-            // `run::run` holds on the run (it also writes the run's pid file).
+            // Every guard runs before anything is logged, so a refused start opens no session in
+            // run.log (`refuse` notes it there instead). Fail before the plan is built if the run
+            // is live; what keeps a second writer out is the lock `run::run` holds (it also
+            // writes the run's pid file).
             if let Some(pid) = run::running_pid(&dir) {
-                anyhow::bail!("census {name} is already running (pid {pid})");
+                return Err(refuse(&dir, anyhow::anyhow!("census {name} is already running (pid {pid})")));
             }
-            let cfg = run_settings(&name, &dir, smoke)?;
+            let cfg = run_settings(&name, &dir, smoke).map_err(|e| refuse(&dir, e))?;
             let store = c2_data::Store::open(&store_dir())?;
+            let t0 = Instant::now();
+            let plan = run::Plan::new(&store, cfg)?;
+            let built = t0.elapsed().as_secs_f64();
+            // The checks `run::run` makes before resuming (settings, price data, task list,
+            // correlation periods and their stocks), made here so a refusal comes before the
+            // plan line.
+            run::resume_check(&dir, &plan, &store).map_err(|e| refuse(&dir, e))?;
             let log = census_log(&dir, None);
-            let plan = census_plan(&store, cfg, &name, &dir, &log)?;
+            log_plan(&plan, built, &name, &dir, &log)?;
             let stop = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
             let s2 = stop.clone();
             ctrlc::set_handler(move || {
-                eprintln!("stopping after the current window...");
+                eprintln!("stopping after the correlation period in progress...");
                 s2.store(true, std::sync::atomic::Ordering::Relaxed);
             })?;
             run::run(&store, &plan, &dir, &stop, &log)
@@ -926,21 +997,82 @@ fn census_log(dir: &std::path::Path, also: Option<std::path::PathBuf>) -> impl F
     }
 }
 
-/// Builds the plan of a census about to run (or resume) in `dir` and logs its "plan:" line,
-/// which opens a session in run.log.
-fn census_plan(store: &c2_data::Store, cfg: c2_census::grid::Config, name: &str, dir: &std::path::Path, log: &dyn Fn(&str)) -> Result<c2_census::run::Plan> {
+/// Logs the "plan:" line that opens a census session in run.log, for a plan built in `built`
+/// seconds that has passed every guard (`run::resume_check`), so a refused attempt never opens
+/// a session. Says so when the run is paused.
+fn log_plan(plan: &c2_census::run::Plan, built: f64, name: &str, dir: &std::path::Path, log: &dyn Fn(&str)) -> Result<()> {
     std::fs::create_dir_all(dir)?;
-    let t0 = Instant::now();
-    let plan = c2_census::run::Plan::new(store, cfg)?;
     let units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
     let sizes: Vec<usize> = plan.universes.iter().map(|u| u.len()).collect();
-    log(&format!("plan: {} stocks in the variable, {} windows (universe {}..{} stocks), {} tasks, {} units; built in {:.1}s",
-        plan.var.n, plan.windows.len(), sizes.iter().min().unwrap_or(&0), sizes.iter().max().unwrap_or(&0),
-        plan.tasks.len(), units, t0.elapsed().as_secs_f64()));
+    log(&format!("plan: {} stocks in the variable, {} correlation periods ({}..{} stocks each), {} tasks, {} units; built in {built:.1}s",
+        plan.var.n, plan.windows.len(), sizes.iter().min().unwrap_or(&0), sizes.iter().max().unwrap_or(&0), plan.tasks.len(), units));
     if c2_census::run::control_state(dir) == "pause" {
         log(&format!("census {name} is paused: it waits, without the GPU, until `c2 census resume --name {name}`"));
     }
-    Ok(plan)
+    Ok(())
+}
+
+/// Notes a refused start of the census in `dir` in its run.log (if the run exists) and returns
+/// the error. The line deliberately has no "[HH:MM:SS]" stamp at its start: `analyze::run_history`
+/// counts computing time from stamped lines, and a stamped refusal would stretch the last session
+/// to the moment of the refusal.
+fn refuse(dir: &std::path::Path, err: anyhow::Error) -> anyhow::Error {
+    if dir.is_dir()
+        && let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(dir.join("run.log"))
+    {
+        use std::io::Write;
+        let _ = writeln!(f, "refused {}: {err:#}", local_date_time());
+    }
+    err
+}
+
+/// "1 day" or "N days".
+fn days_text(n: usize) -> String {
+    if n == 1 { "1 day".into() } else { format!("{n} days") }
+}
+
+/// A walk-forward row's note of what its holdout left out ("" when nothing).
+fn holdout_left_out(r: &c2_census::holdout::Report) -> String {
+    let mut parts = Vec::new();
+    if r.periods_unavailable > 0 {
+        parts.push(format!("{} uncovered correlation period(s)", r.periods_unavailable));
+    }
+    if r.pairs_skipped > 0 {
+        parts.push(format!("{} pair(s) with a stock no longer in today's data", r.pairs_skipped));
+    }
+    if parts.is_empty() { String::new() } else { format!("   [left out: {}]", parts.join(", ")) }
+}
+
+/// What today's data can't reproduce of the run a reading plan (`Plan::for_run`) was built for.
+struct Gaps {
+    /// Correlation periods today's data doesn't cover exactly, of all the run's periods.
+    periods: usize,
+    of: usize,
+    /// The run's stocks no longer in today's data (distinct; `Plan::missing_stocks`).
+    stocks: usize,
+    /// Why recomputed values may differ from the stored ones (`Plan::variable_note`).
+    note: Option<String>,
+}
+
+fn gaps(plan: &c2_census::run::Plan) -> Gaps {
+    let stocks: std::collections::HashSet<u32> = plan.missing_stocks.iter().flatten().copied().collect();
+    Gaps { periods: plan.unavailable().0, of: plan.windows.len(), stocks: stocks.len(), note: plan.variable_note.clone() }
+}
+
+impl Gaps {
+    /// The lines to print, `stocks_then` saying what happens to the pairs with a missing stock;
+    /// none when the run is fully reproducible on today's data.
+    fn lines(&self, stocks_then: &str) -> Vec<String> {
+        let mut out = Vec::new();
+        if self.periods > 0 {
+            out.push(format!("{} of the run's {} correlation periods aren't covered exactly by today's price data, so they are left out", self.periods, self.of));
+        }
+        if self.stocks > 0 {
+            out.push(format!("{} of the run's stocks are no longer in today's data, so {stocks_then}", self.stocks));
+        }
+        out.extend(self.note.clone());
+        out
+    }
 }
 
 /// Gives every census run without its own copy of its stock list (the store's symbols.tsv,
@@ -966,6 +1098,21 @@ fn snapshot_symbols() -> Result<()> {
 /// Local time of day for log lines. The UTC offset comes from `date +%z` once (std has no time
 /// zones); falls back to UTC.
 fn hms_now() -> String {
+    hms_of(local_seconds())
+}
+
+/// Local date and time, "YYYY-MM-DD HH:MM:SS".
+fn local_date_time() -> String {
+    let local = local_seconds();
+    format!("{} {}", c2_data::date_string(local.div_euclid(86_400) as i32), hms_of(local))
+}
+
+fn hms_of(local: i64) -> String {
+    format!("{:02}:{:02}:{:02}", (local / 3600).rem_euclid(24), (local / 60).rem_euclid(60), local.rem_euclid(60))
+}
+
+/// Seconds since 1970 in local time (see `hms_now`).
+fn local_seconds() -> i64 {
     static OFFSET: std::sync::OnceLock<i64> = std::sync::OnceLock::new();
     let offset = *OFFSET.get_or_init(|| {
         let z = std::process::Command::new("date").arg("+%z").output().ok().and_then(|o| String::from_utf8(o.stdout).ok()).unwrap_or_default();
@@ -979,6 +1126,5 @@ fn hms_now() -> String {
         }
     });
     let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
-    let local = secs as i64 + offset;
-    format!("{:02}:{:02}:{:02}", (local / 3600).rem_euclid(24), (local / 60).rem_euclid(60), local.rem_euclid(60))
+    secs as i64 + offset
 }
