@@ -1,14 +1,23 @@
 //! Reading census output, and the replication test: do stored pairs keep their sign in the next
 //! window that does not overlap?
+//!
+//! Every reader takes what a run's files mean from the run itself (`meta::RunMeta`): its task
+//! list (what each `tasks/t<id>` file holds), its correlation periods (mapped onto the census
+//! variable's rows by date, never clamped: a period today's data doesn't cover exactly is left
+//! out) and its stock list (records hold store ids as of the run; they are translated through
+//! tickers, never used as today's store ids).
 
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::collections::{BTreeMap, HashMap, HashSet};
+use std::ops::Range;
+use std::path::Path;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, anyhow, bail};
+use c2_data::Store;
 use rayon::prelude::*;
 
-use crate::grid::{self, Window};
-use crate::run::{FLAG_NULL, FLAG_TOP, Plan, RECORD_BYTES, Record};
+use crate::grid::{self, Config, Task, Window};
+use crate::meta::{self, RunMeta};
+use crate::run::{FLAG_FDR, FLAG_NULL, FLAG_TOP, Plan, RECORD_BYTES, Record};
 
 /// All records of one task file.
 pub fn read_records(path: &Path) -> Result<Vec<Record>> {
@@ -16,10 +25,198 @@ pub fn read_records(path: &Path) -> Result<Vec<Record>> {
     Ok(bytes.chunks_exact(RECORD_BYTES).map(Record::from_bytes).collect())
 }
 
+/// Calls `f` on every record of a task file, in file order, reading the file in pieces so that
+/// memory stays small however large it is. A trailing partial record (a write cut off by a
+/// crash) is ignored, as `read_records` does.
+pub(crate) fn visit_records(path: &Path, mut f: impl FnMut(&Record)) -> Result<()> {
+    use std::io::Read;
+    let mut file = std::fs::File::open(path).with_context(|| format!("read {}", path.display()))?;
+    let mut buf = vec![0u8; RECORD_BYTES * 16384];
+    let mut fill = 0;
+    loop {
+        let n = file.read(&mut buf[fill..]).with_context(|| format!("read {}", path.display()))?;
+        if n == 0 {
+            return Ok(());
+        }
+        fill += n;
+        let whole = fill / RECORD_BYTES * RECORD_BYTES;
+        for chunk in buf[..whole].chunks_exact(RECORD_BYTES) {
+            f(&Record::from_bytes(chunk));
+        }
+        buf.copy_within(whole..fill, 0);
+        fill -= whole;
+    }
+}
+
+/// `visit_records` on the run's results file for `task`, checking that every record belongs to
+/// it: the task's move lengths and one of its correlation periods. Errors otherwise, since the
+/// run's files then don't hold what its task list says and nothing read from them can be trusted.
+pub(crate) fn visit_task(meta: &RunMeta, task: &Task, mut f: impl FnMut(&Record)) -> Result<()> {
+    let mut ours = vec![false; meta.windows.len()];
+    for &w in &task.windows {
+        ours[w] = true;
+    }
+    let mut stray: Option<Record> = None;
+    visit_records(&meta.task_path(task.id, "rec"), |r| {
+        if (r.h1 as usize, r.h2 as usize) == (task.h1, task.h2) && ours.get(r.window as usize) == Some(&true) {
+            f(r);
+        } else if stray.is_none() {
+            stray = Some(*r);
+        }
+    })?;
+    match stray {
+        None => Ok(()),
+        Some(r) => bail!(
+            "census {}: results file t{} should hold {}, but it has a record for A over {} -> B over {} days in correlation period {}; the run's files don't match its task list",
+            meta.name, task.id, meta::describe_task(task.h1, task.h2, task.length), r.h1, r.h2, r.window
+        ),
+    }
+}
+
+/// One line of a task's summary (`tasks/t<id>.csv`, see `run::SUMMARY_HEADER`): one matrix,
+/// i.e. one correlation period and offset.
+#[derive(Clone, Debug, Default)]
+pub struct SummaryLine {
+    pub window: usize,
+    pub h1: usize,
+    pub h2: usize,
+    pub lag: usize,
+    /// Stocks in the matrix, and observations per stock.
+    pub stocks: usize,
+    pub obs: usize,
+    /// Real pairs at |z| >= 3, 4, 5, and the mean count over the sign-flip nulls.
+    pub real: [f64; 3],
+    pub null: [f64; 3],
+    /// The false-discovery cut-off |r|; None when nothing passed.
+    pub fdr_r: Option<f64>,
+    pub stored_real: usize,
+    pub stored_null: usize,
+    /// The same test run on a sign-flip null matrix: its cut-off when it fired. None when it
+    /// didn't fire, or when the run didn't record it (`Summary::placebo_recorded`).
+    pub placebo_fdr_r: Option<f64>,
+}
+
+/// A task's summary lines.
+#[derive(Clone, Debug, Default)]
+pub struct Summary {
+    pub lines: Vec<SummaryLine>,
+    /// False when the file has no `placebo_fdr_r` column (runs made before it existed: their
+    /// summaries have 17 columns), or no header at all.
+    pub placebo_recorded: bool,
+}
+
+/// Reads a task's summary by the names in its header, so every layout a run has used reads
+/// correctly. A file with no lines (or no header) has no matrices. An incomplete last line (a
+/// write cut off by a crash; committed lines always end in a newline) is ignored; any other
+/// malformed line is an error.
+pub fn read_summary(path: &Path) -> Result<Summary> {
+    let text = std::fs::read_to_string(path).with_context(|| format!("read {}", path.display()))?;
+    let complete = match text.rfind('\n') {
+        Some(k) => &text[..=k],
+        None => "",
+    };
+    let mut lines = complete.lines();
+    let Some(header) = lines.next() else { return Ok(Summary::default()) };
+    let names: Vec<&str> = header.split(',').collect();
+    let col = |n: &str| names.iter().position(|h| *h == n);
+    let need = |n: &str| col(n).with_context(|| format!("{}: its header has no {n} column", path.display()));
+    let (cw, ch1, ch2, clag, cn, cobs) = (need("window")?, need("h1")?, need("h2")?, need("lag")?, need("stocks")?, need("obs")?);
+    let real = [need("real_z3")?, need("real_z4")?, need("real_z5")?];
+    let null = [need("null_z3")?, need("null_z4")?, need("null_z5")?];
+    let (cfdr, csr, csn) = (need("fdr_r")?, need("stored_real")?, need("stored_null")?);
+    let cplacebo = col("placebo_fdr_r");
+    let out = lines
+        .enumerate()
+        .map(|(k, line)| {
+            let f: Vec<&str> = line.split(',').collect();
+            let bad = || anyhow!("{} line {}: {line:?} doesn't fit its header", path.display(), k + 2);
+            let field = |c: usize| f.get(c).copied().ok_or_else(bad);
+            let int = |c: usize| field(c)?.parse::<usize>().map_err(|_| bad());
+            let num = |c: usize| field(c)?.parse::<f64>().map_err(|_| bad());
+            let opt = |c: usize| -> Result<Option<f64>> {
+                let v = field(c)?;
+                if v.is_empty() { Ok(None) } else { v.parse().map(Some).map_err(|_| bad()) }
+            };
+            if f.len() != names.len() {
+                return Err(bad());
+            }
+            Ok(SummaryLine {
+                window: int(cw)?,
+                h1: int(ch1)?,
+                h2: int(ch2)?,
+                lag: int(clag)?,
+                stocks: int(cn)?,
+                obs: int(cobs)?,
+                real: [num(real[0])?, num(real[1])?, num(real[2])?],
+                null: [num(null[0])?, num(null[1])?, num(null[2])?],
+                fdr_r: opt(cfdr)?,
+                stored_real: int(csr)?,
+                stored_null: int(csn)?,
+                placebo_fdr_r: match cplacebo {
+                    Some(c) => opt(c)?,
+                    None => None,
+                },
+            })
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok(Summary { lines: out, placebo_recorded: cplacebo.is_some() })
+}
+
+/// `read_summary` of the run's summary for `task`, checking that every line belongs to it (its
+/// move lengths and one of its correlation periods).
+pub(crate) fn task_summary(meta: &RunMeta, task: &Task) -> Result<Summary> {
+    let s = read_summary(&meta.task_path(task.id, "csv"))?;
+    if let Some(l) = s.lines.iter().find(|l| (l.h1, l.h2) != (task.h1, task.h2) || !task.windows.contains(&l.window)) {
+        bail!(
+            "census {}: results file t{} should hold {}, but its summary has a line for A over {} -> B over {} days in correlation period {}; the run's files don't match its task list",
+            meta.name, task.id, meta::describe_task(task.h1, task.h2, task.length), l.h1, l.h2, l.window
+        );
+    }
+    Ok(s)
+}
+
+/// Refuses unless `plan` can read the run in `meta`: its census variable starts on the run's
+/// first day, and its correlation periods are the run's, id by id, on the variable's rows (found
+/// by date). With `store`, also that the plan numbers the stocks as the run's records do
+/// (`Plan::for_run` translates through tickers; `Plan::new` is right only while the store is the
+/// one the run was made with). `Plan::for_run` passes all of these by construction.
+pub(crate) fn check_plan(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<()> {
+    let name = &meta.name;
+    let prepare = "prepare it from the run itself (Plan::for_run)";
+    let first = c2_data::date_string(plan.var.days[0]);
+    if let Some(theirs) = meta.manifest["variable_days"][0].as_str()
+        && theirs != first
+    {
+        bail!("census {name} was made with a census variable starting {theirs}, this one starts {first}, so its values can't be reproduced");
+    }
+    if plan.windows.len() != meta.windows.len() {
+        bail!("this calculation was prepared for {} correlation periods, census {name} has {}; {prepare}", plan.windows.len(), meta.windows.len());
+    }
+    for (w, theirs) in plan.windows.iter().zip(&meta.windows) {
+        if w.length != theirs.length || meta.window_rows_in(&plan.var.days, theirs.id) != Some(w.start..w.end) {
+            bail!(
+                "this calculation was prepared for other correlation periods than census {name}'s (its period {} is {}..{}); {prepare}",
+                theirs.id, c2_data::date_string(theirs.first), c2_data::date_string(theirs.last)
+            );
+        }
+    }
+    if let Some(store) = store {
+        let ids = meta.id_map(store)?;
+        if let Some(c) = (0..plan.var.n).find(|&c| plan.run_id_of_column(c) != ids.run(plan.var.ids[c])) {
+            bail!(
+                "census {name} numbers its stocks differently from this calculation (e.g. {}); the price store was rebuilt since the run, so {prepare}",
+                store.symbols[plan.var.ids[c]].ticker
+            );
+        }
+    }
+    Ok(())
+}
+
 /// Exact r of leader column `i` and target column `j` (variable columns) in a window.
-fn r_in_window(plan: &Plan, w: &Window, h1: usize, h2: usize, lag: usize, i: usize, j: usize) -> Option<f64> {
+#[allow(clippy::too_many_arguments)]
+fn r_in_window(plan: &Plan, min_obs: usize, w: &Window, h1: usize, h2: usize, lag: usize, i: usize, j: usize) -> Option<f64> {
     let m = grid::observations(w.end - w.start, h1, h2, lag);
-    if m < plan.cfg.min_obs {
+    if m < min_obs {
         return None;
     }
     let (vi, vj) = (&plan.var.col(&plan.var.v, i)[w.start..w.end], &plan.var.col(&plan.var.v, j)[w.start..w.end]);
@@ -64,18 +261,34 @@ fn bucket(lag: usize, h2: usize) -> &'static str {
 /// pair at the same lag in the next window of that length that starts where this one ends.
 /// Null records were selected on sign-flipped data, so their next-window r is the baseline for
 /// "selected by chance".
+///
+/// The tasks (what each results file holds) come from the run in `dir`. `plan` supplies the
+/// census variable, the period rows and the stock numbering, and must fit the run (see
+/// `check_plan`): `Plan::for_run` does. Its stock numbering can only be checked against a store:
+/// `replicate_run` does that too.
 pub fn replicate(plan: &Plan, dir: &Path) -> Result<RepTable> {
-    let col_of: HashMap<u32, usize> = plan.var.ids.iter().enumerate().map(|(c, &id)| (id as u32, c)).collect();
+    replicate_in(plan, &RunMeta::load(dir)?, None)
+}
+
+/// `replicate`, also checking that `plan` numbers the stocks as the run's records do in `store`
+/// (a `Plan::new` plan doesn't once the store has been rebuilt since the run).
+pub fn replicate_run(store: &Store, plan: &Plan, dir: &Path) -> Result<RepTable> {
+    replicate_in(plan, &RunMeta::load(dir)?, Some(store))
+}
+
+fn replicate_in(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<RepTable> {
+    check_plan(plan, meta, store)?;
     let mut table: HashMap<(usize, usize, &'static str, bool), Rep> = HashMap::new();
-    for task in &plan.tasks {
+    for task in meta.tasks()? {
         if task.length == 0 {
             continue;
         }
-        let path = dir.join(format!("tasks/t{}.rec", task.id));
-        if !path.exists() {
-            continue;
-        }
-        let records = read_records(&path)?;
+        let mut records = Vec::new();
+        visit_task(meta, task, |r| {
+            if r.flags & FLAG_TOP != 0 {
+                records.push(*r);
+            }
+        })?;
         // Next non-overlapping window of the same length: the one starting at this one's end.
         let next: HashMap<usize, usize> = task
             .windows
@@ -84,11 +297,10 @@ pub fn replicate(plan: &Plan, dir: &Path) -> Result<RepTable> {
             .collect();
         let results: Vec<((usize, usize, &'static str, bool), f64, f64)> = records
             .par_iter()
-            .filter(|r| r.flags & FLAG_TOP != 0)
             .filter_map(|r| {
                 let nw = *next.get(&(r.window as usize))?;
-                let (i, j) = (*col_of.get(&r.leader)?, *col_of.get(&r.target)?);
-                let rn = r_in_window(plan, &plan.windows[nw], task.h1, task.h2, r.lag as usize, i, j)?;
+                let (i, j) = (plan.column_of_run_id(r.leader)?, plan.column_of_run_id(r.target)?);
+                let rn = r_in_window(plan, meta.cfg.min_obs, &plan.windows[nw], task.h1, task.h2, r.lag as usize, i, j)?;
                 let key = (task.h1, task.h2, bucket(r.lag as usize, task.h2), r.flags & FLAG_NULL != 0);
                 Some((key, r.r as f64, rn))
             })
@@ -235,44 +447,69 @@ pub fn words(pl: &[f64], pt: &[f64], h1: usize, h2: usize, lag: usize, first_e: 
 
 /// Every stored real lagged relationship involving `ticker` (as leader or target), strongest
 /// |z| first; with `significant_only`, just those that passed the false-discovery test.
-/// Builds the census variable first (under a second); `stock_profile_with` reuses one.
-pub fn stock_profile(store: &c2_data::Store, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+/// Builds the run's census variable first (under a second); `stock_profile_with` reuses one.
+pub fn stock_profile(store: &Store, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+    let meta = RunMeta::load(dir)?;
     let cal = c2_data::Calendar::trading_days(store)?;
-    let var = crate::variable::production(store, &cal, grid::Config::full().start)?;
-    stock_profile_with(store, &var, dir, ticker, significant_only)
+    let var = crate::variable::production(store, &cal, meta.cfg.start)?;
+    profile(store, &var, &meta, ticker, significant_only)
 }
 
-/// `stock_profile` with the run's census variable `var` (`Plan::var`, or
+/// `stock_profile` with the run's census variable `var` (`Plan::var` of `Plan::for_run`, or
 /// `variable::production` with the run's start): sizes use its market-relative returns and the
 /// plain-terms counts its repaired closes, on its rows.
-pub fn stock_profile_with(store: &c2_data::Store, var: &crate::variable::Variable, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
-    use crate::forecast::{Period, period_rows, read_periods};
-    use crate::run::FLAG_FDR;
-    let id = store.id(ticker).ok_or_else(|| anyhow::anyhow!("{ticker} is not in the price store"))? as u32;
-    let periods = read_periods(dir)?;
-    // Variable rows of a period for display (as before, by date range), and exactly (for sizes
-    // and counts, which are left out when its dates are not the variable's trading days).
-    let span = |p: &Period| var.days.partition_point(|&d| d < p.first)..var.days.partition_point(|&d| d <= p.last);
-    let exact: Vec<Option<std::ops::Range<usize>>> = periods.iter().map(|p| period_rows(&var.days, p)).collect();
-    // The census's whole history: the full-history window, else the union of windows.
-    let (lo, hi) = periods.iter().find(|p| p.length == 0).map(|p| (span(p).start, span(p).end)).unwrap_or_else(|| {
-        (periods.iter().map(|p| span(p).start).min().unwrap_or(0), periods.iter().map(|p| span(p).end).max().unwrap_or(0))
+///
+/// What it reads comes from the run in `dir`: its task list (not whatever files `tasks/`
+/// holds), its correlation periods mapped onto `var`'s rows by date, and its stock numbering,
+/// translated through tickers into `store`'s. Relationships from a correlation period `var`
+/// doesn't cover exactly are left out (`RunMeta::uncovered_windows` lists them); a partner that
+/// today's store or `var` no longer has keeps its row, under the run's ticker, without sizes.
+/// The chosen stock only has to be in the run.
+pub fn stock_profile_with(store: &Store, var: &crate::variable::Variable, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+    profile(store, var, &RunMeta::load(dir)?, ticker, significant_only)
+}
+
+/// The run's id of `ticker`, or an error saying why there is none.
+fn run_id_for(store: &Store, meta: &RunMeta, ids: &meta::IdMap, ticker: &str) -> Result<u32> {
+    meta.run_id_of(store, ids, ticker).ok_or_else(|| match store.id(ticker) {
+        None => anyhow!("{ticker} is not in the price store"),
+        Some(_) => anyhow!("{ticker} was not in the price store when census {} was made, so it has no results there", meta.name),
+    })
+}
+
+/// Variable rows of each of the run's correlation periods (by date; None when `days` doesn't
+/// cover it exactly), and the census's whole history on those rows: the full-history period,
+/// else the union of the periods that are covered.
+fn period_rows(meta: &RunMeta, days: &[i32]) -> (Vec<Option<Range<usize>>>, Range<usize>) {
+    let rows: Vec<Option<Range<usize>>> = (0..meta.windows.len()).map(|w| meta.window_rows_in(days, w)).collect();
+    let full = meta.windows.iter().find(|w| w.length == 0).and_then(|w| rows[w.id].clone());
+    let all = full.unwrap_or_else(|| {
+        let covered = || rows.iter().flatten();
+        covered().map(|r| r.start).min().unwrap_or(0)..covered().map(|r| r.end).max().unwrap_or(0)
     });
-    let mut tasks: Vec<PathBuf> = std::fs::read_dir(dir.join("tasks"))?.flatten().map(|e| e.path()).filter(|p| p.extension().and_then(|x| x.to_str()) == Some("rec")).collect();
-    tasks.sort();
-    let per_task: Vec<Vec<(Record, f64, u8)>> = tasks.par_iter().map(|path| task_rows(path, id, significant_only)).collect::<Result<_>>()?;
-    let records: Vec<(Record, f64, u8)> = per_task.into_iter().flatten().filter(|(r, _, _)| (r.window as usize) < periods.len()).collect();
+    (rows, all)
+}
+
+fn profile(store: &Store, var: &crate::variable::Variable, meta: &RunMeta, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+    let stocks = meta.stocks()?;
+    let ids = meta.id_map(store)?;
+    let id = run_id_for(store, meta, &ids, ticker)?;
+    let (exact, all) = period_rows(meta, &var.days);
+    let (lo, hi) = (all.start, all.end);
+    let per_task: Vec<Vec<(Record, f64, u8)>> = meta.tasks()?.par_iter().map(|task| task_rows(meta, task, id, significant_only)).collect::<Result<_>>()?;
+    let records: Vec<(Record, f64, u8)> = per_task.into_iter().flatten().filter(|(r, _, _)| exact[r.window as usize].is_some()).collect();
     // Each involved stock's log closes and market-relative daily returns, by variable row,
-    // built once per partner (in parallel) and dropped after its rows are made.
-    let col_of: HashMap<u32, usize> = var.ids.iter().enumerate().map(|(c, &i)| (i as u32, c)).collect();
-    let series = |id: u32| {
-        col_of.get(&id).map(|&j| {
+    // built once per partner (in parallel) and dropped after its rows are made. Records name
+    // stocks by run id: through the ticker to today's store id, then to the variable's column.
+    let col_of: HashMap<usize, usize> = var.ids.iter().enumerate().map(|(c, &i)| (i, c)).collect();
+    let series = |rid: u32| {
+        ids.current(rid).and_then(|c| col_of.get(&c)).map(|&j| {
             let lc: Vec<f64> = var.col(&var.close, j).iter().map(|&c| if c > 0.0 { (c as f64).ln() } else { f64::NAN }).collect();
             (lc, var.market_relative(j))
         })
     };
     let mine = series(id);
-    let mut by_partner: std::collections::BTreeMap<u32, Vec<usize>> = std::collections::BTreeMap::new();
+    let mut by_partner: BTreeMap<u32, Vec<usize>> = BTreeMap::new();
     for (i, (r, _, _)) in records.iter().enumerate() {
         by_partner.entry(if r.leader == id { r.target } else { r.leader }).or_default().push(i);
     }
@@ -281,28 +518,29 @@ pub fn stock_profile_with(store: &c2_data::Store, var: &crate::variable::Variabl
         .par_iter()
         .flat_map_iter(|(partner, idx)| {
             let theirs = series(*partner);
+            let name = stocks.ticker(*partner).unwrap_or("?").to_string();
             let rows: Vec<(usize, ProfileRow)> = idx
                 .iter()
                 .map(|&i| {
                     let (r, chance_n, chance_z) = &records[i];
-                    let p = &periods[r.window as usize];
+                    let p = &meta.windows[r.window as usize];
+                    let span = exact[r.window as usize].clone().unwrap_or_default();
                     let (h1, h2, lag) = (r.h1 as usize, r.h2 as usize, r.lag as usize);
                     let (mut words_, mut move_per_pct) = (None, None);
-                    if let (Some(rows), Some(me), Some(them)) = (&exact[r.window as usize], &mine, &theirs) {
+                    if let (Some(me), Some(them)) = (&mine, &theirs) {
                         let ((pl, al), (pt, at)) = if r.leader == id { ((&me.0, &me.1), (&them.0, &them.1)) } else { ((&them.0, &them.1), (&me.0, &me.1)) };
                         let step = h1.max(h2);
-                        let m = grid::observations(rows.len(), h1, h2, lag);
-                        // Leader moves end at rows.start + max(h1, h2) - 1 + q * step.
-                        words_ = words(pl, pt, h1, h2, lag, rows.start + step - 1, m, step, rows.start, rows.end, lo, hi, None);
-                        move_per_pct = crate::moves::move_per_pct(al, at, r.r as f64, h1, h2, lag, rows.clone());
+                        let m = grid::observations(span.len(), h1, h2, lag);
+                        // Leader moves end at span.start + max(h1, h2) - 1 + q * step.
+                        words_ = words(pl, pt, h1, h2, lag, span.start + step - 1, m, step, span.start, span.end, lo, hi, None);
+                        move_per_pct = crate::moves::move_per_pct(al, at, r.r as f64, h1, h2, lag, span.clone());
                     }
-                    let (leader, target) = (store.symbols[r.leader as usize].ticker.clone(), store.symbols[r.target as usize].ticker.clone());
                     let row = ProfileRow {
                         window: format!("{}..{}", c2_data::date_string(p.first), c2_data::date_string(p.last)),
-                        period_days: span(p).len() as u32,
+                        period_days: span.len() as u32,
                         period_end: c2_data::date_string(p.last),
                         window_id: r.window,
-                        partner: if r.leader == id { target } else { leader },
+                        partner: name.clone(),
                         leads: r.leader == id,
                         h1: r.h1,
                         h2: r.h2,
@@ -329,30 +567,21 @@ pub fn stock_profile_with(store: &c2_data::Store, var: &crate::variable::Variabl
     Ok(rows)
 }
 
-/// The real lagged records of one task file involving store id `id`, with the chance counts of
-/// their matrices (mean sign-flip null pairs at the largest of |z| 3/4/5 below each one's |z|).
-fn task_rows(path: &Path, id: u32, significant_only: bool) -> Result<Vec<(Record, f64, u8)>> {
-    use crate::run::FLAG_FDR;
-    let recs = crate::forecast::scan_records(path, |r| {
-        r.flags & FLAG_NULL == 0 && r.lag > 0 && (r.leader == id || r.target == id) && (!significant_only || r.flags & FLAG_FDR != 0)
+/// The real lagged records of one task involving the stock with run id `id`, with the chance
+/// counts of their matrices (mean sign-flip null pairs at the largest of |z| 3/4/5 below each
+/// one's |z|).
+fn task_rows(meta: &RunMeta, task: &Task, id: u32, significant_only: bool) -> Result<Vec<(Record, f64, u8)>> {
+    let mut recs = Vec::new();
+    visit_task(meta, task, |r| {
+        if r.flags & FLAG_NULL == 0 && r.lag > 0 && (r.leader == id || r.target == id) && (!significant_only || r.flags & FLAG_FDR != 0) {
+            recs.push(*r);
+        }
     })?;
     if recs.is_empty() {
         return Ok(Vec::new());
     }
     // Chance tail counts per (window, lag) from this task's summary.
-    let mut chance: HashMap<(u32, u16), [f64; 3]> = HashMap::new();
-    if let Ok(text) = std::fs::read_to_string(path.with_extension("csv")) {
-        let mut lines = text.lines();
-        let header: Vec<&str> = lines.next().unwrap_or("").split(',').collect();
-        let col = |n: &str| header.iter().position(|h| *h == n);
-        if let (Some(cw), Some(cl), Some(c3), Some(c4), Some(c5)) = (col("window"), col("lag"), col("null_z3"), col("null_z4"), col("null_z5")) {
-            for line in lines {
-                let f: Vec<&str> = line.split(',').collect();
-                let num = |i: usize| f.get(i).and_then(|v| v.parse::<f64>().ok()).unwrap_or(f64::NAN);
-                chance.insert((num(cw) as u32, num(cl) as u16), [num(c3), num(c4), num(c5)]);
-            }
-        }
-    }
+    let chance: HashMap<(u32, u16), [f64; 3]> = task_summary(meta, task)?.lines.iter().map(|l| ((l.window as u32, l.lag as u16), l.null)).collect();
     Ok(recs
         .into_iter()
         .map(|r| {
@@ -388,62 +617,123 @@ pub struct RankRow {
     pub best_leads: bool,
     pub best_lag: u16,
     pub best_r: f32,
+    /// That strongest relationship's move lengths in trading days (A's, then B's, whichever
+    /// stock leads) and its correlation period (the run's period id, as `ProfileRow::window_id`).
+    pub best_h1: u8,
+    pub best_h2: u8,
+    pub best_window: u32,
     /// Strongest |z| among all stored relationships (mostly chance level).
     pub max_z_any: f32,
 }
 
-/// Every stock with stored lagged relationships, most significant first.
-pub fn stock_ranking(store: &c2_data::Store, dir: &Path) -> Result<Vec<RankRow>> {
-    use crate::run::FLAG_FDR;
-    #[derive(Default)]
-    struct Acc {
-        significant: usize,
-        leads: usize,
-        follows: usize,
-        windows: std::collections::HashSet<u32>,
-        stored: usize,
-        sum_abs_r: f64,
-        max_abs_r: f32,
-        sig_sum_abs_r: f64,
-        best: Option<(f32, u32, bool, u16, f32)>,
-        best_any: Option<(f32, u32, bool, u16, f32)>,
-    }
-    let mut acc: HashMap<u32, Acc> = HashMap::new();
-    for e in std::fs::read_dir(dir.join("tasks"))?.flatten() {
-        let path = e.path();
-        if path.extension().and_then(|x| x.to_str()) != Some("rec") {
-            continue;
-        }
-        for r in read_records(&path)? {
-            if r.flags & FLAG_NULL != 0 || r.lag == 0 {
-                continue;
-            }
-            for (me, other, leads) in [(r.leader, r.target, true), (r.target, r.leader, false)] {
-                let a = acc.entry(me).or_default();
-                a.stored += 1;
-                a.sum_abs_r += r.r.abs() as f64;
-                a.max_abs_r = a.max_abs_r.max(r.r.abs());
-                let cand = (r.z.abs(), other, leads, r.lag, r.r);
-                if a.best_any.is_none_or(|b| cand.0 > b.0) {
-                    a.best_any = Some(cand);
-                }
-                if r.flags & FLAG_FDR != 0 {
-                    a.significant += 1;
-                    a.sig_sum_abs_r += r.r.abs() as f64;
-                    if leads { a.leads += 1 } else { a.follows += 1 }
-                    a.windows.insert(r.window);
-                    if a.best.is_none_or(|b| cand.0 > b.0) {
-                        a.best = Some(cand);
-                    }
-                }
-            }
+/// A stock's strongest relationship so far.
+#[derive(Clone, Copy)]
+struct Best {
+    z: f32,
+    other: u32,
+    leads: bool,
+    lag: u16,
+    r: f32,
+    h1: u8,
+    h2: u8,
+    window: u32,
+}
+
+impl Best {
+    /// Keeps the stronger by |z|; on a tie the one met first (task order, then file order).
+    fn keep(slot: &mut Option<Best>, cand: Best) {
+        if slot.is_none_or(|b| cand.z > b.z) {
+            *slot = Some(cand);
         }
     }
-    let name = |id: u32| store.symbols.get(id as usize).map(|s| s.ticker.clone()).unwrap_or_default();
+}
+
+#[derive(Default)]
+struct RankAcc {
+    significant: usize,
+    leads: usize,
+    follows: usize,
+    windows: HashSet<u32>,
+    stored: usize,
+    sum_abs_r: f64,
+    max_abs_r: f32,
+    sig_sum_abs_r: f64,
+    best: Option<Best>,
+    best_any: Option<Best>,
+}
+
+impl RankAcc {
+    fn add(&mut self, r: &Record, other: u32, leads: bool) {
+        self.stored += 1;
+        self.sum_abs_r += r.r.abs() as f64;
+        self.max_abs_r = self.max_abs_r.max(r.r.abs());
+        let cand = Best { z: r.z.abs(), other, leads, lag: r.lag, r: r.r, h1: r.h1, h2: r.h2, window: r.window };
+        Best::keep(&mut self.best_any, cand);
+        if r.flags & FLAG_FDR != 0 {
+            self.significant += 1;
+            self.sig_sum_abs_r += r.r.abs() as f64;
+            if leads { self.leads += 1 } else { self.follows += 1 }
+            self.windows.insert(r.window);
+            Best::keep(&mut self.best, cand);
+        }
+    }
+
+    /// Adds the tallies of a later task.
+    fn merge(&mut self, o: RankAcc) {
+        self.significant += o.significant;
+        self.leads += o.leads;
+        self.follows += o.follows;
+        self.windows.extend(o.windows);
+        self.stored += o.stored;
+        self.sum_abs_r += o.sum_abs_r;
+        self.max_abs_r = self.max_abs_r.max(o.max_abs_r);
+        self.sig_sum_abs_r += o.sig_sum_abs_r;
+        for (slot, cand) in [(&mut self.best, o.best), (&mut self.best_any, o.best_any)] {
+            if let Some(c) = cand {
+                Best::keep(slot, c);
+            }
+        }
+    }
+}
+
+/// Every stock with stored lagged relationships, most significant first (ties by ticker).
+/// Reads the run's task files in parallel. Tickers come from the run's own stock list, so they
+/// are right whatever has happened to the store since, and stocks it no longer has are ranked
+/// too; `_store` isn't needed for that.
+pub fn stock_ranking(_store: &Store, dir: &Path) -> Result<Vec<RankRow>> {
+    let meta = RunMeta::load(dir)?;
+    let stocks = meta.stocks()?;
+    let parts: Vec<HashMap<u32, RankAcc>> = meta
+        .tasks()?
+        .par_iter()
+        .map(|task| {
+            let mut acc: HashMap<u32, RankAcc> = HashMap::new();
+            visit_task(&meta, task, |r| {
+                if r.flags & FLAG_NULL == 0 && r.lag > 0 {
+                    acc.entry(r.leader).or_default().add(r, r.target, true);
+                    acc.entry(r.target).or_default().add(r, r.leader, false);
+                }
+            })?;
+            Ok(acc)
+        })
+        .collect::<Result<_>>()?;
+    // In task order, so sums and ties never depend on how the work was split.
+    let mut acc: HashMap<u32, RankAcc> = HashMap::new();
+    for part in parts {
+        for (id, a) in part {
+            match acc.entry(id) {
+                std::collections::hash_map::Entry::Occupied(mut e) => e.get_mut().merge(a),
+                std::collections::hash_map::Entry::Vacant(e) => {
+                    e.insert(a);
+                }
+            }
+        }
+    }
+    let name = |id: u32| stocks.ticker(id).unwrap_or("?").to_string();
     let mut rows: Vec<RankRow> = acc
         .into_iter()
         .map(|(id, a)| {
-            let (z, other, leads, lag, r) = a.best.or(a.best_any).unwrap_or((0.0, 0, true, 0, 0.0));
+            let b = a.best.or(a.best_any).unwrap_or(Best { z: 0.0, other: 0, leads: true, lag: 0, r: 0.0, h1: 0, h2: 0, window: 0 });
             RankRow {
                 ticker: name(id),
                 significant: a.significant,
@@ -455,16 +745,19 @@ pub fn stock_ranking(store: &c2_data::Store, dir: &Path) -> Result<Vec<RankRow>>
                 mean_abs_r: a.sum_abs_r / a.stored.max(1) as f64,
                 max_abs_r: a.max_abs_r,
                 sig_sum_abs_r: a.sig_sum_abs_r,
-                best_z: z,
-                best_partner: name(other),
-                best_leads: leads,
-                best_lag: lag,
-                best_r: r,
-                max_z_any: a.best_any.map(|b| b.0).unwrap_or(0.0),
+                best_z: b.z,
+                best_partner: name(b.other),
+                best_leads: b.leads,
+                best_lag: b.lag,
+                best_r: b.r,
+                best_h1: b.h1,
+                best_h2: b.h2,
+                best_window: b.window,
+                max_z_any: a.best_any.map_or(0.0, |b| b.z),
             }
         })
         .collect();
-    rows.sort_by(|a, b| b.sum_abs_r.total_cmp(&a.sum_abs_r));
+    rows.sort_by(|a, b| b.sum_abs_r.total_cmp(&a.sum_abs_r).then_with(|| a.ticker.cmp(&b.ticker)));
     Ok(rows)
 }
 
@@ -488,6 +781,16 @@ impl Tally {
             self.null[k] += null[k];
         }
     }
+
+    fn merge(&mut self, o: &Tally) {
+        self.matrices += o.matrices;
+        self.correlations += o.correlations;
+        for k in 0..3 {
+            self.real[k] += o.real[k];
+            self.null[k] += o.null[k];
+        }
+        self.significant += o.significant;
+    }
 }
 
 /// Whole-census statistics for the Status tab.
@@ -503,6 +806,8 @@ pub struct DatasetStats {
     /// Lagged matrices only.
     pub lagged: Tally,
     pub fdr_matrices: usize,
+    /// Lagged matrices where the false-discovery test, run on a sign-flip null matrix, fired.
+    /// Only meaningful when `placebo_recorded`.
     pub placebo_matrices: usize,
     pub stored_real: usize,
     pub stored_null: usize,
@@ -518,80 +823,139 @@ pub struct DatasetStats {
     /// are each matrix's strongest; the null ones are the strongest of pure chance).
     pub hist_real: Vec<u64>,
     pub hist_null: Vec<u64>,
-    /// Per stock (as leader or follower): stored relationships, mean |r| of them, significant.
+    /// Per stock (as leader or follower): ticker (the run's), stored relationships, mean |r| of
+    /// them, significant. Most stored first, then by ticker.
     pub per_stock: Vec<(String, usize, f64, usize)>,
+    /// False when the run's summaries have no placebo column (runs made before it existed, with
+    /// 17-column summaries): the placebo test was not recorded, so `placebo_matrices` (0) says
+    /// nothing.
+    pub placebo_recorded: bool,
+    /// Set when the run's stock list can't be recovered (the message says why): `per_stock`'s
+    /// tickers are then empty. Everything else holds.
+    pub stock_list_error: Option<String>,
 }
 
-pub fn dataset_stats(store: &c2_data::Store, dir: &Path) -> Result<DatasetStats> {
-    use crate::run::FLAG_FDR;
-    let windows: Vec<(usize, i32)> = std::fs::read_to_string(dir.join("windows.csv"))?
-        .lines()
-        .skip(1)
-        .map(|l| {
-            let f: Vec<&str> = l.split(',').collect();
-            Ok((f[1].parse::<usize>()?, f[3][..4].parse::<i32>()?))
+/// One task's share of `DatasetStats`.
+#[derive(Default)]
+struct StatsPart {
+    correlations_all: f64,
+    matrices_all: usize,
+    lagged: Tally,
+    fdr_matrices: usize,
+    placebo_matrices: usize,
+    placebo_recorded: bool,
+    by_h: HashMap<(usize, usize), Tally>,
+    by_len: HashMap<usize, Tally>,
+    by_year: HashMap<i32, Tally>,
+    by_off: HashMap<usize, Tally>,
+    stored_real: usize,
+    stored_null: usize,
+    hist_real: Vec<u64>,
+    hist_null: Vec<u64>,
+    per: HashMap<u32, (usize, f64, usize)>,
+    sig_pairs: HashSet<(u32, u32)>,
+    sig_by: HashMap<(usize, usize, usize, i32, usize), usize>,
+}
+
+/// Whole-census statistics of the run in `dir`: its summaries (by their header's column names)
+/// and its records, read task file by task file in parallel and never all held at once. The
+/// files are the run's task list's. Tickers come from the run's own stock list; `_store` isn't
+/// needed for that.
+pub fn dataset_stats(_store: &Store, dir: &Path) -> Result<DatasetStats> {
+    let meta = RunMeta::load(dir)?;
+    let tasks = meta.tasks()?;
+    // A correlation period's length and the year it ended.
+    let period = |w: usize| meta.windows.get(w).map_or((0, 0), |w| (w.length, c2_data::civil_from_days(w.last).0));
+    let parts: Vec<StatsPart> = tasks
+        .par_iter()
+        .map(|task| -> Result<StatsPart> {
+            let mut p = StatsPart { hist_real: vec![0; 50], hist_null: vec![0; 50], ..Default::default() };
+            let summary = task_summary(&meta, task)?;
+            p.placebo_recorded = summary.placebo_recorded || summary.lines.is_empty();
+            for l in &summary.lines {
+                let n = l.stocks as f64;
+                let corr = n * (n - 1.0).max(0.0);
+                p.correlations_all += corr;
+                p.matrices_all += 1;
+                if l.lag == 0 {
+                    continue;
+                }
+                p.lagged.add(corr, l.real, l.null);
+                let (len, year) = period(l.window);
+                p.by_h.entry((l.h1, l.h2)).or_default().add(corr, l.real, l.null);
+                p.by_len.entry(len).or_default().add(corr, l.real, l.null);
+                p.by_year.entry(year).or_default().add(corr, l.real, l.null);
+                p.by_off.entry(l.lag / l.h2.max(1)).or_default().add(corr, l.real, l.null);
+                p.fdr_matrices += usize::from(l.fdr_r.is_some());
+                p.placebo_matrices += usize::from(l.placebo_fdr_r.is_some());
+            }
+            // Records: stored counts, |r| histograms, per-stock numbers, significant tallies.
+            visit_task(&meta, task, |r| {
+                if r.lag == 0 {
+                    return;
+                }
+                let bin = ((r.r.abs() * 50.0) as usize).min(49);
+                if r.flags & FLAG_NULL != 0 {
+                    p.stored_null += 1;
+                    p.hist_null[bin] += 1;
+                    return;
+                }
+                p.stored_real += 1;
+                p.hist_real[bin] += 1;
+                let sig = r.flags & FLAG_FDR != 0;
+                for s in [r.leader, r.target] {
+                    let e = p.per.entry(s).or_default();
+                    e.0 += 1;
+                    e.1 += r.r.abs() as f64;
+                    e.2 += usize::from(sig);
+                }
+                if sig {
+                    p.sig_pairs.insert((r.leader, r.target));
+                    let (len, year) = period(r.window as usize);
+                    *p.sig_by.entry((r.h1 as usize, r.h2 as usize, len, year, r.lag as usize / (r.h2 as usize).max(1))).or_default() += 1;
+                }
+            })?;
+            Ok(p)
         })
         .collect::<Result<_>>()?;
-    let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
-    let nulls = m["config"].as_str().and_then(|c| c.split("nulls=").nth(1)).and_then(|v| v.split(' ').next()).and_then(|v| v.parse().ok()).unwrap_or(3);
-    let mut st = DatasetStats { nulls, periods: windows.len(), ..Default::default() };
-    let mut paths: Vec<PathBuf> = std::fs::read_dir(dir.join("tasks"))?.flatten().map(|e| e.path()).filter(|p| p.extension().and_then(|x| x.to_str()) == Some("csv")).collect();
-    paths.sort();
-    st.tasks = paths.len();
+    let mut st = DatasetStats { nulls: meta.cfg.nulls, periods: meta.windows.len(), tasks: tasks.len(), placebo_recorded: true, ..Default::default() };
     let (mut by_h, mut by_len, mut by_year, mut by_off) = (HashMap::new(), HashMap::new(), HashMap::new(), HashMap::new());
+    let (mut hist_real, mut hist_null) = (vec![0u64; 50], vec![0u64; 50]);
+    let mut per: HashMap<u32, (usize, f64, usize)> = HashMap::new();
+    let mut sig_pairs: HashSet<(u32, u32)> = HashSet::new();
     let mut sig_by: HashMap<(usize, usize, usize, i32, usize), usize> = HashMap::new();
-    let mut stocks = std::collections::HashSet::new();
-    for path in &paths {
-        let text = std::fs::read_to_string(path)?;
-        for line in text.lines().skip(1) {
-            let f: Vec<&str> = line.split(',').collect();
-            let num = |i: usize| f.get(i).and_then(|v| v.parse::<f64>().ok()).unwrap_or(0.0);
-            let (w, h1, h2, lag, n) = (num(0) as usize, num(1) as usize, num(2) as usize, num(3) as usize, num(4));
-            let corr = n * (n - 1.0).max(0.0);
-            st.correlations_all += corr;
-            st.matrices_all += 1;
-            if lag == 0 {
-                continue;
-            }
-            let real = [num(6), num(7), num(8)];
-            let null = [num(9), num(10), num(11)];
-            st.lagged.add(corr, real, null);
-            let (len, year) = windows.get(w).copied().unwrap_or((0, 0));
-            by_h.entry((h1, h2)).or_insert_with(Tally::default).add(corr, real, null);
-            by_len.entry(len).or_insert_with(Tally::default).add(corr, real, null);
-            by_year.entry(year).or_insert_with(Tally::default).add(corr, real, null);
-            by_off.entry(lag / h2.max(1)).or_insert_with(Tally::default).add(corr, real, null);
-            st.fdr_matrices += usize::from(!f.get(12).unwrap_or(&"").is_empty());
-            st.placebo_matrices += usize::from(!f.get(17).unwrap_or(&"").is_empty());
+    fn merge_into<K: std::hash::Hash + Eq>(to: &mut HashMap<K, Tally>, from: HashMap<K, Tally>) {
+        for (k, t) in from {
+            to.entry(k).or_default().merge(&t);
         }
     }
-    // Records: stored counts, |r| histograms, per-stock numbers, significant tallies.
-    let recs: Vec<Vec<Record>> = paths.par_iter().map(|p| read_records(&p.with_extension("rec")).unwrap_or_default()).collect();
-    st.hist_real = vec![0; 50];
-    st.hist_null = vec![0; 50];
-    let mut per: HashMap<u32, (usize, f64, usize)> = HashMap::new();
-    let mut sig_pairs = std::collections::HashSet::new();
-    for r in recs.iter().flatten().filter(|r| r.lag > 0) {
-        let bin = ((r.r.abs() * 50.0) as usize).min(49);
-        if r.flags & FLAG_NULL != 0 {
-            st.stored_null += 1;
-            st.hist_null[bin] += 1;
-            continue;
+    // In task order, so the sums never depend on how the work was split.
+    for p in parts {
+        st.correlations_all += p.correlations_all;
+        st.matrices_all += p.matrices_all;
+        st.lagged.merge(&p.lagged);
+        st.fdr_matrices += p.fdr_matrices;
+        st.placebo_matrices += p.placebo_matrices;
+        st.placebo_recorded &= p.placebo_recorded;
+        merge_into(&mut by_h, p.by_h);
+        merge_into(&mut by_len, p.by_len);
+        merge_into(&mut by_year, p.by_year);
+        merge_into(&mut by_off, p.by_off);
+        st.stored_real += p.stored_real;
+        st.stored_null += p.stored_null;
+        for k in 0..50 {
+            hist_real[k] += p.hist_real[k];
+            hist_null[k] += p.hist_null[k];
         }
-        st.stored_real += 1;
-        st.hist_real[bin] += 1;
-        let sig = r.flags & FLAG_FDR != 0;
-        for s in [r.leader, r.target] {
+        for (s, (n, sum, sig)) in p.per {
             let e = per.entry(s).or_default();
-            e.0 += 1;
-            e.1 += r.r.abs() as f64;
-            e.2 += usize::from(sig);
-            stocks.insert(s);
+            e.0 += n;
+            e.1 += sum;
+            e.2 += sig;
         }
-        if sig {
-            sig_pairs.insert((r.leader, r.target));
-            let (len, year) = windows.get(r.window as usize).copied().unwrap_or((0, 0));
-            *sig_by.entry((r.h1 as usize, r.h2 as usize, len, year, r.lag as usize / (r.h2 as usize).max(1))).or_default() += 1;
+        sig_pairs.extend(p.sig_pairs);
+        for (k, c) in p.sig_by {
+            *sig_by.entry(k).or_default() += c;
         }
     }
     for (&(h1, h2, len, year, off), &c) in &sig_by {
@@ -601,14 +965,21 @@ pub fn dataset_stats(store: &c2_data::Store, dir: &Path) -> Result<DatasetStats>
         by_off.entry(off).or_insert_with(Tally::default).significant += c;
         st.lagged.significant += c;
     }
+    st.hist_real = hist_real;
+    st.hist_null = hist_null;
     st.significant_pairs = sig_pairs.len();
-    st.stocks = stocks.len();
+    st.stocks = per.len();
     st.significant_stocks = per.values().filter(|p| p.2 > 0).count();
+    let stocks = meta.stocks().map_err(|e| format!("{e:#}"));
+    st.stock_list_error = stocks.as_ref().err().cloned();
     st.per_stock = per
         .into_iter()
-        .map(|(id, (n, s, sig))| (store.symbols.get(id as usize).map(|x| x.ticker.clone()).unwrap_or_default(), n, s / n.max(1) as f64, sig))
+        .map(|(id, (n, s, sig))| {
+            let ticker = stocks.as_ref().ok().and_then(|t| t.ticker(id)).unwrap_or("").to_string();
+            (ticker, n, s / n.max(1) as f64, sig)
+        })
         .collect();
-    st.per_stock.sort_by(|a, b| b.1.cmp(&a.1));
+    st.per_stock.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
     fn sorted<K: Ord + Copy>(m: HashMap<K, Tally>) -> Vec<(K, Tally)> {
         let mut v: Vec<_> = m.into_iter().collect();
         v.sort_by_key(|e| e.0);
@@ -625,10 +996,12 @@ pub fn dataset_stats(store: &c2_data::Store, dir: &Path) -> Result<DatasetStats>
 #[derive(Clone, Default)]
 pub struct RunInfo {
     pub name: String,
-    /// "full" or "smoke test".
+    /// "full" or "smoke test" (from the run's settings; "unknown" if they can't be read).
     pub kind: String,
     pub started_unix: u64,
     pub finished_unix: Option<u64>,
+    /// As status.json says, except "running" while a process computes it (whatever the file
+    /// says) and "interrupted" when the file says running but nothing does.
     pub state: String,
     pub fraction: f64,
     /// Time spent computing, summed over every session in run.log.
@@ -642,11 +1015,24 @@ pub struct RunInfo {
     pub multiply_adds: f64,
     /// `c2 update` started it after new data arrived.
     pub from_update: bool,
+    /// The run the caller reads (`run_history_using`); for `run_history`, the default census.
     pub in_use: bool,
+    /// The default census (`census/LATEST`).
+    pub latest: bool,
+    /// The process computing it, while one is (`run::running_pid`).
+    pub pid: Option<u32>,
 }
 
-/// Every census run under the data directory, newest first.
+/// Every census run under the data directory, newest first; `in_use` marks the default census
+/// (`census/LATEST`). `run_history_using` marks the run the caller reads instead.
 pub fn run_history() -> Vec<RunInfo> {
+    run_history_using(&crate::run::latest_run())
+}
+
+/// Every census run under the data directory, newest first; `in_use` marks the run named
+/// `in_use` (the one the caller shows, e.g. the GUI's chosen run) and `latest` the default
+/// census. A run whose files can't all be read is still listed, with what can be.
+pub fn run_history_using(in_use: &str) -> Vec<RunInfo> {
     let root = c2_data::data_dir().join("census");
     let latest = crate::run::latest_run();
     let update_log = std::fs::read_to_string(c2_data::data_dir().join("update.log")).unwrap_or_default();
@@ -654,84 +1040,168 @@ pub fn run_history() -> Vec<RunInfo> {
         .map(|it| it.flatten().map(|e| e.path()).filter(|p| p.join("manifest.json").exists()).collect::<Vec<_>>())
         .unwrap_or_default()
         .par_iter()
-        .map(|dir| {
-            let name = dir.file_name().and_then(|n| n.to_str()).unwrap_or("").to_string();
-            let m: serde_json::Value = std::fs::read_to_string(dir.join("manifest.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
-            let s: serde_json::Value = std::fs::read_to_string(dir.join("status.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
-            let config = m["config"].as_str().unwrap_or("");
-            let nulls: f64 = config.split("nulls=").nth(1).and_then(|v| v.split(' ').next()).and_then(|v| v.parse().ok()).unwrap_or(3.0);
-            let mut state = s["state"].as_str().unwrap_or("not started").to_string();
-            // "running" in status.json with no live c2 process means it crashed or was killed.
-            let alive = std::fs::read_to_string(dir.join("pid"))
-                .ok()
-                .and_then(|p| p.trim().parse::<u32>().ok())
-                .and_then(|pid| std::fs::read_link(format!("/proc/{pid}/exe")).ok())
-                .is_some_and(|exe| exe.file_name().and_then(|n| n.to_str()).is_some_and(|n| n.starts_with("c2")));
-            if state == "running" && !alive {
-                state = "interrupted".into();
-            }
-            // Sessions: from a "plan:" line to the last timestamp before the next one.
-            let (mut seconds, mut sessions, mut start, mut last) = (0.0, 0, None::<f64>, 0.0);
-            let mut prev = 0.0;
-            let mut wrap = 0.0;
-            for line in std::fs::read_to_string(dir.join("run.log")).unwrap_or_default().lines() {
-                let Some(ts) = line.get(1..9) else { continue };
-                let f: Vec<f64> = ts.split(':').filter_map(|v| v.parse().ok()).collect();
-                if f.len() != 3 {
-                    continue;
-                }
-                let mut t = f[0] * 3600.0 + f[1] * 60.0 + f[2] + wrap;
-                if t < prev {
-                    wrap += 86400.0;
-                    t += 86400.0;
-                }
-                prev = t;
-                if line.contains("] plan:") {
-                    if let Some(s0) = start {
-                        seconds += last - s0;
-                    }
-                    start = Some(t);
-                    sessions += 1;
-                }
-                last = t;
-            }
-            if let Some(s0) = start {
-                seconds += last - s0;
-            }
-            let mut info = RunInfo {
-                kind: if config.contains("full_history=true") { "full".into() } else { "smoke test".into() },
-                started_unix: m["created_unix"].as_u64().unwrap_or(0),
-                finished_unix: (state == "finished").then(|| s["updated_unix"].as_u64()).flatten(),
-                fraction: s["fraction_done"].as_f64().unwrap_or(0.0),
-                state,
-                seconds,
-                sessions,
-                data_last_day: std::fs::read_to_string(dir.join("windows.csv")).ok().and_then(|t| t.lines().last().and_then(|l| l.split(',').nth(3)).map(String::from)).unwrap_or_default(),
-                from_update: update_log.contains(&format!("running census {name} ")),
-                in_use: name == latest,
-                name,
-                ..Default::default()
-            };
-            for e in std::fs::read_dir(dir.join("tasks")).into_iter().flatten().flatten() {
-                if e.path().extension().and_then(|x| x.to_str()) != Some("csv") {
-                    continue;
-                }
-                for line in std::fs::read_to_string(e.path()).unwrap_or_default().lines().skip(1) {
-                    let f: Vec<f64> = line.split(',').take(6).map(|v| v.parse().unwrap_or(0.0)).collect();
-                    if f.len() < 6 {
-                        continue;
-                    }
-                    let (n, obs) = (f[4], f[5]);
-                    let pairs = n * (n - 1.0).max(0.0);
-                    info.correlations_real += pairs;
-                    info.correlations_null += pairs * nulls;
-                    let np = crate::run::pad_width(n as usize) as f64;
-                    info.multiply_adds += np * np * ((obs as usize).div_ceil(32) * 32) as f64 * (1.0 + nulls);
-                }
-            }
-            info
-        })
+        .map(|dir| run_info(dir, in_use, &latest, &update_log))
         .collect();
-    out.sort_by(|a, b| b.started_unix.cmp(&a.started_unix));
+    out.sort_by(|a, b| b.started_unix.cmp(&a.started_unix).then_with(|| a.name.cmp(&b.name)));
     out
+}
+
+fn run_info(dir: &Path, in_use: &str, latest: &str, update_log: &str) -> RunInfo {
+    let name = dir.file_name().and_then(|n| n.to_str()).unwrap_or("").to_string();
+    let m: serde_json::Value = std::fs::read_to_string(dir.join("manifest.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+    let s: serde_json::Value = std::fs::read_to_string(dir.join("status.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+    let meta = RunMeta::load(dir).ok();
+    // The run's settings as RunMeta reads them, else straight from the manifest's text.
+    let cfg: Option<Config> = meta.as_ref().map(|m| m.cfg.clone()).or_else(|| Config::from_text(m["config"].as_str()?).ok());
+    let nulls = cfg.as_ref().map_or(0, |c| c.nulls) as f64;
+    let pid = crate::run::running_pid(dir);
+    let mut state = s["state"].as_str().unwrap_or("not started").to_string();
+    if pid.is_some() {
+        state = "running".into();
+    } else if state == "running" {
+        // status.json says running but no process holds the run: it crashed or was killed.
+        state = "interrupted".into();
+    }
+    let (seconds, sessions) = computing_time(&std::fs::read_to_string(dir.join("run.log")).unwrap_or_default());
+    let mut info = RunInfo {
+        kind: match &cfg {
+            Some(c) if c.full_history => "full",
+            Some(_) => "smoke test",
+            None => "unknown",
+        }
+        .into(),
+        started_unix: m["created_unix"].as_u64().unwrap_or(0),
+        finished_unix: (state == "finished").then(|| s["updated_unix"].as_u64()).flatten(),
+        fraction: s["fraction_done"].as_f64().unwrap_or(0.0),
+        state,
+        seconds,
+        sessions,
+        data_last_day: meta.as_ref().and_then(|m| m.windows.iter().map(|w| w.last).max()).map(c2_data::date_string).unwrap_or_default(),
+        from_update: update_log.contains(&format!("running census {name} ")),
+        in_use: name == in_use,
+        latest: name == latest,
+        pid,
+        name,
+        ..Default::default()
+    };
+    // Correlations computed, from every summary line: of the run's task files, or of every
+    // summary file there when its task list is unknown (e.g. a crashed run).
+    let summaries: Vec<std::path::PathBuf> = match meta.as_ref().map(|m| m.tasks().map(|t| t.iter().map(|t| m.task_path(t.id, "csv")).collect())) {
+        Some(Ok(paths)) => paths,
+        _ => std::fs::read_dir(dir.join("tasks"))
+            .into_iter()
+            .flatten()
+            .flatten()
+            .map(|e| e.path())
+            .filter(|p| p.extension().and_then(|x| x.to_str()) == Some("csv"))
+            .collect(),
+    };
+    for path in summaries {
+        let Ok(summary) = read_summary(&path) else { continue };
+        for l in &summary.lines {
+            let n = l.stocks as f64;
+            let pairs = n * (n - 1.0).max(0.0);
+            info.correlations_real += pairs;
+            info.correlations_null += pairs * nulls;
+            let np = crate::run::pad_width(l.stocks) as f64;
+            info.multiply_adds += np * np * (l.obs.div_ceil(32) * 32) as f64 * (1.0 + nulls);
+        }
+    }
+    info
+}
+
+/// Time spent computing, from a run's log, and the number of sessions: each session runs from a
+/// "plan:" line to the last time stamp before the next one (a log with no "plan:" line at all is
+/// one session from its first line to its last). Lines are "[HH:MM:SS] message", as both
+/// `c2 census run` and `c2 update` write them; a time earlier than the line before it is taken
+/// to be on the next day.
+fn computing_time(log: &str) -> (f64, usize) {
+    let (mut seconds, mut sessions, mut start, mut last) = (0.0, 0, None::<f64>, None::<f64>);
+    let (mut first, mut prev, mut wrap) = (None::<f64>, 0.0, 0.0);
+    for line in log.lines() {
+        let (Some(stamp), Some(message)) = (line.get(1..9), line.get(10..)) else { continue };
+        if !line.starts_with('[') || line.as_bytes()[9] != b']' {
+            continue;
+        }
+        let f: Vec<f64> = stamp.split(':').filter_map(|v| v.parse().ok()).collect();
+        if f.len() != 3 {
+            continue;
+        }
+        let mut t = f[0] * 3600.0 + f[1] * 60.0 + f[2] + wrap;
+        if t < prev {
+            wrap += 86400.0;
+            t += 86400.0;
+        }
+        prev = t;
+        first.get_or_insert(t);
+        if message.trim_start().starts_with("plan:") {
+            if let (Some(s0), Some(l)) = (start, last) {
+                seconds += l - s0;
+            }
+            start = Some(t);
+            sessions += 1;
+        }
+        last = Some(t);
+    }
+    match (start.or(first), last) {
+        (Some(s0), Some(l)) => {
+            seconds += l - s0;
+            (seconds, sessions.max(1))
+        }
+        _ => (0.0, 0),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn computing_time_counts_sessions_from_either_writer() {
+        // `c2 census run`: two sessions, the second across midnight; the time between them
+        // doesn't count.
+        let run = "[23:50:00] plan: 8503 stocks in the variable, 285 windows (universe 283..2345 stocks), 180 tasks, 10260 units; built in 0.5s\n\
+                   [23:50:15] 56/10260 windows (1.46% of work), last unit 266 ms on GPU, ETA 0h17m01s\n\
+                   [23:55:00] stopped: 3000/10260 windows committed\n\
+                   [23:58:00] plan: 8503 stocks in the variable, 285 windows (universe 283..2345 stocks), 180 tasks, 10260 units; built in 0.5s\n\
+                   [00:02:00] 6000/10260 windows (60.00% of work), last unit 266 ms on GPU, ETA 0h03m00s\n\
+                   [00:05:00] finished: 10260/10260 windows committed\n";
+        assert_eq!(computing_time(run), (300.0 + 420.0, 2));
+        // `c2 update` writes the same lines into the run's log (its own line before the plan
+        // line is not computing time).
+        let update = "[18:30:02] running census main-2025-07-03 on the new data\n\
+                      [18:30:03] plan: 8510 stocks in the variable, 286 windows (universe 283..2350 stocks), 180 tasks, 10296 units; built in 0.5s\n\
+                      [18:30:18] 56/10296 windows (1.46% of work), last unit 266 ms on GPU, ETA 0h12m01s\n\
+                      [18:42:03] finished: 10296/10296 windows committed\n";
+        assert_eq!(computing_time(update), (720.0, 1));
+        // A log with no plan line (an older writer) is one session.
+        assert_eq!(computing_time("[10:00:00] 1/888 windows\n[10:00:30] finished: 888/888 windows committed\n"), (30.0, 1));
+        assert_eq!(computing_time(""), (0.0, 0));
+        assert_eq!(computing_time("no time stamp\n[1x:00:00] bad\n"), (0.0, 0));
+    }
+
+    #[test]
+    fn summaries_read_by_header() {
+        let dir = std::env::temp_dir().join(format!("c2-summary-test-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let old = "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null,screened,truncated\n\
+                   4,1,1,0,300,252,7336,2990,1574,261.0,9.7,0.3,,100,50,100,0\n\
+                   4,1,1,1,300,251,3000,20,1,2900.5,19.0,0.7,0.2817,100,50,100,0\n";
+        let new = format!("{}4,1,1,1,300,251,3000,20,1,2900.5,19.0,0.7,0.2817,120,50,140,0,0.3012\n4,1,1,2,300,250,1,0,0,1.0,0,0,,100,50,100,0,\n4,1,1,3,30", crate::run::SUMMARY_HEADER);
+        let (a, b, c) = (dir.join("a.csv"), dir.join("b.csv"), dir.join("c.csv"));
+        std::fs::write(&a, old).unwrap();
+        std::fs::write(&b, new).unwrap();
+        std::fs::write(&c, "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null\n4,1,1,x,1,1,1,1,1,1,1,1,,1,1\n").unwrap();
+        let (sa, sb) = (read_summary(&a).unwrap(), read_summary(&b).unwrap());
+        assert!(!sa.placebo_recorded && sb.placebo_recorded);
+        assert_eq!(sa.lines.len(), 2);
+        let l = &sa.lines[1];
+        assert_eq!((l.window, l.h1, l.h2, l.lag, l.stocks, l.obs, l.fdr_r, l.placebo_fdr_r), (4, 1, 1, 1, 300, 251, Some(0.2817), None));
+        assert_eq!((l.real, l.null), ([3000.0, 20.0, 1.0], [2900.5, 19.0, 0.7]));
+        // The cut-off last line (no newline) is ignored; an empty placebo field did not fire.
+        assert_eq!(sb.lines.len(), 2);
+        assert_eq!((sb.lines[0].placebo_fdr_r, sb.lines[0].stored_real, sb.lines[1].placebo_fdr_r, sb.lines[1].fdr_r), (Some(0.3012), 120, None, None));
+        assert!(read_summary(&c).is_err());
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }

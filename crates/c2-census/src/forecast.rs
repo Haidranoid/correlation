@@ -20,6 +20,12 @@
 //!
 //! `prepare` reads a run's records for one stock once (`ForecastData`); `forecast_from` then
 //! makes forecasts for any as-of day and options without touching the disk.
+//!
+//! What the run's files mean comes from the run itself (`meta::RunMeta`): its task list, its
+//! correlation periods (mapped onto the census variable's rows by date, never clamped, so a
+//! period the data doesn't cover exactly is left out rather than made to end early, which would
+//! let a forecast use correlations measured on days after its as-of day), and its stock list
+//! (record ids are translated through tickers into today's store).
 
 use std::collections::HashMap;
 use std::ops::Range;
@@ -29,66 +35,11 @@ use anyhow::{Context, Result};
 use c2_data::{Calendar, Store};
 use rayon::prelude::*;
 
-use crate::grid::Config;
+use crate::analyze::visit_task;
+use crate::meta::RunMeta;
 use crate::moves;
-use crate::run::{FLAG_FDR, FLAG_NULL, RECORD_BYTES, Record};
+use crate::run::{FLAG_FDR, FLAG_NULL, Record};
 use crate::variable::{self, Variable};
-
-/// The records of one task file that `keep` accepts, read in pieces so that memory stays small
-/// however large the file is.
-pub(crate) fn scan_records(path: &Path, keep: impl Fn(&Record) -> bool) -> Result<Vec<Record>> {
-    use std::io::Read;
-    let mut file = std::fs::File::open(path).with_context(|| format!("read {}", path.display()))?;
-    let mut buf = vec![0u8; RECORD_BYTES * 16384];
-    let (mut fill, mut out) = (0, Vec::new());
-    loop {
-        let n = file.read(&mut buf[fill..]).with_context(|| format!("read {}", path.display()))?;
-        if n == 0 {
-            break;
-        }
-        fill += n;
-        let whole = fill / RECORD_BYTES * RECORD_BYTES;
-        out.extend(buf[..whole].chunks_exact(RECORD_BYTES).map(Record::from_bytes).filter(|r| keep(r)));
-        buf.copy_within(whole..fill, 0);
-        fill -= whole;
-    }
-    Ok(out)
-}
-
-/// A correlation period as a run's windows.csv lists it.
-pub(crate) struct Period {
-    /// Trading days; 0 for the full-history period.
-    pub length: usize,
-    pub first: i32,
-    pub last: i32,
-}
-
-/// A run's correlation periods by id, from its windows.csv (id,length,first,last,stocks).
-/// Round 2: `RunMeta`.
-pub(crate) fn read_periods(dir: &Path) -> Result<Vec<Period>> {
-    let path = dir.join("windows.csv");
-    let text = std::fs::read_to_string(&path).with_context(|| format!("read {}", path.display()))?;
-    text.lines()
-        .skip(1)
-        .filter(|l| !l.trim().is_empty())
-        .enumerate()
-        .map(|(i, l)| {
-            let f: Vec<&str> = l.split(',').collect();
-            anyhow::ensure!(f.len() >= 4 && f[0].parse::<usize>().ok() == Some(i), "{}: unexpected line {l:?}", path.display());
-            Ok(Period { length: f[1].parse()?, first: c2_data::parse_date(f[2])?, last: c2_data::parse_date(f[3])? })
-        })
-        .collect()
-}
-
-/// Rows of the trading days `days` (e.g. `Variable::days`) that a period covers, matched by
-/// date. None unless its first and last days are both trading days in `days` and, for a rolling
-/// period, the rows number exactly its length: a period is never clamped onto other days.
-/// Round 2: `RunMeta::window_rows`.
-pub(crate) fn period_rows(days: &[i32], p: &Period) -> Option<Range<usize>> {
-    let (a, b) = (days.binary_search(&p.first).ok()?, days.binary_search(&p.last).ok()?);
-    let rows = a..b + 1;
-    (a <= b && (p.length == 0 || rows.len() == p.length)).then_some(rows)
-}
 
 /// A relationship in which the chosen stock (B) follows.
 #[derive(Clone)]
@@ -221,41 +172,62 @@ pub struct Forecast {
 /// Loads what forecasts for `ticker` need from the census run in `dir`: every stored real lagged
 /// relationship in which it follows (significant or not, so the significant-only option needs
 /// no reread), its leaders' and its own market-relative daily returns, and its repaired closes.
-/// `var` is the census variable of the run (`Plan::var`, or `variable::production` with the
-/// run's start); its rows are the forecast's days. Relationships from the full-history period,
-/// from periods whose dates are not exactly `var`'s trading days (see `period_rows`), with a
-/// leader outside `var`, or with fewer than `moves::MIN_PAIRS` observations are left out.
+/// `var` is the census variable of the run (`Plan::var` of `Plan::for_run`, or
+/// `variable::production` with the run's start); its rows are the forecast's days.
+///
+/// The run's task list says which files to read (rolling periods only). Its correlation periods
+/// are found on `var`'s rows by date (`RunMeta::window_rows_in`); its record ids are translated
+/// through tickers into `store` and then `var`'s columns. Relationships from the full-history
+/// period, from periods `var` doesn't cover exactly (`RunMeta::uncovered_windows`), with a
+/// leader that today's store or `var` doesn't have, or with fewer than `moves::MIN_PAIRS`
+/// observations are left out.
 pub fn prepare(store: &Store, var: &Variable, dir: &Path, ticker: &str) -> Result<ForecastData> {
-    let target = store.id(ticker).with_context(|| format!("{ticker} is not in the price store"))?;
+    let meta = RunMeta::load(dir)?;
+    let stocks = meta.stocks()?;
+    let ids = meta.id_map(store)?;
+    let current = store.id(ticker).with_context(|| format!("{ticker} is not in the price store"))?;
     let col_of: HashMap<usize, usize> = var.ids.iter().enumerate().map(|(c, &id)| (id, c)).collect();
-    let tc = *col_of.get(&target).with_context(|| format!("{ticker} is not a common stock the census covers"))?;
-    let periods = read_periods(dir)?;
-    let rows: Vec<Option<Range<usize>>> = periods.iter().map(|p| period_rows(&var.days, p)).collect();
+    let tc = *col_of.get(&current).with_context(|| format!("{ticker} is not a common stock the census covers"))?;
+    let target = meta
+        .run_id_of(store, &ids, ticker)
+        .with_context(|| format!("{ticker} was not in the price store when census {} was made, so it has no results there", meta.name))?;
+    // Variable rows (not calendar rows) of each correlation period, found by date.
+    let rows: Vec<Option<Range<usize>>> = (0..meta.windows.len()).map(|w| meta.window_rows_in(&var.days, w)).collect();
     let first_row = rows.iter().flatten().map(|r| r.start).min().context("none of the run's correlation periods fall on this store's trading days")?;
-    let mut paths: Vec<PathBuf> = std::fs::read_dir(dir.join("tasks"))?
-        .flatten()
-        .map(|e| e.path())
-        .filter(|p| p.extension().and_then(|x| x.to_str()) == Some("rec"))
-        .collect();
-    paths.sort();
-    let target = target as u32;
-    let records: Vec<_> = paths
+    let records: Vec<Record> = meta
+        .tasks()?
+        .iter()
+        .filter(|t| t.length > 0)
+        .collect::<Vec<_>>()
         .par_iter()
-        .map(|path| scan_records(path, |r| r.target == target && r.flags & FLAG_NULL == 0 && r.lag > 0))
+        .map(|task| {
+            let mut out = Vec::new();
+            visit_task(&meta, task, |r| {
+                if r.target == target && r.flags & FLAG_NULL == 0 && r.lag > 0 {
+                    out.push(*r);
+                }
+            })?;
+            Ok(out)
+        })
         .collect::<Result<Vec<_>>>()?
         .into_iter()
         .flatten()
         .collect();
-    let mut ids: Vec<u32> = records.iter().map(|r| r.leader).filter(|id| col_of.contains_key(&(*id as usize))).collect();
-    ids.sort_unstable();
-    ids.dedup();
-    let index: HashMap<u32, u32> = ids.iter().enumerate().map(|(i, &id)| (id, i as u32)).collect();
-    let leaders: Vec<Leader> = ids.par_iter().map(|&id| Leader { ticker: store.symbols[id as usize].ticker.clone(), rel: var.market_relative(col_of[&(id as usize)]) }).collect();
+    // Leaders by run id: today's variable column through the ticker, where there is one.
+    let column = |rid: u32| ids.current(rid).and_then(|c| col_of.get(&c).copied());
+    let mut leader_ids: Vec<u32> = records.iter().map(|r| r.leader).filter(|&rid| column(rid).is_some()).collect();
+    leader_ids.sort_unstable();
+    leader_ids.dedup();
+    let index: HashMap<u32, u32> = leader_ids.iter().enumerate().map(|(i, &rid)| (rid, i as u32)).collect();
+    let leaders: Vec<Leader> = leader_ids
+        .par_iter()
+        .map(|&rid| Leader { ticker: stocks.ticker(rid).unwrap_or("?").to_string(), rel: var.market_relative(column(rid).expect("leaders have a column")) })
+        .collect();
     let target_rel = var.market_relative(tc);
     let mut rels: Vec<Rel> = records
         .par_iter()
         .filter_map(|r| {
-            let p = periods.get(r.window as usize).filter(|p| p.length > 0)?;
+            let p = meta.windows.get(r.window as usize).filter(|p| p.length > 0)?;
             let span = rows[r.window as usize].clone()?;
             let leader = *index.get(&r.leader)?;
             let (h1, h2, lag) = (r.h1 as usize, r.h2 as usize, r.lag as usize);
@@ -386,11 +358,11 @@ fn combine(d: &ForecastData, rels: &[&Rel], t0: usize, horizon: usize) -> Combin
 }
 
 /// Forecast for `ticker` as of `as_of` (the last trading day on or before it), from the census
-/// run in `dir`. Builds the census variable and reads the run on every call; to make several
-/// forecasts for one stock, call `prepare` once and then `forecast_from`.
+/// run in `dir`. Builds the run's census variable and reads the run on every call; to make
+/// several forecasts for one stock, call `prepare` once and then `forecast_from`.
 pub fn forecast(store: &Store, dir: &Path, ticker: &str, as_of: i32, opt: &Options) -> Result<Forecast> {
     let cal = Calendar::trading_days(store)?;
-    let var = variable::production(store, &cal, Config::full().start)?;
+    let var = variable::production(store, &cal, RunMeta::load(dir)?.cfg.start)?;
     forecast_from(&prepare(store, &var, dir, ticker)?, as_of, opt)
 }
 
@@ -562,19 +534,6 @@ mod tests {
         let s = skill(&d, 2, 350, &Options { significant_only: false, horizon: 2, max_age: None }).unwrap();
         assert_eq!((s.forecasts, s.directional), (12, 9));
         assert!((s.hit_rate - 6.0 / 9.0).abs() < 1e-12);
-    }
-
-    #[test]
-    fn periods_map_by_exact_dates_only() {
-        let days = [10, 11, 12, 15, 16, 17];
-        let p = |length, first, last| Period { length, first, last };
-        assert_eq!(period_rows(&days, &p(3, 11, 15)), Some(1..4));
-        assert_eq!(period_rows(&days, &p(0, 10, 17)), Some(0..6));
-        // Not a trading day, past the data, wrong length, reversed: never clamped.
-        assert_eq!(period_rows(&days, &p(3, 11, 14)), None);
-        assert_eq!(period_rows(&days, &p(3, 15, 18)), None);
-        assert_eq!(period_rows(&days, &p(4, 11, 15)), None);
-        assert_eq!(period_rows(&days, &p(0, 15, 11)), None);
     }
 
     #[test]

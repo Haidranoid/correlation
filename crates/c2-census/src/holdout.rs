@@ -10,11 +10,12 @@
 use std::collections::HashMap;
 use std::path::Path;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use c2_data::Store;
 use rayon::prelude::*;
 
-use crate::analyze::read_records;
+use crate::analyze::{check_plan, visit_task};
+use crate::meta::RunMeta;
 use crate::run::{FLAG_NULL, Plan};
 
 /// Which signal makes the predictions.
@@ -115,6 +116,9 @@ fn corr(a: &[f64], b: &[f64]) -> f64 {
     if saa > 0.0 && sbb > 0.0 { sab / (saa * sbb).sqrt() } else { 0.0 }
 }
 
+/// The holdout test on the census run in `dir`. For census pairs, the tasks (what each results
+/// file holds) come from the run itself; `plan` supplies the census variable, the period rows and
+/// the stock numbering, and must fit the run (`Plan::for_run` does; otherwise this refuses).
 pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<Report> {
     let var = &plan.var;
     let h0 = var.days.partition_point(|&d| d < opt.start);
@@ -125,7 +129,7 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
     let days: Vec<usize> = (h0 - 1..t - 1).collect();
     let rebalance = opt.rebalance.max(1);
     let (candidates, scores, pairs_used, windows_used): (Vec<usize>, Vec<Option<Vec<f64>>>, usize, usize) = match opt.family {
-        Family::CensusPairs => census_scores(plan, dir, opt, h0, t, &days, rebalance)?,
+        Family::CensusPairs => census_scores(store, plan, dir, opt, h0, t, &days, rebalance)?,
         Family::PeerMomentum { peers, lookback, window } => peer_scores(var, h0, t, &days, rebalance, peers, lookback, window),
         Family::Reversal { lookback, window } => reversal_scores(var, h0, t, &days, rebalance, lookback, window),
     };
@@ -356,10 +360,14 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
 
 type Scores = (Vec<usize>, Vec<Option<Vec<f64>>>, usize, usize);
 
-/// Family A scores: stored census pairs from windows that ended before the holdout.
-fn census_scores(plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, days: &[usize], rebalance: usize) -> Result<Scores> {
+/// Family A scores: stored census pairs from windows that ended before the holdout. The run's
+/// own task list says what each results file holds; the plan must fit the run (`check_plan`),
+/// so its windows are the run's and `column_of_run_id` turns record ids into its columns.
+#[allow(clippy::too_many_arguments)]
+fn census_scores(store: &Store, plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, days: &[usize], rebalance: usize) -> Result<Scores> {
     let var = &plan.var;
-    let col_of: HashMap<u32, usize> = var.ids.iter().enumerate().map(|(c, &id)| (id as u32, c)).collect();
+    let meta = RunMeta::load(dir)?;
+    check_plan(plan, &meta, Some(store))?;
     // Windows that ended before the holdout: the latest of each length, or all of them.
     let before: Vec<usize> = plan.windows.iter().filter(|w| w.length > 0 && w.end <= h0).map(|w| w.id).collect();
     let mut use_window = vec![false; plan.windows.len()];
@@ -380,20 +388,27 @@ fn census_scores(plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, da
         }
     }
     let windows_used = use_window.iter().filter(|&&u| u).count();
-    // Real stored pairs whose target horizon equals the holding period, at predictive lags.
+    // Real stored pairs whose B move length equals the holding period, at predictive offsets,
+    // in task order, then file order (the order the scores are summed in).
     let h2 = rebalance;
-    anyhow::ensure!(plan.cfg.horizons.contains(&h2), "the census has no target horizon of {h2} days (rebalance must be one of {:?})", plan.cfg.horizons);
+    anyhow::ensure!(
+        meta.cfg.horizons.contains(&h2),
+        "census {} has no B move length of {h2} days (the rebalance period must be one of {:?})",
+        meta.name,
+        meta.cfg.horizons
+    );
     let mut pairs = Vec::new();
-    for task in plan.tasks.iter().filter(|t| t.h2 == h2 && t.length > 0) {
-        let path = dir.join(format!("tasks/t{}.rec", task.id));
-        for r in read_records(&path).with_context(|| format!("task {}", task.id))? {
+    for task in meta.tasks()?.iter().filter(|t| t.h2 == h2 && t.length > 0) {
+        // `visit_task` passes only records of the task's own periods, which `check_plan` made
+        // the plan's, so `use_window` covers them.
+        visit_task(&meta, task, |r| {
             if r.flags & FLAG_NULL != 0 || r.lag == 0 || !use_window[r.window as usize] {
-                continue;
+                return;
             }
-            if let (Some(&i), Some(&j)) = (col_of.get(&r.leader), col_of.get(&r.target)) {
+            if let (Some(i), Some(j)) = (plan.column_of_run_id(r.leader), plan.column_of_run_id(r.target)) {
                 pairs.push(Pair { leader: i, target: j, h1: task.h1, lag: r.lag as usize, r: r.r as f64 });
             }
-        }
+        })?;
     }
     let mut candidates: Vec<usize> = pairs.iter().map(|p| p.target).collect();
     candidates.sort_unstable();
@@ -553,7 +568,7 @@ pub fn current_picks(store: &Store, plan: &Plan, dir: &Path, family: Family, reb
     let opt = Options { family, rebalance, start: var.days[t - 1], end: i32::MAX, picks, costs_bps: vec![0.0], random_runs: 0, cash: 10_000.0, all_windows: false };
     let days = [t - 1];
     let (candidates, scores, _, _) = match family {
-        Family::CensusPairs => census_scores(plan, dir, &opt, t, t, &days, rebalance)?,
+        Family::CensusPairs => census_scores(store, plan, dir, &opt, t, t, &days, rebalance)?,
         Family::PeerMomentum { peers, lookback, window } => peer_scores(var, t, t, &days, rebalance, peers, lookback, window),
         Family::Reversal { lookback, window } => reversal_scores(var, t, t, &days, rebalance, lookback, window),
     };
