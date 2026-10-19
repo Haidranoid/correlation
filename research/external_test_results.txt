@@ -801,6 +801,11 @@ pairs and every census offset: 5.5 billion real correlations against 16.6 billio
       heating degree days -> US Bancorp (A over 21 days, B over 1 day, offset 36) has z +4.4 and +5.0 in 2015-2020 and
       2020-2025 but -1.2 and +1.0 in 2005-2015. After a top-quarter 21-day HDD move, USB rose in 60% of cases inside
       2015-2020 against 52% normally, and in 36% against 44% in the rest of history.
+   d. Climate indices look best by category (ratio 1.27, 54.9% same sign over 2,501 picks), but it is clustering. The
+      excess sits in the two near-duplicate weekly Nino series (1,624 of 5,261 strong entries, against 847 in null
+      copy 1) and in 2015-2020 (1,620 against 1,039), mostly with B over 1 day. These are smooth, persistent series for
+      which the sign-flip null is too lenient, and only 7 climate-index relationships survive into the next period at
+      |z| >= 3, scattered over series and move lengths.
 5. Same day (offset 0), real effects as expected: oil vs energy stocks, gold vs miners, rates vs banks and utilities,
    FX and world indices vs exporters. 349,900 correlations at |z| >= 4 against 43,244 by chance, and 91% keep their
    sign in the next period, which shows that both the pipeline and the out-of-sample check work. None of it predicts.
