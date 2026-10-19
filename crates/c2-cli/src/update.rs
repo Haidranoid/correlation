@@ -198,15 +198,19 @@ fn latest_out_of_date(today: &Today) -> Option<String> {
 }
 
 /// Where today's census goes: `<prefix><last data day>`, or that name with `-2`, `-3`, ... after
-/// it while a run of the name already holds a census of other data or settings (which could
-/// not be resumed). A run of the name made with `cfg` on today's store is used again:
-/// `run::run` resumes it if it was interrupted and reports it complete if it is.
-fn census_name(prefix: &str, today: &Today, cfg: &Config) -> String {
+/// it while a run of the name holds a census that `plan` can't resume or find complete
+/// (`run::resume_check`: other settings, price data, task list, correlation periods or their
+/// stocks; e.g. a same-day run made by older code), which is left as it is. A run that passes is
+/// used again: `run::run` resumes it if it was interrupted and reports it complete if it is.
+fn census_name(prefix: &str, today: &Today, plan: &run::Plan, store: &Store) -> String {
     (1..)
         .map(|k| if k == 1 { format!("{prefix}{}", today.last_day) } else { format!("{prefix}{}-{k}", today.last_day) })
-        .find(|name| {
-            let dir = run::run_dir(name);
-            !dir.join("manifest.json").exists() || RunMeta::load(&dir).is_ok_and(|m| today.differs(&m.manifest, cfg).is_none())
+        .find(|name| match run::resume_check(&run::run_dir(name), plan, store) {
+            Ok(()) => true,
+            Err(e) => {
+                log(&format!("census {name} can't be continued with today's plan, so it is left as it is: {e:#}"));
+                false
+            }
         })
         .expect("a free run name")
 }
@@ -215,10 +219,14 @@ fn census_name(prefix: &str, today: &Today, cfg: &Config) -> String {
 /// then becomes the default, or with `smoke` the reduced grid, which never does. Its plan and
 /// progress go to the run's own run.log as with `c2 census run` (so the Status tab's history
 /// shows its computing time), and to update.log. Ctrl-C or `c2 census stop` stops it cleanly
-/// after the window in progress.
+/// after the correlation period in progress.
 fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<()> {
     let cfg = if smoke { Config::smoke() } else { Config::full() };
-    let name = census_name(if smoke { "smoke-" } else { "main-" }, today, &cfg);
+    // The plan comes first: it doesn't depend on the run's name, and choosing the name needs it.
+    let t0 = std::time::Instant::now();
+    let plan = run::Plan::new(store, cfg)?;
+    let built = t0.elapsed().as_secs_f64();
+    let name = census_name(if smoke { "smoke-" } else { "main-" }, today, &plan, store);
     let dir = run::run_dir(&name);
     if let Some(pid) = run::running_pid(&dir) {
         log(&format!("census {name} is already running (pid {pid}); this update leaves it to finish{}", if smoke { "" } else { ", and the next `c2 update` makes it the default" }));
@@ -227,11 +235,11 @@ fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<()> {
     // `analyze::run_history` recognizes update-started runs by this line ("running census NAME ").
     log(&format!("running census {name} because {why}"));
     let census_log = super::census_log(&dir, Some(update_log()));
-    let plan = super::census_plan(store, cfg, &name, &dir, &census_log)?;
+    super::log_plan(&plan, built, &name, &dir, &census_log)?;
     let stop = Arc::new(AtomicBool::new(false));
     let flag = stop.clone();
     ctrlc::set_handler(move || {
-        eprintln!("stopping after the current window...");
+        eprintln!("stopping after the correlation period in progress...");
         flag.store(true, Ordering::Relaxed);
     })?;
     run::run(store, &plan, &dir, &stop, &census_log)?;
