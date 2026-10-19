@@ -13,6 +13,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use c2_census::holdout::Family;
+use c2_census::meta::{self, RunMeta};
 use c2_census::run;
 use c2_data::{Calendar, Store};
 
@@ -55,6 +56,17 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
     if zips.is_empty() {
         log(&format!("no new zips in {}", inbox.display()));
     } else {
+        // Census records hold store ids, which a rebuilt store renumbers: first give every run
+        // without one a copy of the symbol table its ids refer to.
+        let saved = meta::snapshot_symbols_for_all_runs().context("could not save the stock lists of the existing census runs, so the store was not rebuilt")?;
+        let names = |want: meta::Snapshot| saved.iter().filter(|(_, s)| *s == want).map(|(n, _)| n.as_str()).collect::<Vec<_>>().join(", ");
+        let (written, lost) = (names(meta::Snapshot::Written), names(meta::Snapshot::Unrecoverable));
+        if !written.is_empty() {
+            log(&format!("saved the stock list of census runs {written}"));
+        }
+        if !lost.is_empty() {
+            log(&format!("census runs {lost} have no copy of their stock list and the store already changed since they ran; their results can't be matched to stocks"));
+        }
         let paths: Vec<&Path> = zips.iter().map(|p| p.as_path()).collect();
         let r = c2_data::ingest::ingest_stooq(&paths, &["us"], &store_dir)?;
         log(&format!("ingested {} files, {} rows from {} zip(s)", r.files, r.rows, zips.len()));
@@ -87,12 +99,17 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
         let name = format!("{}{last}", if opt.smoke { "smoke-" } else { "main-" });
         let cfg = if opt.smoke { c2_census::grid::Config::smoke() } else { c2_census::grid::Config::full() };
         log(&format!("running census {name} on the new data"));
+        // A new run: today's plan is its plan.
         let plan = run::Plan::new(&store, cfg)?;
         let dir = run::run_dir(&name);
         std::fs::create_dir_all(&dir)?;
         let stop = std::sync::atomic::AtomicBool::new(false);
         run::run(&store, &plan, &dir, &stop, &|m: &str| log(m))?;
-        std::fs::write(data.join("census/LATEST"), &name)?;
+        if opt.smoke {
+            log(&format!("smoke test: census {name} is not made the default; the default stays {}", run::latest_run()));
+        } else {
+            run::set_latest(&name)?;
+        }
     }
     forward_log(&store)
 }
@@ -107,9 +124,15 @@ fn forward_log(store: &Store) -> Result<()> {
         log(&format!("forward log: census {name} is not finished; nothing logged"));
         return Ok(());
     }
-    let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
-    let cfg = if m["config"].as_str().unwrap_or("").contains("full_history=true") { c2_census::grid::Config::full() } else { c2_census::grid::Config::smoke() };
-    let plan = run::Plan::new(store, cfg)?;
+    // The run's own settings, correlation periods and tasks, on today's data.
+    let meta = RunMeta::load(&dir)?;
+    let plan = run::Plan::for_run(store, &meta).with_context(|| format!("forward log from census {name}"))?;
+    // holdout::current_picks still reads record ids as today's store ids; until it translates
+    // them through the run's stock list, log nothing when the two numberings differ.
+    if !meta.id_map(store)?.is_identity() {
+        log(&format!("forward log: census {name} numbers its stocks differently from today's store (it was made before the store was rebuilt); nothing logged"));
+        return Ok(());
+    }
     let day = c2_data::date_string(*plan.var.days.last().unwrap());
     let path = c2_data::data_dir().join("forward_log.jsonl");
     let existing = std::fs::read_to_string(&path).unwrap_or_default();

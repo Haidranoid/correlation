@@ -6,7 +6,9 @@
 //! For h1 = h2 = 1, lag 1 is "next day" and lag 0 "same day", as in research/lag_spectrum.py.
 //! Observations are non-overlapping: grid points g step by max(h1, h2).
 
-#[derive(Clone, Debug)]
+use anyhow::{Context, Result, anyhow, bail};
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct Config {
     pub horizons: Vec<usize>,
     /// Rolling window lengths in trading days.
@@ -54,6 +56,59 @@ impl Config {
     /// (h1, h2) pairs: every leader horizon with every target horizon.
     pub fn horizon_pairs(&self) -> Vec<(usize, usize)> {
         self.horizons.iter().flat_map(|&h1| self.horizons.iter().map(move |&h2| (h1, h2))).collect()
+    }
+
+    /// The settings as a run's manifest records them (`config`). `fdr_cap` is not part of it.
+    /// Finished runs are recognized on resume by this exact text, so it must never change.
+    pub fn to_text(&self) -> String {
+        format!(
+            "horizons={:?} lengths={:?} full_history={} step={} start={} min_obs={} nulls={} keep_real={} keep_null={} floor_z={} fdr_q={}",
+            self.horizons, self.lengths, self.full_history, self.step, c2_data::date_string(self.start), self.min_obs, self.nulls,
+            self.keep_real, self.keep_null, self.floor_z, self.fdr_q
+        )
+    }
+
+    /// Parses a manifest's `config` text field by field. Only text that `to_text` would write
+    /// back byte for byte is accepted. `fdr_cap` is not recorded and gets today's default.
+    pub fn from_text(text: &str) -> Result<Config> {
+        fn field<'a>(rest: &mut &'a str, key: &str) -> Result<&'a str> {
+            let s = rest.strip_prefix(key).and_then(|s| s.strip_prefix('=')).ok_or_else(|| anyhow!("expected `{key}=` at {rest:?}"))?;
+            let end = if s.starts_with('[') { s.find(']').map(|i| i + 1).ok_or_else(|| anyhow!("unclosed list after `{key}=`"))? } else { s.find(' ').unwrap_or(s.len()) };
+            let (value, tail) = s.split_at(end);
+            *rest = tail.strip_prefix(' ').unwrap_or(tail);
+            Ok(value)
+        }
+        fn list(v: &str) -> Result<Vec<usize>> {
+            let inner = v.strip_prefix('[').and_then(|v| v.strip_suffix(']')).ok_or_else(|| anyhow!("expected a list, got {v:?}"))?;
+            if inner.is_empty() { Ok(Vec::new()) } else { inner.split(',').map(|x| Ok(x.trim().parse::<usize>()?)).collect() }
+        }
+        let parse = || -> Result<Config> {
+            let mut rest = text;
+            let horizons = list(field(&mut rest, "horizons")?)?;
+            let lengths = list(field(&mut rest, "lengths")?)?;
+            let full_history = match field(&mut rest, "full_history")? {
+                "true" => true,
+                "false" => false,
+                v => bail!("full_history={v:?}"),
+            };
+            let step = field(&mut rest, "step")?.parse()?;
+            let start = c2_data::parse_date(field(&mut rest, "start")?)?;
+            let min_obs = field(&mut rest, "min_obs")?.parse()?;
+            let nulls = field(&mut rest, "nulls")?.parse()?;
+            let keep_real = field(&mut rest, "keep_real")?.parse()?;
+            let keep_null = field(&mut rest, "keep_null")?.parse()?;
+            let floor_z = field(&mut rest, "floor_z")?.parse()?;
+            let fdr_q = field(&mut rest, "fdr_q")?.parse()?;
+            if !rest.is_empty() {
+                bail!("unexpected text at the end: {rest:?}");
+            }
+            let cfg = Config { horizons, lengths, full_history, step, start, min_obs, nulls, keep_real, keep_null, fdr_cap: Config::full().fdr_cap, floor_z, fdr_q };
+            if cfg.to_text() != text {
+                bail!("it reads back as {:?}", cfg.to_text());
+            }
+            Ok(cfg)
+        };
+        parse().with_context(|| format!("census settings {text:?} are not in the form this version writes"))
     }
 }
 
@@ -129,4 +184,21 @@ pub fn tasks(cfg: &Config, windows: &[Window]) -> Vec<Task> {
         }
     }
     out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn config_text_round_trip() {
+        for cfg in [Config::full(), Config::smoke(), Config { horizons: vec![], lengths: vec![63], ..Config::smoke() }] {
+            assert_eq!(Config::from_text(&cfg.to_text()).unwrap(), cfg);
+        }
+        // Text another version could write but this one would not is refused, not guessed.
+        let text = Config::full().to_text();
+        for bad in [text.replace("floor_z=3.5", "floor_z=3.50"), text.replace(' ', "  "), format!("{text} extra=1"), text.replace("step=63 ", "")] {
+            assert!(Config::from_text(&bad).is_err(), "{bad}");
+        }
+    }
 }
