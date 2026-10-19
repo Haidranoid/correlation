@@ -517,6 +517,9 @@ fn census(action: CensusCmd) -> Result<()> {
                 println!("{:<24} {:>7} {:>9} {:>9} {:>10} {:>10} {:>10} {:>8} {:>8} {:>9} {:>8}", "holdout", "pairs", "SPY", "QQQ", "picks", "random med", "p (0 bps)", "hit %", "IC t", "LS bps/d", "LS t");
                 let mut beat = 0;
                 let mut years = 0;
+                // Years whose holdout failed: (period, error). Each is shown in the table.
+                let mut failed: Vec<(String, String)> = Vec::new();
+                let mut no_pairs = 0;
                 let (mut ic_ts, mut ls_ts, mut ls_bps, mut ls_turn): (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>) = Default::default();
                 for y in (2006..=y0).rev().collect::<Vec<_>>().into_iter().rev() {
                     let s = c2_data::days_from_civil(y, mo, d);
@@ -525,8 +528,20 @@ fn census(action: CensusCmd) -> Result<()> {
                         continue;
                     }
                     let opt = c2_census::holdout::Options { family: fam, rebalance, start: s, end: e, picks, costs_bps: vec![0.0], random_runs: random, cash: 10_000.0, all_windows };
-                    let Ok(r) = c2_census::holdout::holdout(&store, &plan, &dir, &opt) else { continue };
+                    let r = match c2_census::holdout::holdout(&store, &plan, &dir, &opt) {
+                        Ok(r) => r,
+                        Err(err) => {
+                            let (period, msg) = (format!("{}..{}", c2_data::date_string(s), c2_data::date_string(e - 1)), format!("{err:#}"));
+                            match failed.iter().find(|(_, m)| *m == msg) {
+                                Some((first, _)) => println!("{period:<24} failed: the same error as {first}"),
+                                None => println!("{period:<24} failed: {msg}"),
+                            }
+                            failed.push((period, msg));
+                            continue;
+                        }
+                    };
                     if r.pairs == 0 {
+                        no_pairs += 1;
                         continue;
                     }
                     let pct = |v: f64| 100.0 * (v / 10_000.0 - 1.0);
@@ -541,6 +556,16 @@ fn census(action: CensusCmd) -> Result<()> {
                     ls_ts.push(r.ls_t);
                     ls_bps.push(1e4 * r.ls_mean);
                     ls_turn.push(r.ls_turnover);
+                }
+                if years == 0 {
+                    let empty = if no_pairs > 0 { format!(", {no_pairs} had no census pairs from correlation periods that ended before them") } else { String::new() };
+                    match failed.first() {
+                        Some((period, msg)) => anyhow::bail!("no year of the walk-forward could be tested ({} failed{empty}); the first failure, {period}: {msg}", failed.len()),
+                        None => anyhow::bail!("no year of the walk-forward could be tested: none had census pairs from correlation periods that ended before it"),
+                    }
+                }
+                if !failed.is_empty() {
+                    println!("{} year(s) could not be tested (above); the summary covers the other {years}.", failed.len());
                 }
                 println!("Years where the picks beat random guessers at p < 0.1: {beat} of {years} (chance alone: about {:.1})  [{:.0}s]", 0.1 * years as f64, t0.elapsed().as_secs_f64());
                 let stouffer = |v: &[f64]| v.iter().sum::<f64>() / (v.len() as f64).sqrt();
@@ -733,7 +758,7 @@ fn census(action: CensusCmd) -> Result<()> {
             // The run's own settings, correlation periods, stocks and task numbering, on today's data.
             let meta = c2_census::meta::RunMeta::load(&dir)?;
             let plan = run::Plan::for_run(&store, &meta)?;
-            let table = c2_census::analyze::replicate(&plan, &dir)?;
+            let table = c2_census::analyze::replicate_run(&store, &plan, &dir)?;
             println!("Replication in the next non-overlapping window ({:.0}s). 'Chance' rows are pairs picked from sign-flip null matrices.", t0.elapsed().as_secs_f64());
             println!("{:>4} {:>4} {:>16} {:>7} {:>10} {:>11} {:>16} {:>14}", "h1", "h2", "lag", "kind", "pairs", "same sign", "mean |r| then", "mean r next*");
             for ((h1, h2, b, null), r) in &table {

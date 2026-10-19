@@ -254,15 +254,11 @@ fn forward_log(store: &Store) -> Result<()> {
         log(&format!("forward log: census {name} is not finished; nothing logged"));
         return Ok(());
     }
-    // The run's own settings, correlation periods and tasks, on today's data.
+    // The run's own settings, correlation periods, tasks and stock numbering, on today's data:
+    // `current_picks` translates the run's stock ids to today's through the plan (and refuses a
+    // plan that doesn't fit the run), so a store rebuilt since the run is fine.
     let meta = RunMeta::load(&dir)?;
     let plan = run::Plan::for_run(store, &meta).with_context(|| format!("forward log from census {name}"))?;
-    // holdout::current_picks still reads record ids as today's store ids; until it translates
-    // them through the run's stock list, log nothing when the two numberings differ.
-    if !meta.id_map(store)?.is_identity() {
-        log(&format!("forward log: census {name} numbers its stocks differently from today's store (it was made before the store was rebuilt); nothing logged"));
-        return Ok(());
-    }
     let day = c2_data::date_string(*plan.var.days.last().unwrap());
     let path = c2_data::data_dir().join("forward_log.jsonl");
     let existing = std::fs::read_to_string(&path).unwrap_or_default();
