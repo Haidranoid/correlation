@@ -283,6 +283,10 @@ pub struct Explained {
     pub matrix: Matrix,
     /// What the numbers above were checked against in the run's stored data.
     pub check: Check,
+    /// The plan's `variable_note`: set when values recomputed today may differ from those the run
+    /// stored (its census variable started on another day, e.g. `smoke`), saying why. Show it with
+    /// the correlation period (step 1) and next to `check`.
+    pub variable_note: Option<String>,
     /// Pairs tested in the matrix and how many chance alone would give at |z| >= this one.
     pub pairs_tested: f64,
     pub chance_analytic: f64,
@@ -535,7 +539,9 @@ pub fn explain(store: &c2_data::Store, plan: &Plan, dir: &Path, req: &Request) -
 
 /// Explains one relationship of the run `meta` describes. `plan` is that run's plan
 /// (`Plan::for_run`); `req.window` is one of the run's correlation period ids. Errors if the
-/// plan's period of that id is not the run's (by date), if a stock is unknown, if the offset
+/// plan was prepared for another run or its period of that id is not the run's (by date), if
+/// today's data doesn't cover the period (saying why, `period_unavailable`), if a stock of the
+/// period is no longer in today's data (`Plan::missing_stocks`) or is unknown, if the offset
 /// lets B's move start before A's ends (0 < offset < h2), or if there is room for fewer than 3
 /// observations. Otherwise it first decides whether the census computed the matrix
 /// (`census_computed`), then explains the pair either way.
@@ -551,15 +557,38 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
         );
     }
     let run = meta.name.as_str();
+    if let Some(other) = plan.built_for()
+        && !plan.is_for(meta)
+    {
+        bail!("this calculation was prepared for census {other}, not for census {run}; prepare it from the run itself");
+    }
     let rw = meta.windows.get(req.window).with_context(|| format!("census {run} has no correlation period number {}", req.window))?;
+    // A period today's data doesn't cover exactly can't be recomputed (`Plan::for_run` marks it).
+    if let Some(why) = period_unavailable(plan, meta, req.window) {
+        bail!("census {run}'s {} can't be explained with today's data: {why}", describe_period(rw));
+    }
     // `req.window` is the run's id: the plan's period of that id must be the run's, by date.
-    let rows = meta.window_rows_in(&plan.var.days, req.window).with_context(|| format!("census {run}: its {} is not covered exactly by today's price data", describe_period(rw)))?;
+    let rows = meta.window_rows_in(&plan.var.days, req.window).context("the correlation period is not covered")?;
     let w = plan
         .windows
         .get(req.window)
         .filter(|w| w.length == rw.length && rows == (w.start..w.end))
         .ok_or_else(|| anyhow!("the census data prepared for the Explainer doesn't match census {run}: its correlation period {} is not the run's {}", req.window, describe_period(rw)))?;
-    let (ja, jb) = (column(plan, store, &req.leader)?, column(plan, store, &req.follower)?);
+    // A stock the period had that today's data no longer has (delisted or dropped since) can't be
+    // recomputed; say so rather than calling it unknown.
+    let stocks = meta.stocks()?;
+    let col = |ticker: &str| -> Result<usize> {
+        if let Some(rid) = stocks.id(ticker)
+            && plan.missing_stocks.get(req.window).is_some_and(|m| m.contains(&rid))
+        {
+            bail!(
+                "{ticker} was one of census {run}'s stocks in its {}, but today's data no longer has it as a census stock (delisted or dropped since), so this pair can't be recomputed",
+                describe_period(rw)
+            );
+        }
+        column(plan, store, ticker)
+    };
+    let (ja, jb) = (col(&req.leader)?, col(&req.follower)?);
     anyhow::ensure!(ja != jb, "pick two different stocks");
     let (step, g0) = (h1.max(h2), h1.max(h2) - 1);
     let len = w.end - w.start;
@@ -601,7 +630,6 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
     // Records name stocks by the run's ids. The plan must number them as the run does
     // (`Plan::for_run`); one built for today's store differs after a re-ingest.
     let (ida, idb) = (plan.run_id_of_column(ja), plan.run_id_of_column(jb));
-    let stocks = meta.stocks()?;
     for (ticker, id) in [(&req.leader, ida), (&req.follower, idb)] {
         if let (Some(want), Some(have)) = (stocks.id(ticker), id)
             && want != have
@@ -730,35 +758,157 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
         stored,
         matrix,
         check,
+        variable_note: plan.variable_note.clone(),
         pairs_tested,
         chance_analytic,
         words,
     })
 }
 
+/// Why today's data can't reproduce correlation period `id` of the run, or None when it covers
+/// it exactly: its first and last days are trading days of the census variable with exactly its
+/// length of rows between them (`Plan::for_run` marks the others unavailable).
+pub fn period_unavailable(plan: &Plan, meta: &RunMeta, id: usize) -> Option<String> {
+    let Some(w) = meta.windows.get(id) else { return Some(format!("census {} has no correlation period number {id}", meta.name)) };
+    if plan.period_available(id) && meta.window_rows_in(&plan.var.days, id).is_some() {
+        return None;
+    }
+    Some(why_uncovered(&plan.var.days, w))
+}
+
+/// Why the trading days `days` (a census variable's) don't cover period `w` exactly.
+fn why_uncovered(days: &[i32], w: &RunWindow) -> String {
+    let d = c2_data::date_string;
+    let (first, last) = (days.first().copied().unwrap_or(i32::MAX), days.last().copied().unwrap_or(i32::MIN));
+    if w.last > last {
+        format!("it ends on {}, after today's data, which ends on {}", d(w.last), d(last))
+    } else if w.first < first {
+        format!("it starts on {}, before today's census data, which starts on {}", d(w.first), d(first))
+    } else if days.binary_search(&w.first).is_err() {
+        format!("its first day, {}, is not a trading day in today's data", d(w.first))
+    } else if days.binary_search(&w.last).is_err() {
+        format!("its last day, {}, is not a trading day in today's data", d(w.last))
+    } else {
+        let n = days.partition_point(|&x| x <= w.last) - days.partition_point(|&x| x < w.first);
+        format!("today's data has {n} trading days from {} to {}, not the {} the census used", d(w.first), d(w.last), w.length)
+    }
+}
+
+/// Which period of one length a request means. `of_len` holds that length's periods in date
+/// order; `covered` says which ones today's data covers.
+#[derive(Debug, PartialEq)]
+enum Pick {
+    /// The period asked for (by `end`, or the latest), covered.
+    Covered(usize),
+    /// With no `end`: the latest period isn't covered (`want`), the latest covered one is `chosen`.
+    PassedOver { want: usize, chosen: usize },
+    /// The period asked for isn't covered; `latest_covered` of that length, if any.
+    Uncovered { want: usize, latest_covered: Option<usize> },
+}
+
+/// The period of `of_len` ending on or before `end` (else the earliest), or with no `end` the
+/// latest one, falling back to the latest covered one only when no `end` was given. Indexes
+/// into `of_len`; `of_len` must not be empty.
+fn pick(of_len: &[&RunWindow], covered: impl Fn(&RunWindow) -> bool, end: Option<i32>) -> Pick {
+    let latest_covered = (0..of_len.len()).rev().find(|&k| covered(of_len[k]));
+    let want = match end {
+        Some(end) => (0..of_len.len()).rev().find(|&k| of_len[k].last <= end).unwrap_or(0),
+        None => of_len.len() - 1,
+    };
+    match (covered(of_len[want]), end, latest_covered) {
+        (true, _, _) => Pick::Covered(want),
+        (false, None, Some(chosen)) => Pick::PassedOver { want, chosen },
+        (false, _, latest_covered) => Pick::Uncovered { want, latest_covered },
+    }
+}
+
 /// The correlation period of `length` trading days (0 = full history) ending on or before `end`,
-/// else the earliest one of that length.
+/// else the earliest one of that length, among those today's data covers
+/// (`Plan::period_available`). None if it covers none of that length.
 pub fn find_window(plan: &Plan, length: usize, end: i32) -> Option<usize> {
-    let of_len: Vec<usize> = plan.windows.iter().filter(|w| w.length == length).map(|w| w.id).collect();
+    let of_len: Vec<usize> = plan.windows.iter().filter(|w| w.length == length && plan.period_available(w.id)).map(|w| w.id).collect();
     of_len.iter().rev().find(|&&id| plan.var.days[plan.windows[id].end - 1] <= end).or(of_len.first()).copied()
 }
 
-/// `find_window`, or an error naming the lengths census `run` has when it has no correlation
-/// period of `length` days (e.g. no full-history period, `length` 0, on a smoke run).
-pub fn find_period(plan: &Plan, run: &str, length: usize, end: i32) -> Result<usize> {
-    find_window(plan, length, end).ok_or_else(|| {
-        let mut have: Vec<usize> = plan.windows.iter().map(|w| w.length).collect();
+/// The correlation period a request names, by the run's own dates: of `length` trading days
+/// (0 = full history), the one ending on or before `end` (else the earliest of that length), or
+/// with no `end` the latest one today's data covers. Errors name the run's lengths when it has no
+/// period of `length`, and name the period and why when today's data doesn't cover the one asked
+/// for. The note is set when, with no `end`, later periods of that length had to be passed over.
+pub fn find_period(plan: &Plan, meta: &RunMeta, length: usize, end: Option<i32>) -> Result<(usize, Option<String>)> {
+    let run = &meta.name;
+    let d = c2_data::date_string;
+    let of_len: Vec<&RunWindow> = meta.windows.iter().filter(|w| w.length == length).collect();
+    if of_len.is_empty() {
+        let mut have: Vec<usize> = meta.windows.iter().map(|w| w.length).collect();
         have.sort_by_key(|&l| if l == 0 { usize::MAX } else { l });
         have.dedup();
         let names: Vec<String> = have.iter().map(|&l| if l == 0 { "the full history (0)".to_string() } else { format!("{l} days") }).collect();
         let what = if length == 0 { "full-history correlation period".to_string() } else { format!("{length}-day correlation periods") };
-        if names.is_empty() { anyhow!("census {run} has no correlation periods") } else { anyhow!("census {run} has no {what}; its correlation periods are {}", list_and(&names)) }
-    })
+        bail!(if names.is_empty() { format!("census {run} has no correlation periods") } else { format!("census {run} has no {what}; its correlation periods are {}", list_and(&names)) });
+    }
+    let covered = |w: &RunWindow| period_unavailable(plan, meta, w.id).is_none();
+    let why = |w: &RunWindow| period_unavailable(plan, meta, w.id).unwrap_or_default();
+    match pick(&of_len, covered, end) {
+        Pick::Covered(k) => Ok((of_len[k].id, None)),
+        Pick::PassedOver { want, chosen } => {
+            let (want, chosen) = (of_len[want], of_len[chosen]);
+            let note = format!("census {run}'s latest {} can't be explained with today's data: {}. Showing the latest one it covers, {}..{}.", describe_period(want), why(want), d(chosen.first), d(chosen.last));
+            Ok((chosen.id, Some(note)))
+        }
+        Pick::Uncovered { want, latest_covered } => {
+            let want = of_len[want];
+            let hint = match latest_covered {
+                Some(k) => format!("; the latest {length}-day one today's data covers ends on {}", d(of_len[k].last)),
+                None => match meta.windows.iter().filter(|w| covered(w)).map(|w| w.last).max() {
+                    Some(last) => format!("; the correlation periods today's data covers end on or before {}", d(last)),
+                    None => "; today's data covers none of its correlation periods".to_string(),
+                },
+            };
+            bail!("census {run}'s {} can't be explained with today's data: {}{hint}", describe_period(want), why(want))
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn rw(id: usize, length: usize, first: &str, last: &str) -> RunWindow {
+        RunWindow { id, length, first: c2_data::parse_date(first).unwrap(), last: c2_data::parse_date(last).unwrap(), stocks: 10 }
+    }
+
+    #[test]
+    fn uncovered_periods_say_why() {
+        // Trading days 2025-01-02 .. 2025-01-10 without 2025-01-08.
+        let days: Vec<i32> = ["2025-01-02", "2025-01-03", "2025-01-06", "2025-01-07", "2025-01-09", "2025-01-10"].iter().map(|d| c2_data::parse_date(d).unwrap()).collect();
+        let why = |w: RunWindow| why_uncovered(&days, &w);
+        assert_eq!(why(rw(0, 3, "2025-01-09", "2025-01-14")), "it ends on 2025-01-14, after today's data, which ends on 2025-01-10");
+        assert_eq!(why(rw(0, 3, "2024-12-30", "2025-01-03")), "it starts on 2024-12-30, before today's census data, which starts on 2025-01-02");
+        assert!(why(rw(0, 3, "2025-01-08", "2025-01-10")).contains("first day, 2025-01-08, is not a trading day"));
+        assert!(why(rw(0, 3, "2025-01-06", "2025-01-08")).contains("last day, 2025-01-08, is not a trading day"));
+        // Both days are trading days, but a day in between is missing today (the run had 5 rows).
+        assert_eq!(why(rw(0, 5, "2025-01-06", "2025-01-10")), "today's data has 4 trading days from 2025-01-06 to 2025-01-10, not the 5 the census used");
+    }
+
+    #[test]
+    fn a_request_picks_its_period_and_falls_back_only_without_an_end() {
+        let ws = [rw(3, 252, "2023-01-03", "2023-12-29"), rw(7, 252, "2023-04-03", "2024-03-28"), rw(9, 252, "2023-07-03", "2024-06-28")];
+        let of_len: Vec<&RunWindow> = ws.iter().collect();
+        let date = |d: &str| Some(c2_data::parse_date(d).unwrap());
+        let all = |_: &RunWindow| true;
+        let not_last = |w: &RunWindow| w.id != 9;
+        let none = |_: &RunWindow| false;
+        // Covered: the latest, the one ending by --end, the earliest if --end is before them all.
+        assert_eq!(pick(&of_len, all, None), Pick::Covered(2));
+        assert_eq!(pick(&of_len, all, date("2024-05-01")), Pick::Covered(1));
+        assert_eq!(pick(&of_len, all, date("2020-01-01")), Pick::Covered(0));
+        // The latest isn't covered: with no --end, the latest covered one; with --end, refused.
+        assert_eq!(pick(&of_len, not_last, None), Pick::PassedOver { want: 2, chosen: 1 });
+        assert_eq!(pick(&of_len, not_last, date("2024-06-28")), Pick::Uncovered { want: 2, latest_covered: Some(1) });
+        assert_eq!(pick(&of_len, not_last, date("2024-06-27")), Pick::Covered(1));
+        assert_eq!(pick(&of_len, none, None), Pick::Uncovered { want: 2, latest_covered: None });
+    }
 
     #[test]
     fn nearest_offsets_bracket_the_request() {

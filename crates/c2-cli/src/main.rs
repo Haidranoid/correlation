@@ -606,8 +606,9 @@ fn census(action: CensusCmd) -> Result<()> {
             let meta = c2_census::meta::RunMeta::load(&run::run_dir(&name))?;
             let plan = run::Plan::for_run(&store, &meta)?;
             let built = t0.elapsed().as_secs_f64();
-            let end = match end { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
-            let window = explain::find_period(&plan, &name, period, end)?;
+            let end = match end { Some(d) => Some(c2_data::parse_date(&d)?), None => None };
+            // Only a period today's data covers can be explained; with no --end, the latest one.
+            let (window, passed_over) = explain::find_period(&plan, &meta, period, end)?;
             let req = explain::Request { leader: leader.to_uppercase(), follower: follower.to_uppercase(), h1, h2, lag: offset, window, threshold: None };
             let t1 = Instant::now();
             let e = explain::explain_with(&store, &plan, &meta, &req)?;
@@ -616,7 +617,13 @@ fn census(action: CensusCmd) -> Result<()> {
             println!("(census {name}: census variable for all stocks built in {built:.1}s; this explanation took {:.1} ms)", 1000.0 * took);
             let qualified = |s: &explain::DaySteps| if s.in_universe { "qualified" } else { "did NOT qualify" };
             let kind = if plan.windows[window].length == 0 { format!("full-history correlation period ({} trading days)", e.period_days) } else { format!("{}-day correlation period", e.period_days) };
+            if let Some(note) = &passed_over {
+                println!("note: {note}");
+            }
             println!("{kind} {} .. {}: {} stocks qualified; {a} {}, {b} {}", c2_data::date_string(e.period_first), c2_data::date_string(e.period_last), e.universe, qualified(&e.a), qualified(&e.b));
+            if let Some(note) = &e.variable_note {
+                println!("note: {note}");
+            }
             if e.same_day {
                 println!("offset 0 is the same-day reference: {b}'s move over {} ends the same day as {a}'s over {}. The census computes it to compare its later offsets with; it is not a prediction.", days(h2), days(h1));
             }
@@ -649,16 +656,30 @@ fn census(action: CensusCmd) -> Result<()> {
                     if c.agrees() { "agrees" } else { "DIFFERS" }, c.stored_stocks, c.stored_obs, c.stocks, c.obs),
                 Check::Nothing => println!("nothing stored to check against: the census never computed this matrix"),
             }
+            if let (Check::Record(c), Some(_)) = (&e.check, &e.variable_note) {
+                println!("  ({}: this run's census variable started on another day, so values recomputed today can differ from the stored ones; see the note above)",
+                    if c.agrees() { "they agree here, but in general" } else { "expected" });
+            }
             if e.matrix.found {
                 let cut = match e.matrix.fdr_r { Some(v) => format!("{v:.4}"), None if offset == 0 => "none (no significance test at offset 0)".into(), None => "none (no pair passed)".into() };
                 println!("matrix: pairs at |z|>=3/4/5: real {:?}, chance (sign-flip) {:?}; significance cut-off |r| {cut}", e.matrix.real, e.matrix.null);
             }
             println!("chance alone would give about {:.1} of {:.0} pairs at |z| >= {:.2}", e.chance_analytic, e.pairs_tested, e.z.abs());
-            let forecast = match &e.forecast_use { Ok(()) => "the Forecast applies this multiplier".to_string(), Err(why) => format!("not used by the Forecast: {why}") };
             match &e.move_size {
-                Some(s) => println!("size: {b}'s move relative to the market per 1% move of {a}'s relative to the market = r {:+.6} x ({:.2}% / {:.2}%) = {:+.4}, over {} observations; {forecast}",
+                Some(s) => println!("size: {b}'s move relative to the market per 1% move of {a}'s relative to the market = r {:+.6} x ({:.2}% / {:.2}%) = {:+.4}, over {} observations",
                     e.move_size_r, 100.0 * s.sd_b, 100.0 * s.sd_a, s.per_pct, s.pairs),
-                None => println!("size: fewer than {} observations have both moves, so there is no size; {forecast}", c2_census::moves::MIN_PAIRS),
+                None => println!("size: fewer than {} observations have both moves, so there is no size", c2_census::moves::MIN_PAIRS),
+            }
+            // How forecast::rel_path applies it: per leader move, spread over B's predicted days,
+            // only the days inside the forecast counting, on log changes.
+            match (&e.forecast_use, &e.move_size) {
+                (Ok(()), Some(s)) => {
+                    let (m, step) = (s.per_pct, h1.max(h2));
+                    println!("how the Forecast uses it: each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
+                        days(step), days(h2), tdays(offset), 100.0 * s.sd_a.exp_m1(), 100.0 * (m * s.sd_a).exp_m1());
+                }
+                (Err(why), _) => println!("not used by the Forecast: {why}"),
+                (Ok(()), None) => {}
             }
             if let Some(w) = &e.words {
                 let pc = |a: u32, b: u32| if b > 0 { format!("{a} of {b} ({:.0}%)", 100.0 * a as f64 / b as f64) } else { "no cases".into() };
