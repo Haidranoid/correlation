@@ -434,15 +434,15 @@ fn check_resume(dir: &Path, plan: &Plan, store: &Store, windows_csv: &str, unive
     let days = serde_json::json!([c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())]);
     let old: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
     if old["config"].as_str() != Some(cfg.as_str()) {
-        bail!("run directory {} was started with a different config:\n  {}\nnow:\n  {}", dir.display(), old["config"], cfg);
+        bail!("census {name} was started with a different config:\n  {}\nnow:\n  {}", old["config"], cfg);
     }
     // Progress is recorded by window position; new data changes the window list, so resuming
     // would file records under the wrong windows.
     if old["store_rows"].as_u64() != Some(store.rows() as u64) || old["variable_days"] != days || old["windows"].as_u64() != Some(plan.windows.len() as u64) {
         bail!(
-            "the price data changed since census {} started (rows {} -> {}, days {} -> {}, correlation periods {} -> {}); \
+            "the price data changed since census {name} started (rows {} -> {}, days {} -> {}, correlation periods {} -> {}); \
              start a new run with a different --name",
-            dir.display(), old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
+            old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
         );
     }
     // Progress is also recorded by task id, and what a task id holds depends on the code that
@@ -811,10 +811,26 @@ fn write_status(dir: &Path, state: &str, done_units: usize, total_units: usize, 
 /// `log` every ~15 s. Holds `<dir>/lock` throughout, so a second writer on the same run fails
 /// at once ("census X is already running (pid N)"). Refuses, before touching `dir`, a plan made
 /// for reading (`Plan::for_run`) that leaves out periods or stocks or rebuilt the variable.
+/// `lock_run` + `run_locked` do the same in two steps, for a caller that must know it is the
+/// writer before it logs anything for the run.
 pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn Fn(&str) + Sync)) -> Result<()> {
     writing_plan(plan)?;
+    run_locked(store, plan, dir, lock_run(dir)?, stop, log)
+}
+
+/// Takes the writer lock of the census run in `dir` (creating the directory), as `run` does: a
+/// second writer fails at once ("census X is already running (pid N)"). Held until the returned
+/// guard is dropped; pass it to `run_locked`.
+pub fn lock_run(dir: &Path) -> Result<RunLock> {
     std::fs::create_dir_all(dir)?;
-    let _lock = RunLock::acquire(dir)?;
+    RunLock::acquire(dir)
+}
+
+/// `run` for a caller that already holds the run's writer lock (`lock_run` on the same `dir`).
+pub fn run_locked(store: &Store, plan: &Plan, dir: &Path, lock: RunLock, stop: &AtomicBool, log: &(dyn Fn(&str) + Sync)) -> Result<()> {
+    writing_plan(plan)?;
+    anyhow::ensure!(lock.pid_path.parent() == Some(dir), "the lock passed is for {}, not for census {}", lock.pid_path.display(), run_name(dir));
+    let _lock = lock;
     prepare_dir(dir, plan, store)?;
     let progress = read_progress(dir)?;
     let total_units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
@@ -890,7 +906,7 @@ pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn
                 }
                 if last_log.elapsed() > Duration::from_secs(15) {
                     let eta = (cost_total - cost_done) / rate.max(1e-9);
-                    log(&format!("{units_done}/{total_units} windows ({:.2}% of work), last unit {:.0} ms on GPU, ETA {}",
+                    log(&format!("{units_done}/{total_units} correlation-period computations ({:.2}% of the work), last one {:.0} ms on the GPU, ETA {}",
                         100.0 * cost_done / cost_total, res.gpu_ms, hms(eta)));
                     last_log = Instant::now();
                 }
@@ -898,7 +914,7 @@ pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn
             let rate = (cost_done - session_start_cost) / started.elapsed().as_secs_f64().max(1e-3);
             let state = if units_done == total_units { "finished" } else { "stopped" };
             write_status(&dir_f, state, units_done, total_units, cost_done, cost_total, rate, started, "");
-            log(&format!("{state}: {units_done}/{total_units} windows committed"));
+            log(&format!("{state}: {units_done}/{total_units} correlation-period computations committed"));
             Ok(())
         });
         let worker = gpu_worker(plan, prep_rx, res_tx, stop, dir, log);
@@ -910,8 +926,8 @@ pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn
 /// The one writer's hold on a run directory: an exclusive `flock` on `<dir>/lock` for as long
 /// as this lives. The holder's pid is written into the lock file ("pid\n", read back only when
 /// complete) and into `<dir>/pid` (for older readers). Dropping it removes `pid` if it is still
-/// ours; the lock goes with the file.
-struct RunLock {
+/// ours; the lock goes with the file. Taken by `run` itself, or by `lock_run`.
+pub struct RunLock {
     file: File,
     pid_path: PathBuf,
 }
