@@ -27,13 +27,14 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use c2_census::holdout::{Family, Options, Report};
+use c2_census::meta::RunMeta;
 use c2_census::run::{self, FLAG_NULL, Plan};
 use c2_data::Store;
 use eframe::egui;
 use c2_census::analyze::ProfileRow;
 use c2_census::analyze::{Counts, DatasetStats, RunInfo, Words};
 use c2_census::explain::Explained;
-use c2_census::forecast::Forecast;
+use c2_census::forecast::{Forecast, ForecastData};
 use c2_census::grid;
 use egui_plot::{Arrows, Bar, BarChart, HLine, Legend, Line, LineStyle, MarkerShape, Plot, PlotPoint, PlotPoints, Points, Polygon, Text, VLine};
 
@@ -84,11 +85,15 @@ struct Job<K, T> {
     done: Option<(K, Result<T, String>)>,
     /// Bumped whenever `done` changes, so views derived from the result know to rebuild.
     generation: u64,
+    /// When the job in flight started, and how long the last finished one took (from its start
+    /// to its result arriving); self-checks report it.
+    started: Instant,
+    took: Duration,
 }
 
 impl<K, T> Default for Job<K, T> {
     fn default() -> Self {
-        Job { running: None, done: None, generation: 0 }
+        Job { running: None, done: None, generation: 0, started: Instant::now(), took: Duration::ZERO }
     }
 }
 
@@ -105,6 +110,7 @@ impl<K: Clone + PartialEq, T: Send + 'static> Job<K, T> {
             let _ = tx.send(res);
         });
         self.running = Some((key, rx));
+        self.started = Instant::now();
     }
 
     /// Collects the outcome of the job in flight if it has finished; true when one arrived. A
@@ -122,6 +128,7 @@ impl<K: Clone + PartialEq, T: Send + 'static> Job<K, T> {
         if let Some((key, _)) = self.running.take() {
             self.done = Some((key, res));
             self.generation += 1;
+            self.took = self.started.elapsed();
         }
         true
     }
@@ -161,12 +168,11 @@ type ExplainKey = (String, String, String, usize, usize, usize, usize, Option<i6
 /// (run, signal family, first holdout day, stocks held, rebalance days, costs, random accounts).
 type HoldoutKey = (String, usize, String, usize, usize, String, usize);
 
-/// The census variable is rebuilt per run: (run name, the config text in its manifest).
-type PlanKey = (String, String);
-
-/// The one census variable kept in memory, shared by the Explainer's plan job and the holdout's
-/// worker so that only one is built at a time.
-type PlanSlot = Arc<Mutex<Option<(PlanKey, Arc<Plan>)>>>;
+/// The one census plan kept in memory, with the name of the run it is for: the census variable
+/// and that run's own correlation periods, universes and tasks (`Plan::for_run`). Shared by the
+/// plan job (Stock timeline, Forecast, Explainer) and the holdout's worker so that only one is
+/// built at a time.
+type PlanSlot = Arc<Mutex<Option<(String, Arc<Plan>)>>>;
 
 /// A Strongest-tab row with the move lengths of its strongest relationship (h1, h2).
 type RankEntry = (c2_census::analyze::RankRow, Option<(u8, u8)>);
@@ -194,6 +200,16 @@ struct Shot {
 /// Run name typing settles after this long without a keystroke (or on Enter).
 const RUN_IDLE: Duration = Duration::from_millis(1200);
 
+/// A census process started from this window (Start / resume), watched until it exits so that a
+/// refusal ("census X is already running") or a failure is shown, not just written to run.out.
+struct Launch {
+    run: String,
+    child: std::process::Child,
+    /// Its output file and the length it had before this process started writing to it.
+    out: PathBuf,
+    from: u64,
+}
+
 struct App {
     tab: Tab,
     /// The census run every tab reads (set from the Status tab's Run name box on Enter, when the
@@ -210,6 +226,10 @@ struct App {
     control: String,
     last_poll: Instant,
     message: String,
+    /// The census process started from this window, until it exits, and what its exit said
+    /// (true = an error).
+    launch: Option<Launch>,
+    launch_note: Option<(bool, String)>,
     // Census tab: the lag table and the run it was read from.
     lag_table: BTreeMap<(usize, usize), BTreeMap<usize, LagRow>>,
     lag_table_run: String,
@@ -232,8 +252,10 @@ struct App {
     tl: Timeline,
     // Forecast tab.
     fc: ForecastView,
-    // Explainer tab, and the census variable it (and the holdout) needs. Key: run.
+    // Explainer tab.
     ex: ExplainView,
+    /// The current run's plan: the census variable and the run's own periods, universes and
+    /// tasks, used by the Stock timeline, Forecast and Explainer tabs. Key: run.
     plan: Job<String, Arc<Plan>>,
     // Status tab statistics: of the run (key: run), and every run (key: refresh count).
     stats: Job<String, DatasetStats>,
@@ -328,6 +350,8 @@ struct ExplainView {
     job: Job<ExplainKey, Explained>,
     /// The request for the current choices (None until the census variable is ready).
     key: Option<ExplainKey>,
+    /// Self-check (`C2_GUI_SCROLL`): scroll the steps down this far once they are shown.
+    scroll: Option<f32>,
 }
 
 #[derive(Default)]
@@ -342,9 +366,16 @@ struct ForecastView {
     /// Plot the value of this many dollars invested instead of the share price.
     amount: String,
     show_amount: bool,
+    /// What forecasts for one stock need from the run, read once. Key: (run, ticker).
+    data: Job<(String, String), Arc<ForecastData>>,
+    /// The forecast for the current choices, made from `data` without rereading the run.
     job: Job<ForecastKey, Forecast>,
     /// A mistyped as-of date.
     input_error: String,
+    /// Self-check (`C2_GUI_WALK`): steps of "◀ month" still to take, and when the first was taken
+    /// and how many there are in all.
+    walk: usize,
+    walk_started: Option<(Instant, usize)>,
 }
 
 fn key(r: &ProfileRow) -> RelKey {
@@ -362,10 +393,33 @@ fn c2_binary() -> PathBuf {
     std::env::current_exe().ok().and_then(|p| p.parent().map(|d| d.join("c2"))).filter(|p| p.exists()).unwrap_or_else(|| "c2".into())
 }
 
-fn running_pid(dir: &Path) -> Option<u32> {
-    let pid: u32 = std::fs::read_to_string(dir.join("pid")).ok()?.trim().parse().ok()?;
-    let exe = std::fs::read_link(format!("/proc/{pid}/exe")).ok()?;
-    exe.file_name()?.to_str()?.starts_with("c2").then_some(pid)
+/// The last few non-empty lines `path` gained after its first `from` bytes.
+fn output_since(path: &Path, from: u64) -> String {
+    let bytes = std::fs::read(path).unwrap_or_default();
+    let text = String::from_utf8_lossy(bytes.get(from as usize..).unwrap_or_default());
+    let lines: Vec<&str> = text.lines().map(str::trim_end).filter(|l| !l.trim().is_empty()).collect();
+    lines[lines.len().saturating_sub(4)..].join("\n")
+}
+
+/// Spawns `cmd` with its output appended to `out` (not truncated: a refused start must not wipe
+/// the output of the process that is running): the child, and `out`'s length before it.
+fn spawn_logged(mut cmd: std::process::Command, out: &Path) -> std::io::Result<(std::process::Child, u64)> {
+    let from = std::fs::metadata(out).map(|m| m.len()).unwrap_or(0);
+    let f = std::fs::OpenOptions::new().create(true).append(true).open(out)?;
+    cmd.stdout(f.try_clone()?).stderr(f);
+    Ok((cmd.spawn()?, from))
+}
+
+/// What a census process started from this window said when it exited: (an error?, the text).
+/// A refusal ("census X is already running (pid N)") or a failure shows its last lines; a clean
+/// exit its last line ("finished", "stopped", "census already complete").
+fn launch_outcome(l: &Launch, status: std::io::Result<std::process::ExitStatus>) -> (bool, String) {
+    let said = output_since(&l.out, l.from);
+    match status {
+        Ok(s) if s.success() => (false, format!("Census '{}': {}", l.run, said.lines().last().unwrap_or("done"))),
+        Ok(s) => (true, format!("Census '{}' exited with an error ({s}):\n{said}", l.run)),
+        Err(e) => (true, format!("Lost track of the process for census '{}': {e}", l.run)),
+    }
 }
 
 fn pct(v: f64) -> String {
@@ -431,104 +485,26 @@ fn local_time(unix: u64, offset: i64) -> String {
     format!("{} {:02}:{:02}", c2_data::date_string(t.div_euclid(86_400) as i32), secs / 3600, secs % 3600 / 60)
 }
 
-/// A run's manifest: its config text and the number of tasks it was planned with.
-fn read_manifest(run: &str, dir: &Path) -> Result<(String, Option<u64>), String> {
-    let text = std::fs::read_to_string(dir.join("manifest.json")).map_err(|e| format!("census '{run}' has no manifest ({e}); check the run name on the Status tab"))?;
-    let m: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("census '{run}': unreadable manifest.json ({e})"))?;
-    let config = m["config"].as_str().ok_or_else(|| format!("census '{run}': manifest.json has no config"))?;
-    Ok((config.to_string(), m["tasks"].as_u64()))
-}
-
-/// The census configuration for a run's manifest config text. Until runs can be read back
-/// exactly (round 2's RunMeta), the text only decides between the full and the smoke grid;
-/// `check_periods` and `check_tasks` refuse a run the guess doesn't fit.
-fn config_for(text: &str) -> c2_census::grid::Config {
-    if text.contains("full_history=true") { c2_census::grid::Config::full() } else { c2_census::grid::Config::smoke() }
-}
-
-/// The census variable for `run`, from the shared slot when it holds this run's (with the same
-/// manifest config), else built now in its place. Checked against the run's correlation periods
-/// before it is returned.
-fn plan_for_run(slot: &Mutex<Option<(PlanKey, Arc<Plan>)>>, store: &Store, run: &str, dir: &Path) -> Result<Arc<Plan>, String> {
-    let (config, _) = read_manifest(run, dir)?;
-    let key: PlanKey = (run.to_string(), config);
-    let plan = {
-        // The slot only ever holds nothing or a complete plan (it is emptied before a build and
-        // filled after it succeeds), so a lock poisoned by a panicking worker is still usable.
-        let mut guard = slot.lock().unwrap_or_else(|e| e.into_inner());
-        match guard.as_ref() {
-            Some((k, p)) if *k == key => p.clone(),
-            _ => {
-                // Free the other run's variable before building this one.
-                *guard = None;
-                let p = Arc::new(Plan::new(store, config_for(&key.1)).map_err(|e| format!("{e:#}"))?);
-                *guard = Some((key, p.clone()));
-                p
-            }
-        }
-    };
-    check_periods(&plan, run, dir)?;
+/// The plan of census `run`: the census variable built from today's prices with the run's own
+/// settings, and the run's own correlation periods (matched by date), universes and tasks, read
+/// from its directory (`Plan::for_run`), so period and task ids mean what they meant in that run.
+/// From the shared slot when it holds this run's, else built now in its place. Errors (naming
+/// the problem) when the run can't be reproduced on today's prices.
+fn plan_for_run(slot: &Mutex<Option<(String, Arc<Plan>)>>, store: &Store, run: &str, dir: &Path) -> Result<Arc<Plan>, String> {
+    // The slot only ever holds nothing or a complete plan (it is emptied before a build and
+    // filled after it succeeds), so a lock poisoned by a panicking worker is still usable.
+    let mut guard = slot.lock().unwrap_or_else(|e| e.into_inner());
+    if let Some((k, p)) = guard.as_ref()
+        && k == run
+    {
+        return Ok(p.clone());
+    }
+    // Free the other run's variable before building this one.
+    *guard = None;
+    let meta = RunMeta::load(dir).map_err(|e| format!("{e:#}"))?;
+    let plan = Arc::new(Plan::for_run(store, &meta).map_err(|e| format!("{e:#}"))?);
+    *guard = Some((run.to_string(), plan.clone()));
     Ok(plan)
-}
-
-/// One row of a run's `windows.csv`: correlation period id, length (0 = full history), first
-/// and last day.
-fn run_periods(run: &str, dir: &Path) -> Result<Vec<(usize, usize, String, String)>, String> {
-    let text = std::fs::read_to_string(dir.join("windows.csv")).map_err(|e| format!("census '{run}' has no list of correlation periods yet ({e})"))?;
-    text.lines()
-        .skip(1)
-        .filter(|l| !l.trim().is_empty())
-        .map(|l| {
-            let f: Vec<&str> = l.split(',').collect();
-            let num = |i: usize| f.get(i).and_then(|v| v.parse::<usize>().ok());
-            match (num(0), num(1), f.get(2), f.get(3)) {
-                (Some(id), Some(len), Some(a), Some(b)) => Ok((id, len, a.to_string(), b.to_string())),
-                _ => Err(format!("census '{run}': unreadable line in windows.csv: {l}")),
-            }
-        })
-        .collect()
-}
-
-/// The run's correlation periods must be exactly the plan's, id by id and date by date, or the
-/// plan's period ids would point at other periods than the ones the run's records were filed under.
-fn check_periods(plan: &Plan, run: &str, dir: &Path) -> Result<(), String> {
-    let periods = run_periods(run, dir)?;
-    let day = |row: usize| c2_data::date_string(plan.var.days[row]);
-    let rebuilt = |w: &grid::Window| (w.id, w.length, day(w.start), day(w.end - 1));
-    if periods.len() != plan.windows.len() {
-        return Err(format!(
-            "census '{run}' has {} correlation periods, but rebuilt from today's price data with its settings there are {}; this tab can't use that run yet",
-            periods.len(),
-            plan.windows.len()
-        ));
-    }
-    for (p, w) in periods.iter().zip(&plan.windows) {
-        if *p != rebuilt(w) {
-            let r = rebuilt(w);
-            return Err(format!(
-                "census '{run}' doesn't match today's price data: its correlation period {} is {} days, {} to {}, but rebuilt today it is {} days, {} to {}; this tab can't use that run yet",
-                p.0, p.1, p.2, p.3, r.1, r.2, r.3
-            ));
-        }
-    }
-    Ok(())
-}
-
-/// The holdout reads `tasks/t{id}.rec` by the plan's task numbering, so the run must have been
-/// planned with the same move lengths, correlation period lengths and number of tasks.
-fn check_tasks(plan: &Plan, run: &str, dir: &Path) -> Result<(), String> {
-    let (config, tasks) = read_manifest(run, dir)?;
-    let same_grid = config.contains(&format!("horizons={:?} ", plan.cfg.horizons)) && config.contains(&format!("lengths={:?} ", plan.cfg.lengths));
-    if !same_grid || tasks != Some(plan.tasks.len() as u64) {
-        return Err(format!(
-            "census '{run}' was planned with a different set of move lengths or tasks ({} tasks) than this version numbers them ({} tasks: move lengths {:?}, correlation periods {:?}), so the holdout can't read it yet",
-            tasks.map_or("an unknown number of".to_string(), |t| t.to_string()),
-            plan.tasks.len(),
-            plan.cfg.horizons,
-            plan.cfg.lengths
-        ));
-    }
-    Ok(())
 }
 
 /// Move lengths (h1, h2) of each row's strongest relationship, found by its stored record
@@ -614,18 +590,14 @@ fn timeline_view(data: &TimelineData, vk: &TimelineViewKey) -> TimelineView {
     TimelineView { rows: rows.into_iter().cloned().collect(), lengths, horizons: pairs, total_sig, recent_end, full_days }
 }
 
-/// Window ids of a run's full-history correlation period (length 0 in `windows.csv`).
-fn full_history_ids(run: &str, dir: &Path) -> Result<HashSet<u32>, String> {
-    Ok(run_periods(run, dir)?.into_iter().filter(|p| p.1 == 0).map(|p| p.0 as u32).collect())
-}
-
-/// How a forecast's track record compares with luck, from its hit rate and its predicted vs
-/// actual correlation over `n` forecasts: (colour, sentence). Skill can be negative: a record
-/// that points the wrong way more often than luck explains is worse than chance, not "good".
-fn track_record_verdict(hit_rate: f64, corr: f64, n: usize) -> (egui::Color32, &'static str) {
-    let n = n.max(1) as f64;
-    let z_hit = (hit_rate - 0.5) / (0.25 / n).sqrt();
-    let z_corr = corr * n.sqrt();
+/// How a forecast's track record compares with luck, from its hit rate over the `n_hit` forecasts
+/// where both the predicted and the actual move had a direction (`Skill::directional`) and its
+/// predicted vs actual correlation over all `n_corr` forecasts: (colour, sentence). Skill can be
+/// negative: a record that points the wrong way more often than luck explains is worse than
+/// chance, not "good".
+fn track_record_verdict(hit_rate: f64, n_hit: usize, corr: f64, n_corr: usize) -> (egui::Color32, &'static str) {
+    let z_hit = (hit_rate - 0.5) / (0.25 / n_hit.max(1) as f64).sqrt();
+    let z_corr = corr * (n_corr.max(1) as f64).sqrt();
     let better = z_hit >= 2.0 || z_corr >= 2.0;
     let worse = z_hit <= -2.0 || z_corr <= -2.0;
     match (better, worse) {
@@ -760,6 +732,8 @@ impl App {
             control: "run".into(),
             last_poll: Instant::now() - Duration::from_secs(10),
             message: String::new(),
+            launch: None,
+            launch_note: None,
             lag_table: BTreeMap::new(),
             lag_table_run: String::new(),
             pair: (1, 1),
@@ -832,6 +806,7 @@ impl App {
         self.tl.job.clear();
         self.tl.view = None;
         self.tl.selected = None;
+        self.fc.data.clear();
         self.fc.job.clear();
         self.plan.clear();
         // Free the old run's census variable now unless a worker is using the slot.
@@ -856,39 +831,71 @@ impl App {
         self.poll();
     }
 
-    /// Collects every finished background job, whichever tab is shown.
+    /// Collects every finished background job, whichever tab is shown. Self-checks report how
+    /// long each took.
     fn poll_jobs(&mut self) {
-        self.rank.poll();
-        self.tl.job.poll();
+        let timing = self.shot.is_some();
+        let report = |what: &str, arrived: bool, took: Duration| {
+            if timing && arrived {
+                eprintln!("c2-gui self-check: {what} ready after {:.3} s", took.as_secs_f64());
+            }
+            arrived
+        };
+        report("Strongest ranking", self.rank.poll(), self.rank.took);
+        report("Stock timeline", self.tl.job.poll(), self.tl.job.took);
+        report("forecast data", self.fc.data.poll(), self.fc.data.took);
         // The as-of box shows the day of the forecast for the current choices (not an older one
         // that finished while those were being computed).
-        if self.fc.job.poll()
+        if report("forecast", self.fc.job.poll(), self.fc.job.took)
             && let Some((k, Ok(f))) = &self.fc.job.done
             && *k == self.forecast_key()
         {
             self.fc.as_of_text = c2_data::date_string(f.as_of);
         }
-        self.plan.poll();
-        if self.ex.job.poll()
+        report("plan (census variable)", self.plan.poll(), self.plan.took);
+        if report("explanation", self.ex.job.poll(), self.ex.job.took)
             && let Some((_, Ok(e))) = &self.ex.job.done
         {
             self.ex.obs = self.ex.obs.min(e.obs.len().saturating_sub(1));
         }
-        self.stats.poll();
-        self.runs.poll();
-        self.pairs.poll();
-        self.holdout.poll();
+        report("run statistics", self.stats.poll(), self.stats.took);
+        report("list of runs", self.runs.poll(), self.runs.took);
+        report("stored pairs", self.pairs.poll(), self.pairs.took);
+        report("holdout", self.holdout.poll(), self.holdout.took);
+    }
+
+    /// True while any background job is computing (the window then checks for results often).
+    fn jobs_running(&self) -> bool {
+        self.rank.is_running()
+            || self.tl.job.is_running()
+            || self.fc.data.is_running()
+            || self.fc.job.is_running()
+            || self.plan.is_running()
+            || self.ex.job.is_running()
+            || self.stats.is_running()
+            || self.runs.is_running()
+            || self.pairs.is_running()
+            || self.holdout.is_running()
     }
 
     /// Whether the shown tab has everything it asked for (a result or an error), for self-checks.
     fn tab_ready(&self) -> bool {
         let run = &self.run_name;
         let has_store = self.store.is_some();
+        // The Stock timeline and the Forecast wait for the run's plan; if it can't be built,
+        // they show that error and wait for nothing else.
+        let plan_failed = matches!(self.plan.get(run), Some(Err(_)));
         match self.tab {
             Tab::Status => self.runs.get(&self.runs_refresh).is_some() && (!has_store || self.stats.get(run).is_some()),
             Tab::Strongest => !has_store || (self.rank.get(run).is_some() && self.stats.get(run).is_some()),
-            Tab::Stock => !has_store || self.tl.want.as_ref().is_none_or(|t| self.tl.job.get(&(run.clone(), t.clone())).is_some()),
-            Tab::Forecast => !has_store || self.fc.ticker.is_empty() || self.fc.job.get(&self.forecast_key()).is_some(),
+            Tab::Stock => !has_store || self.tl.want.as_ref().is_none_or(|t| plan_failed || self.tl.job.get(&(run.clone(), t.clone())).is_some()),
+            Tab::Forecast => {
+                !has_store
+                    || self.fc.ticker.is_empty()
+                    || plan_failed
+                    || matches!(self.fc.data.get(&(run.clone(), self.fc.ticker.clone())), Some(Err(_)))
+                    || (self.fc.walk == 0 && self.fc.walk_started.is_none() && self.fc.job.get(&self.forecast_key()).is_some())
+            }
             Tab::Explain => {
                 !has_store
                     || match self.plan.get(run) {
@@ -1115,11 +1122,31 @@ impl App {
         let run = self.run_name.clone();
         let job_key = (run.clone(), want.clone());
         if self.tl.job.wants(&job_key) {
+            // Sizes and plain-terms counts come from the run's census variable (built once per
+            // run and shared with the Forecast and Explainer tabs).
+            let plan = match self.need_plan() {
+                Ok(Some(plan)) => plan,
+                Ok(None) => {
+                    ui.horizontal(|ui| {
+                        ui.spinner();
+                        ui.label(format!("Building the census variable for every stock, for census '{run}' (a few seconds)…"));
+                    });
+                    return;
+                }
+                Err(e) => {
+                    ui.colored_label(egui::Color32::LIGHT_RED, format!("The Stock timeline can't read census '{run}': {e}"));
+                    if ui.button("Try again").clicked() {
+                        self.plan.clear();
+                    }
+                    return;
+                }
+            };
             let dir = self.dir();
-            let (r, t) = (run.clone(), want.clone());
+            let t = want.clone();
             self.tl.job.start(job_key.clone(), move || {
-                let rows = c2_census::analyze::stock_profile(&store, &dir, &t, false).map_err(|e| format!("{e:#}"))?;
-                Ok(TimelineData { rows, full_history: full_history_ids(&r, &dir)? })
+                let rows = c2_census::analyze::stock_profile_with(&store, &plan.var, &dir, &t, false).map_err(|e| format!("{e:#}"))?;
+                let full_history = plan.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
+                Ok(TimelineData { rows, full_history })
             });
         }
         let data = match self.tl.job.get(&job_key) {
@@ -1203,19 +1230,20 @@ impl App {
         egui::ScrollArea::vertical().id_salt("tl_scroll").show(ui, |ui| {
             ui.label(if stock_first {
                 format!("A = {t}, which moves first; B = the stock that follows. A point at +k days: when {t} moves, that stock tends to move k trading days \
-                         later (offset from the end of {t}'s move to the end of B's); height = B's typical move beyond the market per 1% move of {t}. \
-                         Orange = passed the significance test; grey = within what chance produces.")
+                         later (offset from the end of {t}'s move to the end of B's); height = how far B tends to move beyond what the market did, per 1% \
+                         that {t} moves beyond the market. Orange = passed the significance test; grey = within what chance produces.")
             } else {
                 format!("B = {t}, which follows; A = the stock that moves first. A point at +k days: when that stock moves, {t} tends to move k trading days \
-                         later (offset from the end of A's move to the end of {t}'s); height = {t}'s typical move beyond the market per 1% move of A \
-                         (these feed the Forecast tab). Orange = passed the significance test; grey = within what chance produces.")
+                         later (offset from the end of A's move to the end of {t}'s); height = how far {t} tends to move beyond what the market did, per 1% \
+                         that A moves beyond the market (the multiplier the Forecast tab applies). Orange = passed the significance test; grey = within what \
+                         chance produces.")
             });
             let y_of = |r: &ProfileRow| if show_r { r.r as f64 } else { r.move_per_pct.unwrap_or(r.r as f64) };
             let x_of = |r: &ProfileRow| r.lag as f64;
             Plot::new("timeline")
                 .height(280.0)
                 .x_axis_label("offset: trading days later")
-                .y_axis_label(if show_r { "r".to_string() } else { "% move per 1%".to_string() })
+                .y_axis_label(if show_r { "r".to_string() } else { "% vs market, per 1% of A".to_string() })
                 .legend(Legend::default())
                 .show(ui, |p| {
                     p.vline(VLine::new("today", 0.0).color(egui::Color32::WHITE).width(2.0));
@@ -1238,7 +1266,7 @@ impl App {
             ui.strong("Relationships (click one for details)");
             egui::ScrollArea::vertical().id_salt("tl_rows").max_height(260.0).show(ui, |ui| {
                 egui::Grid::new("tl_grid").striped(true).show(ui, |ui| {
-                    for h in ["", "A -> B", "offset", "move lengths", "B per 1% of A", "r", "z", "chance", "in your words (in the correlation period)", "period", "ending"] {
+                    for h in ["", "A -> B", "offset", "move lengths", "B per 1% of A (vs market)", "r", "z", "chance", "in your words (in the correlation period)", "period", "ending"] {
                         ui.strong(h);
                     }
                     ui.end_row();
@@ -1285,6 +1313,15 @@ impl App {
                             explain = Some(r.clone());
                         }
                         ui.label(format!("Shown: the {}-day correlation period ending {} (r {:+.3} over {} observations).", r.period_days, r.period_end, r.r, r.obs));
+                        if let Some(m) = r.move_per_pct {
+                            ui.label(format!(
+                                "Size: when {a} moves 1% beyond what the market did over {}, {b} tends to move {m:+.2}% beyond the market over the {} \
+                                 ending {} later (the multiplier the Forecast tab applies).",
+                                days_label(r.h1 as usize),
+                                days_label(r.h2 as usize),
+                                tdays(r.lag as usize)
+                            ));
+                        }
                         if let Some(w) = &r.words {
                             for s in words_text(w, &a, &b, r.h1 as usize, r.h2 as usize, r.lag as usize) {
                                 ui.label(s);
@@ -1335,9 +1372,10 @@ impl App {
                 if !t.is_empty() {
                     self.fc.ticker = t.clone();
                     self.fc.input_error.clear();
-                    // Asking again for the forecast shown recomputes it.
-                    let key = self.forecast_key();
-                    if self.fc.job.get(&key).is_some() {
+                    // Asking again for the stock shown rereads the run for it (a run still being
+                    // computed may have stored more since).
+                    if self.fc.data.get(&(self.run_name.clone(), t.clone())).is_some() {
+                        self.fc.data.clear();
                         self.fc.job.clear();
                     }
                     // The Stock timeline tab follows the same stock (it loads when shown).
@@ -1367,7 +1405,7 @@ impl App {
             if ui.button("latest").clicked() {
                 self.fc.as_of = None;
             }
-            if self.fc.job.is_running() {
+            if self.fc.job.is_running() || self.fc.data.is_running() || self.plan.is_running() {
                 ui.spinner();
             }
         });
@@ -1396,38 +1434,79 @@ impl App {
             ui.colored_label(egui::Color32::LIGHT_RED, &self.store_note);
             return;
         };
-        let key = self.forecast_key();
-        if !self.fc.ticker.is_empty() && self.fc.job.wants(&key) {
-            let dir = self.dir();
-            let (_, ticker, as_of, horizon, significant_only, age) = key.clone();
-            self.fc.job.start(key.clone(), move || {
-                let opt = c2_census::forecast::Options { significant_only, horizon, max_age: (age > 0).then_some(age * 252) };
-                c2_census::forecast::forecast(&store, &dir, &ticker, as_of.unwrap_or(i32::MAX), &opt).map_err(|e| format!("{e:#}"))
-            });
+        if self.fc.ticker.is_empty() {
+            ui.label("Enter a ticker.");
+            return;
         }
         if !self.fc.input_error.is_empty() {
             ui.colored_label(egui::Color32::LIGHT_RED, &self.fc.input_error);
         }
-        // The forecast for the current choices, else (while that one is computed) the last one
-        // of this run, which names its own stock and day.
+        // Three steps, each computed once for its inputs: the run's plan (its census variable,
+        // shared with the other tabs), what forecasts for this stock need from the run (read once
+        // per run and stock), and the forecast for the current choices, made from that without
+        // reading anything again. While a step runs, the last forecast of this run stays shown;
+        // it names its own stock and day.
+        let run = self.run_name.clone();
+        let data_key = (run.clone(), self.fc.ticker.clone());
+        let key = self.forecast_key();
+        let mut waiting = None;
+        if self.fc.data.wants(&data_key) {
+            match self.need_plan() {
+                Ok(Some(plan)) => {
+                    let (dir, ticker) = (self.dir(), self.fc.ticker.clone());
+                    self.fc.data.start(data_key.clone(), move || {
+                        c2_census::forecast::prepare(&store, &plan.var, &dir, &ticker).map(Arc::new).map_err(|e| format!("{e:#}"))
+                    });
+                }
+                Ok(None) => waiting = Some(format!("Building the census variable for every stock, for census '{run}' (a few seconds)…")),
+                Err(e) => {
+                    ui.colored_label(egui::Color32::LIGHT_RED, format!("The Forecast can't read census '{run}': {e}"));
+                    if ui.button("Try again").clicked() {
+                        self.plan.clear();
+                    }
+                    return;
+                }
+            }
+        }
+        match self.fc.data.get(&data_key) {
+            None => {
+                waiting.get_or_insert_with(|| format!("Reading census '{run}' for {} (under a second)…", self.fc.ticker));
+            }
+            Some(Err(e)) => {
+                ui.colored_label(egui::Color32::LIGHT_RED, e);
+                return;
+            }
+            Some(Ok(data)) => {
+                if self.fc.job.wants(&key) {
+                    let data = data.clone();
+                    let (_, _, as_of, horizon, significant_only, age) = key.clone();
+                    self.fc.job.start(key.clone(), move || {
+                        let opt = c2_census::forecast::Options { significant_only, horizon, max_age: (age > 0).then_some(age * 252) };
+                        c2_census::forecast::forecast_from(&data, as_of.unwrap_or(i32::MAX), &opt).map_err(|e| format!("{e:#}"))
+                    });
+                }
+            }
+        }
         let f = match &self.fc.job.done {
             Some((k, Err(e))) if *k == key => {
                 ui.colored_label(egui::Color32::LIGHT_RED, e);
                 return;
             }
-            Some((k, Ok(f))) if k.0 == self.run_name => f,
+            Some((k, Ok(f))) if k.0 == run => f,
             _ => {
-                if self.fc.ticker.is_empty() {
-                    ui.label("Enter a ticker.");
-                } else {
-                    ui.horizontal(|ui| {
-                        ui.spinner();
-                        ui.label(format!("Reading census '{}' for {} (about a second)…", self.run_name, self.fc.ticker));
-                    });
-                }
+                ui.horizontal(|ui| {
+                    ui.spinner();
+                    ui.label(waiting.unwrap_or_else(|| "Computing the forecast…".to_string()));
+                });
                 return;
             }
         };
+        if let Some(w) = waiting {
+            ui.horizontal(|ui| {
+                ui.spinner();
+                ui.label(w);
+            });
+        }
         let t = &f.ticker;
         let h = f.predicted_pct.len();
         let amount: f64 = self.fc.amount.trim().replace([',', '$'], "").parse().unwrap_or(10_000.0);
@@ -1436,27 +1515,29 @@ impl App {
         let day = c2_data::date_string(f.as_of);
         let end_pct = f.predicted_pct[h - 1];
         let typical = 100.0 * f.daily_sd * (h as f64).sqrt();
-        let what = if self.fc.show_amount { format!("${amount:.0} in {t}") } else { format!("{t}") };
+        let what = if self.fc.show_amount { format!("${amount:.0} in {t}") } else { t.to_string() };
+        // Every move here is relative to the market: the census correlates moves beyond what the
+        // market did, so that is what the forecast predicts and what it is checked against.
         ui.label(format!(
-            "{what}: ${base:.2} on {day}. Forecast {h} trading days later: ${:.2} ({end_pct:+.2}%). It is the average of what {} relationships imply \
-             (another stock moved first and {t} tends to follow some days later; each leader's actual move so far is scaled by the relationship). \
-             For scale, {t}'s typical {h}-day move is ±{typical:.1}%.",
+            "{what}: ${base:.2} on {day}. Forecast for the next {h} trading days: {t} moves {end_pct:+.2}% beyond what the market does, so ${:.2} if the \
+             market is flat. It is the average of what {} relationships imply (another stock moved first and {t} tends to follow some days later; each \
+             leader's move beyond the market so far is scaled by the relationship). For scale, {t}'s typical {h}-day move beyond the market is ±{typical:.1}%.",
             val(end_pct),
             f.relationships
         ));
         if let Some(Some(a)) = f.actual_pct.last() {
-            ui.label(format!("What happened: ${:.2} ({a:+.2}%) after {h} trading days.", val(*a)));
+            ui.label(format!("What happened: {t} moved {a:+.2}% beyond what the market did over those {h} trading days (${:.2} had the market been flat).", val(*a)));
         } else if f.actual_pct.iter().any(|a| a.is_some()) {
-            ui.label("What happened so far is drawn in blue; the data ends before the full horizon.");
+            ui.label(format!("What happened so far ({t}'s move beyond the market) is drawn in blue; the data ends before the full horizon."));
         }
         match &f.skill {
             Some(s) => {
-                let (colour, verdict) = track_record_verdict(s.hit_rate, s.corr, s.forecasts);
+                let (colour, verdict) = track_record_verdict(s.hit_rate, s.directional, s.corr, s.forecasts);
                 let text = format!(
-                    "Track record for {t}: the same forecast made every 21 trading days in the past, each using only relationships known at the time: {} forecasts \
-                     {}-day ahead, direction right {:.0}% of the time (a coin flip gets 50%), predicted vs actual correlation {:+.2}; the forecasts averaged {:.2}% \
-                     while {t} actually moved {:.2}% on average. {verdict}",
-                    s.forecasts, s.horizon, 100.0 * s.hit_rate, s.corr, s.mean_abs_predicted_pct, s.mean_abs_actual_pct,
+                    "Track record for {t}, with every move measured beyond the market: the same forecast made every 21 trading days in the past, each using \
+                     only relationships known at the time: {} forecasts {}-day ahead; direction right {:.0}% of the {} times both moved (a coin flip gets 50%); \
+                     predicted vs actual correlation {:+.2}; the forecasts averaged ±{:.2}% while {t} actually moved ±{:.2}% beyond the market on average. {verdict}",
+                    s.forecasts, s.horizon, 100.0 * s.hit_rate, s.directional, s.corr, s.mean_abs_predicted_pct, s.mean_abs_actual_pct,
                 );
                 ui.colored_label(colour, text);
             }
@@ -1472,21 +1553,22 @@ impl App {
             .chain(f.actual_pct.iter().enumerate().filter_map(|(j, a)| a.map(|a| [(j + 1) as f64, val(a)])))
             .collect();
         let band = |sign: f64| -> Vec<[f64; 2]> { (0..=h).map(|j| [j as f64, base * (sign * f.daily_sd * (j as f64).sqrt()).exp()]).collect() };
+        let range = "typical range (±1 sd of past moves beyond the market)";
         Plot::new("forecast_plot")
             .height(300.0)
             .x_axis_label(format!("trading days after {day}"))
-            .y_axis_label(if self.fc.show_amount { "value ($)" } else { "share price ($)" })
+            .y_axis_label(if self.fc.show_amount { "value if the market is flat ($)" } else { "price if the market is flat ($)" })
             .legend(Legend::default())
             .show(ui, |p| {
                 p.hline(HLine::new("", base).color(egui::Color32::DARK_GRAY));
-                p.line(Line::new("typical range (±1 sd of past moves)", PlotPoints::from(band(1.0))).color(grey).style(LineStyle::dashed_loose()));
-                p.line(Line::new("typical range (±1 sd of past moves)", PlotPoints::from(band(-1.0))).color(grey).style(LineStyle::dashed_loose()));
+                p.line(Line::new(range, PlotPoints::from(band(1.0))).color(grey).style(LineStyle::dashed_loose()));
+                p.line(Line::new(range, PlotPoints::from(band(-1.0))).color(grey).style(LineStyle::dashed_loose()));
                 if actual.len() > 1 {
-                    p.line(Line::new("actual", PlotPoints::from(actual)).color(blue).width(2.0));
+                    p.line(Line::new("actual, had the market been flat", PlotPoints::from(actual)).color(blue).width(2.0));
                 }
                 p.line(Line::new("forecast", PlotPoints::from(pred)).color(orange).width(2.5));
             });
-        ui.label(format!("When the predicted moves land: the forecast's change on each day ahead (in %), from the relationships whose delay reaches that day."));
+        ui.label("When the predicted moves land: the forecast's change beyond the market on each day ahead (in %), from the relationships whose delay reaches that day.");
         let bars: Vec<Bar> = (0..h)
             .map(|j| {
                 let prev = if j == 0 { 0.0 } else { f.predicted_pct[j - 1] };
@@ -1498,14 +1580,19 @@ impl App {
                     .name(format!("day {} {date}: {d:+.3}% from {} relationships", j + 1, f.covering[j]))
             })
             .collect();
-        Plot::new("forecast_days").height(110.0).x_axis_label("trading days ahead").y_axis_label("% that day").show(ui, |p| {
+        Plot::new("forecast_days").height(110.0).x_axis_label("trading days ahead").y_axis_label("% vs market").show(ui, |p| {
             p.bar_chart(BarChart::new("daily forecast", bars));
         });
         ui.strong(format!("Largest shares of the forecast at day {h} ({} relationships say something about these days)", f.contributions.len()));
+        ui.label(format!(
+            "Each row: the leader's move beyond the market so far, times how far {t} tends to move beyond the market per 1% of it (the same \
+             '% per 1%' the Stock timeline shows), is what that relationship alone implies for {t}'s move beyond the market."
+        ));
         let mut open: Option<(String, String, usize, usize, usize, usize)> = None;
         egui::ScrollArea::vertical().id_salt("fc_rows").show(ui, |ui| {
             egui::Grid::new("fc_grid").striped(true).show(ui, |ui| {
-                for c in ["leader", "offset", "move lengths", "r", "", "leader's move", "alone implies", "share of forecast", "correlation period", ""] {
+                let per = format!("{t} per 1%");
+                for c in ["leader", "offset", "move lengths", "r", "", "leader's move vs market", &per, "alone implies vs market", "share of forecast", "correlation period", ""] {
                     ui.strong(c);
                 }
                 ui.end_row();
@@ -1516,6 +1603,7 @@ impl App {
                     ui.label(format!("{:+.3}", c.r));
                     ui.label(if c.significant { "★" } else { "" });
                     ui.label(format!("{:+.2}%", c.leader_move_pct));
+                    ui.label(format!("{:+.3}%", c.move_per_pct));
                     ui.label(format!("{:+.2}%", c.implied_pct));
                     ui.label(format!("{:+.3} pts", c.share_pct));
                     ui.label(format!("{} days to {}", c.period_days, c.window.split("..").nth(1).unwrap_or("")));
@@ -1531,9 +1619,9 @@ impl App {
         }
     }
 
-    /// The census variable for every stock of the current run, built in the background (in the
-    /// slot it shares with the holdout) and checked against the run's correlation periods.
-    /// Ok(None) while it is being built.
+    /// The current run's plan (`plan_for_run`): the census variable for every stock and the run's
+    /// own correlation periods, universes and tasks, built in the background (in the slot it
+    /// shares with the holdout). Ok(None) while it is being built.
     fn need_plan(&mut self) -> Result<Option<Arc<Plan>>, String> {
         let Some(store) = self.store.clone() else { return Err(self.store_note.clone()) };
         let run = self.run_name.clone();
@@ -1567,7 +1655,7 @@ impl App {
                 return;
             }
         };
-        // A period id from a row of this run (the plan's periods were checked to be the run's).
+        // A period id from a row of this run (the plan's periods are the run's own).
         if let Some((run, w)) = self.ex.pending_window.take()
             && run == self.run_name
             && let Some(win) = plan.windows.get(w)
@@ -1592,11 +1680,10 @@ impl App {
             self.ex.length = l;
             self.ex.pos = usize::MAX;
         }
-        for h in [&mut self.ex.h1, &mut self.ex.h2] {
-            if !plan.cfg.horizons.contains(h) {
-                *h = plan.cfg.horizons.iter().copied().find(|&x| x >= *h).or(plan.cfg.horizons.last().copied()).unwrap_or(1);
-            }
-        }
+        // Only move lengths the run computed for periods of this length (older runs paired fewer:
+        // B's move no longer than A's), and below, only the offsets the census uses for B's.
+        let (h1s, h2s, h1, h2) = move_length_choices(&plan.tasks, self.ex.length, self.ex.h1, self.ex.h2);
+        (self.ex.h1, self.ex.h2) = (h1, h2);
         let full_days = plan.windows.iter().find(|w| w.length == 0).map(|w| w.end - w.start).unwrap_or(0);
         let len_label = move |l: usize| if l == 0 { format!("{full_days} days (all history)") } else { format!("{l} days") };
         ui.label(
@@ -1618,17 +1705,16 @@ impl App {
                 std::mem::swap(&mut self.ex.leader, &mut self.ex.follower);
             }
         });
-        let horizons = plan.cfg.horizons.clone();
         ui.horizontal_wrapped(|ui| {
             ui.label("A's move over");
             egui::ComboBox::from_id_salt("ex_h1").selected_text(days_label(self.ex.h1)).show_ui(ui, |ui| {
-                for &h in &horizons {
+                for &h in &h1s {
                     ui.selectable_value(&mut self.ex.h1, h, days_label(h));
                 }
             });
             ui.label("B's move over");
             egui::ComboBox::from_id_salt("ex_h2").selected_text(days_label(self.ex.h2)).show_ui(ui, |ui| {
-                for &h in &horizons {
+                for &h in &h2s {
                     ui.selectable_value(&mut self.ex.h2, h, days_label(h));
                 }
             });
@@ -1669,7 +1755,13 @@ impl App {
         let window = plan.windows.iter().filter(|w| w.length == self.ex.length).nth(self.ex.pos).map(|w| w.id);
         self.ex.selected = window.map(|w| (plan.windows[w].length, plan.var.days[plan.windows[w].end - 1]));
         let run = self.run_name.clone();
-        let key: Option<ExplainKey> = window.map(|w| {
+        if h1s.is_empty() {
+            ui.label(format!("Census '{run}' computed no lead-lag correlations for {} correlation periods.", len_label(self.ex.length)));
+        }
+        // Only move lengths the run has a task for with periods of this length (a choice changed
+        // above is checked against the others on the next frame).
+        let computed = plan.tasks.iter().any(|t| (t.h1, t.h2, t.length) == (self.ex.h1, self.ex.h2, self.ex.length));
+        let key: Option<ExplainKey> = window.filter(|_| computed).map(|w| {
             let threshold = self.ex.threshold_fixed.then(|| (self.ex.threshold_pct * 100.0).round() as i64);
             (run.clone(), self.ex.leader.clone(), self.ex.follower.clone(), self.ex.h1, self.ex.h2, self.ex.lag, w, threshold)
         });
@@ -1720,7 +1812,11 @@ impl App {
         let date = |row: usize| e.days.get(row).map(|d| c2_data::date_string(*d)).unwrap_or_default();
         let pct = |l: f64| if l.is_finite() { format!("{:+.2}%", 100.0 * l.exp_m1()) } else { "no price".to_string() };
         let date_axis = |days: Vec<i32>| move |m: egui_plot::GridMark, _: &std::ops::RangeInclusive<f64>| days.get(m.value.round().max(0.0) as usize).map(|d| c2_data::date_string(*d)).unwrap_or_default();
-        egui::ScrollArea::vertical().id_salt("ex_scroll").show(ui, |ui| {
+        let mut area = egui::ScrollArea::vertical().id_salt("ex_scroll");
+        if let Some(y) = self.ex.scroll.take() {
+            area = area.vertical_scroll_offset(y);
+        }
+        area.show(ui, |ui| {
             // 1. Period and observations.
             ui.add_space(6.0);
             ui.heading("1. The correlation period and the moves being compared");
@@ -2046,31 +2142,33 @@ impl App {
                 }
             }
 
-            // 7. Size.
+            // 7. Size, relative to the market: exactly the multiplier the Forecast tab applies.
             ui.add_space(8.0);
-            ui.heading("7. Size in price terms (used by the timeline and the Forecast tab)");
-            let raw_moves: Vec<(f64, f64)> = e.obs.iter().map(|o| (o.a_move, o.b_move)).filter(|p| p.0.is_finite() && p.1.is_finite()).collect();
-            let sd = |v: Vec<f64>| {
-                let n = v.len().max(1) as f64;
-                let mu = v.iter().sum::<f64>() / n;
-                (v.iter().map(|x| (x - mu) * (x - mu)).sum::<f64>() / n).sqrt()
+            ui.heading("7. Size: how far B moves beyond the market per 1% that A does (the timeline's '% per 1%')");
+            match &e.move_size {
+                Some(s) => ui.label(format!(
+                    "% per 1% = r x (typical size of {b}'s {}-day moves beyond the market / typical size of {a}'s {}-day moves beyond the market) \
+                     = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}, from the {} observations where both moves are known. So when {a} moves 1% beyond what the \
+                     market did over {}, {b} tends to move {:+.3}% beyond the market over the {} ending {} later. The Forecast tab multiplies each \
+                     leader's latest move beyond the market by this number, and the Stock timeline shows it as '% per 1%'.",
+                    h2,
+                    h1,
+                    e.r,
+                    100.0 * s.sd_b,
+                    100.0 * s.sd_a,
+                    s.per_pct,
+                    s.pairs,
+                    days_label(h1),
+                    s.per_pct,
+                    days_label(h2),
+                    tdays(lag)
+                )),
+                None => ui.label(format!(
+                    "Fewer than {} observations have both moves, too few to size this relationship: the Forecast tab leaves it out and the Stock \
+                     timeline shows no '% per 1%' for it.",
+                    c2_census::moves::MIN_PAIRS
+                )),
             };
-            let (sa, sb) = (sd(raw_moves.iter().map(|p| p.0).collect()), sd(raw_moves.iter().map(|p| p.1).collect()));
-            ui.label(format!(
-                "% move per 1% = r x (typical size of {b}'s {}-day moves / typical size of {a}'s {}-day moves) = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}. \
-                 So when {a} moves 1% more than usual over {}, {b} tends to move {:+.3}% more than usual over the {} ending {} later. \
-                 The Forecast tab multiplies each leader's latest move by this number.",
-                h2,
-                h1,
-                e.r,
-                100.0 * sb,
-                100.0 * sa,
-                e.move_per_pct,
-                days_label(h1),
-                e.move_per_pct,
-                days_label(h2),
-                tdays(lag as usize)
-            ));
             ui.add_space(12.0);
         });
     }
@@ -2124,7 +2222,8 @@ impl App {
                 ui.end_row();
                 for r in runs {
                     let mut name = r.name.clone();
-                    if r.in_use {
+                    // The run this window shows (the Run name box), not just the default one.
+                    if r.name == run_name {
                         name.push_str("  (in use)");
                     }
                     if r.from_update {
@@ -2325,13 +2424,49 @@ impl App {
         run::run_dir(&self.run_name)
     }
 
+    /// Starts `c2 census run` for the current run in its own process group (closing the window
+    /// doesn't stop it), its output appended to `<run>/run.out`, and watches it (`check_launch`).
+    /// `run::run` refuses a second writer of a run; that refusal is then shown on the Status tab.
+    fn start_census(&mut self) {
+        let dir = self.dir();
+        let _ = std::fs::create_dir_all(&dir);
+        let out = dir.join("run.out");
+        let mut cmd = std::process::Command::new(c2_binary());
+        cmd.args(["census", "run", "--name", &self.run_name]);
+        use std::os::unix::process::CommandExt;
+        cmd.process_group(0);
+        self.launch_note = None;
+        self.message.clear();
+        match spawn_logged(cmd, &out) {
+            Ok((child, from)) => self.launch = Some(Launch { run: self.run_name.clone(), child, out, from }),
+            Err(e) => self.launch_note = Some((true, format!("Could not start c2 for census '{}': {e}", self.run_name))),
+        }
+        self.last_poll = Instant::now() - Duration::from_secs(10);
+    }
+
+    /// Once the census process started from here exits, says what it said (`launch_outcome`).
+    fn check_launch(&mut self) {
+        let status = match self.launch.as_mut().map(|l| l.child.try_wait()) {
+            None | Some(Ok(None)) => return,
+            Some(Ok(Some(status))) => Ok(status),
+            Some(Err(e)) => Err(e),
+        };
+        if let Some(l) = self.launch.take() {
+            self.launch_note = Some(launch_outcome(&l, status));
+        }
+        self.message.clear();
+        self.last_poll = Instant::now() - Duration::from_secs(10);
+    }
+
     fn poll(&mut self) {
         if self.last_poll.elapsed() < Duration::from_secs(2) {
             return;
         }
         self.last_poll = Instant::now();
         let dir = self.dir();
-        self.pid = running_pid(&dir);
+        // Whoever holds the run's lock (`run::run` takes it for its whole duration), or for runs
+        // started by older binaries a live c2 process named in its pid file.
+        self.pid = run::running_pid(&dir);
         self.control = run::control_state(&dir);
         match std::fs::read_to_string(dir.join("status.json")).map_err(|e| e.to_string()).and_then(|t| serde_json::from_str(&t).map_err(|e| e.to_string())) {
             Ok(v) => {
@@ -2387,25 +2522,13 @@ impl App {
         // While a new run name is being typed, the buttons wait for it to be switched to, so they
         // never act on a different run than the one shown.
         let settled = self.run_input.trim() == self.run_name;
+        // Only one process may write a run. A census process started from here that hasn't exited
+        // counts as running too: it builds its plan before it takes the run's lock.
+        let live = self.pid.is_some() || self.launch.as_ref().is_some_and(|l| l.run == self.run_name);
         ui.horizontal(|ui| {
             let dir = self.dir();
-            if ui.add_enabled(settled && self.pid.is_none(), egui::Button::new("Start / resume census")).clicked() {
-                let _ = std::fs::create_dir_all(&dir);
-                let log = std::fs::File::create(dir.join("run.out"));
-                let mut cmd = std::process::Command::new(c2_binary());
-                cmd.args(["census", "run", "--name", &self.run_name]);
-                if let Ok(f) = log {
-                    if let Ok(f2) = f.try_clone() {
-                        cmd.stdout(f).stderr(f2);
-                    }
-                }
-                use std::os::unix::process::CommandExt;
-                cmd.process_group(0);
-                self.message = match cmd.spawn() {
-                    Ok(c) => format!("started census '{}' (pid {})", self.run_name, c.id()),
-                    Err(e) => format!("could not start c2: {e}"),
-                };
-                self.last_poll = Instant::now() - Duration::from_secs(10);
+            if ui.add_enabled(settled && !live, egui::Button::new("Start / resume census")).clicked() {
+                self.start_census();
             }
             if ui.add_enabled(settled, egui::Button::new("Pause (frees the GPU)")).clicked() {
                 let _ = run::set_control(&dir, "pause");
@@ -2415,15 +2538,28 @@ impl App {
                 let _ = run::set_control(&dir, "run");
                 self.message = "resuming".into();
             }
-            if ui.add_enabled(settled && self.pid.is_some(), egui::Button::new("Stop")).clicked() {
-                if let Some(pid) = self.pid {
-                    let _ = std::process::Command::new("kill").arg(pid.to_string()).status();
-                    self.message = format!("asked pid {pid} to stop after committing the current window");
-                }
+            if ui.add_enabled(settled && self.pid.is_some(), egui::Button::new("Stop")).clicked()
+                && let Some(pid) = self.pid
+            {
+                let _ = std::process::Command::new("kill").arg(pid.to_string()).status();
+                self.message = format!("asked pid {pid} to stop after committing the current window");
             }
         });
         if !self.message.is_empty() {
             ui.label(&self.message);
+        }
+        if let Some(l) = &self.launch
+            && l.run == self.run_name
+            && self.pid.is_none()
+        {
+            ui.label(format!("Starting census '{}' (pid {}): it builds its plan, then takes the run's lock…", l.run, l.child.id()));
+        }
+        if let Some((error, note)) = &self.launch_note {
+            if *error {
+                ui.colored_label(egui::Color32::LIGHT_RED, note);
+            } else {
+                ui.label(note);
+            }
         }
         ui.add_space(4.0);
         ui.label("Stopping or pausing loses at most the work unit in progress; starting again resumes where it left off.");
@@ -2472,9 +2608,8 @@ impl App {
 
     /// Looks up the strongest stored pairs of the Census tab's ticker in the current run.
     fn start_find_pairs(&mut self) {
-        let Some(store) = self.store.clone() else { return };
         let (dir, ticker) = (self.dir(), self.ticker.trim().to_uppercase());
-        self.pairs.start((self.run_name.clone(), ticker.clone()), move || find_pairs(&store, &dir, &ticker).map_err(|e| format!("{e:#}")));
+        self.pairs.start((self.run_name.clone(), ticker.clone()), move || find_pairs(&dir, &ticker).map_err(|e| format!("{e:#}")));
     }
 
     fn census_tab(&mut self, ui: &mut egui::Ui) {
@@ -2656,8 +2791,7 @@ impl App {
         let Some(store) = self.store.clone() else { return };
         self.holdout_started = Some(Instant::now());
         let (run, dir, slot) = (self.run_name.clone(), self.dir(), self.plan_slot.clone());
-        let census_pairs = self.family == 0;
-        let family = if census_pairs {
+        let family = if self.family == 0 {
             Family::CensusPairs
         } else {
             Family::PeerMomentum { peers: 20, lookback: 21, window: 756 }
@@ -2667,13 +2801,9 @@ impl App {
         let costs: Vec<f64> = self.costs.split(',').filter_map(|c| c.trim().parse().ok()).collect();
         let key: HoldoutKey = (run.clone(), self.family, start.clone(), picks, rebalance, self.costs.clone(), random);
         self.holdout.start(key, move || {
-            // This run's census variable (rebuilt if the slot holds another run's), checked against
-            // the run's correlation periods, and for census pairs its task numbering, before any
-            // record is looked up by them.
+            // This run's plan (built if the slot holds another run's): its own correlation periods
+            // and task numbering, by which its records are looked up.
             let plan = plan_for_run(&slot, &store, &run, &dir)?;
-            if census_pairs {
-                check_tasks(&plan, &run, &dir)?;
-            }
             let opt = Options {
                 family,
                 rebalance,
@@ -2714,20 +2844,17 @@ impl App {
 }
 
 /// The strongest stored real pairs involving `ticker`, as leader or target, across all windows.
-fn find_pairs(store: &Store, dir: &Path, ticker: &str) -> anyhow::Result<Vec<PairRow>> {
-    let id = store.id(ticker).ok_or_else(|| anyhow::anyhow!("{ticker} is not in the price store"))? as u32;
-    let windows: Vec<String> = std::fs::read_to_string(dir.join("windows.csv"))?
-        .lines()
-        .skip(1)
-        .map(|l| {
-            let f: Vec<&str> = l.split(',').collect();
-            format!("{}..{}", f.get(2).unwrap_or(&""), f.get(3).unwrap_or(&""))
-        })
-        .collect();
+/// Records name stocks by the run's own store ids and periods by the run's own ids, so both are
+/// read through the run's description (`RunMeta`), never today's store.
+fn find_pairs(dir: &Path, ticker: &str) -> anyhow::Result<Vec<PairRow>> {
+    let meta = RunMeta::load(dir)?;
+    let stocks = meta.stocks()?;
+    let id = stocks.id(ticker).ok_or_else(|| anyhow::anyhow!("{ticker} was not in the price store when census {} was made", meta.name))?;
+    let label = |w: &c2_census::meta::RunWindow| format!("{}..{}", c2_data::date_string(w.first), c2_data::date_string(w.last));
     let mut rows = Vec::new();
-    for e in std::fs::read_dir(dir.join("tasks"))?.flatten() {
-        let path = e.path();
-        if path.extension().and_then(|x| x.to_str()) != Some("rec") {
+    for task in meta.tasks()? {
+        let path = meta.task_path(task.id, "rec");
+        if !path.exists() {
             continue;
         }
         for r in c2_census::analyze::read_records(&path)? {
@@ -2736,8 +2863,8 @@ fn find_pairs(store: &Store, dir: &Path, ticker: &str) -> anyhow::Result<Vec<Pai
             }
             let (partner, role) = if r.leader == id { (r.target, "leads") } else { (r.leader, "follows") };
             rows.push(PairRow {
-                window: windows.get(r.window as usize).cloned().unwrap_or_default(),
-                partner: store.symbols.get(partner as usize).map(|s| s.ticker.clone()).unwrap_or_default(),
+                window: meta.windows.get(r.window as usize).map(label).unwrap_or_default(),
+                partner: stocks.ticker(partner).unwrap_or_default().to_string(),
                 role,
                 h1: r.h1,
                 h2: r.h2,
@@ -2755,9 +2882,13 @@ fn find_pairs(store: &Store, dir: &Path, ticker: &str) -> anyhow::Result<Vec<Pai
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.check_launch();
         self.poll();
         // Results arrive whichever tab is shown.
         self.poll_jobs();
+        if self.shot.is_some() {
+            self.walk_step();
+        }
         // A pause in typing a run name switches to it.
         if self.run_edited.is_some_and(|t| t.elapsed() >= RUN_IDLE) {
             let name = self.run_input.clone();
@@ -2815,8 +2946,17 @@ impl eframe::App for App {
             }
             self.shot = Some(shot);
         }
-        // While a run name is being typed, wake up in time to switch to it.
-        ctx.request_repaint_after(Duration::from_millis(if self.run_edited.is_some() { 200 } else { 500 }));
+        // While a background job computes, look for its result often, so that a quick one (a
+        // forecast from data already read takes milliseconds) shows at once; while a run name is
+        // being typed, wake up in time to switch to it.
+        let wait = if self.jobs_running() {
+            50
+        } else if self.run_edited.is_some() {
+            200
+        } else {
+            500
+        };
+        ctx.request_repaint_after(Duration::from_millis(wait));
     }
 }
 
@@ -2859,6 +2999,8 @@ impl App {
                 self.fc.as_of = env("C2_GUI_AS_OF").and_then(|d| c2_data::parse_date(&d).ok());
                 self.fc.horizon = env("C2_GUI_DAYS").and_then(|d| d.parse().ok()).unwrap_or(21);
                 self.fc.significant_only = env("C2_GUI_SIGNIFICANT").is_some();
+                // Press "◀ month" this many times, each once the forecast before it is shown.
+                self.fc.walk = env("C2_GUI_WALK").and_then(|d| d.parse().ok()).unwrap_or(0);
             }
             Some("explain") => {
                 self.tab = Tab::Explain;
@@ -2877,10 +3019,58 @@ impl App {
                 self.ex.obs = num("C2_GUI_OBS", 0);
                 let end = env("C2_GUI_END").and_then(|d| c2_data::parse_date(&d).ok()).unwrap_or(i32::MAX);
                 self.ex.pending_end = Some((num("C2_GUI_PERIOD", 0), end));
+                self.ex.scroll = env("C2_GUI_SCROLL").and_then(|v| v.parse().ok());
             }
             _ => self.tab = Tab::Status,
         }
     }
+
+    /// Self-check (`C2_GUI_WALK`): once the forecast for the current choices is shown, takes the
+    /// next "◀ month" step as that button does; reports how long the steps took in all.
+    fn walk_step(&mut self) {
+        if self.fc.walk == 0 && self.fc.walk_started.is_none() {
+            return;
+        }
+        let shown = match self.fc.job.get(&self.forecast_key()) {
+            None => return,
+            Some(res) => res.as_ref().ok().map(|f| f.as_of),
+        };
+        match shown {
+            Some(day) if self.fc.walk > 0 => {
+                let steps = self.fc.walk;
+                self.fc.walk_started.get_or_insert_with(|| (Instant::now(), steps));
+                self.fc.walk -= 1;
+                self.fc.as_of = Some(day - 30);
+            }
+            _ => {
+                if let Some((t, steps)) = self.fc.walk_started.take() {
+                    let day = shown.map(c2_data::date_string).unwrap_or_else(|| "(an error)".into());
+                    eprintln!("c2-gui self-check: {steps} steps of \"◀ month\" took {:.3} s in all, ending as of {day}", t.elapsed().as_secs_f64());
+                }
+                self.fc.walk = 0;
+            }
+        }
+    }
+}
+
+/// `v` if it is one of `options` (sorted), else the next larger one, else the largest (`v` itself
+/// when there are none).
+fn nearest(options: &[usize], v: usize) -> usize {
+    if options.contains(&v) { v } else { options.iter().copied().find(|&x| x >= v).or(options.last().copied()).unwrap_or(v) }
+}
+
+/// The move lengths a run computed for correlation periods of `length` days, from its tasks:
+/// A's (h1) choices, B's (h2) choices for the chosen A, and the choice nearest to (h1, h2).
+fn move_length_choices(tasks: &[grid::Task], length: usize, h1: usize, h2: usize) -> (Vec<usize>, Vec<usize>, usize, usize) {
+    let mut pairs: Vec<(usize, usize)> = tasks.iter().filter(|t| t.length == length).map(|t| (t.h1, t.h2)).collect();
+    pairs.sort_unstable();
+    pairs.dedup();
+    let mut h1s: Vec<usize> = pairs.iter().map(|p| p.0).collect();
+    h1s.dedup();
+    let h1 = nearest(&h1s, h1);
+    let h2s: Vec<usize> = pairs.iter().filter(|p| p.0 == h1).map(|p| p.1).collect();
+    let h2 = nearest(&h2s, h2);
+    (h1s, h2s, h1, h2)
 }
 
 fn main() -> eframe::Result {
@@ -2947,19 +3137,65 @@ mod tests {
     #[test]
     fn track_record_handles_negative_skill() {
         // The review's case: reliably wrong over 200 forecasts.
-        let (c, text) = track_record_verdict(0.35, -0.25, 200);
+        let (c, text) = track_record_verdict(0.35, 200, -0.25, 200);
         assert_eq!(c, RED_NOTE);
         assert!(text.contains("worse than chance"), "{text}");
         // One significantly negative measure is enough.
-        assert_eq!(track_record_verdict(0.5, -0.14, 225).0, RED_NOTE);
-        let (c, text) = track_record_verdict(0.60, 0.25, 200);
+        assert_eq!(track_record_verdict(0.5, 225, -0.14, 225).0, RED_NOTE);
+        let (c, text) = track_record_verdict(0.60, 200, 0.25, 200);
         assert_eq!(c, GREEN_NOTE);
         assert!(text.contains("better than luck"), "{text}");
-        assert!(track_record_verdict(0.52, 0.05, 200).1.contains("within what luck produces"));
+        assert!(track_record_verdict(0.52, 200, 0.05, 200).1.contains("within what luck produces"));
         // Mixed: direction right more often than luck, sizes moving the opposite way.
-        let (c, text) = track_record_verdict(0.60, -0.20, 200);
+        let (c, text) = track_record_verdict(0.60, 200, -0.20, 200);
         assert_eq!(c, YELLOW_NOTE);
         assert!(text.contains("disagree"), "{text}");
+    }
+
+    #[test]
+    fn track_record_hit_rate_counts_only_forecasts_with_a_direction() {
+        // 62% right is beyond luck over 100 forecasts with a direction (z 2.4), not over the 20
+        // that had one out of 100 made (z 1.07); the correlation is over all 100.
+        assert_eq!(track_record_verdict(0.62, 100, 0.0, 100).0, GREEN_NOTE);
+        assert_eq!(track_record_verdict(0.62, 20, 0.0, 100).0, YELLOW_NOTE);
+    }
+
+    #[test]
+    fn a_refused_start_shows_what_the_process_said() {
+        let dir = std::env::temp_dir().join(format!("c2-gui-test-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let out = dir.join("run.out");
+        // The running census's own output stays, and isn't shown as the new process's.
+        std::fs::write(&out, "[10:00:00] 5/888 windows (1.00% of work)\n").unwrap();
+        let mut cmd = std::process::Command::new("sh");
+        cmd.args(["-c", "echo 'Error: census x is already running (pid 4242)' >&2; exit 1"]);
+        let (mut child, from) = spawn_logged(cmd, &out).unwrap();
+        let status = child.wait();
+        let (error, text) = launch_outcome(&Launch { run: "x".into(), child, out: out.clone(), from }, status);
+        assert!(error && text.contains("Census 'x' exited with an error"), "{text}");
+        assert!(text.contains("already running (pid 4242)") && !text.contains("windows"), "{text}");
+        assert!(std::fs::read_to_string(&out).unwrap().starts_with("[10:00:00] 5/888"));
+        // A clean exit shows its last line.
+        let mut cmd = std::process::Command::new("sh");
+        cmd.args(["-c", "echo '[10:01:00] plan: ...'; echo '[10:01:01] census already complete'"]);
+        let (mut child, from) = spawn_logged(cmd, &out).unwrap();
+        let status = child.wait();
+        let (error, text) = launch_outcome(&Launch { run: "x".into(), child, out: out.clone(), from }, status);
+        assert!(!error && text == "Census 'x': [10:01:01] census already complete", "{text}");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn explainer_offers_only_the_move_lengths_the_run_computed() {
+        let task = |id, h1, h2, length| grid::Task { id, h1, h2, length, windows: Vec::new() };
+        // An older run's pairing (B's move no longer than A's), 756-day periods only.
+        let old: Vec<grid::Task> = [(1, 1), (5, 1), (5, 5), (21, 1), (21, 5), (21, 21)].iter().enumerate().map(|(k, &(a, b))| task(k, a, b, 756)).collect();
+        assert_eq!(move_length_choices(&old, 756, 5, 21), (vec![1, 5, 21], vec![1, 5], 5, 5));
+        assert_eq!(move_length_choices(&old, 756, 1, 5), (vec![1, 5, 21], vec![1], 1, 1));
+        // A move length the run doesn't have moves to the next one it has.
+        assert_eq!(move_length_choices(&old, 756, 3, 1), (vec![1, 5, 21], vec![1, 5], 5, 1));
+        // No tasks for that period length: nothing to offer.
+        assert_eq!(move_length_choices(&old, 252, 5, 5), (vec![], vec![], 5, 5));
     }
 
     #[test]
