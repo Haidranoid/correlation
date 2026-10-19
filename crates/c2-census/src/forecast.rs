@@ -112,14 +112,22 @@ pub struct Contribution {
     /// Census window (correlation period) id and its length in trading days.
     pub window_id: usize,
     pub period_days: usize,
-    /// The leader's market-relative moves feeding this forecast, summed (in %).
+    /// For reference: the leader's market-relative moves feeding this forecast, summed (in %),
+    /// each counted whole even when only part of the days it predicts fall inside the horizon.
+    /// The row's arithmetic uses `leader_move_in_horizon_pct`.
     pub leader_move_pct: f64,
+    /// The part of the leader's moves that lands in these days (in %): 100 (e^L - 1) with
+    /// L = sum of x_i w_i, where x_i is one of the leader's market-relative h1-day moves (a log
+    /// change) and w_i the share of the h2 days it predicts that fall inside the horizon.
+    pub leader_move_in_horizon_pct: f64,
     /// The multiplier applied to them (`moves::move_per_pct`): the stock's move relative to the
     /// market per 1% move of the leader relative to the market. The stock timeline and the
     /// Explainer show this same number as "% per 1%".
     pub move_per_pct: f64,
     /// What this relationship alone predicts for the stock's move relative to the market over
-    /// the horizon (in %).
+    /// the horizon (in %): 100 (e^(move_per_pct x L) - 1), i.e.
+    /// (1 + leader_move_in_horizon_pct / 100)^move_per_pct - 1. The multiplier applies to log
+    /// changes, so only for small moves is this about leader_move_in_horizon_pct x move_per_pct.
     pub implied_pct: f64,
     /// Its share of the combined forecast at the horizon (percentage points; shares add up to
     /// the forecast's log change, 100 x ln(1 + predicted % / 100)).
@@ -292,12 +300,14 @@ fn usable<'a>(d: &'a ForecastData, t0: usize, opt: &Options) -> Vec<&'a Rel> {
 }
 
 /// One relationship's predicted market-relative log returns for days t0+1..=t0+horizon, which
-/// of those days it covers (makes a prediction for, even one of 0), and the sum of the leader
-/// moves that fed them.
+/// of those days it covers (makes a prediction for, even one of 0), and the leader moves that
+/// fed them: summed whole (`used`), and weighted by the share of each one's h2 days inside the
+/// horizon (`landed`, so the path's total is beta x landed).
 struct RelPath {
     daily: Vec<f64>,
     covers: Vec<bool>,
     used: f64,
+    landed: f64,
 }
 
 /// A relationship covers a day at most once: its observations step by max(h1, h2) >= h2, so
@@ -305,7 +315,7 @@ struct RelPath {
 fn rel_path(d: &ForecastData, r: &Rel, t0: usize, horizon: usize) -> RelPath {
     let a = &d.leaders[r.leader as usize].rel;
     let step = r.h1.max(r.h2);
-    let mut p = RelPath { daily: vec![0.0; horizon], covers: vec![false; horizon], used: 0.0 };
+    let mut p = RelPath { daily: vec![0.0; horizon], covers: vec![false; horizon], used: 0.0, landed: 0.0 };
     // Leader moves ending at g = t0, t0 - step, ... (all known at t0) whose target interval
     // (g + lag - h2, g + lag] overlaps (t0, t0 + horizon].
     let mut g = t0;
@@ -315,12 +325,15 @@ fn rel_path(d: &ForecastData, r: &Rel, t0: usize, horizon: usize) -> RelPath {
             if x.is_finite() {
                 p.used += x;
                 let per_day = r.beta * x / r.h2 as f64;
+                let mut inside = 0;
                 for day in (g + r.lag + 1 - r.h2)..=(g + r.lag) {
                     if day > t0 && day <= t0 + horizon {
                         p.daily[day - t0 - 1] += per_day;
                         p.covers[day - t0 - 1] = true;
+                        inside += 1;
                     }
                 }
+                p.landed += x * inside as f64 / r.h2 as f64;
             }
         }
         if g < step {
@@ -386,7 +399,6 @@ pub fn forecast_from(d: &ForecastData, as_of: i32, opt: &Options) -> Result<Fore
         if !p.covers.contains(&true) {
             continue;
         }
-        let own: f64 = p.daily.iter().sum();
         let share: f64 = p.daily.iter().zip(&c.count).map(|(x, &n)| if n > 0 { x / n as f64 } else { 0.0 }).sum();
         contributions.push(Contribution {
             leader: d.leaders[r.leader as usize].ticker.clone(),
@@ -399,8 +411,10 @@ pub fn forecast_from(d: &ForecastData, as_of: i32, opt: &Options) -> Result<Fore
             window_id: r.window_id,
             period_days: r.period_days,
             leader_move_pct: 100.0 * p.used.exp_m1(),
+            leader_move_in_horizon_pct: 100.0 * p.landed.exp_m1(),
             move_per_pct: r.beta,
-            implied_pct: 100.0 * own.exp_m1(),
+            // The sum of this relationship's daily path, up to rounding.
+            implied_pct: 100.0 * (r.beta * p.landed).exp_m1(),
             share_pct: 100.0 * share,
         });
     }
@@ -538,7 +552,11 @@ mod tests {
 
     #[test]
     fn same_end_prefers_the_longest_period_in_any_order() {
-        let a = vec![rel(0, 300, 756, 9), rel(0, 300, 1260, 4), rel(0, 200, 1260, 2)];
+        // Runs number periods by length, so on a shared end day the longest has the highest id
+        // (main-2025-06-27: 252, 756 and 1260 days with ids 77, 221 and 283 all end 2025-04-14;
+        // 504 and 1260 days with ids 138 and 270 end 2022-01-06). Lowest id alone would pick the
+        // shortest.
+        let a = vec![rel(0, 300, 252, 77), rel(0, 300, 756, 221), rel(0, 300, 1260, 283), rel(0, 200, 504, 138), rel(0, 200, 1260, 270)];
         let mut b = a.clone();
         b.reverse();
         let opt = Options { significant_only: false, horizon: 5, max_age: None };
@@ -546,9 +564,32 @@ mod tests {
             let d = data(rels, &[0.01]);
             let u = usable(&d, 350, &opt);
             assert_eq!(u.len(), 1);
-            assert_eq!((u[0].period_days, u[0].window_id), (1260, 4));
-            // Before that period ended, the older one is used.
-            assert_eq!(usable(&d, 250, &opt)[0].window_id, 2);
+            assert_eq!((u[0].period_days, u[0].window_id), (1260, 283));
+            // Before those ended, the longest of the older ones.
+            let u = usable(&d, 250, &opt);
+            assert_eq!((u[0].period_days, u[0].window_id), (1260, 270));
         }
+    }
+
+    #[test]
+    fn a_row_multiplies_out() {
+        // Offset 10, A over 1 day, B over 5 days, 7 days ahead. A's move on t0 (+0.3) predicts
+        // B's days t0+6..t0+10, 2 of 5 inside; its move on t0-5 (-0.2) predicts t0+1..t0+5, all
+        // inside. Counted whole they sum to +0.1, but what lands is L = 0.4 x 0.3 - 0.2 = -0.08,
+        // and the relationship implies e^(2 L) - 1 at 2% per 1%.
+        let mut r = rel(0, 300, 252, 1);
+        (r.lag, r.h2, r.beta) = (10, 5, 2.0);
+        let mut d = data(vec![r], &[0.0]);
+        d.leaders[0].rel[350] = 0.3;
+        d.leaders[0].rel[345] = -0.2;
+        let f = forecast_from(&d, 350, &Options { significant_only: false, horizon: 7, max_age: None }).unwrap();
+        let c = &f.contributions[0];
+        let l = 0.4 * 0.3 - 0.2;
+        assert!((c.leader_move_pct - 100.0 * 0.1f64.exp_m1()).abs() < 1e-9);
+        assert!((c.leader_move_in_horizon_pct - 100.0 * f64::exp_m1(l)).abs() < 1e-9);
+        assert!((c.implied_pct - 100.0 * f64::exp_m1(2.0 * l)).abs() < 1e-9);
+        assert!((c.implied_pct / 100.0 + 1.0 - (1.0 + c.leader_move_in_horizon_pct / 100.0).powf(c.move_per_pct)).abs() < 1e-12);
+        // The forecast's own path adds up to the same.
+        assert!(((1.0 + f.predicted_pct[6] / 100.0).ln() - 2.0 * l).abs() < 1e-12);
     }
 }
