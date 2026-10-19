@@ -216,7 +216,7 @@ impl RunMeta {
         }
         let universes = read_universes(dir, &windows).with_context(|| format!("census {name}: universes.bin"))?;
         let (task_source, tasks) = task_list(dir, &manifest, &cfg, &windows);
-        let stocks = read_stocks(&name, dir, &manifest);
+        let stocks = read_stocks(dir, &manifest);
         Ok(RunMeta { name, dir: dir.to_path_buf(), manifest, config_text, cfg, windows, universes, task_source, tasks, stocks })
     }
 
@@ -461,7 +461,7 @@ fn check_tasks(dir: &Path, cfg: &Config, tasks: Vec<Task>) -> std::result::Resul
     Ok(tasks)
 }
 
-fn read_stocks(name: &str, dir: &Path, manifest: &serde_json::Value) -> std::result::Result<RunStocks, String> {
+fn read_stocks(dir: &Path, manifest: &serde_json::Value) -> std::result::Result<RunStocks, String> {
     let want = manifest["symbols_tsv_fnv64"].as_str().unwrap_or("");
     let parse = |bytes: &[u8], what: &str| -> std::result::Result<Vec<SymbolInfo>, String> {
         let text = std::str::from_utf8(bytes).map_err(|_| format!("{what} is not text"))?;
@@ -480,7 +480,7 @@ fn read_stocks(name: &str, dir: &Path, manifest: &serde_json::Value) -> std::res
     let now = fingerprint(&bytes);
     if want.is_empty() || now != want {
         return Err(format!(
-            "its stock list can't be recovered: census {name} has no copy of the store's symbols.tsv, and the store has been rebuilt since it ran (symbol table fingerprint {} then, {now} now), so its stock numbers can't be matched to tickers",
+            "its stock list can't be recovered: the run has no copy of the store's symbols.tsv, and the store has been rebuilt since it ran (symbol table fingerprint {} then, {now} now), so its stock numbers can't be matched to tickers",
             if want.is_empty() { "unrecorded" } else { want }
         ));
     }
@@ -518,7 +518,7 @@ pub fn snapshot_symbols_for_all_runs() -> Result<Vec<(String, Snapshot)>> {
             let m: serde_json::Value = std::fs::read_to_string(dir.join("manifest.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
             match (&current, &now, m["symbols_tsv_fnv64"].as_str()) {
                 (Some(bytes), Some(now), Some(want)) if now == want => {
-                    crate::run::write_atomic_bytes(&dir.join("symbols.tsv"), bytes).with_context(|| format!("save census {name}'s stock list"))?;
+                    crate::run::write_durable(&dir.join("symbols.tsv"), bytes).with_context(|| format!("save census {name}'s stock list"))?;
                     Snapshot::Written
                 }
                 _ => Snapshot::Unrecoverable,

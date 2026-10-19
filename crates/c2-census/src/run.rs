@@ -110,12 +110,13 @@ pub fn latest_run() -> String {
 }
 
 /// Makes `name` the default census (`census/LATEST`). The only writer of LATEST; atomic, so a
-/// reader never sees it empty or half written.
+/// reader never sees it empty or half written, and durable (`write_durable`), so the change
+/// survives a power loss once this returns.
 pub fn set_latest(name: &str) -> Result<()> {
     anyhow::ensure!(!name.trim().is_empty() && !name.contains('/'), "{name:?} is not a census name");
     let dir = c2_data::data_dir().join("census");
     std::fs::create_dir_all(&dir)?;
-    write_atomic(&dir.join("LATEST"), name.trim())
+    write_durable(&dir.join("LATEST"), name.trim().as_bytes())
 }
 
 pub fn run_dir(name: &str) -> PathBuf {
@@ -126,16 +127,30 @@ pub fn run_dir(name: &str) -> PathBuf {
 pub struct Plan {
     pub cfg: Config,
     pub var: Variable,
+    /// Per correlation period id, its rows of `var`. Only meaningful where `period_ok` holds: an
+    /// unavailable period keeps its id with an empty range (`start == end`, at the row after its
+    /// last day's position, never 0), so nothing is ever computed over it.
     pub windows: Vec<Window>,
-    /// Per window: variable column indices of its universe.
+    /// Per window: variable column indices of its universe (stocks today's data still has).
     pub universes: Vec<Vec<usize>>,
     pub tasks: Vec<Task>,
     /// Estimated cost of each (task, window position).
     pub cost: Vec<Vec<f64>>,
+    /// Per correlation period: true when today's data covers it exactly (`RunMeta::window_rows`).
+    /// Always true for `Plan::new`. Readers skip the others (`period_available`).
+    pub period_ok: Vec<bool>,
+    /// Per correlation period: the run's stocks (as the run's store ids) that today's store or
+    /// census variable no longer has; they are left out of `universes`. Empty for `Plan::new`.
+    pub missing_stocks: Vec<Vec<u32>>,
+    /// Set when values recomputed with this plan may differ from those the run stored, saying
+    /// why: the run's census variable started on another day (older code). See `variable_for`.
+    pub variable_note: Option<String>,
     /// Store id as the run's records hold it -> variable column, and back. The identity on
     /// `var.ids` for a new run; through tickers for `Plan::for_run`.
     run_col: HashMap<u32, usize>,
     col_run: Vec<Option<u32>>,
+    /// The run `Plan::for_run` built this for: (name, the manifest's `created_unix`).
+    built_for: Option<(String, u64)>,
 }
 
 impl Plan {
@@ -150,68 +165,85 @@ impl Plan {
         let cost = unit_costs(&cfg, &windows, &universes, &tasks);
         let col_run: Vec<Option<u32>> = var.ids.iter().map(|&id| Some(id as u32)).collect();
         let run_col = var.ids.iter().enumerate().map(|(c, &id)| (id as u32, c)).collect();
-        Ok(Plan { cfg, var, windows, universes, tasks, cost, run_col, col_run })
+        let (period_ok, missing_stocks) = (vec![true; windows.len()], vec![Vec::new(); windows.len()]);
+        Ok(Plan { cfg, var, windows, universes, tasks, cost, period_ok, missing_stocks, variable_note: None, run_col, col_run, built_for: None })
     }
 
     /// The plan of an existing run, rebuilt on today's store: the census variable from the
-    /// current store with the run's settings, and the run's own correlation periods (by date),
-    /// universes (`universes.bin`, translated to today's variable columns) and tasks. So
-    /// `windows[id]` and `tasks[id]` mean what they meant in that run, and
-    /// `column_of_run_id` turns a record's leader or target into a variable column.
-    /// Errors, naming the problem, if the run can't be reproduced on today's store: its task
-    /// list or stock list is unknown, the census variable starts on a different day, a
-    /// correlation period isn't covered exactly, or one of its stocks is missing.
+    /// current store with the run's settings and the run's own first day (`variable_for`), and
+    /// the run's own correlation periods (by date), universes (`universes.bin`, translated to
+    /// today's variable columns) and tasks. So `windows[id]` and `tasks[id]` mean what they
+    /// meant in that run, and `column_of_run_id` turns a record's leader or target into a
+    /// variable column.
+    ///
+    /// What today's data can't reproduce is marked, not refused: a correlation period it
+    /// doesn't cover exactly is unavailable (`period_ok`), a stock it no longer has is left out
+    /// of its periods and counted (`missing_stocks`), and a census variable that started on
+    /// another day is noted (`variable_note`). Errors only when the run can't be read
+    /// correctly at all: its task list or its stock list is unknown.
     pub fn for_run(store: &Store, meta: &RunMeta) -> Result<Plan> {
-        let name = &meta.name;
         let tasks = meta.tasks()?.to_vec();
-        let stocks = meta.stocks()?;
+        meta.stocks()?;
         let ids = meta.id_map(store)?;
         let cfg = meta.cfg.clone();
-        let cal = Calendar::trading_days(store)?;
-        let var = variable::production(store, &cal, cfg.start)?;
-        // The variable's warm-up rows fix the phase of its 21-day liquidity re-checks, so a
-        // different first day (older code) means different values throughout.
-        let first = meta.manifest["variable_days"][0].as_str().unwrap_or("unrecorded");
-        let today = c2_data::date_string(var.days[0]);
-        if first != today {
-            bail!("census {name} was made with a census variable starting {first}; today's starts {today}, so its values can't be reproduced");
-        }
-        let windows = meta
+        let (var, variable_note) = variable_for(store, meta)?;
+        let (windows, period_ok): (Vec<Window>, Vec<bool>) = meta
             .windows
             .iter()
-            .map(|w| {
-                let rows = meta.window_rows_in(&var.days, w.id).ok_or_else(|| {
-                    let what = if w.length == 0 { "full-history".to_string() } else { format!("{}-day", w.length) };
-                    anyhow!("census {name}: its {what} correlation period {}..{} is not covered exactly by today's price data, so it can't be reproduced",
-                        c2_data::date_string(w.first), c2_data::date_string(w.last))
-                })?;
-                Ok(Window { id: w.id, length: w.length, start: rows.start, end: rows.end })
+            .map(|w| match meta.window_rows_in(&var.days, w.id) {
+                Some(rows) => (Window { id: w.id, length: w.length, start: rows.start, end: rows.end }, true),
+                None => {
+                    let at = var.days.partition_point(|&d| d <= w.last).clamp(1, var.t.max(1));
+                    (Window { id: w.id, length: w.length, start: at, end: at }, false)
+                }
             })
-            .collect::<Result<Vec<_>>>()?;
+            .unzip();
         let col_of: HashMap<usize, usize> = var.ids.iter().enumerate().map(|(c, &id)| (id, c)).collect();
-        let universes = meta
+        let (universes, missing_stocks): (Vec<Vec<usize>>, Vec<Vec<u32>>) = meta
             .universes
             .iter()
-            .zip(&meta.windows)
-            .map(|(u, w)| {
-                u.iter()
-                    .map(|&rid| {
-                        let ticker = stocks.ticker(rid).unwrap_or("?");
-                        let period = format!("{}..{}", c2_data::date_string(w.first), c2_data::date_string(w.last));
-                        let cur = ids.current(rid).ok_or_else(|| anyhow!("census {name}: {ticker}, one of the stocks of its correlation period {period}, is not in today's price store"))?;
-                        col_of.get(&cur).copied().ok_or_else(|| anyhow!("census {name}: {ticker}, one of the stocks of its correlation period {period}, is no longer among the census's stocks"))
-                    })
-                    .collect::<Result<Vec<usize>>>()
+            .map(|u| {
+                let (mut cols, mut missing) = (Vec::with_capacity(u.len()), Vec::new());
+                for &rid in u {
+                    match ids.current(rid).and_then(|cur| col_of.get(&cur)) {
+                        Some(&c) => cols.push(c),
+                        None => missing.push(rid),
+                    }
+                }
+                (cols, missing)
             })
-            .collect::<Result<Vec<_>>>()?;
+            .unzip();
         let cost = unit_costs(&cfg, &windows, &universes, &tasks);
         let col_run: Vec<Option<u32>> = var.ids.iter().map(|&id| ids.run(id)).collect();
         let run_col = col_run.iter().enumerate().filter_map(|(c, r)| r.map(|r| (r, c))).collect();
-        Ok(Plan { cfg, var, windows, universes, tasks, cost, run_col, col_run })
+        let built_for = Some((meta.name.clone(), meta.manifest["created_unix"].as_u64().unwrap_or(0)));
+        Ok(Plan { cfg, var, windows, universes, tasks, cost, period_ok, missing_stocks, variable_note, run_col, col_run, built_for })
     }
 
     pub fn total_cost(&self) -> f64 {
         self.cost.iter().flatten().sum()
+    }
+
+    /// True when correlation period `id` can be read: today's data covers it exactly.
+    pub fn period_available(&self, id: usize) -> bool {
+        self.period_ok.get(id).copied().unwrap_or(false)
+    }
+
+    /// Correlation periods today's data doesn't cover exactly (unavailable), and the run's
+    /// stock places in period universes that today's data no longer has, summed over periods.
+    pub fn unavailable(&self) -> (usize, usize) {
+        (self.period_ok.iter().filter(|ok| !**ok).count(), self.missing_stocks.iter().map(|m| m.len()).sum())
+    }
+
+    /// The run `Plan::for_run` built this plan for; None for `Plan::new`.
+    pub fn built_for(&self) -> Option<&str> {
+        self.built_for.as_ref().map(|(name, _)| name.as_str())
+    }
+
+    /// True when `Plan::for_run` built this plan for the run `meta` describes (same name and
+    /// creation time).
+    pub fn is_for(&self, meta: &RunMeta) -> bool {
+        self.built_for.as_ref().is_some_and(|(name, created)| *name == meta.name && *created == meta.manifest["created_unix"].as_u64().unwrap_or(0))
     }
 
     /// Variable column of a stock as the run's records name it (`Record::leader` / `target`).
@@ -223,6 +255,39 @@ impl Plan {
     pub fn run_id_of_column(&self, col: usize) -> Option<u32> {
         self.col_run.get(col).copied().flatten()
     }
+}
+
+/// The census variable a run's results are read against: today's store with the run's
+/// settings, starting on the run's own first day (the manifest's `variable_days`). The second
+/// value is set, saying why, when that first day differs from the one today's code starts the
+/// variable on (runs made by older code, such as `smoke`, which started 2003-12-01): the
+/// variable is then rebuilt from the run's first day when the calendar allows (the warm-up
+/// rows fix the phase of its 21-day liquidity re-checks), but values recomputed today may still
+/// differ from those the run stored.
+pub fn variable_for(store: &Store, meta: &RunMeta) -> Result<(Variable, Option<String>)> {
+    let cal = Calendar::trading_days(store)?;
+    let var = variable::production(store, &cal, meta.cfg.start)?;
+    let today = c2_data::date_string(var.days[0]);
+    let name = &meta.name;
+    let Some(theirs) = meta.manifest["variable_days"][0].as_str().map(String::from) else {
+        let note = format!("census {name} doesn't record the first day of its census variable, so values recomputed today may differ from the stored ones");
+        return Ok((var, Some(note)));
+    };
+    if theirs == today {
+        return Ok((var, None));
+    }
+    // A later first day: start the calendar there, so the variable's rows start there too.
+    if let Some(k) = c2_data::parse_date(&theirs).ok().and_then(|d| cal.days.binary_search(&d).ok()).filter(|_| theirs > today) {
+        let from_theirs = variable::production(store, &Calendar { days: cal.days[k..].to_vec() }, meta.cfg.start)?;
+        if c2_data::date_string(from_theirs.days[0]) == theirs {
+            let note = format!(
+                "census {name} was made by older code whose census variable started on {theirs} (today's starts on {today}); it is rebuilt from {theirs} here, but values recomputed today may still differ from the stored ones"
+            );
+            return Ok((from_theirs, Some(note)));
+        }
+    }
+    let note = format!("census {name} was made by older code whose census variable started on {theirs}; today's starts on {today}, so values recomputed today may differ from the stored ones");
+    Ok((var, Some(note)))
 }
 
 /// Estimated cost of each (task, window position).
@@ -289,6 +354,24 @@ fn write_atomic(path: &Path, text: &str) -> Result<()> {
     write_atomic_bytes(path, text.as_bytes())
 }
 
+/// `write_atomic_bytes`, made durable: the temporary file is flushed to disk before the rename
+/// and its directory after it, so once this returns the new content survives a power loss
+/// (without the first, a crash can leave the renamed file empty; without the second, the
+/// rename itself can be lost).
+pub(crate) fn write_durable(path: &Path, bytes: &[u8]) -> Result<()> {
+    let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("file");
+    let tmp = path.with_file_name(format!(".{name}.{}.tmp", std::process::id()));
+    {
+        let mut f = File::create(&tmp).with_context(|| format!("write {}", tmp.display()))?;
+        f.write_all(bytes).with_context(|| format!("write {}", tmp.display()))?;
+        f.sync_all().with_context(|| format!("flush {}", tmp.display()))?;
+    }
+    std::fs::rename(&tmp, path).with_context(|| format!("rename {} to {}", tmp.display(), path.display()))?;
+    let dir = path.parent().filter(|d| !d.as_os_str().is_empty()).unwrap_or(Path::new("."));
+    File::open(dir).and_then(|d| d.sync_all()).with_context(|| format!("flush the directory {}", dir.display()))?;
+    Ok(())
+}
+
 /// What a run directory's `windows.csv` and `universes.bin` hold for a plan.
 fn layout(plan: &Plan) -> (String, Vec<u8>) {
     let mut w = String::from("id,length,first,last,stocks\n");
@@ -308,52 +391,72 @@ fn run_name(dir: &Path) -> String {
     dir.file_name().and_then(|n| n.to_str()).unwrap_or("?").to_string()
 }
 
+/// Whether `run::run(store, plan, dir, ..)` would accept `dir`: Ok when it holds no run yet (no
+/// manifest; a fresh start) or a run `plan` can resume or find complete, else the error that
+/// `run::run` would stop with, before doing anything. Reads only, and takes no lock (a run being
+/// computed right now is `running_pid`'s business). For `c2 update`: when its dated run name is
+/// already taken by a run this refuses, it can fall back to a free name instead of failing.
+pub fn resume_check(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
+    if !dir.join("manifest.json").exists() {
+        return Ok(());
+    }
+    let (windows_csv, universes_bin) = layout(plan);
+    check_resume(dir, plan, store, &windows_csv, &universes_bin)
+}
+
+/// The resume guard: the run in `dir` (which has a manifest) must be `plan`'s own: same
+/// settings, price data, task list, correlation periods and universes.
+fn check_resume(dir: &Path, plan: &Plan, store: &Store, windows_csv: &str, universes_bin: &[u8]) -> Result<()> {
+    let name = run_name(dir);
+    let cfg = config_text(&plan.cfg);
+    let days = serde_json::json!([c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())]);
+    let old: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
+    if old["config"].as_str() != Some(cfg.as_str()) {
+        bail!("run directory {} was started with a different config:\n  {}\nnow:\n  {}", dir.display(), old["config"], cfg);
+    }
+    // Progress is recorded by window position; new data changes the window list, so resuming
+    // would file records under the wrong windows.
+    if old["store_rows"].as_u64() != Some(store.rows() as u64) || old["variable_days"] != days || old["windows"].as_u64() != Some(plan.windows.len() as u64) {
+        bail!(
+            "the price data changed since census {} started (rows {} -> {}, days {} -> {}, correlation periods {} -> {}); \
+             start a new run with a different --name",
+            dir.display(), old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
+        );
+    }
+    // Progress is also recorded by task id, and what a task id holds depends on the code that
+    // made the run (the pairing of move lengths changed once already): the run's own task list
+    // must be this plan's, or results would be filed under the wrong move lengths.
+    let fresh = || format!("start a new run with a different --name (census {name} itself stays readable)");
+    let meta = RunMeta::load(dir).with_context(|| format!("can't check census {name} before resuming it; {}", fresh()))?;
+    let theirs = meta.tasks().with_context(|| format!("can't check which move lengths census {name}'s results files hold, so resuming could mix them; {}", fresh()))?;
+    if let Some(id) = (0..theirs.len().max(plan.tasks.len())).find(|&id| {
+        let key = |t: &Task| (t.h1, t.h2, t.length, t.windows.clone());
+        theirs.get(id).map(key) != plan.tasks.get(id).map(key)
+    }) {
+        let say = |t: Option<&Task>| t.map(|t| meta::describe_task(t.h1, t.h2, t.length)).unwrap_or_else(|| "nothing".into());
+        bail!(
+            "census {name} numbers its results files differently from this version ({} files there, {} now; t{id} holds {} there but {} now), so resuming would mix them; {}",
+            theirs.len(), plan.tasks.len(), say(theirs.get(id)), say(plan.tasks.get(id)), fresh()
+        );
+    }
+    if std::fs::read_to_string(dir.join("windows.csv")).ok().as_deref() != Some(windows_csv)
+        || std::fs::read(dir.join("universes.bin")).ok().as_deref() != Some(universes_bin)
+    {
+        bail!("census {name}'s correlation periods or their stocks differ from what this version would use, so resuming would mix them; {}", fresh());
+    }
+    Ok(())
+}
+
 /// Writes the run's description on first start (the manifest last, so a manifest means the
-/// rest is there); on resume refuses unless the plan is the run's own: same settings, price
-/// data, task list, correlation periods and universes.
+/// rest is there); on resume refuses unless the plan is the run's own (`check_resume`).
 fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
     std::fs::create_dir_all(dir.join("tasks"))?;
-    let name = run_name(dir);
     let manifest = dir.join("manifest.json");
     let cfg = config_text(&plan.cfg);
     let days = serde_json::json!([c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())]);
     let (windows_csv, universes_bin) = layout(plan);
     if manifest.exists() {
-        let old: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&manifest)?)?;
-        if old["config"].as_str() != Some(cfg.as_str()) {
-            bail!("run directory {} was started with a different config:\n  {}\nnow:\n  {}", dir.display(), old["config"], cfg);
-        }
-        // Progress is recorded by window position; new data changes the window list, so resuming
-        // would file records under the wrong windows.
-        if old["store_rows"].as_u64() != Some(store.rows() as u64) || old["variable_days"] != days || old["windows"].as_u64() != Some(plan.windows.len() as u64) {
-            bail!(
-                "the price data changed since census {} started (rows {} -> {}, days {} -> {}, correlation periods {} -> {}); \
-                 start a new run with a different --name",
-                dir.display(), old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
-            );
-        }
-        // Progress is also recorded by task id, and what a task id holds depends on the code that
-        // made the run (the pairing of move lengths changed once already): the run's own task list
-        // must be this plan's, or results would be filed under the wrong move lengths.
-        let fresh = || format!("start a new run with a different --name (census {name} itself stays readable)");
-        let meta = RunMeta::load(dir).with_context(|| format!("can't check census {name} before resuming it; {}", fresh()))?;
-        let theirs = meta.tasks().with_context(|| format!("can't check which move lengths census {name}'s results files hold, so resuming could mix them; {}", fresh()))?;
-        if let Some(id) = (0..theirs.len().max(plan.tasks.len())).find(|&id| {
-            let key = |t: &Task| (t.h1, t.h2, t.length, t.windows.clone());
-            theirs.get(id).map(key) != plan.tasks.get(id).map(key)
-        }) {
-            let say = |t: Option<&Task>| t.map(|t| meta::describe_task(t.h1, t.h2, t.length)).unwrap_or_else(|| "nothing".into());
-            bail!(
-                "census {name} numbers its results files differently from this version ({} files there, {} now; t{id} holds {} there but {} now), so resuming would mix them; {}",
-                theirs.len(), plan.tasks.len(), say(theirs.get(id)), say(plan.tasks.get(id)), fresh()
-            );
-        }
-        if std::fs::read_to_string(dir.join("windows.csv")).ok().as_deref() != Some(windows_csv.as_str())
-            || std::fs::read(dir.join("universes.bin")).ok().as_deref() != Some(universes_bin.as_slice())
-        {
-            bail!("census {name}'s correlation periods or their stocks differ from what this version would use, so resuming would mix them; {}", fresh());
-        }
-        return Ok(());
+        return check_resume(dir, plan, store, &windows_csv, &universes_bin);
     }
     // The symbol table the run's store ids refer to: saved with the run, and fingerprinted.
     let symbols = std::fs::read(c2_data::data_dir().join("store/symbols.tsv")).context("read the store's symbols.tsv")?;
@@ -598,7 +701,10 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
         // too big for the cap, which needs fewer than keep_real pairs with |r| >= 1/1024 among
         // more than 64 stocks (with real data a cut-off of 0 means 10 stocks or fewer).
         let screened = rc - (pulled.len() - real.len());
-        real.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()));
+        // Strongest first; equal |r| by matrix index, so which pairs a tie at the keep boundary
+        // keeps, and the order records are written in, never depend on the GPU's order.
+        let strongest = |a: &(i64, f32), b: &(i64, f32)| b.1.abs().total_cmp(&a.1.abs()).then(a.0.cmp(&b.0));
+        real.sort_by(strongest);
         let fdr = if *k > 0 && thr[2] <= 1.0 { Some(thr[2]) } else { None };
         let mut stored = 0;
         for (rank, &(idx, r8)) in real.iter().enumerate() {
@@ -615,7 +721,7 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
             stored += 1;
         }
         let mut null: Vec<(i64, f32)> = res.null[li * CAP_NULL..li * CAP_NULL + nc.min(CAP_NULL)].iter().copied().filter(is_pair).collect();
-        null.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()));
+        null.sort_by(strongest);
         let stored_null = null.len().min(cfg.keep_null);
         for &(idx, r8) in null.iter().take(cfg.keep_null) {
             chosen.push((li, idx, r8, true, FLAG_NULL | FLAG_TOP));
@@ -1125,5 +1231,56 @@ mod tests {
             // stored_real, stored_null, screened
             assert_eq!((f[13], f[14], f[15]), ("20", "20", "20"), "{line}");
         }
+    }
+
+    /// Equal |r| at the keep boundary: whatever order the GPU hands the entries back in, the
+    /// same pairs are kept, in the same order (the lower matrix index first), byte for byte.
+    #[test]
+    fn ties_keep_the_same_pairs_in_the_same_order() {
+        let cfg = Config { keep_real: 3, keep_null: 2, ..Config::smoke() };
+        let (n, w) = (5usize, 40usize);
+        let mut prefix = vec![0f64; (w + 1) * n];
+        for j in 0..n {
+            for r in 0..w {
+                prefix[j * (w + 1) + r + 1] = prefix[j * (w + 1) + r] + (((r * 5 + j * 3) % 7) as f64 - 3.0);
+            }
+        }
+        let unit = Arc::new(UnitData { h1: 1, h2: 1, w, n, np: pad_width(n), prefix, ids: vec![20, 21, 22, 23, 24], lags: vec![(0, 40, vec![3, 5, 7])] });
+        let np = unit.np as i64;
+        // The 20 pairs: two strong ones, then four tied at |r| 0.5 (signs differ) where the third
+        // kept place falls, then weak ones.
+        let pairs: Vec<(i64, f32)> = (0..np * np)
+            .filter(|&idx| idx % np < n as i64 && idx / np < n as i64 && idx % np != idx / np)
+            .enumerate()
+            .map(|(k, idx)| (idx, match k { 0 | 1 => 0.9, 2..=5 => if k % 2 == 0 { 0.5 } else { -0.5 }, _ => 0.1 }))
+            .collect();
+        let run = |entries: &[(i64, f32)]| {
+            let mut real = vec![(0i64, 0f32); CAP_REAL];
+            real[..entries.len()].copy_from_slice(entries);
+            let mut null = vec![(0i64, 0f32); CAP_NULL];
+            null[..entries.len()].copy_from_slice(entries);
+            let res = UnitResult {
+                task: 0, window: 1, pos: 0, gpu_ms: 0.0, unit: unit.clone(),
+                hist: vec![0; (1 + cfg.nulls) * R_BINS],
+                thr: vec![0.0, 0.0, 2.0],
+                cnt: vec![entries.len() as u32, entries.len() as u32],
+                real, null,
+            };
+            let (mut out, mut csv) = (Vec::new(), String::new());
+            finish_unit(&res, &cfg, &mut out, &mut csv);
+            (out, csv)
+        };
+        let forward = run(&pairs);
+        let mut reversed = pairs.clone();
+        reversed.reverse();
+        let mut shuffled = pairs.clone();
+        shuffled.rotate_left(7);
+        assert!(forward == run(&reversed) && forward == run(&shuffled));
+        let recs: Vec<Record> = forward.0.chunks_exact(RECORD_BYTES).map(Record::from_bytes).collect();
+        let kept = |null: bool| -> Vec<(u32, u32)> { recs.iter().filter(|r| (r.flags & FLAG_NULL != 0) == null).map(|r| (r.leader, r.target)).collect() };
+        // The two strong pairs, then the tied pair with the lowest matrix index (target-major).
+        let id = |idx: i64| (20 + (idx % np) as u32, 20 + (idx / np) as u32);
+        assert_eq!(kept(false), vec![id(pairs[0].0), id(pairs[1].0), id(pairs[2].0)]);
+        assert_eq!(kept(true), vec![id(pairs[0].0), id(pairs[1].0)]);
     }
 }
