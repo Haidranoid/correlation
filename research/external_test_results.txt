@@ -1,6 +1,6 @@
 External series vs US stocks: census-faithful lead-lag test
-run ext-all-1 (2026-10-19), census run main-2025-06-27, data /home/bhoult/.local/share/correlation2/external
-command: cargo run --release -p c2-census --example external_test -- --run ext-all-1 --noise 220
+run ext-all-2 (2026-10-19), census run main-2025-06-27, data /home/bhoult/.local/share/correlation2/external
+command: cargo run --release -p c2-census --example external_test -- --run ext-all-2 --noise 220
 
 How to read this: A moves first over its move length, B follows over its move length, and the offset is the
 number of trading days from the end of A's move to the end of B's. Offset 0 = the same day (no prediction);
@@ -40,7 +40,7 @@ catalog data-migration: 292 series listed, 292 loaded
 catalog data-news: 135 series listed, 135 loaded
 catalog data-other: 79 series listed, 79 loaded
 catalog data-politics: 212 series listed, 212 loaded
-catalog data-predictions: 84 series listed, 84 loaded
+catalog data-predictions: 111 series listed, 111 loaded
 catalog data-prosperity: 342 series listed, 342 loaded
 catalog data-trends: 88 series listed, 88 loaded
 catalog data-weather: 239 series listed, 239 loaded
@@ -48,7 +48,7 @@ plus 236 synthetic control series injected in memory (excluded from every headli
 
 category         series    in 222    in 242    in 262    in 282    in 284   transforms
 astronomical          4         4         4         4         4         4   level/daily
-attention           127        63        75        87       126        68   anomaly_log1p/weekly, diff/daily, logdiff/daily, logdiff/weekly
+attention           127        66        81        87       126        71   anomaly_log1p/weekly, diff/daily, logdiff/daily, logdiff/weekly
 climate_index        10        10        10        10        10        10   level/daily, level/monthly, level/weekly
 commodity            17         5        10        17        17         8   logdiff/daily
 credit                7         4         7         7         7         5   diff/daily, diff/weekly, logdiff/daily
@@ -63,7 +63,7 @@ news                135        52        85        98        49         5   leve
 other                 4         3         3         3         4         3   level/daily, logdiff/daily
 politics            212       148       153       155       148       134   diff/daily, diff/monthly, diff/weekly, level/daily, logdiff/daily, logdiff/monthly
 population            2         2         2         2         2         2   logdiff/monthly
-prediction_market     10         0         0         0         0         0   diff/daily
+prediction_market     20         0         0         0         0         0   diff/daily, logdiff/daily
 prosperity          261       252       254       260       261       252   diff/monthly, diff/quarterly, level/monthly, logdiff/monthly, logdiff/quarterly
 rates                37        22        35        36        36        32   diff/daily, diff/weekly, logdiff/daily
 space_weather         5         5         5         5         5         5   diff/daily, level/daily, logdiff/daily
@@ -72,10 +72,10 @@ weather             229       227       220       228       229       228   anom
 world_equity         49        31        49        49        49        49   logdiff/daily
 noise_test          220       220       220       220       220       220   anomaly/daily, anomaly_log1p/daily, diff/weekly, level/daily, level/weekly, logdiff/daily, logdiff/monthly
 annual              346         0         0         0         0       345   diff/annual, logdiff/annual
-single_contract      74         0         0         0         0         0   diff/daily
+single_contract      91         0         0         0         0         0   diff/daily
 synthetic            16        16        16        16        16        16   anomaly/daily, anomaly_log1p/daily, diff/weekly, level/daily, level/weekly, logdiff/daily, logdiff/monthly
 
-Considered but not tested: 165 of 1726 catalog series joined no correlation period. A series joins a period only
+Considered but not tested: 192 of 1753 catalog series joined no correlation period. A series joins a period only
 with values on >= 90% of its trading days and >= 10 non-zero moves there; annual data (about 5 changes per
 1260-day period, about 20 in full history) mostly can't pass, so it is reported here rather than dropped.
 category         considered     joined full hist only   too sparse    too short   annual series (joined / considered)
@@ -95,7 +95,7 @@ news                    135        115            0            0           20   
 other                     4          4            0            0            0   -
 politics                212        174            2           18           20   -
 population                2          2            0            0            0   -
-prediction_market         10          0            0            0           10   -
+prediction_market         20          0            0            0           20   -
 prosperity              261        261            0            0            0   -
 rates                    37         36            0            0            1   -
 space_weather             5          5            0            0            0   -
@@ -103,21 +103,21 @@ volatility                6          6            0            0            0   
 weather                 229        229            0            0            0   -
 world_equity             49         49            0            0            0   -
 annual                  346        345          345            0            1   345 / 346
-single_contract          74          0            0            0           74   -
-Too sparse to test (18): pol_us_pres_margin (daily), pol_us_congress_flip (daily), pol_us_pres_flip (daily), pol_ctl_az (daily), pol_ctl_ca (daily), pol_ctl_fl (daily), pol_ctl_ga (daily), pol_ctl_il (daily), pol_ctl_ma (daily), pol_ctl_mi (daily), pol_ctl_nc (daily), pol_ctl_nj (daily), pol_ctl_ny (daily), pol_ctl_oh (daily), pol_ctl_pa (daily), pol_ctl_tx (daily), pol_ctl_va (daily), pol_ctl_wa (daily)
-Too short or gappy (147): stooq_shibor3m (daily), stooq_aave (daily), stooq_avax (daily), stooq_axs (daily), stooq_cake (daily), stooq_comp (daily), stooq_crv (daily), stooq_dot (daily), stooq_egld (daily), stooq_grt (daily), stooq_ksm (daily), stooq_lrc (daily), stooq_mana (daily), stooq_near (daily), stooq_sand (daily), stooq_sol (daily), stooq_sushi (daily), stooq_uni (daily), stooq_yfi (daily), atn_count (daily), atn_crisis_any (daily), atn_crisis_bankruptcy (daily), atn_crisis_crash (daily), atn_crisis_default (daily), atn_crisis_inflation (daily), atn_crisis_layoffs (daily), atn_crisis_pandemic (daily), atn_crisis_recession (daily), atn_crisis_war (daily), atn_fin_count (daily), atn_fin_crisis_any (daily), atn_fin_lm_negshare (daily), atn_fin_lm_tone (daily), atn_fin_vader (daily), atn_lm_negshare (daily), atn_lm_tone (daily), atn_vader (daily), huff_count (daily), huff_crisis_pandemic (daily), nyt_covid_us_cases_7d (daily), nyt_covid_us_deaths_7d (daily), oxcgrt_stringency_ca (daily), oxcgrt_stringency_fl (daily), oxcgrt_stringency_ga (daily), oxcgrt_stringency_il (daily), oxcgrt_stringency_mi (daily), oxcgrt_stringency_nc (daily), oxcgrt_stringency_nj (daily), oxcgrt_stringency_ny (daily), oxcgrt_stringency_oh (daily), oxcgrt_stringency_pa (daily), oxcgrt_stringency_tx (daily), oxcgrt_stringency_us (daily), oxcgrt_stringency_wa (daily), pol_gov_close_races (daily), iem_house_dem (daily), iem_pres_vs_dem (daily), iem_pres_wta_dem (daily), iem_senate_dem (daily), pol_us_power_change (daily), ... and 87 more (externals.csv, column status)
+single_contract          91          0            0            2           89   -
+Too sparse to test (20): pol_us_pres_margin (daily), pol_us_congress_flip (daily), pol_us_pres_flip (daily), pol_ctl_az (daily), pol_ctl_ca (daily), pol_ctl_fl (daily), pol_ctl_ga (daily), pol_ctl_il (daily), pol_ctl_ma (daily), pol_ctl_mi (daily), pol_ctl_nc (daily), pol_ctl_nj (daily), pol_ctl_ny (daily), pol_ctl_oh (daily), pol_ctl_pa (daily), pol_ctl_tx (daily), pol_ctl_va (daily), pol_ctl_wa (daily), ksc_recession_2026 (daily), ksc_shutdown_on_2026jan31 (daily)
+Too short or gappy (172): stooq_shibor3m (daily), stooq_aave (daily), stooq_avax (daily), stooq_axs (daily), stooq_cake (daily), stooq_comp (daily), stooq_crv (daily), stooq_dot (daily), stooq_egld (daily), stooq_grt (daily), stooq_ksm (daily), stooq_lrc (daily), stooq_mana (daily), stooq_near (daily), stooq_sand (daily), stooq_sol (daily), stooq_sushi (daily), stooq_uni (daily), stooq_yfi (daily), atn_count (daily), atn_crisis_any (daily), atn_crisis_bankruptcy (daily), atn_crisis_crash (daily), atn_crisis_default (daily), atn_crisis_inflation (daily), atn_crisis_layoffs (daily), atn_crisis_pandemic (daily), atn_crisis_recession (daily), atn_crisis_war (daily), atn_fin_count (daily), atn_fin_crisis_any (daily), atn_fin_lm_negshare (daily), atn_fin_lm_tone (daily), atn_fin_vader (daily), atn_lm_negshare (daily), atn_lm_tone (daily), atn_vader (daily), huff_count (daily), huff_crisis_pandemic (daily), nyt_covid_us_cases_7d (daily), nyt_covid_us_deaths_7d (daily), oxcgrt_stringency_ca (daily), oxcgrt_stringency_fl (daily), oxcgrt_stringency_ga (daily), oxcgrt_stringency_il (daily), oxcgrt_stringency_mi (daily), oxcgrt_stringency_nc (daily), oxcgrt_stringency_nj (daily), oxcgrt_stringency_ny (daily), oxcgrt_stringency_oh (daily), oxcgrt_stringency_pa (daily), oxcgrt_stringency_tx (daily), oxcgrt_stringency_us (daily), oxcgrt_stringency_wa (daily), pol_gov_close_races (daily), iem_house_dem (daily), iem_pres_vs_dem (daily), iem_pres_wta_dem (daily), iem_senate_dem (daily), pol_us_power_change (daily), ... and 112 more (externals.csv, column status)
 
 Correlation periods (the census's own, with its stock universes):
-  222 2005-01-03..2010-01-04 (1260 trading days): 1136 external series + 283 stocks
-  242 2010-01-05..2015-01-06 (1260 trading days): 1233 external series + 1174 stocks
+  222 2005-01-03..2010-01-04 (1260 trading days): 1139 external series + 283 stocks
+  242 2010-01-05..2015-01-06 (1260 trading days): 1239 external series + 1174 stocks
   262 2015-01-07..2020-01-08 (1260 trading days): 1316 external series + 1516 stocks
   282 2020-01-09..2025-01-13 (1260 trading days): 1359 external series + 1970 stocks
-  284 2005-01-03..2025-06-27 (5154 trading days): 1461 external series + 1231 stocks
+  284 2005-01-03..2025-06-27 (5154 trading days): 1464 external series + 1231 stocks
 Grid: 36 move-length pairs (A and B each over 1, 3, 5, 10, 21, 63 days), 1080 offsets in all (0 plus the census's
 predictive offsets for each B move length), only where >= 30 non-overlapping observations fit the period
-(63-day moves fit only in full history). 13,260 block matrices; 15,514,059,690 real correlations of the catalog series tested,
-46,542,179,070 null-copy correlations as chance. Stock->stock pairs are not recomputed (the census has them).
-GPU: 17680 FP32 products (45s transfer + multiply, 53s scanning on the CPU).
+(63-day moves fit only in full history). 13,260 block matrices; 15,555,455,760 real correlations of the catalog series tested,
+46,666,367,280 null-copy correlations as chance. Stock->stock pairs are not recomputed (the census has them).
+GPU: 17680 FP32 products (53s transfer + multiply, 30s scanning on the CPU).
 
 == Self-checks ==
 [ok] CSV parser: quotes, doubled quotes, CRLF, BOM, blank lines
@@ -131,8 +131,8 @@ GPU: 17680 FP32 products (45s transfer + multiply, 53s scanning on the CPU).
 [ok] sparse 0/1 events: values bounded by +-5 (max 5.00), none once a year passes without an event
 [ok] census run main-2025-06-27: 285 correlation periods and 180 tasks from its own files; settings "horizons=[1, 3, 5, 10, 21, 63] lengths=[252, 504, 756, 1260] full_history=true step=63 start=2005-01-03 min_obs=30 nulls=3 keep_real=100 keep_null=50 floor_z=3.5 fdr_q=0.05"; stock ids identical to today's store
 [ok] correlation periods chosen by length and date, not id: 4 non-overlapping consecutive 1260-day periods from the census's first day (222 (2005-01-03..2010-01-04), 242 (2010-01-05..2015-01-06), 262 (2015-01-07..2020-01-08), 282 (2020-01-09..2025-01-13)), and full history 284 (2005-01-03..2025-06-27)
-[ok] census records reproduced: 350 stored stock->stock correlations (175 of them null copies) in 7 (period, move-length) cases, largest |r difference| 2.9e-8
-[ok] GPU FP32 r vs exact f64 recomputation: 13052 spot checks (real and null), largest |r difference| 1.1e-6
+[ok] census records reproduced: 500 stored stock->stock correlations (250 of them null copies) in 10 (period, move-length) cases, largest |r difference| 3.0e-8
+[ok] GPU FP32 r vs exact f64 recomputation: 13054 spot checks (real and null), largest |r difference| 7.5e-7
 
 == Real vs chance (all periods and move lengths pooled) ==
 Headline = the catalogs' series except single-contract and annual series. 'noise externals' = 220 pure-noise
@@ -140,20 +140,20 @@ series of the same timing and transform kinds, run through the same pipeline aga
 ratio that 'no relationship at all' produces. The census's null is not exactly calibrated at long move lengths
 (see the move-length table), so compare real ratios with the noise ratios, not with 1.
 direction    offset         |z|>=3 real         chance  ratio    |z|>=4 real       chance  ratio       |z|>=5     chance  ratio
-ext->stock   same day         1,507,831        832,029   1.81        369,022       60,582   6.09      153,907      4,834  31.84
-ext->stock   predictive      18,976,045     18,911,903   1.00        881,342      847,281   1.04       44,596     37,246   1.20
-ext->ext     same day         4,538,996      1,046,118   4.34      2,614,080      245,140  10.66    1,802,444     93,113  19.36
-ext->ext     predictive      47,250,607     22,773,083   2.07     14,137,924    3,447,443   4.10    6,209,024    855,020   7.26
-stock->ext   same day         1,507,831        844,842   1.78        369,022       62,051   5.95      153,907      4,997  30.80
-stock->ext   predictive      19,614,070     19,635,287   1.00      1,060,430      996,938   1.06       91,056     68,234   1.33
+ext->stock   same day         1,509,796        833,557   1.81        369,151       60,698   6.08      153,917      4,842  31.79
+ext->stock   predictive      19,013,145     18,946,340   1.00        882,605      848,396   1.04       44,578     37,235   1.20
+ext->ext     same day         4,555,420      1,049,794   4.34      2,622,054      245,521  10.68    1,807,260     93,174  19.40
+ext->ext     predictive      47,441,805     22,843,244   2.08     14,187,594    3,449,832   4.11    6,231,179    854,908   7.29
+stock->ext   same day         1,509,796        846,462   1.78        369,151       62,170   5.94      153,917      5,009  30.73
+stock->ext   predictive      19,653,679     19,670,319   1.00      1,061,497      997,916   1.06       91,023     68,234   1.33
 For comparison, the census's own stock->stock matrices for the same periods and move lengths:
 stock->stock same day        11,726,595      2,297,253   5.10      4,875,234      185,051  26.35    2,592,390     11,213 231.20
 stock->stock predictive      30,767,302     30,099,458   1.02      1,332,790    1,288,500   1.03       42,352     40,292   1.05
 Noise externals (the baseline):
 ext->stock   same day           112,127        108,483   1.03          3,479        3,244   1.07           66         57   1.16
 ext->stock   predictive       3,515,047      3,429,943   1.02        107,918      103,938   1.04        2,073      2,001   1.04
-ext->ext     same day           244,494        230,041   1.06         18,726       16,360   1.14        3,728      3,185   1.17
-ext->ext     predictive       7,924,292      7,174,588   1.10        668,753      511,078   1.31      131,187     96,208   1.36
+ext->ext     same day           245,078        230,599   1.06         18,762       16,381   1.15        3,724      3,185   1.17
+ext->ext     predictive       7,938,045      7,188,392   1.10        669,270      511,491   1.31      131,174     96,193   1.36
 stock->ext   same day           112,127        108,622   1.03          3,479        3,270   1.06           66         59   1.12
 stock->ext   predictive       3,614,604      3,527,542   1.02        123,189      117,277   1.05        3,456      3,310   1.04
 
@@ -161,174 +161,174 @@ Offsets split by timing (|z| >= 4, from the stored entries). 'within delay': a s
 than B's move length plus B's known_after_days and measurement span (5 rows weekly, 21 monthly, ...), so B's
 move can describe the same physical days as A's: timing, not a lead. 'predictive' is only what lies beyond that.
 direction    offset class                 real/chance            noise externals
-ext->stock   same day           369,022/60,582 = 6.09         3,479/3,244 = 1.07
-ext->stock   predictive        881,343/847,281 = 1.04     107,918/103,938 = 1.04
-ext->ext     same day       2,614,080/245,140 = 10.66       18,726/16,360 = 1.14
-ext->ext     predictive      4,650,697/848,719 = 5.48     330,494/229,820 = 1.44
-ext->ext     within delay  9,487,228/2,598,724 = 3.65     338,259/281,258 = 1.20
-stock->ext   same day           369,022/62,051 = 5.95         3,479/3,270 = 1.06
-stock->ext   predictive        513,400/490,451 = 1.05     107,577/101,121 = 1.06
-stock->ext   within delay      547,030/506,487 = 1.08       15,612/16,155 = 0.97
+ext->stock   same day           369,151/60,698 = 6.08         3,479/3,244 = 1.07
+ext->stock   predictive        882,606/848,396 = 1.04     107,918/103,938 = 1.04
+ext->ext     same day       2,622,054/245,521 = 10.68       18,762/16,381 = 1.15
+ext->ext     predictive      4,689,905/850,220 = 5.52     330,935/230,190 = 1.44
+ext->ext     within delay  9,497,690/2,599,612 = 3.65     338,335/281,301 = 1.20
+stock->ext   same day           369,151/62,170 = 5.94         3,479/3,270 = 1.06
+stock->ext   predictive        514,186/491,221 = 1.05     107,577/101,121 = 1.06
+stock->ext   within delay      547,311/506,695 = 1.08       15,612/16,155 = 0.97
 
 By correlation period, |z| >= 4:
 period   direction        same day real/chance   predictive real/chance  noise predictive   stock->stock predictive (census)
-222      ext->stock         6,592/1,195 = 5.52     31,080/29,976 = 1.04              0.99   12,157/11,587 = 1.05
-222      ext->ext        343,966/40,940 = 8.40 2,057,189/587,192 = 3.50              1.37   
-222      stock->ext         6,592/1,208 = 5.46     36,635/34,371 = 1.07              1.07   
-242      ext->stock        23,777/3,836 = 6.20   121,074/116,353 = 1.04              1.03   114,461/112,059 = 1.02
-242      ext->ext        464,258/47,332 = 9.81 2,818,162/642,360 = 4.39              1.33   
-242      stock->ext        23,777/3,806 = 6.25   139,694/133,609 = 1.05              1.02   
-262      ext->stock       58,957/5,818 = 10.13   177,261/172,247 = 1.03              1.04   196,750/185,536 = 1.06
-262      ext->ext        429,728/46,901 = 9.16 2,534,518/741,284 = 3.42              1.26   
-262      stock->ext       58,957/5,702 = 10.34   201,296/188,986 = 1.07              1.03   
-282      ext->stock      129,380/41,893 = 3.09   411,378/409,860 = 1.00              1.02   771,000/757,895 = 1.02
-282      ext->ext        529,268/66,817 = 7.92 2,375,423/898,451 = 2.64              1.32   
-282      stock->ext      129,380/42,977 = 3.01   524,931/513,907 = 1.02              1.06   
-284      ext->stock      150,316/7,841 = 19.17   140,549/118,844 = 1.18              1.08   238,422/221,423 = 1.08
-284      ext->ext       846,860/43,149 = 19.63 4,352,632/578,157 = 7.53              1.26   
-284      stock->ext      150,316/8,357 = 17.99   157,874/126,066 = 1.25              1.08   
+222      ext->stock         6,595/1,197 = 5.51     31,187/30,071 = 1.04              0.99   12,157/11,587 = 1.05
+222      ext->ext        344,740/41,023 = 8.40 2,062,460/588,353 = 3.51              1.38   
+222      stock->ext         6,595/1,210 = 5.45     36,777/34,486 = 1.07              1.07   
+242      ext->stock        23,806/3,849 = 6.18   121,644/116,924 = 1.04              1.03   114,461/112,059 = 1.02
+242      ext->ext        467,346/47,473 = 9.84 2,840,718/643,946 = 4.41              1.33   
+242      stock->ext        23,806/3,826 = 6.22   140,201/134,134 = 1.05              1.02   
+262      ext->stock       58,905/5,771 = 10.21   176,975/171,908 = 1.03              1.04   196,750/185,536 = 1.06
+262      ext->ext        430,654/46,943 = 9.17 2,537,647/739,653 = 3.43              1.26   
+262      stock->ext       58,905/5,652 = 10.42   200,724/188,492 = 1.06              1.03   
+282      ext->stock      129,410/41,924 = 3.09   411,678/410,174 = 1.00              1.02   771,000/757,895 = 1.02
+282      ext->ext        529,898/66,831 = 7.93 2,377,305/898,719 = 2.65              1.32   
+282      stock->ext      129,410/43,002 = 3.01   525,307/514,215 = 1.02              1.06   
+284      ext->stock      150,435/7,957 = 18.91   141,121/119,319 = 1.18              1.08   238,422/221,423 = 1.08
+284      ext->ext       849,416/43,250 = 19.64 4,369,464/579,161 = 7.54              1.26   
+284      stock->ext      150,435/8,479 = 17.74   158,488/126,589 = 1.25              1.08   
 
 By category, predictive offsets only, |z| >= 4 (category = the external series' category; for ext->ext, A's):
 category             ext->stock real/chance       ext->ext real/chance     stock->ext real/chance
-astronomical             1,533/1,515 = 1.01      111,960/1,678 = 66.74         1,480/1,463 = 1.01
-attention              76,710/74,301 = 1.03      379,108/87,881 = 4.31       79,650/73,106 = 1.09
-climate_index            5,261/4,154 = 1.27      121,951/8,847 = 13.78         5,405/4,354 = 1.24
-commodity              12,255/11,864 = 1.03        13,225/8,560 = 1.54       17,907/10,543 = 1.70
-credit                 14,049/13,325 = 1.05        18,557/8,004 = 2.32       13,575/11,747 = 1.16
-crypto                 13,695/12,555 = 1.09       26,003/10,362 = 2.51        10,680/9,651 = 1.11
-energy                 10,498/10,012 = 1.05        74,500/9,074 = 8.21       18,892/15,361 = 1.23
-fx                     28,528/27,974 = 1.02       31,858/23,541 = 1.35       42,158/26,311 = 1.60
-geophysical              1,946/2,070 = 0.94         9,326/3,376 = 2.76         2,451/2,248 = 1.09
-health                   7,167/8,857 = 0.81        31,174/4,726 = 6.60         4,498/4,392 = 1.02
-macro                  19,041/18,414 = 1.03     390,664/150,875 = 2.59       34,863/33,333 = 1.05
-migration              28,088/27,684 = 1.01     519,713/173,727 = 2.99       40,996/40,641 = 1.01
-news                   39,054/42,524 = 0.92     473,423/46,325 = 10.22       36,722/36,065 = 1.02
-other                    3,066/3,192 = 0.96        31,459/4,025 = 7.82         3,880/3,603 = 1.08
-politics             108,395/106,428 = 1.02   1,140,185/923,067 = 1.24     160,577/159,531 = 1.01
-population               2,850/1,792 = 1.59      115,939/12,041 = 9.63         2,713/1,670 = 1.62
-prosperity           217,200/206,497 = 1.05 9,113,795/1,712,120 = 5.32     364,829/365,024 = 1.00
-rates                  43,950/40,328 = 1.09       70,795/29,657 = 2.39       35,692/27,441 = 1.30
-space_weather            2,559/2,468 = 1.04        27,290/4,251 = 6.42         3,746/3,830 = 0.98
-volatility             12,347/11,597 = 1.06         7,520/5,055 = 1.49         4,429/2,986 = 1.48
-weather              122,053/118,567 = 1.03   1,330,890/168,244 = 7.91     120,707/115,299 = 1.05
-world_equity         111,097/101,164 = 1.10       98,589/52,007 = 1.90       54,580/48,339 = 1.13
-noise_test           107,918/103,938 = 1.04     668,753/511,078 = 1.31     123,189/117,277 = 1.05
-annual               159,949/160,385 = 1.00 5,200,280/1,957,729 = 2.66     323,987/309,179 = 1.05
-synthetic                8,553/7,565 = 1.13       42,930/35,219 = 1.22         8,572/7,943 = 1.08
+astronomical             1,533/1,515 = 1.01      112,669/1,686 = 66.83         1,480/1,463 = 1.01
+attention              77,973/75,416 = 1.03      413,541/89,391 = 4.63       80,717/74,084 = 1.09
+climate_index            5,261/4,154 = 1.27      121,990/8,848 = 13.79         5,405/4,354 = 1.24
+commodity              12,255/11,864 = 1.03        13,251/8,571 = 1.55       17,907/10,543 = 1.70
+credit                 14,049/13,325 = 1.05        18,595/8,020 = 2.32       13,575/11,747 = 1.16
+crypto                 13,695/12,555 = 1.09       25,993/10,372 = 2.51        10,680/9,651 = 1.11
+energy                 10,498/10,012 = 1.05        75,256/9,098 = 8.27       18,892/15,361 = 1.23
+fx                     28,528/27,974 = 1.02       31,916/23,580 = 1.35       42,158/26,311 = 1.60
+geophysical              1,946/2,070 = 0.94         9,333/3,381 = 2.76         2,451/2,248 = 1.09
+health                   7,167/8,857 = 0.81        31,563/4,744 = 6.65         4,498/4,392 = 1.02
+macro                  19,041/18,414 = 1.03     390,782/150,877 = 2.59       34,863/33,333 = 1.05
+migration              28,088/27,684 = 1.01     520,089/173,751 = 2.99       40,996/40,641 = 1.01
+news                   39,054/42,524 = 0.92     480,731/46,355 = 10.37       36,722/36,065 = 1.02
+other                    3,066/3,192 = 0.96        31,999/4,017 = 7.97         3,880/3,603 = 1.08
+politics             108,395/106,428 = 1.02   1,141,576/923,230 = 1.24     160,577/159,531 = 1.01
+population               2,850/1,792 = 1.59      116,167/12,040 = 9.65         2,713/1,670 = 1.62
+prosperity           217,200/206,497 = 1.05 9,115,616/1,712,451 = 5.32     364,829/365,024 = 1.00
+rates                  43,950/40,328 = 1.09       71,051/29,680 = 2.39       35,692/27,441 = 1.30
+space_weather            2,559/2,468 = 1.04        27,269/4,244 = 6.42         3,746/3,830 = 0.98
+volatility             12,347/11,597 = 1.06         7,579/5,069 = 1.50         4,429/2,986 = 1.48
+weather              122,053/118,567 = 1.03   1,331,910/168,320 = 7.91     120,707/115,299 = 1.05
+world_equity         111,097/101,164 = 1.10       98,718/52,107 = 1.89       54,580/48,339 = 1.13
+noise_test           107,918/103,938 = 1.04     669,270/511,491 = 1.31     123,189/117,277 = 1.05
+annual               159,949/160,385 = 1.00 5,212,262/1,960,908 = 2.66     323,987/309,179 = 1.05
+synthetic                8,553/7,565 = 1.13       42,951/35,247 = 1.22         8,572/7,943 = 1.08
 
 By category, same day (offset 0), |z| >= 4:
-astronomical                   41/39 = 1.04           3,110/55 = 56.89               41/58 = 0.71
-attention                4,748/4,265 = 1.11      128,613/8,873 = 14.49         4,748/4,279 = 1.11
-climate_index                181/132 = 1.37          7,531/394 = 19.10             181/128 = 1.42
-commodity              34,468/1,932 = 17.84         28,027/628 = 44.65       34,468/2,017 = 17.09
-credit                  14,105/3,692 = 3.82       16,230/1,003 = 16.18        14,105/3,769 = 3.74
-crypto                     1,408/760 = 1.85       33,484/1,085 = 30.87           1,408/709 = 1.99
-energy                 24,438/1,540 = 15.87         18,261/644 = 28.36       24,438/1,503 = 16.26
-fx                      42,222/6,788 = 6.22       77,170/2,133 = 36.18        42,222/7,339 = 5.75
+astronomical                   41/39 = 1.04           3,125/56 = 55.80               41/58 = 0.71
+attention                4,877/4,380 = 1.11      135,460/9,158 = 14.79         4,877/4,398 = 1.11
+climate_index                181/132 = 1.37          7,538/393 = 19.18             181/128 = 1.42
+commodity              34,468/1,932 = 17.84         28,032/629 = 44.59       34,468/2,017 = 17.09
+credit                  14,105/3,692 = 3.82       16,226/1,006 = 16.12        14,105/3,769 = 3.74
+crypto                     1,408/760 = 1.85       33,484/1,087 = 30.79           1,408/709 = 1.99
+energy                 24,438/1,540 = 15.87         18,291/645 = 28.36       24,438/1,503 = 16.26
+fx                      42,222/6,788 = 6.22       77,184/2,140 = 36.07        42,222/7,339 = 5.75
 geophysical                    45/48 = 0.93              803/90 = 8.89               45/56 = 0.80
-health                   1,029/1,110 = 0.93           1,508/339 = 4.44         1,029/1,106 = 0.93
-macro                        606/572 = 1.06        15,070/4,091 = 3.68             606/589 = 1.03
-migration                1,026/1,009 = 1.02       28,920/10,883 = 2.66           1,026/940 = 1.09
-news                     3,133/3,430 = 0.91       30,183/2,156 = 14.00         3,133/3,687 = 0.85
-other                        300/295 = 1.02          1,851/130 = 14.28             300/244 = 1.23
-politics                 3,418/3,223 = 1.06       98,547/54,942 = 1.79         3,418/3,349 = 1.02
-population                     94/50 = 1.88           5,732/695 = 8.25               94/44 = 2.15
-prosperity               8,639/7,133 = 1.21   1,029,721/135,619 = 7.59         8,639/7,183 = 1.20
-rates                 100,182/4,597 = 21.79       67,663/2,146 = 31.52      100,182/4,362 = 22.97
-space_weather                  32/41 = 0.77          1,955/129 = 15.19               32/40 = 0.79
-volatility               2,569/1,161 = 2.21         17,815/637 = 27.95         2,569/1,199 = 2.14
-weather                  3,699/3,590 = 1.03     793,643/11,450 = 69.31         3,699/3,635 = 1.02
-world_equity          122,639/15,173 = 8.08      208,243/7,017 = 29.68      122,639/15,817 = 7.75
-noise_test               3,479/3,244 = 1.07       18,726/16,360 = 1.14         3,479/3,270 = 1.06
-annual                   5,665/5,657 = 1.00     927,022/638,056 = 1.45         5,665/5,250 = 1.08
-synthetic                    339/225 = 1.50         1,130/1,100 = 1.03             339/229 = 1.48
+health                   1,029/1,110 = 0.93           1,516/344 = 4.40         1,029/1,106 = 0.93
+macro                        606/572 = 1.06        15,088/4,094 = 3.69             606/589 = 1.03
+migration                1,026/1,009 = 1.02       28,974/10,887 = 2.66           1,026/940 = 1.09
+news                     3,133/3,430 = 0.91       30,603/2,157 = 14.19         3,133/3,687 = 0.85
+other                        300/295 = 1.02          1,908/131 = 14.60             300/244 = 1.23
+politics                 3,418/3,223 = 1.06       98,642/54,960 = 1.79         3,418/3,349 = 1.02
+population                     94/50 = 1.88           5,757/696 = 8.27               94/44 = 2.15
+prosperity               8,639/7,133 = 1.21   1,029,934/135,662 = 7.59         8,639/7,183 = 1.20
+rates                 100,182/4,597 = 21.79       67,701/2,146 = 31.55      100,182/4,362 = 22.97
+space_weather                  32/41 = 0.77          1,955/129 = 15.16               32/40 = 0.79
+volatility               2,569/1,161 = 2.21         17,852/636 = 28.08         2,569/1,199 = 2.14
+weather                  3,699/3,590 = 1.03     793,709/11,452 = 69.31         3,699/3,635 = 1.02
+world_equity          122,639/15,173 = 8.08      208,272/7,023 = 29.66      122,639/15,817 = 7.75
+noise_test               3,479/3,244 = 1.07       18,762/16,381 = 1.15         3,479/3,270 = 1.06
+annual                   5,665/5,657 = 1.00     927,334/638,102 = 1.45         5,665/5,250 = 1.08
+synthetic                    339/225 = 1.50         1,136/1,102 = 1.03             339/229 = 1.48
 
 By move-length pair (A/B), predictive offsets, |z| >= 4: real/chance = ratio [noise externals' ratio]
 moves                          ext->stock                         ext->ext                       stock->ext
-1/1           86,451/78,442 = 1.10 [1.02]  2,288,703/830,668 = 2.76 [1.37]     105,320/74,853 = 1.41 [1.04]
-1/3           36,175/35,716 = 1.01 [0.99]    597,009/246,065 = 2.43 [1.03]      31,714/27,139 = 1.17 [1.05]
-1/5           39,133/38,112 = 1.03 [0.98]    346,094/150,870 = 2.29 [1.08]      23,721/22,232 = 1.07 [1.01]
-1/10          48,948/48,066 = 1.02 [1.03]      76,070/45,874 = 1.66 [1.26]      19,263/18,781 = 1.03 [1.00]
-1/21          21,454/22,999 = 0.93 [0.98]    292,242/24,119 = 12.12 [2.19]      19,189/17,817 = 1.08 [1.05]
-1/63            1,041/1,211 = 0.86 [1.21]       10,021/1,277 = 7.85 [0.97]        1,441/1,432 = 1.01 [1.10]
-3/1           72,970/71,810 = 1.02 [1.02]  1,552,463/659,558 = 2.35 [1.08]    115,683/108,505 = 1.07 [0.99]
-3/3           27,018/27,406 = 0.99 [1.08]    872,453/196,289 = 4.44 [1.18]      33,567/27,139 = 1.24 [0.97]
-3/5           23,208/21,258 = 1.09 [1.08]    581,514/117,612 = 4.94 [1.13]      22,877/21,314 = 1.07 [1.05]
-3/10          21,242/20,616 = 1.03 [0.98]     200,849/35,957 = 5.59 [1.13]      17,215/16,835 = 1.02 [1.02]
-3/21          15,492/16,672 = 0.93 [0.99]    292,691/21,811 = 13.42 [1.72]      17,826/17,517 = 1.02 [1.06]
-3/63              818/1,056 = 0.77 [1.05]       10,873/2,324 = 4.68 [1.00]        1,256/1,289 = 0.97 [1.15]
-5/1           72,076/70,532 = 1.02 [0.99]  1,117,228/446,941 = 2.50 [1.09]    144,576/147,158 = 0.98 [1.04]
-5/3           26,528/27,092 = 0.98 [1.05]    705,503/131,574 = 5.36 [1.16]      29,160/27,383 = 1.06 [1.06]
-5/5           23,641/20,165 = 1.17 [1.03]     786,452/89,119 = 8.82 [1.22]      24,667/20,841 = 1.18 [1.09]
-5/10          17,857/16,816 = 1.06 [1.05]    400,634/31,262 = 12.82 [1.15]      18,394/16,533 = 1.11 [1.09]
-5/21          15,638/16,950 = 0.92 [1.06]    269,529/22,425 = 12.02 [1.11]      17,914/16,444 = 1.09 [1.03]
-5/63              791/1,156 = 0.68 [1.00]       10,266/1,154 = 8.90 [1.05]        1,202/1,328 = 0.91 [1.06]
-10/1          70,679/68,835 = 1.03 [1.01]    286,588/137,604 = 2.08 [1.11]    184,364/180,246 = 1.02 [1.03]
-10/3          25,811/24,753 = 1.04 [1.03]     312,165/41,562 = 7.51 [1.16]      29,906/28,709 = 1.04 [1.06]
-10/5          21,405/19,244 = 1.11 [1.12]    455,928/35,079 = 13.00 [1.20]      22,692/21,444 = 1.06 [1.11]
-10/10         19,940/15,412 = 1.29 [1.08]    568,755/20,742 = 27.42 [1.37]      19,350/16,767 = 1.15 [1.14]
-10/21         17,091/16,524 = 1.03 [1.09]    213,985/19,279 = 11.10 [1.14]      16,849/16,031 = 1.05 [1.08]
-10/63             966/1,209 = 0.80 [1.22]      13,829/1,199 = 11.53 [0.93]        1,214/1,153 = 1.05 [0.97]
-21/1          70,125/68,894 = 1.02 [0.98]    785,644/53,884 = 14.58 [2.96]      51,465/58,036 = 0.89 [1.01]
-21/3          28,894/27,561 = 1.05 [1.02]    292,379/17,726 = 16.49 [2.91]      17,723/18,871 = 0.94 [1.05]
-21/5          22,327/20,162 = 1.11 [1.02]    286,478/17,099 = 16.75 [2.62]      16,502/17,829 = 0.93 [1.07]
-21/10         17,780/15,894 = 1.12 [1.16]    232,554/16,168 = 14.38 [1.99]      17,275/16,672 = 1.04 [1.12]
-21/21         17,162/14,809 = 1.16 [1.22]     139,472/14,461 = 9.64 [1.40]      16,956/15,172 = 1.12 [1.23]
-21/63           1,129/1,034 = 1.09 [1.30]         9,661/959 = 10.07 [1.30]        1,286/1,197 = 1.07 [1.30]
-63/1            6,834/6,955 = 0.98 [1.02]       37,858/7,912 = 4.78 [1.11]        8,531/9,285 = 0.92 [0.99]
-63/3            2,604/2,401 = 1.08 [1.06]       14,566/2,278 = 6.39 [1.07]        2,619/2,882 = 0.91 [1.00]
-63/5            2,268/2,315 = 0.98 [1.05]       17,583/2,142 = 8.21 [1.13]        2,245/2,447 = 0.92 [1.04]
-63/10           2,033/2,095 = 0.97 [1.22]      19,570/1,888 = 10.36 [1.17]        2,050/2,215 = 0.93 [1.29]
-63/21           2,292/2,106 = 1.09 [1.29]      21,262/1,663 = 12.79 [1.31]        2,602/2,393 = 1.09 [1.33]
-63/63           1,521/1,001 = 1.52 [2.44]        19,053/898 = 21.23 [1.90]        1,816/1,048 = 1.73 [2.54]
+1/1           86,482/78,501 = 1.10 [1.02]  2,305,892/830,694 = 2.78 [1.37]     105,410/74,869 = 1.41 [1.04]
+1/3           36,173/35,746 = 1.01 [0.99]    599,566/246,034 = 2.44 [1.03]      31,747/27,136 = 1.17 [1.05]
+1/5           39,128/38,108 = 1.03 [0.98]    346,541/150,999 = 2.29 [1.08]      23,793/22,292 = 1.07 [1.01]
+1/10          48,918/48,061 = 1.02 [1.03]      76,208/45,904 = 1.66 [1.26]      19,294/18,799 = 1.03 [1.00]
+1/21          21,492/23,025 = 0.93 [0.98]    292,402/24,174 = 12.10 [2.19]      19,206/17,848 = 1.08 [1.05]
+1/63            1,025/1,212 = 0.85 [1.21]       10,038/1,294 = 7.76 [0.97]        1,445/1,437 = 1.01 [1.10]
+3/1           73,029/71,906 = 1.02 [1.02]  1,559,176/659,580 = 2.36 [1.08]    115,679/108,504 = 1.07 [0.99]
+3/3           27,026/27,435 = 0.99 [1.08]    875,565/196,362 = 4.46 [1.18]      33,652/27,166 = 1.24 [0.97]
+3/5           23,238/21,280 = 1.09 [1.08]    582,471/117,686 = 4.95 [1.13]      22,900/21,367 = 1.07 [1.05]
+3/10          21,281/20,639 = 1.03 [0.98]     201,370/35,997 = 5.59 [1.13]      17,233/16,861 = 1.02 [1.02]
+3/21          15,547/16,706 = 0.93 [0.99]    292,888/21,893 = 13.38 [1.72]      17,876/17,540 = 1.02 [1.06]
+3/63              815/1,061 = 0.77 [1.05]       10,910/2,338 = 4.67 [1.00]        1,259/1,293 = 0.97 [1.15]
+5/1           72,213/70,618 = 1.02 [0.99]  1,119,140/447,420 = 2.50 [1.09]    144,638/147,293 = 0.98 [1.04]
+5/3           26,571/27,144 = 0.98 [1.05]    707,111/131,648 = 5.37 [1.16]      29,180/27,418 = 1.06 [1.06]
+5/5           23,699/20,194 = 1.17 [1.03]     787,926/89,215 = 8.83 [1.22]      24,689/20,874 = 1.18 [1.09]
+5/10          17,887/16,829 = 1.06 [1.05]    401,477/31,334 = 12.81 [1.15]      18,406/16,559 = 1.11 [1.09]
+5/21          15,683/16,965 = 0.92 [1.06]    269,793/22,523 = 11.98 [1.12]      17,991/16,484 = 1.09 [1.03]
+5/63              796/1,159 = 0.69 [1.00]       10,363/1,160 = 8.94 [1.05]        1,208/1,329 = 0.91 [1.06]
+10/1          70,822/68,960 = 1.03 [1.01]    287,155/137,804 = 2.08 [1.11]    184,407/180,294 = 1.02 [1.03]
+10/3          25,875/24,806 = 1.04 [1.03]     313,056/41,639 = 7.52 [1.16]      29,932/28,748 = 1.04 [1.06]
+10/5          21,455/19,272 = 1.11 [1.12]    457,085/35,138 = 13.01 [1.19]      22,721/21,461 = 1.06 [1.11]
+10/10         19,968/15,444 = 1.29 [1.08]    571,459/20,794 = 27.48 [1.37]      19,358/16,781 = 1.15 [1.14]
+10/21         17,111/16,564 = 1.03 [1.09]    214,285/19,389 = 11.05 [1.14]      16,871/16,080 = 1.05 [1.08]
+10/63             973/1,212 = 0.80 [1.22]      14,120/1,219 = 11.58 [0.93]        1,223/1,161 = 1.05 [0.97]
+21/1          70,313/69,035 = 1.02 [0.98]    785,893/54,055 = 14.54 [2.96]      51,510/58,052 = 0.89 [1.01]
+21/3          28,941/27,595 = 1.05 [1.02]    292,738/17,832 = 16.42 [2.91]      17,750/18,899 = 0.94 [1.05]
+21/5          22,378/20,195 = 1.11 [1.02]    286,687/17,166 = 16.70 [2.62]      16,551/17,873 = 0.93 [1.07]
+21/10         17,819/15,923 = 1.12 [1.16]    233,185/16,242 = 14.36 [1.99]      17,349/16,729 = 1.04 [1.12]
+21/21         17,204/14,845 = 1.16 [1.22]     140,348/14,507 = 9.67 [1.39]      16,983/15,200 = 1.12 [1.23]
+21/63           1,133/1,036 = 1.09 [1.30]        10,139/968 = 10.47 [1.30]        1,290/1,208 = 1.07 [1.30]
+63/1            6,867/6,982 = 0.98 [1.02]       37,866/7,906 = 4.79 [1.11]        8,595/9,334 = 0.92 [0.99]
+63/3            2,609/2,406 = 1.08 [1.06]       14,623/2,286 = 6.40 [1.06]        2,626/2,893 = 0.91 [1.00]
+63/5            2,269/2,321 = 0.98 [1.05]       17,829/2,162 = 8.25 [1.13]        2,252/2,458 = 0.92 [1.04]
+63/10           2,043/2,104 = 0.97 [1.22]      20,027/1,897 = 10.56 [1.16]        2,058/2,224 = 0.93 [1.29]
+63/21           2,298/2,108 = 1.09 [1.29]      21,934/1,671 = 13.13 [1.32]        2,602/2,400 = 1.08 [1.33]
+63/63           1,524/1,002 = 1.52 [2.44]        20,328/901 = 22.57 [1.90]        1,813/1,051 = 1.73 [2.54]
 
 == False-discovery rule (q = 0.05) vs its placebo ==
 Run exactly as the census does, on each block matrix (one period, move-length pair, offset and direction;
 pairs = the block's pair count). The placebo runs the same rule with null copy 2 standing in for the real
 matrix: how often it fires with nothing there.
 direction    offset       matrices     rule fired  placebo fired  entries passing  placebo entries
-ext->stock   same day          136     84 (61.8%)       1 (0.7%)          287,086               10
-ext->stock   predictive       4284      52 (1.2%)      15 (0.4%)            8,654              351
-ext->ext     same day          136    135 (99.3%)       4 (2.9%)        2,441,505              250
-ext->ext     predictive       4284   3575 (83.5%)      68 (1.6%)        6,856,563            5,237
-stock->ext   same day          136     84 (61.8%)       2 (1.5%)          286,386               27
-stock->ext   predictive       4284      89 (2.1%)      20 (0.5%)           29,197              333
+ext->stock   same day          136     84 (61.8%)       1 (0.7%)          285,980               10
+ext->stock   predictive       4284      52 (1.2%)      15 (0.4%)            8,645              352
+ext->ext     same day          136    135 (99.3%)       4 (2.9%)        2,444,722              247
+ext->ext     predictive       4284   3584 (83.7%)      67 (1.6%)        6,876,391            5,184
+stock->ext   same day          136     84 (61.8%)       2 (1.5%)          285,721               27
+stock->ext   predictive       4284      89 (2.1%)      20 (0.5%)           29,219              332
 The same rule on the noise externals' blocks alone (the baseline):
 ext->stock   same day          136       0 (0.0%)       0 (0.0%)                0                0
 ext->stock   predictive       4284       0 (0.0%)       0 (0.0%)                0                0
 ext->ext     same day          136       6 (4.4%)       0 (0.0%)              108                0
-ext->ext     predictive       4284     410 (9.6%)      18 (0.4%)           24,199              314
+ext->ext     predictive       4284     411 (9.6%)      18 (0.4%)           24,151              314
 stock->ext   same day          136       0 (0.0%)       0 (0.0%)                0                0
 stock->ext   predictive       4284       0 (0.0%)       2 (0.0%)                0               29
 Census stock->stock, same periods and move lengths, predictive: rule fired in 4, placebo in 4, of 4284 matrices.
 
 Run within each category alone (predictive offsets): matrices where the rule fired / placebo fired, entries passing / placebo entries
 category                             ext->stock                       ext->ext                     stock->ext
-astronomical                 4/3 of 4284, 70/40   3276/26 of 4284, 178,387/699              0/3 of 4284, 0/57
-attention                    4/3 of 4284, 52/39 1369/51 of 4284, 274,278/1,244           11/5 of 4284, 292/83
-climate_index                4/2 of 4284, 61/29   2568/18 of 4284, 126,343/404             4/2 of 4284, 59/25
-commodity                 9/12 of 4284, 165/261       65/27 of 4284, 4,618/795       41/17 of 4284, 9,158/306
-credit                    12/9 of 4284, 340/129      159/28 of 4284, 4,877/654         17/11 of 4284, 964/153
-crypto                      4/7 of 1620, 45/321      279/7 of 1620, 14,874/206           4/7 of 1620, 315/199
-energy                     9/8 of 4284, 207/124    1498/25 of 4284, 62,054/547        43/9 of 4284, 1,339/171
-fx                        9/15 of 4284, 136/192    108/34 of 4284, 6,826/1,233      36/24 of 4284, 20,391/436
-geophysical                   0/2 of 4284, 0/60      167/19 of 4284, 2,875/504             3/1 of 4284, 56/16
-health                      4/9 of 4284, 94/102    1002/34 of 4284, 21,645/936           4/10 of 4284, 79/322
-macro                       8/2 of 4284, 106/32   1971/41 of 4284, 185,845/874            8/2 of 4284, 164/41
-migration                    1/1 of 4284, 10/16   1867/33 of 4284, 306,144/627              0/4 of 4284, 0/67
-news                         1/5 of 4284, 12/64   2655/29 of 4284, 424,060/537            2/7 of 4284, 26/223
-other                       6/5 of 4284, 132/79     893/21 of 4284, 33,605/613            3/5 of 4284, 193/69
-politics                      0/2 of 4284, 0/23     677/36 of 4284, 43,089/900             3/3 of 4284, 41/56
-population                 13/3 of 4284, 146/42   1703/33 of 4284, 132,829/705           10/1 of 4284, 180/10
-prosperity             69/27 of 4284, 4,345/590 3108/109 of 4284, 7,532,353/11,824       65/39 of 4284, 2,812/823
-rates                  22/11 of 4284, 1,611/201   448/37 of 4284, 20,930/1,127        45/8 of 4284, 8,350/185
-space_weather                 2/0 of 4284, 42/0     555/16 of 4284, 33,568/474              0/2 of 4284, 0/25
-volatility               14/16 of 4284, 217/340       87/26 of 4284, 2,818/739        7/12 of 4284, 2,044/246
-weather                      4/5 of 4284, 81/58 2028/39 of 4284, 1,262,378/973           4/8 of 4284, 106/130
-world_equity         38/45 of 4284, 8,298/1,206   243/56 of 4284, 46,552/2,369     25/32 of 4284, 2,773/1,159
-noise_test                     0/0 of 4284, 0/0     410/18 of 4284, 24,199/314              0/2 of 4284, 0/29
-annual                   22/30 of 1044, 485/638 807/77 of 1044, 3,034,800/2,448         35/21 of 1044, 786/639
-synthetic                  11/2 of 4284, 720/27      101/28 of 4284, 1,737/512           10/1 of 4284, 506/12
+astronomical                 4/3 of 4284, 70/40   3283/26 of 4284, 179,496/698              0/3 of 4284, 0/57
+attention                    2/3 of 4284, 30/41 1597/51 of 4284, 308,539/1,189           10/6 of 4284, 259/91
+climate_index                4/2 of 4284, 61/29   2567/18 of 4284, 126,115/403             4/2 of 4284, 59/25
+commodity                 9/12 of 4284, 165/261       65/27 of 4284, 4,617/788       41/17 of 4284, 9,158/306
+credit                    12/9 of 4284, 340/129      161/26 of 4284, 4,859/601         17/11 of 4284, 964/153
+crypto                      4/7 of 1620, 45/321      281/7 of 1620, 14,934/205           4/7 of 1620, 315/199
+energy                     9/8 of 4284, 207/124    1534/25 of 4284, 62,784/547        43/9 of 4284, 1,339/171
+fx                        9/15 of 4284, 136/192    107/34 of 4284, 6,823/1,214      36/24 of 4284, 20,391/436
+geophysical                   0/2 of 4284, 0/60      168/18 of 4284, 2,874/494             3/1 of 4284, 56/16
+health                      4/9 of 4284, 94/102    1020/34 of 4284, 22,231/938           4/10 of 4284, 79/322
+macro                       8/2 of 4284, 106/32   1973/41 of 4284, 185,936/874            8/2 of 4284, 164/41
+migration                    1/1 of 4284, 10/16   1865/32 of 4284, 306,618/616              0/4 of 4284, 0/67
+news                         1/5 of 4284, 12/64   2660/29 of 4284, 435,112/537            2/7 of 4284, 26/223
+other                       6/5 of 4284, 132/79     899/21 of 4284, 34,657/617            3/5 of 4284, 193/69
+politics                      0/2 of 4284, 0/23     679/35 of 4284, 43,165/891             3/3 of 4284, 41/56
+population                 13/3 of 4284, 146/42   1704/33 of 4284, 133,156/706           10/1 of 4284, 180/10
+prosperity             69/27 of 4284, 4,345/590 3109/109 of 4284, 7,528,835/11,739       65/39 of 4284, 2,812/823
+rates                  22/11 of 4284, 1,611/201   451/36 of 4284, 21,031/1,112        45/8 of 4284, 8,350/185
+space_weather                 2/0 of 4284, 42/0     556/17 of 4284, 33,545/494              0/2 of 4284, 0/25
+volatility               14/16 of 4284, 217/340       89/28 of 4284, 2,876/759        7/12 of 4284, 2,044/246
+weather                      4/5 of 4284, 81/58 2035/39 of 4284, 1,263,022/985           4/8 of 4284, 106/130
+world_equity         38/45 of 4284, 8,298/1,206   245/58 of 4284, 46,606/2,376     25/32 of 4284, 2,773/1,159
+noise_test                     0/0 of 4284, 0/0     411/18 of 4284, 24,151/314              0/2 of 4284, 0/29
+annual                   22/30 of 1044, 485/638 806/77 of 1044, 3,036,558/2,450         35/21 of 1044, 786/639
+synthetic                  11/2 of 4284, 720/27      100/28 of 4284, 1,722/512           10/1 of 4284, 506/12
 
 == Out-of-sample: same sign in the next 1260-day period? ==
 Relationships (A, B, move lengths, offset) picked in one period are recomputed exactly in the next. Picked from
@@ -337,104 +337,104 @@ from the real data of the pure-noise externals ('noise'). 'kept' = both series s
 universe; 'rep' = same sign and |z| >= 2 / >= 3 in the next period.
 Picked: every |z| >= 4
 direction    offset      picked       kept   same sign    mean r  rep z>=2 rep z>=3  dropped
-ext->stock   same day    real       85,139       88.9%   +0.1724     63.5%    48.8%    4,187
-ext->stock   same day    null 1     10,038       49.4%   +0.0018      6.0%     2.5%    1,265
-ext->stock   same day    null 2-3    19,127       49.8%   +0.0014      5.0%     1.7%    2,114
+ext->stock   same day    real       85,115       88.9%   +0.1725     63.5%    48.8%    4,191
+ext->stock   same day    null 1     10,002       49.4%   +0.0019      6.0%     2.5%    1,267
+ext->stock   same day    null 2-3    19,073       49.8%   +0.0014      5.0%     1.7%    2,108
 ext->stock   same day    noise       1,470       51.4%   +0.0014      2.1%     0.3%       86
-ext->stock   predictive  real      292,142       50.7%   +0.0017      3.3%     0.5%   37,273
-ext->stock   predictive  null 1    282,517       50.3%   +0.0007      3.0%     0.4%   35,325
-ext->stock   predictive  null 2-3   567,388       50.0%   -0.0001      2.9%     0.3%   70,500
+ext->stock   predictive  real      292,506       50.7%   +0.0017      3.3%     0.5%   37,300
+ext->stock   predictive  null 1    282,874       50.3%   +0.0007      3.0%     0.3%   35,338
+ext->stock   predictive  null 2-3   567,959       50.0%   -0.0001      2.9%     0.3%   70,537
 ext->stock   predictive  noise      46,980       50.0%   +0.0000      2.5%     0.1%    3,549
-ext->ext     same day    real    1,219,762       91.7%   +0.3369     80.0%    71.9%   18,190
-ext->ext     same day    null 1    131,005       50.4%   +0.0066     29.5%    23.7%    1,580
-ext->ext     same day    null 2-3   270,125       50.7%   +0.0129     30.9%    25.1%    2,810
-ext->ext     same day    noise      10,578       50.7%   +0.0015     11.2%     5.0%      244
-ext->ext     predictive  real    2,191,584       63.0%   +0.0637     28.6%    18.5%  256,766
-ext->ext     predictive  null 1    459,145       50.3%   +0.0008      9.6%     3.8%   29,236
-ext->ext     predictive  null 2-3   915,647       50.2%   +0.0008      9.7%     3.9%   57,492
-ext->ext     predictive  noise     188,228       49.6%   -0.0001      6.7%     2.2%    8,939
-ext->ext     within delay real    4,877,751       70.6%   +0.0954     42.3%    30.9%   83,769
-ext->ext     within delay null 1  1,463,554       49.8%   -0.0006     18.9%    10.5%   14,040
-ext->ext     within delay null 2-3 2,944,012       49.8%   -0.0005     18.8%    10.5%   29,382
-ext->ext     within delay noise     201,641       51.6%   +0.0071     16.1%     7.8%    2,979
-stock->ext   same day    real       85,139       88.9%   +0.1724     63.5%    48.8%    4,187
-stock->ext   same day    null 1      9,682       49.9%   +0.0014      4.5%     1.5%    1,105
-stock->ext   same day    null 2-3    19,123       49.4%   +0.0020      4.9%     1.4%    2,239
+ext->ext     same day    real    1,224,220       91.7%   +0.3366     80.0%    71.8%   18,520
+ext->ext     same day    null 1    131,414       50.4%   +0.0066     29.4%    23.6%    1,575
+ext->ext     same day    null 2-3   270,524       50.7%   +0.0128     30.8%    25.0%    2,805
+ext->ext     same day    noise      10,592       50.8%   +0.0016     11.2%     5.1%      244
+ext->ext     predictive  real    2,213,107       63.2%   +0.0643     29.0%    18.9%  261,442
+ext->ext     predictive  null 1    460,030       50.3%   +0.0008      9.6%     3.8%   29,138
+ext->ext     predictive  null 2-3   917,368       50.2%   +0.0008      9.7%     3.9%   57,286
+ext->ext     predictive  noise     188,518       49.6%   -0.0001      6.7%     2.2%    8,939
+ext->ext     within delay real    4,882,302       70.6%   +0.0954     42.3%    30.9%   83,975
+ext->ext     within delay null 1  1,463,855       49.8%   -0.0006     18.9%    10.5%   14,008
+ext->ext     within delay null 2-3 2,944,838       49.8%   -0.0005     18.8%    10.5%   29,334
+ext->ext     within delay noise     201,719       51.6%   +0.0071     16.1%     7.8%    2,979
+stock->ext   same day    real       85,115       88.9%   +0.1725     63.5%    48.8%    4,191
+stock->ext   same day    null 1      9,670       49.9%   +0.0013      4.5%     1.4%    1,107
+stock->ext   same day    null 2-3    19,054       49.5%   +0.0020      4.9%     1.4%    2,234
 stock->ext   same day    noise       1,470       51.4%   +0.0014      2.1%     0.3%       86
-stock->ext   predictive  real      172,295       50.5%   +0.0010      3.1%     0.6%   25,259
-stock->ext   predictive  null 1    166,043       50.2%   +0.0004      2.5%     0.2%   24,958
-stock->ext   predictive  null 2-3   331,707       49.9%   -0.0002      2.5%     0.2%   49,527
+stock->ext   predictive  real      172,452       50.5%   +0.0010      3.1%     0.6%   25,316
+stock->ext   predictive  null 1    166,295       50.2%   +0.0004      2.5%     0.2%   24,976
+stock->ext   predictive  null 2-3   332,226       49.9%   -0.0002      2.5%     0.2%   49,535
 stock->ext   predictive  noise      44,620       49.9%   -0.0005      2.3%     0.2%    3,489
-stock->ext   within delay real      165,897       52.7%   +0.0082      7.3%     3.5%   14,174
-stock->ext   within delay null 1    152,846       50.3%   +0.0011      3.3%     0.5%   12,832
-stock->ext   within delay null 2-3   306,944       50.2%   +0.0002      3.2%     0.4%   26,039
+stock->ext   within delay real      165,769       52.7%   +0.0082      7.3%     3.5%   14,165
+stock->ext   within delay null 1    152,668       50.3%   +0.0011      3.3%     0.5%   12,827
+stock->ext   within delay null 2-3   306,780       50.1%   +0.0002      3.2%     0.4%   26,029
 stock->ext   within delay noise       6,776       50.0%   +0.0000      2.6%     0.2%      477
 
 Picked: the top 1,000 by |z| per period, direction and offset class
 direction    offset      picked       kept   same sign    mean r  rep z>=2 rep z>=3  dropped
 ext->stock   same day    real        2,779       99.1%   +0.3499     91.5%    85.9%      221
-ext->stock   same day    null 1      2,723       48.3%   +0.0008      5.6%     2.5%      277
-ext->stock   same day    null 2-3     5,571       50.8%   +0.0037      5.6%     1.9%      429
+ext->stock   same day    null 1      2,719       48.0%   +0.0003      5.7%     2.5%      281
+ext->stock   same day    null 2-3     5,566       50.8%   +0.0031      5.6%     1.9%      434
 ext->stock   same day    noise       2,794       50.6%   -0.0000      2.0%     0.2%      134
-ext->stock   predictive  real        2,753       51.4%   +0.0016      6.4%     2.0%      247
-ext->stock   predictive  null 1      2,732       49.3%   +0.0002      5.3%     1.6%      268
-ext->stock   predictive  null 2-3     5,486       49.8%   -0.0004      4.5%     1.1%      514
+ext->stock   predictive  real        2,754       51.2%   +0.0011      6.4%     2.0%      246
+ext->stock   predictive  null 1      2,732       49.4%   +0.0003      5.3%     1.6%      268
+ext->stock   predictive  null 2-3     5,478       49.8%   -0.0004      4.5%     1.1%      522
 ext->stock   predictive  noise       2,833       49.0%   -0.0010      2.8%     0.2%      167
 ext->ext     same day    real        2,990       99.9%   +0.8567     99.9%    99.8%       10
 ext->ext     same day    null 1      2,992       50.6%   +0.0337     41.1%    37.1%        8
-ext->ext     same day    null 2-3     5,994       52.9%   +0.0658     46.5%    43.5%        6
-ext->ext     same day    noise       2,946       53.0%   +0.0088     20.2%    10.5%       54
-ext->ext     predictive  real        2,887       98.1%   +0.6066     96.0%    95.9%      113
-ext->ext     predictive  null 1      2,925       50.2%   +0.0019     19.1%    10.8%       75
-ext->ext     predictive  null 2-3     5,857       51.5%   +0.0032     18.0%     9.5%      143
-ext->ext     predictive  noise       2,871       49.2%   +0.0002     14.0%     6.9%      129
-ext->ext     within delay real        2,967       99.7%   +0.6355     99.7%    99.7%       33
+ext->ext     same day    null 2-3     5,994       52.9%   +0.0657     46.4%    43.4%        6
+ext->ext     same day    noise       2,946       53.0%   +0.0090     20.2%    10.6%       54
+ext->ext     predictive  real        2,871       97.3%   +0.6011     95.3%    95.2%      129
+ext->ext     predictive  null 1      2,928       50.4%   +0.0025     19.3%    11.0%       72
+ext->ext     predictive  null 2-3     5,863       51.4%   +0.0032     18.0%     9.5%      137
+ext->ext     predictive  noise       2,869       49.3%   +0.0006     14.1%     6.9%      131
+ext->ext     within delay real        2,965       99.6%   +0.6343     99.6%    99.6%       35
 ext->ext     within delay null 1      2,992       53.2%   +0.0068     32.6%    24.5%        8
-ext->ext     within delay null 2-3     5,974       50.8%   +0.0055     28.5%    20.1%       26
+ext->ext     within delay null 2-3     5,974       50.8%   +0.0054     28.4%    20.1%       26
 ext->ext     within delay noise       2,994       53.9%   +0.0069     24.5%    14.6%        6
 stock->ext   same day    real        2,779       99.1%   +0.3499     91.5%    85.9%      221
-stock->ext   same day    null 1      2,786       48.7%   -0.0030      3.8%     1.5%      214
-stock->ext   same day    null 2-3     5,504       49.5%   +0.0024      4.9%     1.5%      496
+stock->ext   same day    null 1      2,783       48.7%   -0.0034      3.7%     1.5%      217
+stock->ext   same day    null 2-3     5,505       49.5%   +0.0022      5.0%     1.5%      495
 stock->ext   same day    noise       2,794       50.6%   -0.0000      2.0%     0.2%      134
-stock->ext   predictive  real        2,700       58.6%   +0.0213     17.9%    11.3%      300
-stock->ext   predictive  null 1      2,604       50.8%   +0.0018      3.2%     0.2%      396
-stock->ext   predictive  null 2-3     5,285       49.7%   -0.0012      2.4%     0.3%      715
+stock->ext   predictive  real        2,700       58.6%   +0.0213     17.9%    11.4%      300
+stock->ext   predictive  null 1      2,600       50.9%   +0.0016      3.2%     0.2%      400
+stock->ext   predictive  null 2-3     5,275       49.8%   -0.0010      2.5%     0.3%      725
 stock->ext   predictive  noise       2,838       50.2%   -0.0001      2.5%     0.3%      162
 stock->ext   within delay real        2,777       83.3%   +0.1411     63.4%    57.2%      223
-stock->ext   within delay null 1      2,869       49.7%   +0.0047      4.8%     1.0%      131
-stock->ext   within delay null 2-3     5,687       49.8%   +0.0007      4.5%     0.8%      313
+stock->ext   within delay null 1      2,869       49.8%   +0.0047      4.8%     1.0%      131
+stock->ext   within delay null 2-3     5,687       49.8%   +0.0006      4.5%     0.8%      313
 stock->ext   within delay noise       2,841       49.0%   -0.0015      2.1%     0.1%      159
 
 Per period transition, predictive, every |z| >= 4: real same sign (n) vs null 1 (n) vs noise externals (n)
-  222->242:  ext->stock 50.3% (30,279) vs 49.3% (28,711) vs 50.4% (4,656)  ext->ext 55.6% (639,299) vs 50.4% (135,436) vs 49.9% (61,190)  stock->ext 49.6% (19,449) vs 49.8% (18,297) vs 50.9% (4,762)
-  242->262:  ext->stock 50.4% (109,708) vs 50.7% (105,315) vs 50.2% (18,348)  ext->ext 62.7% (820,872) vs 49.5% (154,153) vs 48.7% (64,832)  stock->ext 50.7% (65,035) vs 50.4% (63,030) vs 50.1% (17,293)
-  262->282:  ext->stock 51.0% (152,155) vs 50.1% (148,491) vs 49.7% (23,976)  ext->ext 69.8% (731,413) vs 50.8% (169,556) vs 50.2% (62,206)  stock->ext 50.6% (87,811) vs 50.1% (84,716) vs 49.6% (22,565)
+  222->242:  ext->stock 50.3% (30,386) vs 49.3% (28,804) vs 50.4% (4,656)  ext->ext 55.8% (643,430) vs 50.4% (136,192) vs 49.9% (61,371)  stock->ext 49.7% (19,587) vs 49.8% (18,417) vs 50.9% (4,762)
+  242->262:  ext->stock 50.4% (110,216) vs 50.7% (105,852) vs 50.2% (18,348)  ext->ext 63.1% (836,534) vs 49.5% (155,437) vs 48.7% (65,070)  stock->ext 50.7% (65,453) vs 50.4% (63,481) vs 50.1% (17,293)
+  262->282:  ext->stock 51.0% (151,904) vs 50.2% (148,218) vs 49.7% (23,976)  ext->ext 69.8% (733,143) vs 50.8% (168,401) vs 50.2% (62,077)  stock->ext 50.6% (87,412) vs 50.1% (84,397) vs 49.6% (22,565)
 
 By category, predictive, every |z| >= 4, all transitions: real vs null 1-3 same-sign share
 category                           ext->stock                     ext->ext                   stock->ext
-astronomical     52.8% (468) vs 50.2% (1,807) 69.7% (48,250) vs 51.1% (2,788) 58.9% (423) vs 49.0% (1,887)
-attention        50.4% (22,026) vs 49.9% (65,309) 67.1% (59,181) vs 50.0% (91,009) 50.8% (21,760) vs 49.7% (61,362)
-climate_index    54.9% (2,501) vs 50.3% (5,469) 56.8% (53,105) vs 50.3% (7,773) 52.8% (2,126) vs 49.7% (5,180)
-commodity        49.5% (2,940) vs 49.8% (8,442) 53.6% (2,627) vs 49.3% (6,955) 49.4% (2,796) vs 49.8% (8,129)
-credit           52.2% (1,915) vs 50.4% (5,122) 58.7% (4,873) vs 50.9% (5,039) 50.8% (1,803) vs 49.7% (5,162)
-crypto           51.3% (1,189) vs 50.5% (2,839) 91.0% (4,500) vs 51.7% (2,288) 50.6% (724) vs 50.4% (2,033)
-energy           50.4% (2,536) vs 50.3% (7,682) 67.1% (13,552) vs 50.0% (8,423) 51.6% (2,884) vs 50.6% (8,824)
-fx               50.1% (6,712) vs 50.9% (19,930) 51.0% (7,680) vs 50.3% (19,458) 51.7% (6,155) vs 49.3% (18,449)
-geophysical      52.5% (969) vs 50.1% (2,959) 51.8% (4,244) vs 50.7% (3,961) 51.8% (941) vs 48.9% (2,812)
-health           54.6% (907) vs 49.0% (2,790) 83.1% (9,241) vs 50.1% (3,631) 52.5% (785) vs 50.2% (2,514)
-macro            50.8% (7,573) vs 50.1% (22,109) 59.9% (35,750) vs 50.1% (46,467) 50.9% (4,471) vs 49.3% (13,840)
-migration        50.5% (12,144) vs 49.9% (36,319) 58.0% (64,423) vs 50.2% (58,502) 48.8% (970) vs 51.8% (2,932)
-news             50.6% (13,956) vs 50.1% (39,444) 61.9% (145,202) vs 49.8% (47,694) 49.5% (13,239) vs 50.1% (38,124)
-other            49.1% (802) vs 51.4% (2,209) 57.6% (6,192) vs 48.4% (2,112) 45.9% (640) vs 50.6% (1,895)
-politics         49.6% (48,263) vs 50.0% (142,365) 51.8% (194,602) vs 50.0% (377,013) 49.1% (20,170) vs 49.8% (58,266)
-population       53.4% (875) vs 51.5% (2,408) 81.1% (15,192) vs 51.2% (5,758)   45.8% (264) vs 48.0% (744)
-prosperity       51.0% (87,060) vs 50.0% (263,266) 64.7% (1,136,681) vs 50.4% (615,514) 50.8% (18,498) vs 50.1% (53,219)
-rates            50.1% (9,925) vs 50.2% (25,857) 53.8% (15,743) vs 50.6% (26,115) 56.0% (9,274) vs 50.8% (24,857)
-space_weather    46.7% (1,217) vs 49.3% (3,369) 49.7% (8,086) vs 49.0% (4,681) 49.4% (1,148) vs 49.5% (3,397)
-volatility       49.9% (1,741) vs 50.1% (4,840) 51.5% (1,342) vs 48.5% (3,741) 47.9% (957) vs 49.5% (2,916)
-weather          51.1% (49,520) vs 50.4% (141,556) 61.1% (452,216) vs 50.0% (219,904) 49.9% (50,088) vs 50.1% (146,355)
-world_equity     51.4% (16,903) vs 50.0% (43,814) 59.4% (17,168) vs 50.5% (37,475) 50.8% (12,179) vs 50.0% (34,853)
-noise_test       50.0% (46,980) vs 50.0% (136,821) 49.3% (79,962) vs 50.1% (174,834) 49.9% (44,620) vs 50.3% (128,623)
+astronomical     52.8% (468) vs 50.2% (1,807) 69.6% (48,727) vs 51.2% (2,793) 58.9% (423) vs 49.0% (1,887)
+attention        50.6% (22,390) vs 50.0% (66,237) 69.8% (72,493) vs 50.0% (92,552) 50.6% (21,917) vs 49.8% (62,133)
+climate_index    54.9% (2,501) vs 50.3% (5,469) 56.9% (53,087) vs 50.2% (7,775) 52.8% (2,126) vs 49.7% (5,180)
+commodity        49.5% (2,940) vs 49.8% (8,442) 53.5% (2,635) vs 49.2% (6,985) 49.4% (2,796) vs 49.8% (8,129)
+credit           52.2% (1,915) vs 50.4% (5,122) 58.6% (4,893) vs 50.8% (5,052) 50.8% (1,803) vs 49.7% (5,162)
+crypto           51.3% (1,189) vs 50.5% (2,839) 91.3% (4,519) vs 51.6% (2,281) 50.6% (724) vs 50.4% (2,033)
+energy           50.4% (2,536) vs 50.3% (7,682) 68.0% (14,003) vs 50.1% (8,480) 51.6% (2,884) vs 50.6% (8,824)
+fx               50.1% (6,712) vs 50.9% (19,930) 51.0% (7,708) vs 50.3% (19,561) 51.7% (6,155) vs 49.3% (18,449)
+geophysical      52.5% (969) vs 50.1% (2,959) 51.6% (4,251) vs 50.6% (3,958) 51.8% (941) vs 48.9% (2,812)
+health           54.6% (907) vs 49.0% (2,790) 82.7% (9,458) vs 50.1% (3,662) 52.5% (785) vs 50.2% (2,514)
+macro            50.8% (7,573) vs 50.1% (22,109) 59.9% (35,777) vs 50.1% (46,471) 50.9% (4,471) vs 49.3% (13,840)
+migration        50.5% (12,144) vs 49.9% (36,319) 58.0% (64,536) vs 50.2% (58,542) 48.8% (970) vs 51.8% (2,932)
+news             50.6% (13,956) vs 50.1% (39,444) 63.0% (149,943) vs 49.8% (47,856) 49.5% (13,239) vs 50.1% (38,124)
+other            49.1% (802) vs 51.4% (2,209) 58.7% (6,389) vs 48.1% (2,076) 45.9% (640) vs 50.6% (1,895)
+politics         49.6% (48,263) vs 50.0% (142,365) 51.9% (195,382) vs 50.1% (377,391) 49.1% (20,170) vs 49.8% (58,266)
+population       53.4% (875) vs 51.5% (2,408) 81.1% (15,234) vs 51.2% (5,755)   45.8% (264) vs 48.0% (744)
+prosperity       51.0% (87,060) vs 50.0% (263,266) 64.7% (1,137,360) vs 50.4% (615,907) 50.8% (18,498) vs 50.1% (53,219)
+rates            50.1% (9,925) vs 50.2% (25,857) 54.0% (15,805) vs 50.6% (26,133) 56.0% (9,274) vs 50.8% (24,857)
+space_weather    46.7% (1,217) vs 49.3% (3,369) 49.6% (8,085) vs 49.2% (4,682) 49.4% (1,148) vs 49.5% (3,397)
+volatility       49.9% (1,741) vs 50.1% (4,840) 51.5% (1,339) vs 48.6% (3,742) 47.9% (957) vs 49.5% (2,916)
+weather          51.1% (49,520) vs 50.4% (141,556) 61.0% (452,726) vs 50.0% (220,016) 49.9% (50,088) vs 50.1% (146,355)
+world_equity     51.4% (16,903) vs 50.0% (43,814) 59.5% (17,192) vs 50.4% (37,603) 50.8% (12,179) vs 50.0% (34,853)
+noise_test       50.0% (46,980) vs 50.0% (136,821) 49.3% (80,083) vs 50.1% (175,178) 49.9% (44,620) vs 50.3% (128,623)
 
 == Controls ==
 Oil vs energy stocks, same day (A over 1 day, B over 1 day):
@@ -493,14 +493,14 @@ stock->ext; ext->ext is left out because calendar series relate trivially to eac
   synthetic noise (noise_rw_cal_k0, noise_rw_cal_k1, noise_fat_wd, noise_garch_wd, noise_weekly_diff_k5, noise_weekly_level_k7, noise_month): predictive 11,744 real vs 11,552 chance (1.02), same day 376 vs 328 (1.15); next-period same sign 2503 of 5114 (48.9%) -> PASS (looks like chance)
 
 == Strongest predictive relationships that survive the out-of-sample check ==
-Survive = |z| >= 4 in one period and the same sign with |z| >= 3 in the next. Real: 408,839 relationships; picked from
-the null copies instead, the same test passes 18,964 on average ([18871, 18983, 19038] per copy); picked from the noise externals, 4,250.
-Per million predictive pairs tested: real 55.51, null copies 2.57, noise externals 1.90: the numbers to beat.
+Survive = |z| >= 4 in one period and the same sign with |z| >= 3 in the next. Real: 420,168 relationships; picked from
+the null copies instead, the same test passes 18,994 on average ([18900, 19017, 19065] per copy); picked from the noise externals, 4,247.
+Per million predictive pairs tested: real 56.84, null copies 2.57, noise externals 1.90: the numbers to beat.
 By direction, per million predictive pairs tested (real / null copies, mean / noise externals):
-  ext->stock  1,580 survivors (0.64 per million) / 919.0 (0.37) / 66 (0.12)
-  ext->ext    406,197 survivors (168.99 per million) / 17704.0 (7.37) / 4112 (3.49)
-  stock->ext  1,062 survivors (0.43 per million) / 341.0 (0.14) / 72 (0.14)
-ext->stock survivors led by US-listed ETFs (market data from the price store, not outside information): 88; by all other external series: 1492.
+  ext->stock  1,576 survivors (0.63 per million) / 917.7 (0.37) / 66 (0.12)
+  ext->ext    417,529 survivors (172.70 per million) / 17732.3 (7.33) / 4109 (3.48)
+  stock->ext  1,063 survivors (0.43 per million) / 344.0 (0.14) / 72 (0.14)
+ext->stock survivors led by US-listed ETFs (market data from the price store, not outside information): 88; by all other external series: 1488.
 
 -- ext->stock, external series other than US-listed ETFs (strongest first, best move lengths and offset per pair, at most 10) --
 1. bea_st_pcpi_q_min -> GRMN: A over 1 day(s), B over 1 day(s), offset 2. Found in 262 (r +0.178, z +6.4), next period 282 (r +0.196, z +7.0).
@@ -651,42 +651,42 @@ ext->stock survivors led by US-listed ETFs (market data from the price store, no
      after its bottom quarter (typically 0.04 fraction 0-1 (0 new moon, 1 full moon) (summed)) in 0 of 314 (0.0%), vs 51.0% of all 1255 cases normally.
    rest of history (2005-2025, sharing no day with it): after astro_moon_illum's 1-day move was in its top quarter (typically 0.96 fraction 0-1 (0 new moon, 1 full moon) (summed)), astro_moon_age rose over the 1 day(s) ending 5 day(s) after it in 971 of 971 cases (100.0%),
      after its bottom quarter (typically 0.04 fraction 0-1 (0 new moon, 1 full moon) (summed)) in 0 of 971 (0.0%), vs 51.4% of all 3883 cases normally.
-5. hurdat_atl_ace -> hurdat_atl_hurricanes_active: A over 1 day(s), B over 1 day(s), offset 2. Found in 262 (r +0.623, z +25.9), next period 282 (r +0.610, z +25.1).
+5. gt_debt_d -> gt_layoffs_d: A over 1 day(s), B over 1 day(s), offset 5. Found in 242 (r +0.623, z +25.8), next period 262 (r +0.619, z +25.6).
+   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / +25.8 / +25.6 / +23.4 / -
+   inside 242: after gt_debt_d's 1-day move was in its top quarter (typically +42.1%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 274 of 314 cases (87.3%),
+     after its bottom quarter (typically -32.6%) in 69 of 314 (22.0%), vs 55.5% of all 1255 cases normally.
+   rest of history (2005-2025, sharing no day with it): after gt_debt_d's 1-day move was in its top quarter (typically +33.3%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 731 of 850 cases (86.0%),
+     after its bottom quarter (typically -27.5%) in 207 of 850 (24.4%), vs 54.6% of all 3398 cases normally.
+6. hurdat_atl_ace -> hurdat_atl_hurricanes_active: A over 1 day(s), B over 1 day(s), offset 2. Found in 262 (r +0.623, z +25.9), next period 282 (r +0.610, z +25.1).
    z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): +22.5 / +23.6 / +25.9 / +25.1 / +49.4
    inside 262: after hurdat_atl_ace's 1-day move was in its top quarter (typically 0.69 1e4 kt^2 (summed)), hurdat_atl_hurricanes_active rose over the 1 day(s) ending 2 day(s) after it in 103 of 315 cases (32.7%),
      after its bottom quarter (typically 0.00 1e4 kt^2 (summed)) in 3 of 315 (1.0%), vs 9.1% of all 1258 cases normally.
    rest of history (2005-2025, sharing no day with it): after hurdat_atl_ace's 1-day move was in its top quarter (typically 0.72 1e4 kt^2 (summed)), hurdat_atl_hurricanes_active rose over the 1 day(s) ending 2 day(s) after it in 458 of 973 cases (47.1%),
      after its bottom quarter (typically 0.00 1e4 kt^2 (summed)) in 9 of 973 (0.9%), vs 14.9% of all 3889 cases normally.
-6. etf_ief -> stooq_au10y: A over 1 day(s), B over 1 day(s), offset 1. Found in 242 (r -0.600, z -24.6), next period 262 (r -0.609, z -25.1).
+7. gt_layoffs_d -> gt_debt_d: A over 1 day(s), B over 1 day(s), offset 5. Found in 242 (r +0.627, z +26.1), next period 262 (r +0.605, z +24.8).
+   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / +26.1 / +24.8 / +21.4 / -
+   inside 242: after gt_layoffs_d's 1-day move was in its top quarter (typically +80.0%), gt_debt_d rose over the 1 day(s) ending 5 day(s) after it in 265 of 314 cases (84.4%),
+     after its bottom quarter (typically -54.5%) in 68 of 314 (21.7%), vs 48.8% of all 1255 cases normally.
+   rest of history (2005-2025, sharing no day with it): after gt_layoffs_d's 1-day move was in its top quarter (typically +63.6%), gt_debt_d rose over the 1 day(s) ending 5 day(s) after it in 695 of 849 cases (81.9%),
+     after its bottom quarter (typically -50.0%) in 182 of 849 (21.4%), vs 49.5% of all 3393 cases normally.
+8. etf_ief -> stooq_au10y: A over 1 day(s), B over 1 day(s), offset 1. Found in 242 (r -0.600, z -24.6), next period 262 (r -0.609, z -25.1).
    z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / -24.6 / -25.1 / -13.8 / -41.7
    inside 242: after etf_ief's 1-day move was in its top quarter (typically +0.5%), stooq_au10y rose over the 1 day(s) ending 1 day(s) after it in 55 of 315 cases (17.5%),
      after its bottom quarter (typically -0.4%) in 255 of 315 (81.0%), vs 46.9% of all 1257 cases normally.
    rest of history (2005-2025, sharing no day with it): after etf_ief's 1-day move was in its top quarter (typically +0.4%), stooq_au10y rose over the 1 day(s) ending 1 day(s) after it in 198 of 916 cases (21.6%),
      after its bottom quarter (typically -0.5%) in 708 of 916 (77.3%), vs 49.0% of all 3664 cases normally.
-7. gt_buy_stocks_d -> gt_layoffs_d: A over 1 day(s), B over 1 day(s), offset 5. Found in 262 (r +0.600, z +24.5), next period 282 (r +0.597, z +24.4).
-   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / - / +24.5 / +24.4 / -
-   inside 262: after gt_buy_stocks_d's 1-day move was in its top quarter (typically +36.8%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 263 of 314 cases (83.8%),
-     after its bottom quarter (typically -32.0%) in 76 of 314 (24.2%), vs 53.9% of all 1255 cases normally.
-   rest of history (2005-2025, sharing no day with it): after gt_buy_stocks_d's 1-day move was in its top quarter (typically +43.6%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 316 of 351 cases (90.0%),
-     after its bottom quarter (typically -34.3%) in 92 of 351 (26.2%), vs 56.1% of all 1404 cases normally.
-8. fred_dgs10 -> stooq_au10y: A over 1 day(s), B over 1 day(s), offset 1. Found in 242 (r +0.590, z +24.0), next period 262 (r +0.604, z +24.8).
+9. gt_buy_stocks_d -> gt_layoffs_d: A over 1 day(s), B over 1 day(s), offset 5. Found in 262 (r +0.605, z +24.8), next period 282 (r +0.597, z +24.4).
+   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / +19.3 / +24.8 / +24.4 / -
+   inside 262: after gt_buy_stocks_d's 1-day move was in its top quarter (typically +38.1%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 268 of 314 cases (85.4%),
+     after its bottom quarter (typically -33.3%) in 67 of 314 (21.3%), vs 53.9% of all 1255 cases normally.
+   rest of history (2005-2025, sharing no day with it): after gt_buy_stocks_d's 1-day move was in its top quarter (typically +39.3%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 678 of 830 cases (81.7%),
+     after its bottom quarter (typically -31.1%) in 241 of 830 (29.0%), vs 55.2% of all 3318 cases normally.
+10. fred_dgs10 -> stooq_au10y: A over 1 day(s), B over 1 day(s), offset 1. Found in 242 (r +0.590, z +24.0), next period 262 (r +0.604, z +24.8).
    z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / +24.0 / +24.8 / +12.7 / +39.9
    inside 242: after fred_dgs10's 1-day move was in its top quarter (typically +0.060 percent), stooq_au10y rose over the 1 day(s) ending 1 day(s) after it in 253 of 315 cases (80.3%),
      after its bottom quarter (typically -0.060 percent) in 54 of 315 (17.1%), vs 46.9% of all 1257 cases normally.
    rest of history (2005-2025, sharing no day with it): after fred_dgs10's 1-day move was in its top quarter (typically +0.060 percent), stooq_au10y rose over the 1 day(s) ending 1 day(s) after it in 704 of 916 cases (76.9%),
      after its bottom quarter (typically -0.060 percent) in 203 of 916 (22.2%), vs 49.0% of all 3664 cases normally.
-9. psl_mjo_romi_pc1 -> psl_mjo_romi_pc2: A over 1 day(s), B over 1 day(s), offset 7. Found in 262 (r +0.640, z +26.8), next period 282 (r +0.582, z +23.5).
-   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): +30.2 / +19.6 / +26.8 / +23.5 / +50.6
-   inside 262: after psl_mjo_romi_pc1's 1-day move was in its top quarter (typically 1.14 standardized index (summed)), psl_mjo_romi_pc2 rose over the 1 day(s) ending 7 day(s) after it in 275 of 314 cases (87.6%),
-     after its bottom quarter (typically -1.08 standardized index (summed)) in 68 of 314 (21.7%), vs 52.3% of all 1253 cases normally.
-   rest of history (2005-2025, sharing no day with it): after psl_mjo_romi_pc1's 1-day move was in its top quarter (typically 1.10 standardized index (summed)), psl_mjo_romi_pc2 rose over the 1 day(s) ending 7 day(s) after it in 813 of 970 cases (83.8%),
-     after its bottom quarter (typically -1.05 standardized index (summed)) in 167 of 970 (17.2%), vs 50.0% of all 3879 cases normally.
-10. gt_debt_d -> gt_layoffs_d: A over 1 day(s), B over 1 day(s), offset 5. Found in 262 (r +0.611, z +25.2), next period 282 (r +0.580, z +23.4).
-   z in 222 (2005-2010) / 242 (2010-2015) / 262 (2015-2020) / 282 (2020-2025) / 284 (2005-2025): - / - / +25.2 / +23.4 / -
-   inside 262: after gt_debt_d's 1-day move was in its top quarter (typically +34.3%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 273 of 314 cases (86.9%),
-     after its bottom quarter (typically -28.0%) in 76 of 314 (24.2%), vs 53.9% of all 1255 cases normally.
-   rest of history (2005-2025, sharing no day with it): after gt_debt_d's 1-day move was in its top quarter (typically +32.0%), gt_layoffs_d rose over the 1 day(s) ending 5 day(s) after it in 304 of 351 cases (86.6%),
-     after its bottom quarter (typically -26.3%) in 92 of 351 (26.2%), vs 56.1% of all 1404 cases normally.
 
 -- stock->ext (strongest first, best move lengths and offset per pair, at most 10) --
 1. ZION -> stooq_au10y: A over 1 day(s), B over 1 day(s), offset 1. Found in 262 (r +0.286, z +10.4), next period 282 (r +0.227, z +8.2).
@@ -781,20 +781,20 @@ fred_dgs10                     rates               1,405      1,069    1.31     
 For reference, the noise series with the largest ext->stock excess: noisetest0087_sparse_k0 978 real vs 824 chance (1.19).
 
 == The decisive numbers ==
-ext->stock, predictive offsets: 881,342 real vs 847,281 chance correlations at |z| >= 4 (ratio 1.04); pure-noise externals 1.04.
+ext->stock, predictive offsets: 882,605 real vs 848,396 chance correlations at |z| >= 4 (ratio 1.04); pure-noise externals 1.04.
 Noise externals picked at |z| >= 4: same sign in the next period 23,486 of 46,980 (50.0%).
-ext->stock predictive, all external series except US-listed ETFs: 819,102 real vs 793,114 chance at |z| >= 4 (1.03); next-period same sign 142,174 of 280,917 (50.6%) vs null-picked 822,573 (50.1%); mean signed r +0.0017 vs +0.0002.
+ext->stock predictive, all external series except US-listed ETFs: 820,365 real vs 794,229 chance at |z| >= 4 (1.03); next-period same sign 142,413 of 281,281 (50.6%) vs null-picked 823,501 (50.1%); mean signed r +0.0017 vs +0.0002.
 ext->stock predictive, US-listed ETFs only: 62,241 real vs 54,166 chance at |z| >= 4 (1.15); next-period same sign 5,847 of 11,225 (52.1%) vs null-picked 27,332 (49.8%); mean signed r +0.0014 vs +0.0004.
-ext->stock, predictive, picked at |z| >= 4: same sign in the next period 148,021 of 292,142 times (50.7%), null-picked 849,905 (50.1%); mean signed r +0.0017 vs +0.0002.
+ext->stock, predictive, picked at |z| >= 4: same sign in the next period 148,260 of 292,506 times (50.7%), null-picked 850,833 (50.1%); mean signed r +0.0017 vs +0.0002.
 
 == Timing ==
-census variable           0.4s
+census variable           0.5s
 self-checks               0.1s
-external series           0.7s
-GPU correlations        126.2s
-out-of-sample             9.9s
-summary                  13.5s
-total                   150.8s
+external series           0.6s
+GPU correlations         98.2s
+out-of-sample             7.5s
+summary                  13.4s
+total                   120.2s
 
 == Files ==
 externals.csv  every series: catalog row, transform, timing, coverage and whether it joined each period
@@ -804,78 +804,175 @@ oos.csv        out-of-sample tallies
 survivors.csv  every relationship that survived the out-of-sample check, with its z in every period
 controls.csv   the control relationships, every period
 entries.bin    every real and null entry with |z| >= 3.5 (24-byte records; layout in the example's header)
-Browse: cargo run --release -p c2-census --example external_test -- --browse ext-all-1 --series <id or ticker> --min-z 4
+Browse: cargo run --release -p c2-census --example external_test -- --browse ext-all-2 --series <id or ticker> --min-z 4
 
 == Interpretation (written by hand after reading the numbers above) ==
 
-Verdict: unchanged from the first run. Nothing in 1,726 external series leads US stocks in a way that survives into
-the next correlation period, apart from known market-plumbing and calendar effects that carry no outside information.
+Verdict, final data: nothing in 1,753 external series leads US stocks in a way that survives into the next correlation
+period, apart from known market-plumbing and calendar effects that carry no outside information. Prediction markets,
+tested separately on short periods, behave like every baseline.
+
 The decisive numbers for ext->stock at predictive offsets:
-- Real vs chance at |z| >= 4: 881,342 against 847,281 (1.04). Pure-noise externals give 1.04 too, and the census's own
-  stock->stock gives 1.03.
-- Out of sample: relationships picked at |z| >= 4 in one 1260-day period keep their sign in the next 50.7% of the time
-  (292,142), against 50.1% for picks from the null copies and 50.0% for noise externals. The mean signed r in the next
-  period is +0.0017 (null-picked +0.0002). Without the US-listed ETFs: 50.6% against 50.1%.
-- New categories, ext->stock predictive real/chance and out-of-sample same sign against null picks:
-    news 0.92 and 50.6% vs 50.1%
-    politics 1.02 and 49.6% vs 50.0%
-    prosperity 1.05 and 51.0% vs 50.0%
-    migration 1.01 and 50.5% vs 49.9%
-    Google Trends (in attention) 1.03 and 50.4% vs 49.9%
-  No continuous prediction-market series covers 90% of 2020-2025, and the 74 finite-life contracts are too short by
-  construction, so prediction markets could not be tested.
+- Real vs chance at |z| >= 4: 882,605 against 848,396 (1.04). Pure-noise externals 1.04; the census's stock->stock 1.03.
+- Out of sample: picks at |z| >= 4 keep their sign in the next 1260-day period 50.7% of the time (292,506), against
+  50.1% for picks from the null copies and 50.0% for noise externals. Mean signed r next period +0.0017 (null-picked
+  +0.0002). Without US-listed ETFs: 50.6% against 50.1%.
+- The false-discovery rule fires in 52 of 4,284 matrices against 15 for its placebo. 43 of the 52 are in full history,
+  and the passing entries are two known mechanisms:
+  a. ETFs leading thin small banks and closed-end funds by a day (stale prices);
+  b. monthly or quarterly releases on fixed schedules (the 50 state coincident indexes, BEA state personal income,
+     QCEW county wages) lining up with fixed calendars of their own: closed-end funds' monthly distributions and
+     earnings dates.
+- Survivors (|z| >= 4, then the same sign at |z| >= 3 next period): 1,576 against 918 when picked from the null copies
+  (0.63 against 0.37 per million pairs). 88 are the ETF stale-price pairs; the rest are the release pulses of (b),
+  whose plain-terms counts are flat.
 
-What does go beyond chance, and why it isn't a lead:
-1. The false-discovery rule fires in 52 of the 4,284 ext->stock predictive matrices against 15 for its placebo (first
-   run: 25 against 26). 43 of the 52 are in full history, where 20 years of data let small persistent effects pass.
-   The passing entries are two known mechanisms:
-   a. US-listed ETFs (IWM, XLF, SPY, ...) leading thinly traded small banks and closed-end funds by one day (A over
-      1 day, B over 1 day, offset 1): stale prices. 76% of the strongest world_equity entries.
-   b. Monthly or quarterly releases on fixed schedules (the Philadelphia Fed's 50 state coincident indexes, BEA state
-      personal income, QCEW county wages) against stocks with fixed calendars of their own: closed-end funds with
-      monthly distributions (Cornerstone CLM and CRF, Nuveen municipal funds, PDI) and earnings dates. The offsets are
-      roughly multiples of a month (20, 40, 125 days). Two schedules line up; neither carries information.
-2. Survivors (|z| >= 4, then the same sign at |z| >= 3 in the next period): 1,580 ext->stock relationships, against
-   919 when picked from the null copies (0.64 against 0.37 per million pairs; first run 0.36 against 0.25). The new
-   excess is the release pulses of 1b. Their 1-day moves are zero except on release days, and their plain-terms
-   counts are flat. For example, BEA state per-capita income (quarterly) -> Garmin 2 days later: inside 2015-2020,
-   GRMN rose 52.5% of the time after the series' top quarter and 55.0% after its bottom quarter, against 53.0% on all
-   days. The ETF-led survivors are the same 88 as before.
-3. Same day (offset 0): real effects as expected (commodities, rates, FX, world indices against their sectors), with
-   ratios 6 to 22 and 89% same sign in the next period. None of it predicts.
-4. stock->ext beyond the reporting delay is 1.05 (noise 1.06). ext->ext is large and persistent: weather systems,
-   related macro series, the state indexes among themselves. Real, but nothing about stocks.
+What changed from ext-all-1: only the final predictions catalog (84 -> 111 series: 20 rolling, 91 finite-life single
+contracts) and a final Google Trends file.
+- Prediction markets: none qualify for a 1260-day period. The rolling series start in 2021-2024; 89 single contracts
+  are too short and 2 too sparse. They are tested on short periods below.
+- Google Trends (in attention): ext->stock 1.03 as before; out of sample 50.6% against 50.0% (was 50.4% against 49.9%).
+- Everything else agrees to rounding: ratio 1.04, FDR 52 vs 15, out of sample 50.7% vs 50.1%, all controls passed
+  (oil, gold and gas vs their producers; SPY -> Asian indices; heating degree days vs gas; the synthetic leads;
+  sunspots, F10.7, Wikipedia and noise as chance).
+- Run: 2 min 03 s and 8.4 GB.
 
-Is any of it tradable? No, for the reasons given in the first run: the ETF stale-price effect is weak (r about 0.13)
-and sits in thin names, and the calendar alignments are fixed schedules known in advance, not signals.
+Prediction markets on short periods (--short-periods: the census's own non-overlapping 252-day periods, chosen by
+length and date; 1-5 day moves only, since longer moves don't reach 30 observations in 252 days). The headline is
+the 20 rolling series; the 91 finite-life contracts are reported apart. Every baseline runs through the same periods
+and null: Google Trends daily (8), crypto (71), a seeded random sample of 100 other series, and 220 noise series.
+- ext-short-1, as specified (periods 66, 70 and 74: 2021-07-12 to 2024-07-12). The census's 126-day warm-up for the
+  trailing sd keeps young series out: 0, 3 and 11 rolling series join, so there is one out-of-sample step with
+  3 series. Predictive ratio 1.01 (|z| >= 3) and 1.02 (|z| >= 4); same sign next period 47.6% (578) against 49.5% for
+  null picks; FDR 0 against 0.
+- ext-short-2, the latest chain that fits (69, 73 and 77: 2022-04-08 to 2025-04-14). 2, 8 and 12 join, giving two
+  out-of-sample steps. This is the fairer test:
 
-What changed from the first run (ext-2026-10-18: three catalogs, 549 series):
-- Data: 9 catalogs and 1,726 series. New: migration 292, news 135, politics 212, predictions 84, prosperity 342 and
-  Google Trends 88; weather grew from 215 to 239. Real correlations rose from 5.5 billion to 15.5 billion.
-- Annual series (346: population, migration, county income) are now reported as their own category, outside the
-  headline numbers (--include-annual counts them). They release once a year, often on the same date, so they act as
-  one calendar pulse that standardization pushes to +-5; 345 join only full history. As a group they show
-  ext->stock 1.00.
-- Finite-life prediction-market contracts (74, marked FINITE-LIFE) are excluded. ROLLING series built by stitching
-  contracts are kept; the matcher is self-checked on both wordings.
-- Correlation periods are now read through RunMeta and chosen by length and date (the chain of non-overlapping
-  consecutive 1260-day periods from the census's first day, plus full history), not by id. They are validated: exact
-  length, consecutive, dates matching the rows. They came out the same 222, 242, 262, 282 and 284.
-- Headline unchanged: ext->stock predictive 1.05 -> 1.04 (noise 1.04 both); out of sample 51.0% -> 50.7% against null
-  50.3% -> 50.1%.
-- Changed: the FDR firings (25 vs 26 -> 52 vs 15) and the survivor excess (about 110 -> about 660), both from the
-  calendar alignments of the new monthly and quarterly series and in full history. All controls give the same results.
-- Run: 2 min 34 s and 8.4 GB for 1,136 to 1,461 external series per period (including the 236 calibration and
-  control series). entries.bin grew to 3.2 GB.
+      group                predictive real/chance     same sign next period     FDR fired
+                           |z| >= 3    |z| >= 4       real vs null              vs placebo
+      prediction markets   1.02        1.03           50.4% (2,885) vs 49.2%    0 vs 3
+      crypto               1.04        1.05           49.5% vs 49.7%            8 vs 9
+      Google Trends daily  1.00        1.00           49.3% vs 50.1%            0 vs 0
+      random 100 others    1.01        1.02           49.8% vs 50.0%            1 vs 1
+      noise                1.00        1.01           49.9% vs 50.0%            1 vs 1
 
-Known weaknesses (as in the first run, plus):
-- Calendar pulses. Monthly and quarterly releases on fixed dates, and stocks with fixed dividend and earnings
-  calendars, produce persistent but meaningless alignments, which the sign-flip null does not model. A null that
-  keeps each series' release calendar (a circular shift within the period, or flipping whole months) would separate
-  them. So would grouping 'same release schedule' series into one effective test.
-- Plain-terms quarters are degenerate for pulse series (most h-day moves are zero), so their counts say little.
-- Revisions, near-duplicates, timing bounds, survivorship and the census null at long move lengths: as before.
+  Survivors: 15 ext->stock relationships against 16.0 from the null copies (2.10 against 2.24 per million pairs).
+  The top ones (Fed-change expectations -> USPH or CPRI some days later) rest on a handful of non-zero moves: inside
+  the period the top quarter has 21 cases, and in the rest of history the effect regresses (71% -> 55%).
+- Same day the prediction markets do co-move with stocks (ratio 1.77). This is what the predictions agent warned
+  about:
+  - Roll days coincide with FOMC, CPI and jobs releases, when stocks move on the same news.
+  - The S&P year-end, gas and BTC contracts largely copy prices already in the panel.
+  - The recession and Fed-hike contracts move with rate-sensitive stocks.
+  None of it leads.
+- Other caveats from the predictions agent. Long flat stretches pinned near 0 or 1 give few non-zero moves; the >= 10
+  moves rule and the +-5 clip bound their influence, but their quarters are thin. The single contracts were chosen
+  with hindsight (markets that turned out to matter); only 1 to 3 of them cover any 252-day period, so they are not a
+  usable test.
+- Short periods are weak in any case: 252 observations per period at best, two out-of-sample steps, and 1-5 day moves
+  only. A prediction-market lead of r below about 0.15 would not be seen. What the test does say is that the strongest
+  relationships found in one year don't come back the next any more often than for crypto, Google Trends, random
+  series or noise.
 
-Integration into the census and the GUI: as in the first run. In addition, a census-wide null that preserves release
-calendars and dividend schedules would remove the calendar alignments for stock->stock pairs too (closed-end funds
-and utilities are in the census's universes).
+Is any of it tradable? No. The ETF stale-price effect is weak (r about 0.13) and sits in thin names. The calendar
+alignments are fixed schedules known in advance, not signals. Prediction markets show nothing beyond chance.
+
+Known weaknesses:
+- Timing. known_after_days are the data agents' bounds; a too-aggressive k would show up as false leads at offset 1,
+  and none were found.
+- Revisions. Population, macro, flu and others are stored as latest revisions; anomaly base periods were chosen
+  after the fact. That could only create false leads.
+- Calendar pulses. Releases on fixed dates and stocks with fixed dividend or earnings calendars produce persistent but
+  meaningless alignments, which the sign-flip null doesn't model. A calendar-preserving null (a circular shift within
+  the period) would separate them.
+- The census's null is too lenient at long move lengths (63/63: 2.41 in the census itself); compare with the noise
+  externals, not with 1.
+- Survivorship. The census's universes; 7.5% of out-of-sample picks dropped because a series left the next period's
+  universe.
+- Monthly series. Release-day moves are often clipped at +-5.
+- Near-duplicates (stations, ETF families, the 50 state indexes, Fed-expectation contracts) mean the counts overstate
+  the number of independent tests.
+- Plain-terms quarters are degenerate for pulse and pinned series.
+
+Integration into the census and the GUI: as written for the first run.
+- External series become pseudo-stocks with ids above the store's, an external-column builder sits next to
+  variable::production, and only the external rows and columns of each product are computed.
+- A calendar-preserving null and noise calibration series would fix the census's long-move ratios and calendar
+  alignments for stock->stock pairs too.
+- The GUI shows external names, units and the day each value became known, labels 'within delay' offsets as timing,
+  and lists 'too sparse to test' series.
+- The short-period mode is the right home for young series such as prediction markets.
+
+== Appendix: like-for-like tables from the short-period prediction-market runs ==
+
+-- ext-short-1: cargo run --release -p c2-census --example external_test -- --run ext-short-1 --short-periods --noise 220
+correlation periods chosen by length and date, not id: 3 non-overlapping consecutive 252-day periods from the first starting on or after 2021-07-01 (66 (2021-07-12..2022-07-11), 70 (2022-07-12..2023-07-12), 74 (2023-07-13..2024-07
+== Like-for-like comparison (short periods, ext->stock unless noted) ==
+Each group run through the same 252-day periods, move lengths, offsets and null. 'same sign next' = picked at
+|z| >= 4 in one period, same sign in the next (null = picked from the null copies, the 50% baseline).
+group               series joined by period    predictive |z|>=3    predictive |z|>=4   same day |z|>=4  FDR / placebo  same sign next: real/null stock->ext pred
+prediction_market       20           0/3/11 55,909/55,491 = 1.01   6,199/6,057 = 1.02              1.60     0/0 of 648 47.6% (578) / 49.5% (1,718)            1.06
+crypto                  71         71/71/71 550,532/540,650 = 1.02 27,074/25,259 = 1.07              1.28    6/10 of 972 48.2% (16,672) / 49.6% (46,509)            1.07
+trends_daily             8            8/8/8 68,148/64,652 = 1.05   3,393/3,224 = 1.05              1.27     1/4 of 972 49.3% (2,108) / 49.3% (5,994)            1.14
+sample_others          100         87/81/81 828,064/825,007 = 1.00 67,942/65,852 = 1.03              3.21     4/2 of 972 49.4% (36,556) / 49.9% (105,535)            1.05
+noise_test             220      203/203/207 1,537,582/1,541,200 = 1.00 76,915/77,168 = 1.00              0.99     6/2 of 972 50.4% (44,704) / 49.8% (133,495)            1.02
+single_contract         91            0/0/3   7,939/8,660 = 0.92       457/473 = 0.97              0.35     0/0 of 324              - (0) / - (0)            1.33
+Prediction-market series by period (joined = >= 90% coverage and >= 10 non-zero moves):
+  ks_core_cpi_mom_next_exp     66:0%  70:51%  74:yes
+  ks_cpi_mom_next_exp          66:7%  70:yes  74:yes
+  ks_cpi_yoy_next_exp          66:0%  70:7%  74:yes
+  ks_fed_6m_exp_upper          66:0%  70:79%  74:yes
+  ks_fed_next_expchg_bp        66:38%  70:yes  74:yes
+  ks_fed_next_pcut             66:0%  70:81%  74:yes
+  ks_fed_next_phike            66:38%  70:yes  74:yes
+  ks_gas_month_exp             66:0%  70:0%  74:0%
+  ks_gdp_next_exp              66:0%  70:74%  74:yes
+  ks_payrolls_next_exp         66:0%  70:0%  74:81%
+  ks_recession_cur_year        66:0%  70:12%  74:yes
+  ks_shutdown_next_deadline    66:0%  70:29%  74:73%
+  ks_spx_yearend_exp           66:0%  70:50%  74:yes
+  ks_u3_next_exp               66:0%  70:81%  74:yes
+  pm_fed_next_expchg_bp        66:0%  70:0%  74:0%
+  pm_fed_next_pcut             66:0%  70:0%  74:0%
+  pm_fed_next_phike            66:0%  70:0%  74:0%
+  pm_house_gop_cur_cycle       66:0%  70:0%  74:0%
+  pm_senate_gop_cur_cycle      66:0%  70:0%  74:31%
+  pm_us_recession_cur_year     66:0%  70:0%  74:0%
+Finite-life single contracts: 91 loaded, 3 cover 90% of some 252-day period (reported apart).
+
+
+-- ext-short-2: cargo run --release -p c2-census --example external_test -- --run ext-short-2 --short-periods --short-from 2022-04-01 --noise 220
+correlation periods chosen by length and date, not id: 3 non-overlapping consecutive 252-day periods from the first starting on or after 2022-04-01 (69 (2022-04-08..2023-04-11), 73 (2023-04-12..2024-04-11), 77 (2024-04-12..2025-04
+== Like-for-like comparison (short periods, ext->stock unless noted) ==
+Each group run through the same 252-day periods, move lengths, offsets and null. 'same sign next' = picked at
+|z| >= 4 in one period, same sign in the next (null = picked from the null copies, the 50% baseline).
+group               series joined by period    predictive |z|>=3    predictive |z|>=4   same day |z|>=4  FDR / placebo  same sign next: real/null stock->ext pred
+prediction_market       20           2/8/12 86,303/85,024 = 1.02   8,099/7,866 = 1.03              1.77     0/3 of 972 50.4% (2,885) / 49.2% (8,915)            1.01
+crypto                  71         71/71/71 577,756/557,578 = 1.04 28,329/26,969 = 1.05              1.44     8/9 of 972 49.5% (18,658) / 49.7% (52,889)            1.10
+trends_daily             8            8/8/8 64,346/64,357 = 1.00   3,457/3,455 = 1.00              1.64     0/0 of 972 49.3% (1,972) / 50.1% (5,837)            1.05
+sample_others          100         84/81/82 882,627/875,721 = 1.01 75,072/73,345 = 1.02              3.52     1/1 of 972 49.8% (43,705) / 50.0% (129,099)            1.08
+noise_test             220      202/205/206 1,582,646/1,585,571 = 1.00 79,504/78,581 = 1.01              1.03     1/1 of 972 49.9% (45,510) / 50.0% (134,683)            1.03
+single_contract         91            0/1/1   5,909/6,173 = 0.96       466/497 = 0.94              1.47     0/2 of 648              - (0) / - (0)            1.73
+Prediction-market series by period (joined = >= 90% coverage and >= 10 non-zero moves):
+  ks_core_cpi_mom_next_exp     69:26%  73:yes  77:yes
+  ks_cpi_mom_next_exp          69:77%  73:yes  77:yes
+  ks_cpi_yoy_next_exp          69:0%  73:80%  77:yes
+  ks_fed_6m_exp_upper          69:54%  73:yes  77:yes
+  ks_fed_next_expchg_bp        69:yes  73:yes  77:yes
+  ks_fed_next_pcut             69:56%  73:yes  77:yes
+  ks_fed_next_phike            69:yes  73:yes  77:yes
+  ks_gas_month_exp             69:0%  73:0%  77:27%
+  ks_gdp_next_exp              69:49%  73:yes  77:yes
+  ks_payrolls_next_exp         69:0%  73:56%  77:yes
+  ks_recession_cur_year        69:0%  73:87%  77:yes
+  ks_shutdown_next_deadline    69:13%  73:88%  77:0%
+  ks_spx_yearend_exp           69:25%  73:yes  77:yes
+  ks_u3_next_exp               69:60%  73:87%  77:yes
+  pm_fed_next_expchg_bp        69:0%  73:0%  77:67%
+  pm_fed_next_pcut             69:0%  73:0%  77:67%
+  pm_fed_next_phike            69:0%  73:0%  77:67%
+  pm_house_gop_cur_cycle       69:0%  73:0%  77:25%
+  pm_senate_gop_cur_cycle      69:0%  73:6%  77:61%
+  pm_us_recession_cur_year     69:0%  73:0%  77:18%
+Finite-life single contracts: 91 loaded, 2 cover 90% of some 252-day period (reported apart).
+
