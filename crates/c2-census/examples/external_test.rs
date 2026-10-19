@@ -81,6 +81,10 @@ const NOISE: &str = "noise_test";
 /// Annual series: one release a year, often all on the same date, so they act as one calendar
 /// pulse that standardization pushes to +-5. Reported apart unless `--include-annual`.
 const ANNUAL: &str = "annual";
+/// Short-period mode's baselines: Google Trends daily series and a random sample of the rest
+/// (crypto keeps its own category).
+const TRENDS_DAILY: &str = "trends_daily";
+const SAMPLE: &str = "sample_others";
 const SYN_LOAD: f64 = 0.3;
 /// Out-of-sample tallies of relationships picked from the noise externals (real data).
 const NOISE_SRC: usize = 10;
@@ -101,6 +105,10 @@ const USAGE: &str = "external_test: does non-stock data lead US stock moves? (ce
   --periods LIST    correlation period ids of the run (default: chosen by length and date: the chain of
                     non-overlapping L-day periods from the census's first day, plus full history)
   --include-annual  count annual series in the headline numbers (default: reported apart)
+  --short-periods   prediction-market mode: the census's non-overlapping 252-day periods from --short-from
+                    (default 2021-07-01) on, no full history; headline = rolling prediction-market series;
+                    baselines reported apart: Google Trends daily, crypto, a random --sample N (default 100)
+                    of the other series, and the --noise series; finite-life contracts reported apart
   --pairs LIST      move-length pairs as A:B, e.g. 1:1,5:21 (default all 36)
   --synthetic-only  skip the catalogs; only the injected synthetic series (pipeline check)
   --noise N         add N pure-noise calibration series (reported apart from the headline; 220 recommended)
@@ -125,6 +133,11 @@ struct Args {
     length: Option<usize>,
     /// Count annual series in the headline numbers too.
     include_annual: bool,
+    /// Short-period mode: the census's non-overlapping 252-day periods from `short_from` on, for
+    /// series too young for 1260-day periods (prediction markets), with matched baselines.
+    short: bool,
+    short_from: i32,
+    sample: usize,
     pairs: Option<Vec<(usize, usize)>>,
     browse: Option<Vec<String>>,
     command: String,
@@ -147,6 +160,9 @@ fn parse_args() -> Result<Args> {
         periods: None,
         length: None,
         include_annual: false,
+        short: false,
+        short_from: days_from_civil(2021, 7, 1),
+        sample: 100,
         pairs: None,
         browse: None,
         command: std::env::args().skip(1).collect::<Vec<_>>().join(" "),
@@ -162,6 +178,9 @@ fn parse_args() -> Result<Args> {
             "--synthetic-only" => a.synthetic_only = true,
             "--length" => a.length = Some(next_val(&mut it, "--length")?.parse()?),
             "--include-annual" => a.include_annual = true,
+            "--short-periods" => a.short = true,
+            "--short-from" => a.short_from = c2_data::parse_date(&next_val(&mut it, "--short-from")?)?,
+            "--sample" => a.sample = next_val(&mut it, "--sample")?.parse()?,
             "--noise" => a.noise = next_val(&mut it, "--noise")?.parse()?,
             "--catalogs" => a.catalogs = next_val(&mut it, "--catalogs")?.split(',').map(|s| s.trim().to_string()).collect(),
             "--selftest" => a.selftest = true,
@@ -984,8 +1003,20 @@ fn load_census(meta: RunMeta, store: &Store, var: &Variable, checks: &mut Vec<Ch
 /// id, which a new census renumbers): the chain of non-overlapping `length`-day periods that
 /// starts on the census's first trading day, each starting the trading day after the previous one
 /// ends, plus the full-history period from that day. Returns (chain, full history).
-fn select_periods(c: &Census, var: &Variable, length: usize, checks: &mut Vec<Check>) -> Result<(Vec<usize>, Option<usize>)> {
-    let first_row = var.days.partition_point(|&d| d < c.meta.cfg.start);
+fn select_periods(c: &Census, var: &Variable, length: usize, from: Option<i32>, checks: &mut Vec<Check>) -> Result<(Vec<usize>, Option<usize>)> {
+    let census_first = var.days.partition_point(|&d| d < c.meta.cfg.start);
+    // The chain starts with the first `length`-day period starting on or after `from` (default:
+    // the census's first day).
+    let first_row = match from {
+        None => census_first,
+        Some(f) => c
+            .windows
+            .iter()
+            .filter(|w| w.length == length && w.covered && w.first >= f)
+            .map(|w| w.rows.start)
+            .min()
+            .with_context(|| format!("census {} has no {length}-day period starting on or after {}", c.meta.name, date_string(f)))?,
+    };
     ensure!(first_row < var.t, "the census starts after today's data ends");
     let rolling: Vec<&Window> = c.windows.iter().filter(|w| w.length == length && w.covered).collect();
     ensure!(!rolling.is_empty(), "census {} has no {length}-day correlation periods that today's calendar covers (lengths: {:?})", c.meta.name, c.meta.cfg.lengths);
@@ -1011,12 +1042,12 @@ fn select_periods(c: &Census, var: &Variable, length: usize, checks: &mut Vec<Ch
             ensure!(w.rows.start == prev.rows.end && w.first > prev.last, "periods {} and {id} are not consecutive", prev.id);
         }
     }
-    let fulls: Vec<&Window> = c.windows.iter().filter(|w| w.length == 0 && w.covered && w.rows.start == first_row).collect();
+    let fulls: Vec<&Window> = if from.is_some() { Vec::new() } else { c.windows.iter().filter(|w| w.length == 0 && w.covered && w.rows.start == census_first).collect() };
     ensure!(fulls.len() <= 1, "census {} has {} full-history periods", c.meta.name, fulls.len());
     let full = fulls.first().map(|w| w.id);
     let span = |id: usize| format!("{} ({}..{})", id, date_string(c.windows[id].first), date_string(c.windows[id].last));
-    check(checks, chain.len() >= 2, format!("correlation periods chosen by length and date, not id: {} non-overlapping consecutive {length}-day periods from the census's first day ({}){}",
-        chain.len(), chain.iter().map(|&id| span(id)).collect::<Vec<_>>().join(", "),
+    check(checks, chain.len() >= 2, format!("correlation periods chosen by length and date, not id: {} non-overlapping consecutive {length}-day periods from {} ({}){}",
+        chain.len(), from.map(|f| format!("the first starting on or after {}", date_string(f))).unwrap_or_else(|| "the census's first day".into()), chain.iter().map(|&id| span(id)).collect::<Vec<_>>().join(", "),
         full.map(|f| format!(", and full history {}", span(f))).unwrap_or_else(|| ", no full-history period".into())));
     Ok((chain, full))
 }
@@ -1072,13 +1103,15 @@ fn prefix_of(v: &[f32]) -> Vec<f64> {
 /// Recomputes stored census records (real and null) from today's variable and this program's
 /// grid and seeds: proves the stock side and the null are the census's.
 fn replicate(c: &Census, var: &Variable, col_of: &HashMap<usize, usize>, chain: &[usize], full: Option<usize>, checks: &mut Vec<Check>) -> Result<()> {
-    let n = chain.len();
-    let mut cases: Vec<(usize, usize, usize)> = vec![(chain[n - 1], 1, 1), (chain[n - 1], 5, 21), (chain[0], 10, 1)];
-    if n >= 2 {
-        cases.push((chain[n - 2], 21, 5));
-    }
-    if n >= 3 {
-        cases.push((chain[1], 3, 10));
+    // Two move-length pairs per period, rotating through those with observations at this length.
+    let mut cases: Vec<(usize, usize, usize)> = Vec::new();
+    for (k, &w) in chain.iter().enumerate().take(4) {
+        let len = c.windows[w].rows.len();
+        let ok: Vec<(usize, usize)> = [(1, 1), (5, 21), (21, 5), (3, 10), (10, 1), (5, 5), (3, 1), (1, 5)].into_iter().filter(|&(a, b)| grid::observations(len, a, b, 0) >= c.meta.cfg.min_obs).collect();
+        for j in 0..2.min(ok.len()) {
+            let (h1, h2) = ok[(2 * k + j) % ok.len()];
+            cases.push((w, h1, h2));
+        }
     }
     if let Some(f) = full {
         cases.push((f, 63, 63));
@@ -1861,6 +1894,9 @@ fn selftests(days: &[i32], checks: &mut Vec<Check>) {
         ("ROLLING by election cycle: House control after 2024, then 2026", false),
         ("a continuous index, not a single contract", false),
         ("one finite-life contract", true),
+        ("finite-life single contract RECSSNBER-23 (open 2022-11-07, close 2024-01-25, settled: no)", true),
+        ("finite-life single contract; play-money forecast, not a real-money market", true),
+        ("ROLLING continuous series (successive contracts stitched): Kalshi KXFED/FED", false),
     ];
     check(checks, flags.iter().all(|&(n, want)| single_contract(n) == want), "finite-life flags: single contracts marked FINITE-LIFE are excluded from the headline; ROLLING (stitched) series are not".into());
     // 3b. Roll gaps: a series observed every day that misses a day doesn't bridge the gap (a
@@ -2009,7 +2045,8 @@ fn main() -> Result<()> {
     selftests(&var.days, &mut checks);
     let mut census = load_census(meta, &store, &var, &mut checks)?;
     let length = args.length.unwrap_or_else(|| cfg.lengths.iter().copied().max().unwrap_or(1260));
-    let (chain, full) = select_periods(&census, &var, length, &mut checks)?;
+    let length = if args.short { args.length.unwrap_or(252) } else { length };
+    let (chain, full) = select_periods(&census, &var, length, args.short.then_some(args.short_from), &mut checks)?;
     let period_ids: Vec<usize> = match &args.periods {
         Some(p) => p.clone(),
         None => chain.iter().copied().chain(full).collect(),
@@ -2049,6 +2086,39 @@ fn main() -> Result<()> {
     say(&t0, "reading the external catalogs");
     let mut warn = Vec::new();
     let (mut series, catalogs) = if args.synthetic_only { (Vec::new(), Vec::new()) } else { read_catalogs(&args.external, &args.catalogs, &mut warn)? };
+    // Short-period mode: the prediction-market series in the headline; matched baselines (Google
+    // Trends daily, crypto, a seeded random sample of the other series) as their own categories,
+    // reported apart like the noise.
+    let mut baseline_cats: Vec<&str> = Vec::new();
+    if args.short {
+        let (mut keep, mut others) = (Vec::new(), Vec::new());
+        for mut s in series.drain(..) {
+            if s.meta.catalog == "data-predictions" || s.meta.category == "prediction_market" || s.meta.category == SINGLE {
+                keep.push(s);
+            } else if s.meta.catalog == "data-trends" && s.meta.frequency == "daily" {
+                s.meta.subcategory = format!("{}/{}", s.meta.category, s.meta.subcategory);
+                s.meta.category = TRENDS_DAILY.into();
+                keep.push(s);
+            } else if s.meta.category == "crypto" {
+                keep.push(s);
+            } else if !is_annual(&s.meta, &s.obs) && s.meta.frequency != "quarterly" {
+                others.push(s);
+            }
+        }
+        others.sort_by(|a, b| a.meta.id.cmp(&b.meta.id));
+        let mut rng = Rng(2021);
+        for i in (1..others.len()).rev() {
+            let j = (rng.u64() % (i as u64 + 1)) as usize;
+            others.swap(i, j);
+        }
+        for mut s in others.into_iter().take(args.sample) {
+            s.meta.subcategory = format!("{}/{}", s.meta.category, s.meta.subcategory);
+            s.meta.category = SAMPLE.into();
+            keep.push(s);
+        }
+        series = keep;
+        baseline_cats = vec!["crypto", TRENDS_DAILY, SAMPLE];
+    }
     let n_catalog = series.len();
     if !args.include_annual {
         for s in series.iter_mut().filter(|s| s.meta.category != SINGLE && is_annual(&s.meta, &s.obs)) {
@@ -2058,9 +2128,15 @@ fn main() -> Result<()> {
     }
     let (syn_series, syn_specs) = synthetic(&var, &store, &col_of, args.noise)?;
     series.extend(syn_series);
-    let mut cats: Vec<String> = series.iter().map(|s| s.meta.category.clone()).filter(|c| c != SYN && c != SINGLE && c != NOISE && c != ANNUAL).collect::<BTreeSet<_>>().into_iter().collect();
+    let mut cats: Vec<String> = series
+        .iter()
+        .map(|s| s.meta.category.clone())
+        .filter(|c| c != SYN && c != SINGLE && c != NOISE && c != ANNUAL && !baseline_cats.contains(&c.as_str()))
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
     let excl0 = cats.len();
-    for special in [NOISE, ANNUAL, SINGLE] {
+    for special in baseline_cats.iter().copied().chain([NOISE, ANNUAL, SINGLE]) {
         if series.iter().any(|s| s.meta.category == special) {
             cats.push(special.into());
         }
@@ -2484,6 +2560,39 @@ fn main() -> Result<()> {
         }
     }
     writeln!(sum)?;
+    if args.short {
+        writeln!(sum, "== Like-for-like comparison (short periods, ext->stock unless noted) ==")?;
+        writeln!(sum, "Each group run through the same {length}-day periods, move lengths, offsets and null. 'same sign next' = picked at")?;
+        writeln!(sum, "|z| >= 4 in one period, same sign in the next (null = picked from the null copies, the 50% baseline).")?;
+        writeln!(sum, "{:<18} {:>7} {:>16} {:>20} {:>20} {:>17} {:>14} {:>26} {:>15}", "group", "series", "joined by period", "predictive |z|>=3", "predictive |z|>=4", "same day |z|>=4", "FDR / placebo", "same sign next: real/null", "stock->ext pred")?;
+        for (g, c) in cats.iter().enumerate() {
+            if g == syn {
+                continue;
+            }
+            let members: Vec<&ExtInfo> = ext.iter().filter(|x| x.cat == g).collect();
+            let joined: Vec<String> = (0..periods.len()).map(|pi| members.iter().filter(|x| x.per[pi].2).count().to_string()).collect();
+            let rows_of = |dir: usize, pred: bool| -> Vec<&&MRow> { all_rows.iter().filter(|x| x.cat == g && x.dir == dir && (x.lag > 0) == pred).collect() };
+            let tot = |rs: &[&&MRow], t: usize| -> (f64, f64) { rs.iter().fold((0.0, 0.0), |a, x| (a.0 + x.real[t] as f64, a.1 + x.null[t] as f64 / NULLS as f64)) };
+            let (p, sd, sp) = (rows_of(0, true), rows_of(0, false), rows_of(2, true));
+            let ((r3, c3), (r4, c4), (s4, cs4), (q4, cq4)) = (tot(&p, 0), tot(&p, 1), tot(&sd, 1), tot(&sp, 1));
+            let fired = p.iter().filter(|x| x.cfdr.is_some()).count();
+            let placebo = p.iter().filter(|x| x.cplacebo.is_some()).count();
+            let (o, on) = (oos_cat.get(&(g, false, 0)).cloned().unwrap_or_default(), oos_cat.get(&(g, true, 0)).cloned().unwrap_or_default());
+            writeln!(sum, "{:<18} {:>7} {:>16} {:>20} {:>20} {:>17} {:>14} {:>26} {:>15}", c, members.len(), joined.join("/"),
+                format!("{}/{} = {}", th(r3), th(c3), ratio(r3, c3)), format!("{}/{} = {}", th(r4), th(c4), ratio(r4, c4)),
+                ratio(s4, cs4), format!("{fired}/{placebo} of {}", p.len()),
+                format!("{} ({}) / {} ({})", pct(o.same as f64, o.n as f64), th(o.n as f64), pct(on.same as f64, on.n as f64), th(on.n as f64)),
+                ratio(q4, cq4))?;
+        }
+        writeln!(sum, "Prediction-market series by period (joined = >= 90% coverage and >= {MIN_ACTIVE} non-zero moves):")?;
+        for x in ext.iter().filter(|x| x.meta.category == "prediction_market") {
+            let j: Vec<String> = periods.iter().zip(&x.per).map(|(w, p)| format!("{}:{}", w.id, if p.2 { "yes".to_string() } else { format!("{:.0}%", 100.0 * p.0) })).collect();
+            writeln!(sum, "  {:<28} {}", x.meta.id, j.join("  "))?;
+        }
+        let sc_joined = ext.iter().filter(|x| x.meta.category == SINGLE && x.per.iter().any(|p| p.2)).count();
+        writeln!(sum, "Finite-life single contracts: {} loaded, {sc_joined} cover 90% of some {length}-day period (reported apart).", ext.iter().filter(|x| x.meta.category == SINGLE).count())?;
+        writeln!(sum)?;
+    }
     writeln!(sum, "By move-length pair (A/B), predictive offsets, |z| >= 4: real/chance = ratio [noise externals' ratio]")?;
     writeln!(sum, "{:<8} {:>32} {:>32} {:>32}", "moves", DIRS[0], DIRS[1], DIRS[2])?;
     for &(h1, h2) in &pairs {
