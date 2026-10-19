@@ -128,8 +128,9 @@ pub struct Plan {
     pub cfg: Config,
     pub var: Variable,
     /// Per correlation period id, its rows of `var`. Only meaningful where `period_ok` holds: an
-    /// unavailable period keeps its id with an empty range (`start == end`, at the row after its
-    /// last day's position, never 0), so nothing is ever computed over it.
+    /// unavailable period keeps its id with an empty range (`start == end`: the row after its
+    /// last day's position, kept within 1..var.t-1 so that `var.days[start]` and
+    /// `var.days[end - 1]` are always valid), so nothing is ever computed over it.
     pub windows: Vec<Window>,
     /// Per window: variable column indices of its universe (stocks today's data still has).
     pub universes: Vec<Vec<usize>>,
@@ -193,7 +194,9 @@ impl Plan {
             .map(|w| match meta.window_rows_in(&var.days, w.id) {
                 Some(rows) => (Window { id: w.id, length: w.length, start: rows.start, end: rows.end }, true),
                 None => {
-                    let at = var.days.partition_point(|&d| d <= w.last).clamp(1, var.t.max(1));
+                    // An empty range, placed so that both `var.days[start]` and `var.days[end - 1]`
+                    // are valid rows (the run's dates are in `meta.windows`).
+                    let at = var.days.partition_point(|&d| d <= w.last).clamp(1, var.t.saturating_sub(1).max(1));
                     (Window { id: w.id, length: w.length, start: at, end: at }, false)
                 }
             })
@@ -393,15 +396,34 @@ fn run_name(dir: &Path) -> String {
 
 /// Whether `run::run(store, plan, dir, ..)` would accept `dir`: Ok when it holds no run yet (no
 /// manifest; a fresh start) or a run `plan` can resume or find complete, else the error that
-/// `run::run` would stop with, before doing anything. Reads only, and takes no lock (a run being
-/// computed right now is `running_pid`'s business). For `c2 update`: when its dated run name is
-/// already taken by a run this refuses, it can fall back to a free name instead of failing.
+/// `run::run` would stop with, before doing anything. Like `run::run`, it refuses a plan made for
+/// reading (`Plan::for_run`) that leaves something out. Reads only, and takes no lock (a run
+/// being computed right now is `running_pid`'s business). For `c2 update`: when its dated run
+/// name is already taken by a run this refuses, it can fall back to a free name instead of
+/// failing.
 pub fn resume_check(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
+    writing_plan(plan)?;
     if !dir.join("manifest.json").exists() {
         return Ok(());
     }
     let (windows_csv, universes_bin) = layout(plan);
     check_resume(dir, plan, store, &windows_csv, &universes_bin)
+}
+
+/// Refuses a plan made for reading a run (`Plan::for_run`) that leaves something out (a
+/// correlation period or a stock today's data doesn't have, or a census variable rebuilt from
+/// another first day): computing with it would write that gap into a run.
+fn writing_plan(plan: &Plan) -> Result<()> {
+    let (periods, stocks) = plan.unavailable();
+    if let Some(run) = plan.built_for()
+        && (periods > 0 || stocks > 0 || plan.variable_note.is_some())
+    {
+        bail!(
+            "this calculation was prepared for reading census {run} ({periods} correlation period(s) and {stocks} stock place(s) left out{}), so it can't compute or resume a census; plan the run afresh (Plan::new)",
+            if plan.variable_note.is_some() { ", its census variable rebuilt" } else { "" }
+        );
+    }
+    Ok(())
 }
 
 /// The resume guard: the run in `dir` (which has a manifest) must be `plan`'s own: same
@@ -787,8 +809,10 @@ fn write_status(dir: &Path, state: &str, done_units: usize, total_units: usize, 
 
 /// Runs (or resumes) the census in `dir` until finished or `stop` is set. Progress lines go to
 /// `log` every ~15 s. Holds `<dir>/lock` throughout, so a second writer on the same run fails
-/// at once ("census X is already running (pid N)").
+/// at once ("census X is already running (pid N)"). Refuses, before touching `dir`, a plan made
+/// for reading (`Plan::for_run`) that leaves out periods or stocks or rebuilt the variable.
 pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn Fn(&str) + Sync)) -> Result<()> {
+    writing_plan(plan)?;
     std::fs::create_dir_all(dir)?;
     let _lock = RunLock::acquire(dir)?;
     prepare_dir(dir, plan, store)?;
