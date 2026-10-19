@@ -8,11 +8,13 @@
 //! rerun; per-pair running sums are stored for a future live tracker). That check looks at the
 //! census itself, not at whether this update ingested anything, so data ingested by `c2 ingest`,
 //! `--smoke` or `--no-census`, or a census that failed or was stopped, is caught up on by the
-//! next plain `c2 update`. Last, it appends today's picks for each family to an append-only
-//! forward log, written before the outcomes exist. `c2 forward-report` scores past entries once
-//! their holding period has passed.
+//! next plain `c2 update`. Last, once the default census is the full census of the current data,
+//! it appends today's picks for each family from it to an append-only forward log (one row per
+//! data day and family, written before the outcomes exist); while it isn't, it logs nothing, so
+//! an older census never takes a day's row. `c2 forward-report` scores past entries once their
+//! holding period has passed.
 
-use std::io::Write;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -113,13 +115,19 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
     match latest_out_of_date(&today) {
         None => log(&format!("census {} is a finished full census of the current price data; no census to run", run::latest_run())),
         Some(why) if opt.no_census => log(&format!("no census run (--no-census), although {why}; the next plain `c2 update` runs it")),
+        Some(why) => census(&store, &today, opt.smoke, &why)?,
+    }
+    // A day's picks are logged only from the full census of that day's data. A row from an older
+    // census would hold the day's place for good (rows are written once per day and family), so
+    // until the default census is current (after --smoke, --no-census, a stopped census or one
+    // running elsewhere) nothing is logged; the update that makes it current logs the day.
+    match latest_out_of_date(&today) {
+        None => forward_log(&store),
         Some(why) => {
-            if !census(&store, &today, opt.smoke, &why)? {
-                return Ok(());
-            }
+            log(&format!("forward log: skipped, {why}; today's picks are logged after the full census finishes"));
+            Ok(())
         }
     }
-    forward_log(&store)
 }
 
 /// What the manifest of a census made on the price store as it is now records about the store.
@@ -207,14 +215,14 @@ fn census_name(prefix: &str, today: &Today, cfg: &Config) -> String {
 /// then becomes the default, or with `smoke` the reduced grid, which never does. Its plan and
 /// progress go to the run's own run.log as with `c2 census run` (so the Status tab's history
 /// shows its computing time), and to update.log. Ctrl-C or `c2 census stop` stops it cleanly
-/// after the window in progress. False when it stopped before finishing.
-fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<bool> {
+/// after the window in progress.
+fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<()> {
     let cfg = if smoke { Config::smoke() } else { Config::full() };
     let name = census_name(if smoke { "smoke-" } else { "main-" }, today, &cfg);
     let dir = run::run_dir(&name);
     if let Some(pid) = run::running_pid(&dir) {
         log(&format!("census {name} is already running (pid {pid}); this update leaves it to finish{}", if smoke { "" } else { ", and the next `c2 update` makes it the default" }));
-        return Ok(true);
+        return Ok(());
     }
     // `analyze::run_history` recognizes update-started runs by this line ("running census NAME ").
     log(&format!("running census {name} because {why}"));
@@ -233,7 +241,7 @@ fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<bool> 
             "census {name} stopped before it finished, so {}; the next `c2 update{}` or `c2 census run --name {name}` resumes it",
             default_stays(), if smoke { " --smoke" } else { "" }
         ));
-        return Ok(false);
+        return Ok(());
     }
     if smoke {
         log(&format!("smoke test: census {name} is not made the default; {}", default_stays()));
@@ -241,11 +249,11 @@ fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<bool> 
         run::set_latest(&name)?;
         log(&format!("census {name} is now the default census"));
     }
-    Ok(true)
+    Ok(())
 }
 
 /// Appends today's picks for each family (once per data day and family) from the latest finished
-/// census. Rows are never rewritten.
+/// census, which `update` makes sure is the full census of today's data. Rows are never rewritten.
 fn forward_log(store: &Store) -> Result<()> {
     let name = run::latest_run();
     let dir = run::run_dir(&name);
@@ -261,8 +269,12 @@ fn forward_log(store: &Store) -> Result<()> {
     let plan = run::Plan::for_run(store, &meta).with_context(|| format!("forward log from census {name}"))?;
     let day = c2_data::date_string(*plan.var.days.last().unwrap());
     let path = c2_data::data_dir().join("forward_log.jsonl");
-    let existing = std::fs::read_to_string(&path).unwrap_or_default();
-    let mut f = std::fs::OpenOptions::new().create(true).append(true).open(&path)?;
+    // The check for an existing row and the append happen under an exclusive lock on the log, so
+    // updates running at the same time never write a day and family twice.
+    let mut f = std::fs::OpenOptions::new().create(true).read(true).append(true).open(&path)?;
+    f.lock().with_context(|| format!("lock {}", path.display()))?;
+    let mut existing = String::new();
+    f.read_to_string(&mut existing)?;
     for (family, label, rebalance) in [
         (Family::CensusPairs, "census", 1usize),
         (Family::PeerMomentum { peers: 20, lookback: 21, window: 756 }, "peers", 21),
