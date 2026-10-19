@@ -274,18 +274,22 @@ pub struct Explained {
     /// The r `move_size` uses: the stored record's r when the census kept the pair (as the
     /// Forecast and the timeline do), else `r` recomputed here.
     pub move_size_r: f64,
-    /// Ok when the Forecast uses this relationship (it multiplies A's latest move relative to
-    /// the market by `move_per_pct`, as of days on which this is the most recent correlation
-    /// period of the relationship), else why it doesn't.
+    /// Ok when the Forecast uses this relationship's multiplier (as of days on which this is the
+    /// relationship's most recent correlation period; of periods ending on the same day it takes
+    /// the longest, which then is this one), else why it never does: offset 0, the full-history
+    /// period, not stored, no size, or a longer stored period of it ending on the same day.
     pub forecast_use: Result<(), String>,
     /// The census's record of this pair, when it stored it.
     pub stored: Option<Stored>,
     pub matrix: Matrix,
     /// What the numbers above were checked against in the run's stored data.
     pub check: Check,
-    /// The plan's `variable_note`: set when values recomputed today may differ from those the run
-    /// stored (its census variable started on another day, e.g. `smoke`), saying why. Show it with
-    /// the correlation period (step 1) and next to `check`.
+    /// Set when values recomputed today can differ from those the run stored, saying why: the
+    /// plan's `variable_note` (its census variable started on another day, e.g. `smoke`), and/or
+    /// census stocks today's data lacks (delisted since) or has new that could have counted in
+    /// the market return of this period's values (the market averages every liquid stock, not
+    /// only the period's). A `check` that disagrees under this note is expected. Show it with the
+    /// correlation period (step 1) and next to `check`.
     pub variable_note: Option<String>,
     /// Pairs tested in the matrix and how many chance alone would give at |z| >= this one.
     pub pairs_tested: f64,
@@ -481,6 +485,97 @@ fn find_record<F: Read + Seek>(file: &mut F, size: u64, total: u64, line: &Summa
         buf.copy_within(whole..fill, 0);
         fill -= whole;
     }
+}
+
+/// The stored real record of `ids` = (leader, target) in task `task`'s matrix for period
+/// `window`, `key` = (h1, h2, offset); None if the census didn't compute that matrix or didn't
+/// keep the pair.
+fn record_in(meta: &RunMeta, task: usize, window: usize, key: (usize, usize, usize), ids: (u32, u32)) -> Result<Option<Record>> {
+    let (h1, h2, lag) = key;
+    let path = meta.task_path(task, "csv");
+    let text = std::fs::read_to_string(&path).with_context(|| format!("census {}: read {}", meta.name, path.display()))?;
+    let s = parse_summary(&text, window, h1, h2, lag).with_context(|| format!("census {}: {}", meta.name, path.display()))?;
+    let Some(line) = &s.line else { return Ok(None) };
+    let path = meta.task_path(task, "rec");
+    let mut file = std::fs::File::open(&path).with_context(|| format!("census {}: read {}", meta.name, path.display()))?;
+    let size = file.metadata()?.len();
+    find_record(&mut file, size, s.records, line, (window, h1, h2, lag), ids.0, ids.1).with_context(|| format!("census {}: read {}", meta.name, path.display()))
+}
+
+/// The longer correlation periods of the same relationship (`ids`, `key` = (h1, h2, offset)) that
+/// end on the same day as `rw` and that the Forecast could keep instead, longest first: of the
+/// stored periods of a relationship ending on the same day it takes the longest
+/// (`forecast::rel_order`; with "significant relationships only", the longest significant one)
+/// among those today's data covers with a size (at least `moves::MIN_PAIRS` observations, as
+/// `forecast::prepare` requires). Each with its record. `cols` are A's and B's variable columns.
+fn longer_same_end<'a>(plan: &Plan, meta: &'a RunMeta, rw: &RunWindow, key: (usize, usize, usize), ids: (u32, u32), cols: (usize, usize)) -> Result<Vec<(&'a RunWindow, Record)>> {
+    let (h1, h2, lag) = key;
+    let mut longer: Vec<&RunWindow> = meta.windows.iter().filter(|w| w.length > rw.length && w.last == rw.last).collect();
+    longer.sort_by_key(|w| std::cmp::Reverse(w.length));
+    let (mut out, mut series) = (Vec::new(), None::<(Vec<f64>, Vec<f64>)>);
+    for w in longer {
+        if period_unavailable(plan, meta, w.id).is_some() {
+            continue;
+        }
+        let Some(task) = meta.find_task(h1, h2, w.length)? else { continue };
+        let Some(rec) = record_in(meta, task.id, w.id, key, ids)? else { continue };
+        let (a, b) = series.get_or_insert_with(|| (plan.var.market_relative(cols.0), plan.var.market_relative(cols.1)));
+        let pw = &plan.windows[w.id];
+        if moves::move_size(a, b, rec.r as f64, h1, h2, lag, pw.start..pw.end).is_some() {
+            out.push((w, rec));
+        }
+    }
+    Ok(out)
+}
+
+/// Why the Forecast can never apply a relationship whose period ends on variable row `end`, with
+/// A in column `ja` and B in `jb` (`names`), even though it would choose it: from that day on it
+/// needs a move of A over `h1` days ending less than `lag` days before the as-of day
+/// (`forecast::rel_path`), and B's price on the as-of day (`forecast::forecast_from`). None if
+/// some day has both.
+fn never_applied(plan: &Plan, end: usize, (ja, jb): (usize, usize), (h1, lag): (usize, usize), names: (&str, &str)) -> Option<String> {
+    let var = &plan.var;
+    let last = |j: usize| var.col(&var.close, j).iter().rposition(|c| c.is_finite() && *c > 0.0).map_or("the start".to_string(), |k| c2_data::date_string(var.days[k]));
+    let a_rel = var.market_relative(ja);
+    if !(end.saturating_sub(lag) + 1..var.t).any(|g| moves::move_sum(&a_rel, g, h1).is_finite()) {
+        return Some(format!("{} has no prices after {}, too early for this correlation period: the Forecast never has a recent move of {} to apply it to", names.0, last(ja), names.0));
+    }
+    if !(end..var.t).any(|t| var.col(&var.close, jb)[t].is_finite()) {
+        return Some(format!("{} has no prices after {}, so there is no forecast for it once this correlation period has ended", names.1, last(jb)));
+    }
+    None
+}
+
+/// The census stocks behind the market return that differ between the run's data and today's,
+/// for values recomputed over variable rows `rows`: (the run's stocks today's data lacks, stocks
+/// today's data has that the run's didn't), by ticker. The market return averages every liquid
+/// census stock, not only a period's, and each census value uses the market over the 504 rows up
+/// to it (its trailing year of residuals, each from a beta over the year before), so such a
+/// stock shifts every recomputed value slightly, but only if it could have been liquid on those
+/// days: from its first 126 closes (half the year a liquidity check looks at) to its last day.
+fn market_changes(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, rows: std::ops::Range<usize>) -> Result<(Vec<String>, Vec<String>)> {
+    let could_count = |s: &c2_data::SymbolInfo| in_market_window(&plan.var.days, rows.clone(), s.first, s.last);
+    // The run's census variable: its store's common stocks with data from its start on.
+    let census_stock = |s: &c2_data::SymbolInfo| s.kind == c2_data::Kind::Stock && s.last >= meta.cfg.start;
+    let gone = meta.stocks()?.symbols.iter().enumerate().filter(|(rid, s)| census_stock(s) && plan.column_of_run_id(*rid as u32).is_none() && could_count(s)).map(|(_, s)| s.ticker.clone()).collect();
+    let new = (0..plan.var.n).filter(|&c| plan.run_id_of_column(c).is_none()).map(|c| &store.symbols[plan.var.ids[c]]).filter(|s| could_count(s)).map(|s| s.ticker.clone()).collect();
+    Ok((gone, new))
+}
+
+/// Whether a stock with prices from day `first` to day `last` could have counted in the market
+/// return behind census values on rows `rows` of the trading days `days`: it can be liquid from
+/// its 126th close (half the 252 rows a liquidity check looks at) to its last day, and a value
+/// uses the market over the 504 rows up to it.
+fn in_market_window(days: &[i32], rows: std::ops::Range<usize>, first: i32, last: i32) -> bool {
+    let (lo, hi) = (days[rows.start.saturating_sub(2 * variable::LOOKBACK)], days[rows.end - 1]);
+    let first_liquid = days.get(days.partition_point(|&d| d < first) + variable::LOOKBACK / 2).copied().unwrap_or(i32::MAX);
+    first_liquid <= hi && last >= lo
+}
+
+/// "A, B, C and 4 more".
+fn some_of(tickers: &[String]) -> String {
+    let shown: Vec<String> = tickers.iter().take(3).cloned().collect();
+    if tickers.len() > 3 { format!("{} and {} more", shown.join(", "), tickers.len() - 3) } else { list_and(&shown) }
 }
 
 /// Sums of x, y, x^2, y^2 and xy, accumulated in observation order as the census does.
@@ -709,7 +804,12 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
     let move_size_r = stored.as_ref().map_or(r, |s| s.record.r as f64);
     let move_size = moves::move_size(&a.resid, &b.resid, move_size_r, h1, h2, lag, 1..1 + len);
     let move_per_pct = move_size.map_or(f64::NAN, |s| s.per_pct);
-    // The Forecast's own filters (forecast::prepare).
+    // The Forecast's own filters (forecast::prepare), and its choice among the periods of one
+    // relationship ending on the same day (forecast::rel_order: the longest).
+    let longer = match (&stored, ida, idb) {
+        (Some(_), Some(ia), Some(ib)) if lag > 0 && rw.length > 0 && move_size.is_some() => longer_same_end(plan, meta, rw, (h1, h2, lag), (ia, ib), (ja, jb))?,
+        _ => Vec::new(),
+    };
     let forecast_use = if lag == 0 {
         Err("offset 0 is the same-day reference, not a prediction, so the Forecast doesn't use it".to_string())
     } else if rw.length == 0 {
@@ -718,9 +818,40 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
         Err("the census didn't store this pair, and the Forecast uses only the relationships it stored".to_string())
     } else if move_size.is_none() {
         Err(format!("fewer than {} observations have both moves, so it has no size", moves::MIN_PAIRS))
+    } else if let Some(&(lw, _)) = longer.first() {
+        // With "significant relationships only" the Forecast takes the longest significant one.
+        let only_significant = stored.as_ref().is_some_and(|s| s.significant) && longer.iter().all(|(_, rec)| rec.flags & FLAG_FDR == 0);
+        Err(format!(
+            "a longer correlation period of the same relationship, {} days ({}..{}), ends on the same day and the census stored it too; of the periods ending on the same day the Forecast uses the longest{}",
+            lw.length,
+            c2_data::date_string(lw.first),
+            c2_data::date_string(lw.last),
+            if only_significant { ", except with \"significant relationships only\", where it uses this one, because only this one passed the significance test" } else { "" }
+        ))
+    } else if let Some(why) = never_applied(plan, w.end - 1, (ja, jb), (h1, lag), (&req.leader, &req.follower)) {
+        Err(why)
     } else {
         Ok(())
     };
+    // What makes values recomputed today differ from those the run stored: an older variable
+    // start (the plan's note), and census stocks gone from (or new to) today's data that could
+    // have counted in the market return these values use.
+    let (gone, new) = market_changes(store, plan, meta, w.start..w.end)?;
+    let mut notes: Vec<String> = plan.variable_note.iter().cloned().collect();
+    if !gone.is_empty() || !new.is_empty() {
+        let mut what = Vec::new();
+        if !gone.is_empty() {
+            what.push(format!("lacks {} of census {run}'s stocks ({})", gone.len(), some_of(&gone)));
+        }
+        if !new.is_empty() {
+            what.push(format!("has {} stock{} census {run}'s data didn't ({})", new.len(), if new.len() == 1 { "" } else { "s" }, some_of(&new)));
+        }
+        notes.push(format!(
+            "today's data {} that could have been liquid during this correlation period or the two years before it; the census's market return averages every liquid stock, not only this period's, so the market return and every value recomputed here differ slightly from what the census stored",
+            what.join(" and ")
+        ));
+    }
+    let variable_note = (!notes.is_empty()).then(|| notes.join(". Also, "));
 
     let universe = universe_ids.len();
     let pairs_tested = (universe * universe.saturating_sub(1)) as f64;
@@ -758,7 +889,7 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
         stored,
         matrix,
         check,
-        variable_note: plan.variable_note.clone(),
+        variable_note,
         pairs_tested,
         chance_analytic,
         words,
@@ -908,6 +1039,23 @@ mod tests {
         assert_eq!(pick(&of_len, not_last, date("2024-06-28")), Pick::Uncovered { want: 2, latest_covered: Some(1) });
         assert_eq!(pick(&of_len, not_last, date("2024-06-27")), Pick::Covered(1));
         assert_eq!(pick(&of_len, none, None), Pick::Uncovered { want: 2, latest_covered: None });
+    }
+
+    #[test]
+    fn a_stock_counts_in_the_market_only_where_it_could_be_liquid() {
+        // 3000 trading days numbered 0..3000; values on rows 1000..1252 use the market on rows
+        // 496..=1251, and a stock is liquid at the earliest 126 rows after its first close.
+        let days: Vec<i32> = (0..3000).collect();
+        let counts = |first: i32, last: i32| in_market_window(&days, 1000..1252, first, last);
+        assert!(counts(0, 2999));
+        // Prices to row 495 only: gone before the window opens; from 496 on: inside.
+        assert!(!counts(0, 495) && counts(0, 496));
+        // First close on row 1125: liquid from row 1251, the period's last row; from 1126: too late.
+        assert!(counts(1125, 2999) && !counts(1126, 2999));
+        // A first close past the data's end.
+        assert!(!counts(2950, 2999));
+        // Rows near the data's start: the window just starts at row 0.
+        assert!(in_market_window(&days, 100..352, 0, 0));
     }
 
     #[test]

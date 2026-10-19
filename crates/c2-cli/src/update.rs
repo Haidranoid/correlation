@@ -203,12 +203,19 @@ fn latest_out_of_date(today: &Today) -> Option<String> {
 /// stocks; e.g. a same-day run made by older code), which is left as it is. A run that passes is
 /// used again: `run::run` resumes it if it was interrupted and reports it complete if it is.
 fn census_name(prefix: &str, today: &Today, plan: &run::Plan, store: &Store) -> String {
+    // A reason already in update.log (from an earlier update) is referred to, not repeated.
+    let logged = std::fs::read_to_string(update_log()).unwrap_or_default();
     (1..)
         .map(|k| if k == 1 { format!("{prefix}{}", today.last_day) } else { format!("{prefix}{}-{k}", today.last_day) })
         .find(|name| match run::resume_check(&run::run_dir(name), plan, store) {
             Ok(()) => true,
             Err(e) => {
-                log(&format!("census {name} can't be continued with today's plan, so it is left as it is: {e:#}"));
+                let full = format!("census {name} can't be continued with today's plan, so it is left as it is: {e:#}");
+                if logged.contains(&full) {
+                    log(&format!("census {name} is left as it is, as before (it can't be continued with today's plan; the reason is earlier in update.log)"));
+                } else {
+                    log(&full);
+                }
                 false
             }
         })
@@ -228,10 +235,26 @@ fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<()> {
     let built = t0.elapsed().as_secs_f64();
     let name = census_name(if smoke { "smoke-" } else { "main-" }, today, &plan, store);
     let dir = run::run_dir(&name);
-    if let Some(pid) = run::running_pid(&dir) {
+    let leave = |pid: u32| {
         log(&format!("census {name} is already running (pid {pid}); this update leaves it to finish{}", if smoke { "" } else { ", and the next `c2 update` makes it the default" }));
+    };
+    if let Some(pid) = run::running_pid(&dir) {
+        leave(pid);
         return Ok(());
     }
+    // The writer lock decides between this update and a start made at the same moment, before
+    // anything is logged for the run.
+    let lock = match run::lock_run(&dir) {
+        Ok(lock) => lock,
+        Err(e) => match run::running_pid(&dir) {
+            Some(pid) => {
+                leave(pid);
+                return Ok(());
+            }
+            None => return Err(e),
+        },
+    };
+    run::resume_check(&dir, &plan, store)?;
     // `analyze::run_history` recognizes update-started runs by this line ("running census NAME ").
     log(&format!("running census {name} because {why}"));
     let census_log = super::census_log(&dir, Some(update_log()));
@@ -242,7 +265,7 @@ fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<()> {
         eprintln!("stopping after the correlation period in progress...");
         flag.store(true, Ordering::Relaxed);
     })?;
-    run::run(store, &plan, &dir, &stop, &census_log)?;
+    run::run_locked(store, &plan, &dir, lock, &stop, &census_log)?;
     // `run::run` also returns normally when stopped; only a finished run may become the default.
     if run_state(&dir) != "finished" {
         log(&format!(

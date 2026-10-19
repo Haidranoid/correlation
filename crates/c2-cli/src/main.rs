@@ -519,7 +519,7 @@ fn census(action: CensusCmd) -> Result<()> {
                 let (y0, mo, d) = c2_data::civil_from_days(c2_data::parse_date(&start)?);
                 let last = *plan.var.days.last().unwrap();
                 println!("Walk-forward: each year treated as the future, predicted only from census correlation periods that ended before it.");
-                for line in gaps.lines("pairs with them are left out") {
+                for line in gaps.lines("pairs with it are left out", "pairs with them are left out") {
                     println!("{line}.");
                 }
                 println!("{:<24} {:>7} {:>9} {:>9} {:>10} {:>10} {:>10} {:>8} {:>8} {:>9} {:>8}", "holdout", "pairs", "SPY", "QQQ", "picks", "random med", "p (0 bps)", "hit %", "IC t", "LS bps/d", "LS t");
@@ -595,7 +595,7 @@ fn census(action: CensusCmd) -> Result<()> {
             let opt = c2_census::holdout::Options { family: fam, rebalance, start: c2_data::parse_date(&start)?, end: i32::MAX, picks, costs_bps: costs, random_runs: random, cash: 10_000.0, all_windows };
             let r = c2_census::holdout::holdout(&store, &plan, &dir, &opt)?;
             println!("Holdout {} .. {} ({} trading days), {:.0}s", c2_data::date_string(r.first_day), c2_data::date_string(r.last_day), r.days, t0.elapsed().as_secs_f64());
-            for line in gaps.lines("pairs with them are left out") {
+            for line in gaps.lines("pairs with it are left out", "pairs with them are left out") {
                 println!("{line}.");
             }
             if r.periods_unavailable > 0 || r.pairs_skipped > 0 {
@@ -686,15 +686,21 @@ fn census(action: CensusCmd) -> Result<()> {
                 },
             }
             match &e.check {
-                Check::Record(c) => println!("checked against the census's record: {} observations here, {} stored; sums of x, y, x^2, y^2 and xy {} (largest relative difference {:.1e}; the record keeps about 7 digits)",
-                    c.obs, c.stored_obs, if c.agrees() { "agree" } else { "DIFFER" }, c.max_rel_diff),
+                // Under a note (values recomputed today can differ, e.g. a stock gone from today's
+                // data), a disagreement is expected, not a fault.
+                Check::Record(c) => {
+                    let verdict = match (c.agrees(), &e.variable_note) {
+                        (true, None) => "agree".to_string(),
+                        (true, Some(_)) => "agree (though with today's data they could differ slightly; see the note above)".to_string(),
+                        (false, Some(_)) => "differ slightly, as expected with today's data (see the note above)".to_string(),
+                        (false, None) => "DIFFER".to_string(),
+                    };
+                    println!("checked against the census's record: {} observations here, {} stored; sums of x, y, x^2, y^2 and xy {verdict} (largest relative difference {:.1e}; the record keeps about 7 digits)",
+                        c.obs, c.stored_obs, c.max_rel_diff);
+                }
                 Check::Summary(c) => println!("nothing is stored for this pair to check against; the matrix's summary line {}: {} stocks and {} observations there, {} and {} here",
                     if c.agrees() { "agrees" } else { "DIFFERS" }, c.stored_stocks, c.stored_obs, c.stocks, c.obs),
                 Check::Nothing => println!("nothing stored to check against: the census never computed this matrix"),
-            }
-            if let (Check::Record(c), Some(_)) = (&e.check, &e.variable_note) {
-                println!("  ({}: this run's census variable started on another day, so values recomputed today can differ from the stored ones; see the note above)",
-                    if c.agrees() { "they agree here, but in general" } else { "expected" });
             }
             if e.matrix.found {
                 let cut = match e.matrix.fdr_r { Some(v) => format!("{v:.4}"), None if offset == 0 => "none (no significance test at offset 0)".into(), None => "none (no pair passed)".into() };
@@ -711,7 +717,8 @@ fn census(action: CensusCmd) -> Result<()> {
             match (&e.forecast_use, &e.move_size) {
                 (Ok(()), Some(s)) => {
                     let (m, step) = (s.per_pct, h1.max(h2));
-                    println!("how the Forecast uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move lengths and offset): each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
+                    let unless = if e.stored.as_ref().is_some_and(|s| s.significant) { "" } else { "; with \"significant relationships only\" it leaves this one out, since it didn't pass the significance test" };
+                    println!("how the Forecast uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move lengths and offset; of periods ending on the same day it takes the longest, and no longer one of this relationship ends that day{unless}): each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
                         days(step), days(h2), tdays(offset), 100.0 * s.sd_a.exp_m1(), 100.0 * (m * s.sd_a).exp_m1());
                 }
                 (Err(why), _) => println!("not used by the Forecast: {why}"),
@@ -745,7 +752,7 @@ fn census(action: CensusCmd) -> Result<()> {
             })?;
             println!("{t} as of {}: ${:.2}; {} relationships where {t} follows another stock{}; typical daily move relative to the market {:.2}%", c2_data::date_string(f.as_of),
                 f.last_price, f.relationships, if significant { " (significant only)" } else { "" }, 100.0 * f.daily_sd);
-            for line in gaps.lines("relationships with them are left out") {
+            for line in gaps.lines("relationships with it are left out", "relationships with them are left out") {
                 println!("{line}.");
             }
             println!("Moves are relative to the market; the $ columns are the price those moves give if the market is flat.");
@@ -761,8 +768,21 @@ fn census(action: CensusCmd) -> Result<()> {
             for c in f.contributions.iter().take(10) {
                 println!("  {} offset {}d (moves {}d -> {}d, r {:+.3}{}): {}'s moves landing in these days {:+.2}% -> {t} {:+.2}% (at {:+.3}% per 1%, applied to log changes; for small moves Y ≈ X x M); share {:+.3} pts   [{}]",
                     c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader, c.leader_move_in_horizon_pct, c.implied_pct, c.move_per_pct, c.share_pct, c.window);
+                // X is the capped move already; say when a move was capped (api_numbers.md, polish).
+                let cap = c2_census::forecast::MOVE_CAP;
+                match c.clipped_moves {
+                    0 => {}
+                    1 => println!("      capped: 1 of {}'s {}-day moves was far outside anything seen in this correlation period (typical {:.2}%), so it counts as {cap:.0} typical moves",
+                        c.leader, c.h1, c.leader_typical_move_pct),
+                    n => println!("      capped: {n} of {}'s {}-day moves were far outside anything seen in this correlation period (typical {:.2}%), so each counts as {cap:.0} typical moves",
+                        c.leader, c.h1, c.leader_typical_move_pct),
+                }
             }
             println!("A leader's moves \"landing in these days\" are its market-relative moves whose predicted days fall in the days ahead; a move whose predicted days run past the last day counts in proportion to the days inside. The implied move is (1 + X/100)^M - 1: the % per 1% applies to log changes, so it is about X x M only for small moves.");
+            if f.contributions.iter().any(|c| c.clipped_moves > 0) {
+                let cap = c2_census::forecast::MOVE_CAP;
+                println!("A leader's move more than {cap:.0} of its typical moves in a relationship's correlation period is counted as {cap:.0}: the census clips at {cap:.0}, so it never measured the relationship beyond that.");
+            }
             match &f.skill {
                 Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, each {} trading days ahead), against {t}'s actual move relative to the market: \
                     direction right {:.1}% of the time (of {} with a direction); predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
@@ -785,6 +805,20 @@ fn census(action: CensusCmd) -> Result<()> {
                 (c2_census::analyze::stock_profile_with(&store, &plan.var, &dir, &t, significant)?, gaps(&plan))
             };
             let full_history: std::collections::HashSet<u32> = meta.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
+            // Of a relationship's periods that end on the same day, the forecast uses the longest one
+            // it can (a rolling period with a size, `forecast::rel_order`); a shorter one's multiplier
+            // is never applied. Rows listed here: all stored ones, or with --significant the
+            // significant ones, as `c2 census forecast --significant` sees them.
+            let period_of = |r: &c2_census::analyze::ProfileRow| meta.windows.get(r.window_id as usize).map(|w| (w.length, w.last));
+            let relationship = |r: &c2_census::analyze::ProfileRow, last: i32| (r.leads, r.partner.clone(), r.h1, r.h2, r.lag, last);
+            let mut longest: std::collections::HashMap<(bool, String, u8, u8, u16, i32), usize> = std::collections::HashMap::new();
+            for r in rows.iter().filter(|r| r.move_per_pct.is_some()) {
+                if let Some((length, last)) = period_of(r).filter(|(length, _)| *length > 0) {
+                    let e = longest.entry(relationship(r, last)).or_default();
+                    *e = (*e).max(length);
+                }
+            }
+            let longer_used = |r: &c2_census::analyze::ProfileRow| period_of(r).is_some_and(|(length, last)| length > 0 && longest.get(&relationship(r, last)).is_some_and(|&l| l > length));
             let sig = rows.iter().filter(|r| r.significant).count();
             let scope = if gaps.periods == 0 { "across all correlation periods".to_string() } else { format!("across the {} correlation periods that today's data covers", gaps.of - gaps.periods) };
             if significant {
@@ -792,7 +826,7 @@ fn census(action: CensusCmd) -> Result<()> {
             } else {
                 println!("{t}: {} stored lead-lag relationships {scope}, {sig} passed the significance test", rows.len());
             }
-            for line in gaps.lines("rows with one of them show no size") {
+            for line in gaps.lines("rows with it show no size", "rows with one of them show no size") {
                 println!("{line}.");
             }
             for leads in [true, false] {
@@ -812,6 +846,8 @@ fn census(action: CensusCmd) -> Result<()> {
                     }).unwrap_or_default();
                     let period = if full_history.contains(&r.window_id) {
                         format!("full-history correlation period, {} days to {} (not used by the forecast)", r.period_days, r.period_end)
+                    } else if longer_used(r) {
+                        format!("correlation period {} days to {} (a longer period is used)", r.period_days, r.period_end)
                     } else {
                         format!("correlation period {} days to {}", r.period_days, r.period_end)
                     };
@@ -821,7 +857,9 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % per 1% is that relationship in price terms:");
             println!("the follower's move relative to the market per 1% move of the leader relative to the market, in that correlation period.");
-            println!("For rows from rolling correlation periods it is the multiplier `c2 census forecast` applies; the forecast doesn't use the full-history period.");
+            println!("For rows from rolling correlation periods it is the multiplier `c2 census forecast{}` applies, unless a longer correlation period of the same relationship ends the same day:",
+                if significant { " --significant" } else { "" });
+            println!("of those the forecast uses the longest (the shorter ones say \"a longer period is used\"). It doesn't use the full-history period.");
             println!("The 'after ... rose' counts use plain price moves. 'Chance made N' is how many pairs at least that strong appeared in the same period");
             println!("when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
             println!("The offset runs from the end of the leader's move to the end of the follower's. `c2 census explain` shows any one step by step.");
@@ -836,12 +874,19 @@ fn census(action: CensusCmd) -> Result<()> {
             let plan = run::Plan::for_run(&store, &meta)?;
             let rep = c2_census::analyze::replication(&store, &plan, &dir)?;
             println!("Replication in the next correlation period of the same length ({:.0}s). 'Chance' rows are pairs picked from sign-flip null matrices.", t0.elapsed().as_secs_f64());
-            for line in gaps(&plan).lines("records with them are left out") {
+            for line in gaps(&plan).lines("records with it are left out", "records with them are left out") {
                 println!("{line}.");
             }
-            if rep.records_unavailable > 0 || rep.records_missing_stock > 0 {
-                println!("Left out: {} stored record(s) whose correlation period, or the next one of its length, today's data doesn't cover ({} such rolling period(s)); {} with a stock no longer in today's data.",
-                    rep.records_unavailable, rep.periods_unavailable, rep.records_missing_stock);
+            let mut left_out = Vec::new();
+            if rep.records_unavailable > 0 {
+                left_out.push(format!("{} stored record(s) whose correlation period, or the next one of its length, today's data doesn't cover ({} such rolling period(s))",
+                    rep.records_unavailable, rep.periods_unavailable));
+            }
+            if rep.records_missing_stock > 0 {
+                left_out.push(format!("{} stored record(s) with a stock no longer in today's data", rep.records_missing_stock));
+            }
+            if !left_out.is_empty() {
+                println!("Left out: {}.", left_out.join("; "));
             }
             println!("{:>4} {:>4} {:>16} {:>7} {:>10} {:>11} {:>16} {:>14}", "h1", "h2", "offset", "kind", "pairs", "same sign", "mean |r| then", "mean r next*");
             for ((h1, h2, b, null), r) in &rep.table {
@@ -920,9 +965,12 @@ fn census(action: CensusCmd) -> Result<()> {
             let t0 = Instant::now();
             let plan = run::Plan::new(&store, cfg)?;
             let built = t0.elapsed().as_secs_f64();
+            // The writer lock decides between starts made at the same moment, before anything
+            // is logged; the loser is refused here.
+            let lock = run::lock_run(&dir).map_err(|e| refuse(&dir, e))?;
             // The checks `run::run` makes before resuming (settings, price data, task list,
-            // correlation periods and their stocks), made here so a refusal comes before the
-            // plan line.
+            // correlation periods and their stocks), made here, under the lock, so a refusal
+            // comes before the plan line.
             run::resume_check(&dir, &plan, &store).map_err(|e| refuse(&dir, e))?;
             let log = census_log(&dir, None);
             log_plan(&plan, built, &name, &dir, &log)?;
@@ -932,7 +980,7 @@ fn census(action: CensusCmd) -> Result<()> {
                 eprintln!("stopping after the correlation period in progress...");
                 s2.store(true, std::sync::atomic::Ordering::Relaxed);
             })?;
-            run::run(&store, &plan, &dir, &stop, &log)
+            run::run_locked(&store, &plan, &dir, lock, &stop, &log)
         }
     }
 }
@@ -1060,15 +1108,19 @@ fn gaps(plan: &c2_census::run::Plan) -> Gaps {
 }
 
 impl Gaps {
-    /// The lines to print, `stocks_then` saying what happens to the pairs with a missing stock;
-    /// none when the run is fully reproducible on today's data.
-    fn lines(&self, stocks_then: &str) -> Vec<String> {
+    /// The lines to print, `then_one` / `then_many` saying what happens to what involves the
+    /// missing stock / stocks; none when the run is fully reproducible on today's data.
+    fn lines(&self, then_one: &str, then_many: &str) -> Vec<String> {
         let mut out = Vec::new();
-        if self.periods > 0 {
-            out.push(format!("{} of the run's {} correlation periods aren't covered exactly by today's price data, so they are left out", self.periods, self.of));
+        match self.periods {
+            0 => {}
+            1 => out.push(format!("1 of the run's {} correlation periods isn't covered exactly by today's price data, so it is left out", self.of)),
+            n => out.push(format!("{n} of the run's {} correlation periods aren't covered exactly by today's price data, so they are left out", self.of)),
         }
-        if self.stocks > 0 {
-            out.push(format!("{} of the run's stocks are no longer in today's data, so {stocks_then}", self.stocks));
+        match self.stocks {
+            0 => {}
+            1 => out.push(format!("1 of the run's stocks is no longer in today's data, so {then_one}")),
+            n => out.push(format!("{n} of the run's stocks are no longer in today's data, so {then_many}")),
         }
         out.extend(self.note.clone());
         out
@@ -1127,4 +1179,25 @@ fn local_seconds() -> i64 {
     });
     let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
     secs as i64 + offset
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn gap_lines_agree_in_number() {
+        let one = Gaps { periods: 1, of: 16, stocks: 1, note: None }.lines("pairs with it are left out", "pairs with them are left out");
+        assert_eq!(one, [
+            "1 of the run's 16 correlation periods isn't covered exactly by today's price data, so it is left out",
+            "1 of the run's stocks is no longer in today's data, so pairs with it are left out",
+        ]);
+        let many = Gaps { periods: 4, of: 16, stocks: 22, note: Some("a note".into()) }.lines("pairs with it are left out", "pairs with them are left out");
+        assert_eq!(many, [
+            "4 of the run's 16 correlation periods aren't covered exactly by today's price data, so they are left out",
+            "22 of the run's stocks are no longer in today's data, so pairs with them are left out",
+            "a note",
+        ]);
+        assert!(Gaps { periods: 0, of: 16, stocks: 0, note: None }.lines("", "").is_empty());
+    }
 }
