@@ -68,7 +68,6 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 - **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
 - **Direction:** continue with the cluster lead-lag family (B), or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
 - **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
-- **Cleanup:** delete the smoke test directories `~/.local/share/correlation2/census/smoke`, `smoke-b`, `smoke-c` and `smoke-d` (about 930 MB in total; a safety check stopped me removing them).
 
 ---
 
@@ -297,7 +296,7 @@ Only lag 1 keeps a small excess (1.2×). It is spread too thinly over pairs for 
 - The time-shift null's own tail jumped at a few lags (e.g. daily lag 63: 118k vs ~33k elsewhere). That was most likely shifts re-aligning quarterly earnings seasons. The sign-flip null makes it moot.
 - `tail()` in the summary uses `ceil` for the boundary bin while the histogram uses `floor`, so tail counts slightly undercount. Harmless for ratios.
 
-**Run directories left for you to delete if you like** (a safety check stopped me removing my own test output): `~/.local/share/correlation2/census/{smoke,smoke-b,smoke-c,smoke-d}`, about 930 MB in total. The first 3.2 GB smoke run was already replaced by its re-run.
+**Run directories:** the smoke runs (`smoke`, `smoke-b`, `smoke-c`, `smoke-d`) were deleted on 2026-10-19; their results stay in this file. The first 3.2 GB smoke run had already been replaced by its re-run.
 
 ## M2: the $10,000 holdout harness (`c2 census holdout`, `c2 census replicate`)
 
