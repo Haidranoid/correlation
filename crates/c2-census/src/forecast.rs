@@ -549,6 +549,22 @@ mod tests {
     }
 
     #[test]
+    fn hit_rate_skips_zero_moves() {
+        // A leader that always rose 1% predicts a rise every time. The stock's actual 2-day
+        // moves: up after the first 6 forecast dates, down after the next 3, exactly 0 after the
+        // last 3. A zero move has no direction, so the hit rate is 6 of 9, not 9 of 12.
+        let mut d = data(vec![rel(0, 100, 252, 1)], &[0.01]);
+        let dates: Vec<usize> = (100..348).step_by(21).collect();
+        assert_eq!(dates.len(), 12);
+        for (k, &t0) in dates.iter().enumerate() {
+            d.target_rel[t0 + 1] = if k < 6 { 0.01 } else if k < 9 { -0.01 } else { 0.0 };
+        }
+        let s = skill(&d, 2, 350, &Options { significant_only: false, horizon: 2, max_age: None }).unwrap();
+        assert_eq!((s.forecasts, s.directional), (12, 9));
+        assert!((s.hit_rate - 6.0 / 9.0).abs() < 1e-12);
+    }
+
+    #[test]
     fn periods_map_by_exact_dates_only() {
         let days = [10, 11, 12, 15, 16, 17];
         let p = |length, first, last| Period { length, first, last };
