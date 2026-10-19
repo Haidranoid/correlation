@@ -675,7 +675,7 @@ fn census(action: CensusCmd) -> Result<()> {
             match (&e.forecast_use, &e.move_size) {
                 (Ok(()), Some(s)) => {
                     let (m, step) = (s.per_pct, h1.max(h2));
-                    println!("how the Forecast uses it: each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
+                    println!("how the Forecast uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move lengths and offset): each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
                         days(step), days(h2), tdays(offset), 100.0 * s.sd_a.exp_m1(), 100.0 * (m * s.sd_a).exp_m1());
                 }
                 (Err(why), _) => println!("not used by the Forecast: {why}"),
