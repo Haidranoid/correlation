@@ -666,7 +666,7 @@ A full code review (`/code-review max`) of the forecast, your-terms, wider-censu
 - **One damaged results file no longer blocks a whole run.** In runs older than the manifest's task list, an unreadable or corrupted results file made every read of the run fail with a misleading "has records but no summary lines". Now only that file's task fails, and the message names the file and the real error.
   - Other tasks still explain, in the CLI and the GUI.
   - The Forecast and Stock views name the file that stops them, and resuming such a run is refused.
-  - Tested on sandbox copies with unreadable, garbled and truncated files, including `main-2025-06-27` with one of its 291 summary files unreadable.
+  - Tested on sandbox copies with unreadable, garbled and truncated files, including `main-2025-06-27` with one of its 180 summary files unreadable.
 - **Wording.** The GUI says "relative to the market" rather than "beyond the market", and defines it once per screen: a stock's move minus the part its usual sensitivity to the market (its beta) accounts for. The Explainer's intro no longer claims every step is checked against stored values, since daily values aren't stored. The CLI shows "no price" instead of "NaN%".
 - **Speed.** The older `smoke` run opens in 0.55 s instead of 1.1 s, because its census variable is built once.
 - **Open finding, not fixed: the $5 price rule looks ahead.** A stock counts in a correlation period only if its median price was at least $5. That rule uses the store's prices, which are adjusted for every later split and dividend, so whether a stock counted in a past period depends on what happened after it.
