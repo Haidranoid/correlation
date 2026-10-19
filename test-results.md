@@ -2,6 +2,14 @@
 
 ## Where things stand (read this first)
 
+**Latest (2026-10-19):**
+- **Current census:** `main-2025-06-27`, the default via `census/LATEST`. It has 36 move-length pairs (A and B each over 1, 3, 5, 10, 21 or 63 days) and 358.7 billion real correlations. See "Follow-up: your terms, a wider census…".
+- **Code review fixes:** all 15 findings of a full code review, plus the verifiers' later findings, are fixed and verified. See "Code review fixes" at the end. The forecast and "% per 1%" are now relative to the market. Each run is read by its own settings, periods and stock list, and a second writer can't share a run.
+- **Outside data:** 1,753 non-stock series were tested with the census's method. The series cover weather, climate, crypto, markets and macro, politics, news sentiment, Google Trends, prediction markets, prosperity, population and immigration, and space weather. None leads US stocks beyond chance. See "Outside data" at the end.
+- **Corrected forecast track record** (market-relative): 61 large caps pooled, direction right 50.9%, mean correlation +0.018. That is a faint tilt with no practical value.
+
+The summary below describes the first census (`main`, 15 move-length pairs). Its conclusions still hold.
+
 **The full correlation census has finished.** Every pair of liquid US stocks (283–2,345 per window), at every return horizon from 1 to 63 days, at lags from 1 day to 3 years, in rolling 1/2/3/5-year windows from 2005 to mid-2025. That's 83,879 real correlation matrices with 3 chance matrices each.
 - **Time:** 5 min 47 s on the RTX 5080, against v1's estimated ~6 months in C.
 - **Output:** `~/.local/share/correlation2/census/main/`.
@@ -280,7 +288,7 @@ Smoke grid: horizons {1, 5, 21}, 1- and 3-year windows, 888 units.
 | 15 | 87,634 | 34,088 | 96,558 | 0.91 |
 | 63 | 57,340 | 117,980 | 58,540 | 0.98 |
 
-Only lag 1 keeps a small excess (1.2×). That fits the known next-day effect from large to small stocks (`research/results.txt` positive control). It is spread too thinly over pairs for any individual pair to pass the FDR rule.
+Only lag 1 keeps a small excess (1.2×). It is spread too thinly over pairs for any individual pair to pass the FDR rule within one window. Later check (2026-10-18), on the full-history window of `main-2025-06-27`: the next-day pairs that do pass are almost all stale prices or time zones. Of 127, 97 have a thinly traded closed-end fund as B (Nuveen municipal funds such as NVG, NZF, NAC), and 17 have a foreign company's US shares as B (MUFG, HMC, HSBC). In the leader, follower order, the leader trades more in 80% of pairs.
 
 **How this squares with the earlier Python result:** `research/lag_spectrum.py` found that the lag structure of one period doesn't reappear in the next (top pairs ~coin-flip). The census now says the same thing from within each window: beyond lag 1, extreme lagged correlations occur at chance rates once volatility alignment is accounted for.
 
@@ -335,7 +343,7 @@ Hit rate 50.2%; rank IC +0.0009 (t = 0.55).
 
 **Walk-forward, 19 one-year holdouts (2006–2025):**
 - Picks beat random guessers at p < 0.1 in **2 of 19 years**. Chance alone gives about 1.9.
-- Rank IC t-stat positive in 16 of 19 years, combined z = 3.53. That's a weak but consistent ranking signal in vol-normalized residual returns, most likely the documented next-day effect from large to small stocks.
+- Rank IC t-stat positive in 16 of 19 years, combined z = 3.53. That's a weak but consistent ranking signal in vol-normalized residual returns. Its source is *not* the next-day effect from large to small stocks; see the correction under the full census's caveat 3.
 - Long-short top/bottom 10% in actual returns: **0.43 bps/day gross, positive in 8 of 19 years, combined z = 0.52.** Not significant. With 44% of the book replaced daily, costs of c bps per side take about 1.8 × c bps/day, so even 1 bp of cost erases it.
 
 ## The full census (`c2 census run --name main`)
@@ -384,7 +392,14 @@ Hit rate 49.9% of 4,996 picks; daily rank IC +0.0009 (t = 0.57).
 **Three caveats on these numbers:**
 1. **Configuration sensitivity.** The same holdout year, with the same rule, gave +10.8% (p = 0.39) on the smoke census and +23.3% (p = 0.10) on the full census. Only the set of horizons and window lengths differed. A result that moves that much with an arbitrary choice is noise. SPEC §7.4's ledger and deflated Sharpe ratio exist for exactly this; with every configuration counted, the 23.3% is not evidence.
 2. **The random baseline is generous to the strategy.** Picks are chosen by score size, and score size favors stocks with many strong stored pairs, which tend to be the volatile ones. Uniform random picks from the same pool don't share that tilt. In a strong year a volatility tilt beats a uniform draw on its own (note the picks swinging +92% / −35% while the random medians don't), so p = 0.10 overstates how unusual 23.3% is. A random guesser matched on volatility or pick frequency would be the stricter test.
-3. **What the rank IC (z = 4.15) is.** One reading is the documented next-day effect from large to small stocks. Another is mechanical: residuals from trailing betas keep a sliver of market exposure, and the equal-weight market is slightly autocorrelated at lag 1, which gives every residual pair a small positive lag-1 correlation with no pair-specific information. Both readings agree with the near-zero long-short result in actual returns. Either way, it isn't monetizable.
+3. **What the rank IC (z = 4.15) is.** Corrected 2026-10-19. Two readings were offered here: the next-day effect from large to small stocks, and a mechanical lag-1 effect from leftover market exposure. A decomposition of the same 19 yearly ICs contradicts both:
+   - **Not next-day:** offset-1 pairs alone give z = +0.19. Offsets of 2 days and more give +4.17, spread across 2–5, 6–21 and 22–63 days (+1.81 / +2.60 / +2.26).
+   - **Sign-dependent:** it vanishes when the pairs' signs are ignored (−1.45) or randomized (−0.41), and comes mostly from negative-r pairs (+4.29, against +1.69 for positive-r).
+   - **Not the stock's own reversal:** rank correlation with own-stock reversal is about −0.01.
+   - **Not only thin stocks:** it tilts toward illiquid targets but isn't confined to them (terciles +3.81 / +2.87 / +1.79), and the top contributors are liquid names (SNA, AEM, A, VZ, EMR).
+   - **Also in the smoke census:** smoke-d shows the same pattern.
+
+   So it is a faint, consistent cross-sectional tilt of unexplained origin. It is still not monetizable: the long-short result in actual returns is near zero, and the picks beat random guessers in only 2 of 19 years.
 
 ### Verdict from the first version
 - **The census works as designed:** fast, validated, resumable, honest nulls.
@@ -586,3 +601,118 @@ The Stock timeline and Forecast tabs open it with the relationship pre-filled.
   - real/chance by move lengths, by offset and by period length
   - significant relationships by year
   - per-stock average |r|, significant count and stored count
+
+## Code review fixes (2026-10-18/19)
+
+A full code review (`/code-review max`) of the forecast, your-terms, wider-census, Explainer and Status work found 15 verified problems. Its candidate list held 29 more correctness items, 6 efficiency items and 8 cleanups. All of them were fixed in three rounds by parallel agents, each in its own git worktree with its own files. The work was merged on branch `review-fixes`, then checked by four verifiers and a fresh code review. The verifiers reran every original reproduction against the real data, read-only, or in sandbox copies. A third round fixed what they found, and a final verification round rechecked everything.
+
+**What changed that you will notice:**
+- **Each census run is read by its own description** (`c2_census::meta::RunMeta`): its own settings, task numbering, correlation periods (mapped by date) and stock list.
+  - Each run keeps a copy of the store's `symbols.tsv`, and stocks are matched by ticker. `c2 ingest`, `c2 update` and the new `c2 census snapshot-symbols` save it; it was saved for the 7 existing runs on 2026-10-18.
+  - Old runs (`main`, 75 tasks) are read correctly again. replicate, holdout and walk-forward reproduce `research/census_main_*.txt` number for number.
+  - After a data refresh, correlation periods the new data doesn't cover and delisted stocks are skipped and counted, not misread and not refused.
+- **One writer per run.** `run::run` holds an exclusive lock and writes the pid, so a second census on the same run is refused instantly.
+  - `status`, `stop`, `pause` and `resume` without `--name` act on the running census. A census started by `c2 update` shows as running, not "interrupted".
+  - LATEST is written atomically and fsynced. `c2 update --smoke` never changes it.
+  - `c2 update` runs the full census whenever LATEST is out of date for the store, even with an empty inbox. It never gets stuck on a same-day run it can't resume.
+  - The forward log is written only from a census of the day's own data, one row per day and family, under a file lock.
+- **The forecast and every "% per 1%" are relative to the market,** with one shared implementation (`moves.rs`) built on the census's repaired closes. That fixes the market leak (BOH as of 2008-10-10: +0.39% became −1.36%) and the bad prints (NUE's "typical daily move" 20.76% became 1.99%).
+  - The number shown is exactly the multiplier applied. It is bit-identical in the forecast, the Stock timeline and Explainer step 7 for all 34,133 contributions checked.
+  - Forecasts skip full-history periods, which the track record can't grade. Ties go to the longest period, not to file order.
+  - Each contribution row shows the part of A's moves landing in the forecast's days, so its arithmetic holds: (1 + X/100)^M − 1.
+- **Explainer:**
+  - It uses the run's own periods and stocks.
+  - It says when the census never computed a relationship, and why: too few observations, an offset off the census grid, the stock didn't qualify, the period isn't covered, or the stock is gone since.
+  - Offset 0 is explainable as the same-day reference.
+  - The self-check now compares the recomputed sums with the census's stored ones. On 2,184 random stored pairs the largest difference was 5.9e-8.
+- **GUI:**
+  - Every job and cache is keyed by run (and store version). Switching runs can't mix them up or crash the Holdout.
+  - Failed jobs show errors instead of endless spinners.
+  - The store is reloaded when `c2 update` replaces it.
+  - The Forecast tab reads a stock once: an option change takes 33 ms (was 0.7 s), and walking back 12 months 0.37 s (was 8.4 s).
+  - The Strongest tab takes 0.2 s (was 1.7 s). Status statistics take 0.12 s and 80 MB (was 1.3 s and 1.8 GB).
+- **Census engine:** padding entries are dropped before selection. A CPU recount of `main-2025-06-27`'s tail counts matches exactly, so that census was unaffected. Ties at the keep boundary now break by matrix index, so reruns are byte-identical.
+
+**Corrected forecast track records** (21-day forecasts remade every 21 days; direction right / correlation of predicted with actual):
+
+| | Before the fixes (raw moves) | After (market-relative), `main-2025-06-27` |
+|---|---|---|
+| AAPL | 55.0% / +0.08 | 56.5% / +0.05 |
+| BOH | 53.4% / +0.13 | 54.4% / −0.12 |
+| NAD | 51.6% / −0.17 | 48.4% / −0.24 (reliably wrong; the GUI shows it red) |
+| 61 large caps pooled | 50.2% / +0.005 | 50.9% / +0.018 (40 of 61 positive) |
+| same, periods ending in the last 3 years only | 49.6% / 0.000 | 50.9% / +0.013 |
+
+- The pooled 50.9% is 0.9 points above the 50.1% the up/down base rates alone give.
+- Allowing for stocks forecast on the same dates moving together, it's borderline: p = 1.7% to 8% depending on the permutation test.
+- Predicted moves average 0.10%, against actual moves of 4.70%. This is a faint tilt with no practical value.
+
+**A finding about the census's chance comparison.** The outside-data test injected 220 pure-noise series. At 63-day moves they show about 2.4× as many strong correlations as the sign-flip null predicts, and 1.2× at 21-day moves. The census's own 63→63 ratio is 2.41. So that bar on the Status chart is an artifact: the null is too lenient for persistent series at long move lengths. Possible fixes are noise calibration series in every census, or a block sign flip at long move lengths. Neither is built yet.
+
+**Costs:** CLI `forecast`/`stock` now peak at 1.27 GB (was 0.37), and the GUI at about 1.7 GB (was 0.83), because the market-relative maths needs the census variable for all stocks.
+
+**Polish after the final verification (2026-10-19):**
+- **Forecast cap.** Each of A's moves counts as at most 5 of its typical moves in that relationship's correlation period, because the census clips at 5 and never measured a relationship beyond that. Capped rows are marked.
+  - It fixes absurd rows such as MSTR <- OKLO, which said +6,268,142,759% and now says +242.84%. OKLO's 2022–2024 history is its pre-merger SPAC's flat price. Stooq carries SPAC histories under the later ticker; removing those stretches from the census would need a rerun.
+  - Across every stock's latest forecast, 3.3% of rows are capped. The largest implied row went from 6.27 billion % to 1,587%, and rows beyond ±100% from 1,262 to 535.
+  - The pooled track record is unchanged at 50.9% (mean correlation +0.015). AAPL is 58.0% / +0.050, BOH 54.4% / −0.123 → 55.6% / −0.238 as of 2008-10-10, and NAD 48.4% / −0.236.
+- **No false alarms after a data refresh.** When today's data lacks a stock the run had, the census's market average changes, and every recomputed value differs slightly from what was stored. The Explainer now names the missing stock and shows the difference as expected (yellow), not as a fault.
+- **Superseded relationships are marked.** A relationship's shorter period is never used by the forecast when a longer period of the same relationship ends the same day; NAD has 100 such rows and AAPL 288. These rows are marked "(a longer period is used)" in `c2 census stock`, and with an asterisk in the Stock timeline. The Explainer says why.
+- **Simultaneous starts.** The census lock is taken before anything is logged, so the loser of two simultaneous starts is recorded as refused.
+- **Smaller fixes:** thousands separators everywhere, verdict wording by which side of 50% the hit rate is on, size-less rows kept off the "% per 1%" chart, singular forms, and "correlation-period computations" instead of "windows".
+
+## Outside data: does anything outside the stock market lead US stocks?
+
+**Data** (`~/.local/share/correlation2/external/`; each source has a `catalog_*.csv`, a `SOURCES_*.md` with sources, terms, timing rules and caveats, normalized `series/*.csv` and untouched `raw/` downloads):
+
+| Catalog | Series | What |
+|---|---|---|
+| weather | 239 | 30 NOAA US stations plus London, Frankfurt and Sydney (temperature, rain, snow, wind, degree days); CPC population-weighted degree days; NAO/AO/PNA/AAO, ENSO, MJO; hurricanes, tornadoes; US Drought Monitor; ERA5 points (New York sunshine, Corn Belt, Kansas wheat, Central Valley, Brazil coffee, Brazil/Argentina soy, Tokyo) |
+| markets | 255 | 71 crypto (59 coins, Coinbase, Bitcoin on-chain, Fear & Greed); 30 world indices and 19 equity ETFs; government yields in 14 countries; FX; commodities; oil, gas and inventories; credit; volatility indices; economic releases |
+| other | 79 | space weather and sunspots (placebo); moon phase and daylight; earthquakes; population (monthly US; annual states, regions and world); flu and COVID; 37 Wikipedia topics; geopolitical risk; gasoline and electricity demand; TSA |
+| politics | 212 | state EPU (50 + DC), 19 country EPUs, US categorical EPU, Twitter and UK EPU; geopolitical risk for 44 countries; partisan conflict; protests (US by state from 2017; 12 countries 1995–2023); elections and changes of power; state partisan control; Iowa Electronic Markets; approval; shutdowns and debt limit; Federal Register; COVID stringency |
+| news | 135 | daily headline tone (VADER, Loughran-McDonald) and crisis-word counts from Wikipedia Current Events (point-in-time), Hacker News, Reuters (2007–2014), ABC Australia, Times of India, Irish Times, HuffPost, All the News |
+| trends | 88 | Google Trends, weekly from 2004: Preis-2013 terms, FEARS terms, crypto, jobs, weather, market terms, 20 tickers; 8 daily key terms |
+| predictions | 111 | Kalshi and Polymarket as 20 continuous rolling series (Fed next meeting, CPI, jobs, GDP, recession, shutdown, House and Senate control) from 2021; 91 single contracts (finite-life, chosen with hindsight; browsing only) |
+| prosperity | 342 | county unemployment and home values (distributions across all counties plus 50 counties), state unemployment and coincident indexes, OECD unemployment, QCEW wages, BEA income, SAIPE income and poverty, World Bank and WID inequality |
+| migration | 292 | CBP border encounters (monthly from 1999), refugees, DHS removals and arrests, green cards; EU asylum (monthly); Canada, Australia and UK flows; county and state population growth with net international and domestic migration (annual) |
+
+**Method** (`crates/c2-census/examples/external_test.rs`; results in `research/external_test_results.txt`):
+- **Same as the census:** move lengths, offsets, observation grid, sign-flip null, false-discovery rule and placebo, against the census's own stock universes.
+  - Periods: the four non-overlapping 1260-day correlation periods (2005–2025) plus full history.
+  - It reproduced 350 stored census correlations to 3e-8.
+- **Timing:** each observation counts only from the day it was publicly known by the 4 pm New York close, a conservative bound per series. For example, weather counts from the next day, jobless claims 5 days after the week, and monthly releases at their worst historical publication delay.
+- **Standardizing:**
+  - Seasonal series become anomalies against earlier years only.
+  - Everything is standardized by a trailing year, as stocks are.
+  - Sparse event series need at least 10 non-zero moves in a period.
+- **Kept apart:** annual series (about 20 changes in 20 years, often all on one release day) and finite-life contracts are reported separately, not in the headline.
+- **Noise baseline:** 220 pure-noise series run through the same pipeline.
+
+**Results** (run `ext-all-2`: 1,753 series, 15.6 billion real correlations against 46.7 billion chance, 2 min 03 s on the GPU):
+
+| Direction, predictive offsets | Real/chance at \|z\| ≥ 4 | Noise baseline | Same sign in the next 5-year period | Picks from the null copies |
+|---|---|---|---|---|
+| outside data -> stocks | 1.04 | 1.04 | 50.7% (n 292,506) | 50.1% |
+| stocks -> outside data | 1.05 | 1.06 | | |
+
+- **By category, outside data -> stocks, predictive:** 0.81–1.10 everywhere, apart from two small, explained exceptions. Climate indices score 1.27 (two near-duplicate weekly Niño series); monthly population scores 1.59 (a calendar alignment with a monthly-paying fund).
+  - News 0.92, politics 1.02, prosperity 1.05, migration 1.01, Google Trends 1.03.
+  - Annual series 1.00.
+- **Controls:** all pass.
+  - Same day: oil -> energy stocks z +7.6 to +32.7; gold -> miners +24.9 to +52.2; gas -> producers +3.7 to +14.9.
+  - SPY -> Asian indices the next day: r +0.15 to +0.54.
+  - Synthetic leads are found at their exact offsets.
+  - Placebos look like chance: sunspots, solar flux, Wikipedia "Cat"/"Philosophy".
+- **What survives is mechanical:**
+  - US-listed ETFs leading thinly traded closed-end funds and small banks by a day (stale prices, r ≈ 0.13).
+  - Data released on a fixed calendar lining up with funds' payout dates or companies' calendars. The 50 state indexes released together and the monthly-paying PDI, CLM and CRF funds are one example; quarterly state income and Garmin another. Moon phase lines up with dividend dates the same way.
+  - In plain terms these are flat: GRMN rose 52.5% of the time after the income series' top quarter and 55.0% after its bottom quarter, against 53.0% normally.
+- **Prediction markets** need their own test, because they start in 2021. Using the census's 252-day periods from April 2022 to April 2025 (`--short-periods`), the rolling series score 1.03× chance, and 50.4% keep their sign next year (null picks 49.2%). That is the same as crypto (1.05×, 49.5%), daily Google Trends (1.00×, 49.3%), 100 random other series (1.02×, 49.8%) and noise (1.01×, 49.9%). They do move with stocks on the same day (1.77×), because their rolls fall on FOMC, CPI and jobs-report days.
+
+**Verdict:** none of the outside data tested leads US stocks beyond chance, and nothing found is tradable.
+
+To rerun:
+- `cargo run --release -p c2-census --example external_test -- --run <name> --noise 220`
+- add `--short-periods --short-from 2022-04-01` for the recent-years test
+- `--browse <run> --series <id> --min-z 4` lists a series' stored relationships

@@ -160,7 +160,7 @@ The 20 bps row looks better against random only because the picks repeat from da
 
 **Research**
 - **Bennett, Cucuringu & Reinert (2022)**, *Lead-lag detection and network clustering for multivariate time series with an application to the US equity market* (Machine Learning). The rigorous version of v1's idea:
-  - 5,325 NYSE stocks, 2000 to 2019 (CRSP, so no survivorship bias); lead-lag metrics over lags −5 to +5 (distance correlation worked best).
+  - The 434 most-traded NYSE stocks, 2000 to 2019 (CRSP, which includes delisted stocks). They started from 5,325 NYSE stocks and kept the 500 with the highest average dollar volume and at least 2.5 years of data, to avoid stale-price lead-lag. Lead-lag metrics over lags −5 to +5 (distance correlation worked best).
   - Stocks clustered by directed flow imbalance using Hermitian random-walk clustering; leading-cluster returns used to forecast lagging clusters.
   - Rolling 1-year lookback, refit every 2 months.
   - Result: Sharpe 0.62 vs 0.40 for the S&P 500, mean 2.4 bps a day. **No transaction costs**; the authors say costs "may be significant".
