@@ -264,24 +264,27 @@ impl Plan {
 /// settings, starting on the run's own first day (the manifest's `variable_days`). The second
 /// value is set, saying why, when that first day differs from the one today's code starts the
 /// variable on (runs made by older code, such as `smoke`, which started 2003-12-01): the
-/// variable is then rebuilt from the run's first day when the calendar allows (the warm-up
-/// rows fix the phase of its 21-day liquidity re-checks), but values recomputed today may still
-/// differ from those the run stored.
+/// variable is then built from the run's first day when the calendar allows, because values
+/// depend on where it starts, and not only through the phase of its 21-day liquidity
+/// re-checks (`smoke` starts a whole number of re-checks later, yet built from today's first
+/// day its r differ by up to 0.22 in periods ending 2007-2009). Values recomputed today may
+/// still differ from those the run stored. The variable is built once.
 pub fn variable_for(store: &Store, meta: &RunMeta) -> Result<(Variable, Option<String>)> {
     let cal = Calendar::trading_days(store)?;
-    let var = variable::production(store, &cal, meta.cfg.start)?;
-    let today = c2_data::date_string(var.days[0]);
+    let build = |cal: &Calendar| variable::production(store, cal, meta.cfg.start);
+    let first = cal.days.get(variable::first_row(&cal, meta.cfg.start)).copied().context("the price data has no trading days for the census variable")?;
+    let today = c2_data::date_string(first);
     let name = &meta.name;
     let Some(theirs) = meta.manifest["variable_days"][0].as_str().map(String::from) else {
         let note = format!("census {name} doesn't record the first day of its census variable, so values recomputed today may differ from the stored ones");
-        return Ok((var, Some(note)));
+        return Ok((build(&cal)?, Some(note)));
     };
     if theirs == today {
-        return Ok((var, None));
+        return Ok((build(&cal)?, None));
     }
     // A later first day: start the calendar there, so the variable's rows start there too.
     if let Some(k) = c2_data::parse_date(&theirs).ok().and_then(|d| cal.days.binary_search(&d).ok()).filter(|_| theirs > today) {
-        let from_theirs = variable::production(store, &Calendar { days: cal.days[k..].to_vec() }, meta.cfg.start)?;
+        let from_theirs = build(&Calendar { days: cal.days[k..].to_vec() })?;
         if c2_data::date_string(from_theirs.days[0]) == theirs {
             let note = format!(
                 "census {name} was made by older code whose census variable started on {theirs} (today's starts on {today}); it is rebuilt from {theirs} here, but values recomputed today may still differ from the stored ones"
@@ -290,7 +293,7 @@ pub fn variable_for(store: &Store, meta: &RunMeta) -> Result<(Variable, Option<S
         }
     }
     let note = format!("census {name} was made by older code whose census variable started on {theirs}; today's starts on {today}, so values recomputed today may differ from the stored ones");
-    Ok((var, Some(note)))
+    Ok((build(&cal)?, Some(note)))
 }
 
 /// Estimated cost of each (task, window position).
@@ -451,6 +454,9 @@ fn check_resume(dir: &Path, plan: &Plan, store: &Store, windows_csv: &str, unive
     let fresh = || format!("start a new run with a different --name (census {name} itself stays readable)");
     let meta = RunMeta::load(dir).with_context(|| format!("can't check census {name} before resuming it; {}", fresh()))?;
     let theirs = meta.tasks().with_context(|| format!("can't check which move lengths census {name}'s results files hold, so resuming could mix them; {}", fresh()))?;
+    if let Some((_, why)) = meta.damaged().first() {
+        bail!("{why}; census {name} can't be resumed until that file is readable again, or {}", fresh());
+    }
     if let Some(id) = (0..theirs.len().max(plan.tasks.len())).find(|&id| {
         let key = |t: &Task| (t.h1, t.h2, t.length, t.windows.clone());
         theirs.get(id).map(key) != plan.tasks.get(id).map(key)

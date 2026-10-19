@@ -129,6 +129,12 @@ fn median(v: &mut [f32]) -> f32 {
     *v.select_nth_unstable_by(mid, |a, b| a.total_cmp(b)).1
 }
 
+/// The calendar row `production` starts the variable on for data from `from` (about three
+/// years earlier, for its warm-up), so its first day is `cal.days[first_row(cal, from)]`.
+pub fn first_row(cal: &Calendar, from: i32) -> usize {
+    cal.range(from - 1100, i32::MAX).start
+}
+
 /// Builds the production census variable for every common stock with data on or after `from`.
 /// Rows start ~3 years earlier so it is valid from `from`: the market needs a year of liquidity
 /// history, then beta and volatility each need at least half a year more.
@@ -136,7 +142,7 @@ pub fn production(store: &Store, cal: &Calendar, from: i32) -> Result<Variable> 
     let ids: Vec<usize> = (0..store.symbols.len())
         .filter(|&i| store.symbols[i].kind == Kind::Stock && store.symbols[i].last >= from)
         .collect();
-    let rows = cal.range(from - 1100, i32::MAX);
+    let rows = first_row(cal, from)..cal.days.len();
     let mut panel = Panel::build(store, cal, rows, &ids);
     panel.repair_bad_prints();
     let (t, n) = (panel.t, panel.n);

@@ -669,9 +669,11 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             let ending = if offset == 0 { "the same day as".to_string() } else { format!("{} before the end of", tdays(offset)) };
             println!("{} observations ({h1}-day moves of {a} ending {ending} {h2}-day moves of {b}):", e.n);
+            // A move over days without a price has no % (the GUI says "no price" too).
+            let pct = |m: f64| if m.is_finite() { format!("{:+.2}%", 100.0 * m.exp_m1()) } else { "no price".to_string() };
             for o in e.obs.iter().take(3) {
-                println!("  {} {} -> {}: {:+.2}% (x {:+.3});  {} {} -> {}: {:+.2}% (y {:+.3})", e.a.ticker, c2_data::date_string(e.days[o.a_end - h1]), c2_data::date_string(e.days[o.a_end]),
-                    100.0 * o.a_move.exp_m1(), o.x, e.b.ticker, c2_data::date_string(e.days[o.b_end - h2]), c2_data::date_string(e.days[o.b_end]), 100.0 * o.b_move.exp_m1(), o.y);
+                println!("  {} {} -> {}: {} (x {:+.3});  {} {} -> {}: {} (y {:+.3})", e.a.ticker, c2_data::date_string(e.days[o.a_end - h1]), c2_data::date_string(e.days[o.a_end]),
+                    pct(o.a_move), o.x, e.b.ticker, c2_data::date_string(e.days[o.b_end - h2]), c2_data::date_string(e.days[o.b_end]), pct(o.b_move), o.y);
             }
             println!("r = {:+.6}, z = {:+.3}; r of raw % moves = {:+.4}", e.r, e.z, e.r_raw);
             match &e.stored {

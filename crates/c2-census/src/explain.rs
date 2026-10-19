@@ -806,8 +806,10 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
     let move_per_pct = move_size.map_or(f64::NAN, |s| s.per_pct);
     // The Forecast's own filters (forecast::prepare), and its choice among the periods of one
     // relationship ending on the same day (forecast::rel_order: the longest).
+    // The Forecast reads every task of the run's rolling periods, so a damaged one stops it.
+    let damaged = meta.damaged().iter().find(|(id, _)| meta.tasks().ok().and_then(|t| t.get(*id)).is_some_and(|t| t.length > 0));
     let longer = match (&stored, ida, idb) {
-        (Some(_), Some(ia), Some(ib)) if lag > 0 && rw.length > 0 && move_size.is_some() => longer_same_end(plan, meta, rw, (h1, h2, lag), (ia, ib), (ja, jb))?,
+        (Some(_), Some(ia), Some(ib)) if lag > 0 && rw.length > 0 && move_size.is_some() && damaged.is_none() => longer_same_end(plan, meta, rw, (h1, h2, lag), (ia, ib), (ja, jb))?,
         _ => Vec::new(),
     };
     let forecast_use = if lag == 0 {
@@ -818,6 +820,8 @@ pub fn explain_with(store: &c2_data::Store, plan: &Plan, meta: &RunMeta, req: &R
         Err("the census didn't store this pair, and the Forecast uses only the relationships it stored".to_string())
     } else if move_size.is_none() {
         Err(format!("fewer than {} observations have both moves, so it has no size", moves::MIN_PAIRS))
+    } else if let Some((_, why)) = damaged {
+        Err(format!("the Forecast can't read census {run} while one of its results files is damaged ({why})"))
     } else if let Some(&(lw, _)) = longer.first() {
         // With "significant relationships only" the Forecast takes the longest significant one.
         let only_significant = stored.as_ref().is_some_and(|s| s.significant) && longer.iter().all(|(_, rec)| rec.flags & FLAG_FDR == 0);

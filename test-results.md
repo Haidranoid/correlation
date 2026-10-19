@@ -62,6 +62,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 - signal families B and D (cluster lead-lag, the size control)
 - a random guesser matched on volatility (a stricter baseline)
 - survivorship-free data
+- a point-in-time $5 price rule (it needs a split history; see "Last checks" under "Code review fixes")
 
 **Your call:**
 - **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
@@ -660,6 +661,18 @@ A full code review (`/code-review max`) of the forecast, your-terms, wider-censu
 - **Superseded relationships are marked.** A relationship's shorter period is never used by the forecast when a longer period of the same relationship ends the same day; NAD has 100 such rows and AAPL 288. These rows are marked "(a longer period is used)" in `c2 census stock`, and with an asterisk in the Stock timeline. The Explainer says why.
 - **Simultaneous starts.** The census lock is taken before anything is logged, so the loser of two simultaneous starts is recorded as refused.
 - **Smaller fixes:** thousands separators everywhere, verdict wording by which side of 50% the hit rate is on, size-less rows kept off the "% per 1%" chart, singular forms, and "correlation-period computations" instead of "windows".
+
+**Last checks (2026-10-19):** the final Explainer verification passed every item but one, now fixed, and noted a few smaller things:
+- **One damaged results file no longer blocks a whole run.** In runs older than the manifest's task list, an unreadable or corrupted results file made every read of the run fail with a misleading "has records but no summary lines". Now only that file's task fails, and the message names the file and the real error.
+  - Other tasks still explain, in the CLI and the GUI.
+  - The Forecast and Stock views name the file that stops them, and resuming such a run is refused.
+  - Tested on sandbox copies with unreadable, garbled and truncated files, including `main-2025-06-27` with one of its 291 summary files unreadable.
+- **Wording.** The GUI says "relative to the market" rather than "beyond the market", and defines it once per screen: a stock's move minus the part its usual sensitivity to the market (its beta) accounts for. The Explainer's intro no longer claims every step is checked against stored values, since daily values aren't stored. The CLI shows "no price" instead of "NaN%".
+- **Speed.** The older `smoke` run opens in 0.55 s instead of 1.1 s, because its census variable is built once.
+- **Open finding, not fixed: the $5 price rule looks ahead.** A stock counts in a correlation period only if its median price was at least $5. That rule uses the store's prices, which are adjusted for every later split and dividend, so whether a stock counted in a past period depends on what happened after it.
+  - Example: AAPL's 2009-01-05 close is $2.73 in the store (it traded near $95 then), so AAPL was left out of the 2009 periods.
+  - This changes which stocks were compared in older periods, not how. Recent periods, which later splits barely touch, show no edge either (the track record over periods ending in the last 3 years is 50.9%), so the verdict stands.
+  - A fix needs a split history, which the Stooq bulk files don't include, and a census rerun.
 
 ## Outside data: does anything outside the stock market lead US stocks?
 

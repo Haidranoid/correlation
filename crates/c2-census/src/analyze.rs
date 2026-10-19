@@ -52,6 +52,7 @@ pub(crate) fn visit_records(path: &Path, mut f: impl FnMut(&Record)) -> Result<(
 /// it: the task's move lengths and one of its correlation periods. Errors otherwise, since the
 /// run's files then don't hold what its task list says and nothing read from them can be trusted.
 pub(crate) fn visit_task(meta: &RunMeta, task: &Task, mut f: impl FnMut(&Record)) -> Result<()> {
+    meta.check_task(task.id)?;
     let mut ours = vec![false; meta.windows.len()];
     for &w in &task.windows {
         ours[w] = true;
@@ -170,6 +171,7 @@ fn parse_summary(text: &str, what: &str) -> Result<Summary> {
 /// `read_summary` of the run's summary for `task`, checking that every line belongs to it (its
 /// move lengths and one of its correlation periods).
 pub(crate) fn task_summary(meta: &RunMeta, task: &Task) -> Result<Summary> {
+    meta.check_task(task.id)?;
     let s = read_summary(&meta.task_path(task.id, "csv"))?;
     if let Some(l) = s.lines.iter().find(|l| (l.h1, l.h2) != (task.h1, task.h2) || !task.windows.contains(&l.window)) {
         bail!(

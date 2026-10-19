@@ -773,6 +773,9 @@ const SHORTER_UNUSED: &str = "a longer period is used";
 /// How a forecast's track record compares with luck: (colour, sentence). Two measures: the hit
 /// rate over the `n_hit` forecasts where both the predicted and the actual move had a direction
 /// (`Skill::directional`), and the predicted vs actual correlation over all `n_corr` forecasts.
+/// What "relative to the market" means wherever the GUI says it: the census's market residual.
+const MARKET_RELATIVE: &str = "Relative to the market means a stock's move minus the part its usual sensitivity to the market (its beta) accounts for.";
+
 /// Each is beyond luck when its z is 2 or more either way. The sentence names the measure that
 /// did, and gives the other, so a record isn't described by a measure that didn't fire. Green:
 /// one or both better than luck and none worse; red: one or both worse and none better; yellow:
@@ -1534,14 +1537,14 @@ impl App {
         egui::ScrollArea::vertical().id_salt("tl_scroll").show(ui, |ui| {
             ui.label(if stock_first {
                 format!("A = {t}, which moves first; B = the stock that follows. A point at +k days: when {t} moves, that stock tends to move k trading days \
-                         later (offset from the end of {t}'s move to the end of B's); height = how far B tends to move beyond what the market did, per 1% \
-                         that {t} moves beyond the market. Orange = passed the significance test; grey = within what chance produces.")
+                         later (offset from the end of {t}'s move to the end of B's); height = how far B tends to move relative to the market, per 1% \
+                         that {t} moves relative to the market. Orange = passed the significance test; grey = within what chance produces. {MARKET_RELATIVE}")
             } else {
                 format!("B = {t}, which follows; A = the stock that moves first. A point at +k days: when that stock moves, {t} tends to move k trading days \
-                         later (offset from the end of A's move to the end of {t}'s); height = how far {t} tends to move beyond what the market did, per 1% \
-                         that A moves beyond the market (the multiplier the Forecast tab applies, unless a longer period of the relationship ends the same \
+                         later (offset from the end of A's move to the end of {t}'s); height = how far {t} tends to move relative to the market, per 1% \
+                         that A moves relative to the market (the multiplier the Forecast tab applies, unless a longer period of the relationship ends the same \
                          day; it never uses the full-history period). \
-                         Orange = passed the significance test; grey = within what chance produces.")
+                         Orange = passed the significance test; grey = within what chance produces. {MARKET_RELATIVE}")
             });
             // On the "% per 1%" axis only the rows that have a size (the others are counted under
             // the chart); with "plot r", all of them.
@@ -1657,7 +1660,7 @@ impl App {
                                 None => "the multiplier the Forecast tab applies",
                             };
                             ui.label(format!(
-                                "Size: when {a} moves 1% beyond what the market did over {}, {b} tends to move {m:+.2}% beyond the market over the {} \
+                                "Size: when {a} moves 1% relative to the market over {}, {b} tends to move {m:+.2}% relative to the market over the {} \
                                  ending {} later ({use_note}).",
                                 days_label(r.h1 as usize),
                                 days_label(r.h2 as usize),
@@ -1861,27 +1864,28 @@ impl App {
         let end_pct = f.predicted_pct[h - 1];
         let typical = 100.0 * f.daily_sd * (h as f64).sqrt();
         let what = if self.fc.show_amount { format!("${amount:.0} in {t}") } else { t.to_string() };
-        // Every move here is relative to the market: the census correlates moves beyond what the
-        // market did, so that is what the forecast predicts and what it is checked against.
+        // Every move here is relative to the market: the census correlates market residuals, so
+        // that is what the forecast predicts and what it is checked against.
         ui.label(format!(
-            "{what}: ${base:.2} on {day}. Forecast for the next {h} trading days: {t} moves {end_pct:+.2}% beyond what the market does, so ${:.2} if the \
+            "{what}: ${base:.2} on {day}. Forecast for the next {h} trading days: {t} moves {end_pct:+.2}% relative to the market, so ${:.2} if the \
              market is flat. It is the average of what {} relationships imply (another stock moved first and {t} tends to follow some days later; each \
-             leader's move beyond the market so far is scaled by the relationship). For scale, {t}'s typical {h}-day move beyond the market is ±{typical:.1}%.",
+             leader's move relative to the market so far is scaled by the relationship). For scale, {t}'s typical {h}-day move relative to the market is ±{typical:.1}%. \
+             {MARKET_RELATIVE}",
             val(end_pct),
             commas(f.relationships as f64)
         ));
         if let Some(Some(a)) = f.actual_pct.last() {
-            ui.label(format!("What happened: {t} moved {a:+.2}% beyond what the market did over those {h} trading days (${:.2} had the market been flat).", val(*a)));
+            ui.label(format!("What happened: {t} moved {a:+.2}% relative to the market over those {h} trading days (${:.2} had the market been flat).", val(*a)));
         } else if f.actual_pct.iter().any(|a| a.is_some()) {
-            ui.label(format!("What happened so far ({t}'s move beyond the market) is drawn in blue; the data ends before the last day ahead."));
+            ui.label(format!("What happened so far ({t}'s move relative to the market) is drawn in blue; the data ends before the last day ahead."));
         }
         match &f.skill {
             Some(s) => {
                 let (colour, verdict) = track_record_verdict(s.hit_rate, s.directional, s.corr, s.forecasts);
                 let text = format!(
-                    "Track record for {t}, with every move measured beyond the market: the same forecast made every 21 trading days in the past, each using \
+                    "Track record for {t}, with every move measured relative to the market: the same forecast made every 21 trading days in the past, each using \
                      only relationships known at the time: {} forecasts {}-day ahead; direction right {:.0}% of the {} times both moved (a coin flip gets 50%); \
-                     predicted vs actual correlation {:+.2}; the forecasts averaged ±{:.2}% while {t} actually moved ±{:.2}% beyond the market on average. {verdict}",
+                     predicted vs actual correlation {:+.2}; the forecasts averaged ±{:.2}% while {t} actually moved ±{:.2}% relative to the market on average. {verdict}",
                     s.forecasts, s.horizon, 100.0 * s.hit_rate, s.directional, s.corr, s.mean_abs_predicted_pct, s.mean_abs_actual_pct,
                 );
                 ui.colored_label(colour, text);
@@ -1898,7 +1902,7 @@ impl App {
             .chain(f.actual_pct.iter().enumerate().filter_map(|(j, a)| a.map(|a| [(j + 1) as f64, val(a)])))
             .collect();
         let band = |sign: f64| -> Vec<[f64; 2]> { (0..=h).map(|j| [j as f64, base * (sign * f.daily_sd * (j as f64).sqrt()).exp()]).collect() };
-        let range = "typical range (±1 sd of past moves beyond the market)";
+        let range = "typical range (±1 sd of past moves relative to the market)";
         Plot::new("forecast_plot")
             .height(300.0)
             .x_axis_label(format!("trading days after {day}"))
@@ -1913,7 +1917,7 @@ impl App {
                 }
                 p.line(Line::new("forecast", PlotPoints::from(pred)).color(orange).width(2.5));
             });
-        ui.label("When the predicted moves land: the forecast's change beyond the market on each day ahead (in %), from the relationships whose delay reaches that day.");
+        ui.label("When the predicted moves land: the forecast's change relative to the market on each day ahead (in %), from the relationships whose delay reaches that day.");
         let bars: Vec<Bar> = (0..h)
             .map(|j| {
                 let prev = if j == 0 { 0.0 } else { f.predicted_pct[j - 1] };
@@ -1933,8 +1937,8 @@ impl App {
         // move that lands in the days shown (`leader_move_in_horizon_pct`), not all of the
         // leader's moves feeding the forecast (`leader_move_pct`, only on hover).
         ui.label(format!(
-            "Leader's move: its moves beyond the market that land in the {h} days shown (a move whose predicted days run past the last day counts \
-             in proportion). {t} per 1%: how far {t} tends to move beyond the market per 1% the leader moves beyond it (the Stock timeline's \
+            "Leader's move: its moves relative to the market that land in the {h} days shown (a move whose predicted days run past the last day counts \
+             in proportion). {t} per 1%: how far {t} tends to move relative to the market per 1% the leader moves relative to it (the Stock timeline's \
              '% per 1%'). Alone implies = (1 + move/100)^(% per 1%) - 1: the % per 1% applies to log changes, so it is about move x % per 1% \
              only for small moves."
         ));
@@ -2086,8 +2090,8 @@ impl App {
         let len_choice = |l: usize| if none_covered.contains(&l) { format!("{} (none covered by today's price data)", len_label(l)) } else { len_label(l) };
         ui.label(
             "Pick two stocks, the length of move to measure for each, the offset between them and a correlation period. Every step below is \
-             recomputed from prices and checked against what the census stored: the stored record's sums when it kept this pair, else its \
-             summary of the matrix.",
+             recomputed from prices, and the results the census stored are checked against it: the stored record's sums when it kept this \
+             pair, else its summary of the matrix.",
         );
         ui.horizontal_wrapped(|ui| {
             ui.label("Stock A (moves first):");
@@ -2161,7 +2165,7 @@ impl App {
         self.ex.selected = window.map(|w| (plan.windows[w].length, rp.meta.windows[w].last));
         let run = self.run_name.clone();
         if h1s.is_empty() {
-            ui.label(format!("Census '{run}' computed no lead-lag correlations for {} correlation periods.", len_label(self.ex.length)));
+            ui.label(format!("Census '{run}' computed no correlations for {} correlation periods.", len_label(self.ex.length)));
         }
         // Only move lengths the run has a task for with periods of this length (a choice changed
         // above is checked against the others on the next frame).
@@ -2649,13 +2653,13 @@ impl App {
 
             // 7. Size, relative to the market: exactly the multiplier the Forecast tab applies.
             ui.add_space(8.0);
-            ui.heading("7. Size: how far B moves beyond the market per 1% that A does (the timeline's '% per 1%')");
+            ui.heading("7. Size: how far B moves relative to the market per 1% that A does (the timeline's '% per 1%')");
             match &e.move_size {
                 Some(s) => {
                     ui.label(format!(
-                        "% per 1% = r x (typical size of {b}'s {}-day moves beyond the market / typical size of {a}'s {}-day moves beyond the market) \
-                         = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}, over {} observations{}. So when {a} moves 1% beyond what the market did over {}, {b} \
-                         tends to move {:+.3}% beyond the market over the {} ending {}.",
+                        "% per 1% = r x (typical size of {b}'s {}-day moves relative to the market / typical size of {a}'s {}-day moves relative to the market) \
+                         = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}, over {} observations{}. So when {a} moves 1% relative to the market over {}, {b} \
+                         tends to move {:+.3}% relative to the market over the {} ending {}. {MARKET_RELATIVE}",
                         h2,
                         h1,
                         e.move_size_r,
@@ -2676,8 +2680,8 @@ impl App {
                         Ok(()) => ui.label(format!(
                             "How the Forecast tab uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move \
                              lengths and offset; of periods ending on the same day it takes the longest, and no longer one of this relationship ends that \
-                             day{}): each of {a}'s recent {}-day moves beyond the market (the latest ending on the as-of day, then every {} before it) \
-                             predicts {b}'s move beyond the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{:.3} - 1 for {b} \
+                             day{}): each of {a}'s recent {}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) \
+                             predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{:.3} - 1 for {b} \
                              (the % per 1% applies to log changes, so this is about X x {:.3} only for small moves), spread evenly over those days. Only \
                              the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering \
                              it. For example a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}. The Stock timeline shows the same number as '% per \

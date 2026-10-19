@@ -8,7 +8,8 @@
 //!   whose length `windows.csv` gives). Files that hold nothing (combinations too short for a
 //!   single observation) are labeled by the one task numbering the code has used that fits every
 //!   other file. A task that can't be identified is never guessed: the task list is then unknown
-//!   and `tasks()` says why.
+//!   and `tasks()` says why. A task whose summary file can't be read is damaged: it is labeled by
+//!   its first record, or by that numbering, and only readers of that task fail (`damaged()`).
 //! - Correlation periods: `windows.csv`, mapped onto a calendar by date (`window_rows`).
 //! - Stocks: records hold store ids as of the run. The run's copy of the store's `symbols.tsv`, else
 //!   the current store's table if its fingerprint still equals the manifest's. Otherwise the run's
@@ -185,6 +186,8 @@ pub struct RunMeta {
     pub universes: Vec<Vec<u32>>,
     pub task_source: TaskSource,
     tasks: std::result::Result<Vec<Task>, String>,
+    /// Tasks whose files were found damaged while deriving the task list, by id, with why.
+    damaged: Vec<(usize, String)>,
     stocks: std::result::Result<RunStocks, String>,
 }
 
@@ -215,24 +218,47 @@ impl RunMeta {
             anyhow::ensure!(n as usize == windows.len(), "census {name}: the manifest records {n} correlation periods, windows.csv {}", windows.len());
         }
         let universes = read_universes(dir, &windows).with_context(|| format!("census {name}: universes.bin"))?;
-        let (task_source, tasks) = task_list(dir, &manifest, &cfg, &windows);
+        let (task_source, tasks, damaged) = task_list(dir, &manifest, &cfg, &windows);
         let stocks = read_stocks(dir, &manifest);
-        Ok(RunMeta { name, dir: dir.to_path_buf(), manifest, config_text, cfg, windows, universes, task_source, tasks, stocks })
+        Ok(RunMeta { name, dir: dir.to_path_buf(), manifest, config_text, cfg, windows, universes, task_source, tasks, damaged, stocks })
     }
 
     /// The run's tasks by id: `tasks()[id]` is what `tasks/t<id>.*` hold. Errors if they can't
-    /// be established (the message says why).
+    /// be established (the message says why). Damaged tasks are listed too; readers of a task's
+    /// files go through `check_task`, `find_task` or `task`, which refuse them.
     pub fn tasks(&self) -> Result<&[Task]> {
         self.tasks.as_deref().map_err(|e| anyhow!("census {}: {e}", self.name))
     }
 
     pub fn task(&self, id: usize) -> Result<&Task> {
-        self.tasks()?.get(id).ok_or_else(|| anyhow!("census {} has no results file t{id}", self.name))
+        let task = self.tasks()?.get(id).ok_or_else(|| anyhow!("census {} has no results file t{id}", self.name))?;
+        self.check_task(id)?;
+        Ok(task)
     }
 
     /// The task holding (h1, h2) for correlation periods of `length` days (0 = full history).
+    /// Errors if that task's files are damaged.
     pub fn find_task(&self, h1: usize, h2: usize, length: usize) -> Result<Option<&Task>> {
-        Ok(self.tasks()?.iter().find(|t| (t.h1, t.h2, t.length) == (h1, h2, length)))
+        let task = self.tasks()?.iter().find(|t| (t.h1, t.h2, t.length) == (h1, h2, length));
+        if let Some(t) = task {
+            self.check_task(t.id)?;
+        }
+        Ok(task)
+    }
+
+    /// Tasks whose summary file couldn't be read (or holds no lines although the task has
+    /// records), found while deriving the task list, with why. Runs whose manifest lists their
+    /// tasks aren't checked here; their readers find any damage when they read the file.
+    pub fn damaged(&self) -> &[(usize, String)] {
+        &self.damaged
+    }
+
+    /// Errors (saying why) if task `id`'s files are damaged.
+    pub fn check_task(&self, id: usize) -> Result<()> {
+        match self.damaged.iter().find(|(d, _)| *d == id) {
+            Some((_, why)) => Err(anyhow!("census {}: {why}", self.name)),
+            None => Ok(()),
+        }
     }
 
     /// `<run>/tasks/t<id>.<ext>` (`ext` is "rec" or "csv").
@@ -317,13 +343,18 @@ fn windows_of(windows: &[RunWindow], length: usize) -> Vec<usize> {
     windows.iter().filter(|w| w.length == length).map(|w| w.id).collect()
 }
 
-/// (window, h1, h2) of a task's first summary line, if it has one.
+/// (window, h1, h2) of a task's first summary line, if it has one (None also when there is no
+/// file). Errors, naming the file, if it can't be read.
 fn first_summary(path: &Path) -> Result<Option<(usize, usize, usize)>> {
-    let Ok(f) = std::fs::File::open(path) else { return Ok(None) };
+    let f = match std::fs::File::open(path) {
+        Ok(f) => f,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(e) => return Err(e).with_context(|| format!("can't read {}", path.display())),
+    };
     let mut lines = BufReader::new(f).lines();
-    let Some(header) = lines.next().transpose()? else { return Ok(None) };
+    let Some(header) = lines.next().transpose().with_context(|| format!("can't read {}", path.display()))? else { return Ok(None) };
     anyhow::ensure!(header.starts_with("window,h1,h2,lag,"), "{} has an unexpected header", path.display());
-    let Some(row) = lines.next().transpose()? else { return Ok(None) };
+    let Some(row) = lines.next().transpose().with_context(|| format!("can't read {}", path.display()))? else { return Ok(None) };
     let f: Vec<&str> = row.split(',').collect();
     let num = |i: usize| f.get(i).and_then(|v| v.parse::<usize>().ok()).with_context(|| format!("{}: bad first line {row:?}", path.display()));
     Ok(Some((num(0)?, num(1)?, num(2)?)))
@@ -337,7 +368,11 @@ fn first_record(path: &Path) -> Option<(usize, usize, usize)> {
     Some((r.window as usize, r.h1 as usize, r.h2 as usize))
 }
 
-fn task_list(dir: &Path, manifest: &serde_json::Value, cfg: &Config, windows: &[RunWindow]) -> (TaskSource, std::result::Result<Vec<Task>, String>) {
+/// Where a run's task list came from, the list (or why it can't be established), and the tasks
+/// found damaged on the way (by id, with why).
+type TaskList = (TaskSource, std::result::Result<Vec<Task>, String>, Vec<(usize, String)>);
+
+fn task_list(dir: &Path, manifest: &serde_json::Value, cfg: &Config, windows: &[RunWindow]) -> TaskList {
     if let Some(list) = manifest.get("task_list") {
         let parse = || -> std::result::Result<Vec<Task>, String> {
             let list = list.as_array().ok_or("the manifest's task_list is not a list")?;
@@ -350,52 +385,89 @@ fn task_list(dir: &Path, manifest: &serde_json::Value, cfg: &Config, windows: &[
                 })
                 .collect()
         };
-        return (TaskSource::Manifest, parse().and_then(|t| check_tasks(dir, cfg, t)));
+        return (TaskSource::Manifest, parse().and_then(|t| check_tasks(dir, cfg, t)), Vec::new());
     }
-    let derive = || -> std::result::Result<Vec<Task>, String> {
+    /// What a task's files say it holds.
+    #[derive(Clone, Copy)]
+    enum Holds {
+        Task((usize, usize, usize)),
+        Nothing,
+        /// Its summary file is damaged and it has no record to say instead.
+        Unknown,
+    }
+    let mut damaged: Vec<(usize, String)> = Vec::new();
+    let mut derive = || -> std::result::Result<Vec<Task>, String> {
         let count = manifest["tasks"].as_u64().ok_or("the manifest records neither a task list nor a task count")? as usize;
-        // Per task: (h1, h2, length) from its first summary line, or None if it holds nothing.
-        let mut seen: Vec<Option<(usize, usize, usize)>> = Vec::with_capacity(count);
+        // Per task: (h1, h2, length) from its first summary line, or nothing if it holds nothing.
+        // A damaged summary file fails only its own task (`RunMeta::check_task`); the task is
+        // labeled by its first record, which belongs to the same unit as the first summary line,
+        // or else by the numbering below.
+        let mut seen: Vec<Holds> = Vec::with_capacity(count);
         for id in 0..count {
             let rec = dir.join(format!("tasks/t{id}.rec"));
-            match first_summary(&dir.join(format!("tasks/t{id}.csv"))).map_err(|e| format!("{e:#}"))? {
-                Some((wid, h1, h2)) => {
+            // Labeled from the first record when the summary can't say.
+            let from_record = || first_record(&rec).and_then(|(wid, h1, h2)| windows.get(wid).map(|w| (h1, h2, w.length))).map_or(Holds::Unknown, Holds::Task);
+            let (holds, mut problem) = match first_summary(&dir.join(format!("tasks/t{id}.csv"))) {
+                Ok(Some((wid, h1, h2))) => {
                     let w = windows.get(wid).ok_or_else(|| format!("results file t{id} names correlation period {wid}, which windows.csv doesn't have"))?;
                     // Its first record (when there is one) belongs to the same unit, so must agree.
                     if let Some(r) = first_record(&rec).filter(|&r| r != (wid, h1, h2)) {
                         return Err(format!("results file t{id}'s summary starts with period {wid} and move lengths ({h1}, {h2}), but its records start with period {} and ({}, {})", r.0, r.1, r.2));
                     }
-                    seen.push(Some((h1, h2, w.length)));
+                    (Holds::Task((h1, h2, w.length)), None)
                 }
-                None if std::fs::metadata(&rec).map_or(0, |m| m.len()) == 0 => seen.push(None),
-                None => return Err(format!("results file t{id} has records but no summary lines")),
+                Ok(None) if std::fs::metadata(&rec).map_or(0, |m| m.len()) == 0 => (Holds::Nothing, None),
+                Ok(None) => (from_record(), Some(format!("results file t{id} has records but no summary lines"))),
+                Err(e) => (from_record(), Some(format!("results file t{id} can't be used: {e:#}"))),
+            };
+            if problem.is_none()
+                && let Err(e) = std::fs::File::open(&rec)
+                && e.kind() != std::io::ErrorKind::NotFound
+            {
+                problem = Some(format!("results file t{id} can't be used: can't read {}: {e}", rec.display()));
             }
+            if let Some(p) = problem {
+                damaged.push((id, p));
+            }
+            seen.push(holds);
         }
-        let silent: Vec<usize> = (0..count).filter(|&id| seen[id].is_none()).collect();
-        let label = if silent.is_empty() {
-            seen.iter().map(|s| s.unwrap()).collect()
+        let open: Vec<usize> = (0..count).filter(|&id| !matches!(seen[id], Holds::Task(_))).collect();
+        let label: Vec<(usize, usize, usize)> = if open.is_empty() {
+            seen.iter().filter_map(|s| if let Holds::Task(t) = s { Some(*t) } else { None }).collect()
         } else {
-            // Files that hold nothing don't say what they were for. That only matters as a label,
-            // and only one numbering the code has used can be consistent with the rest: the run's
-            // task count, every file that holds results, and nothing at all in each file whose
-            // combination is too short for a single observation. Anything else stays unknown.
+            // Files that hold nothing don't say what they were for, nor do damaged ones without a
+            // record. That only matters as a label, and only one numbering the code has used can
+            // be consistent with the rest: the run's task count, every file that holds results,
+            // and nothing at all in each file whose combination is too short for a single
+            // observation. Anything else stays unknown.
             let fits: Vec<Vec<(usize, usize, usize)>> = numberings(cfg, windows)
                 .into_iter()
-                .filter(|rule| rule.len() == count && rule.iter().zip(&seen).all(|(&t, s)| s.map_or_else(|| produces_nothing(cfg, windows, t), |s| s == t)))
+                .filter(|rule| {
+                    rule.len() == count
+                        && rule.iter().zip(&seen).all(|(&t, s)| match *s {
+                            Holds::Task(s) => s == t,
+                            Holds::Nothing => produces_nothing(cfg, windows, t),
+                            Holds::Unknown => true,
+                        })
+                })
                 .collect();
             let [rule] = &fits[..] else {
-                let shown: Vec<String> = silent.iter().take(8).map(|id| format!("t{id}")).collect();
+                let why = if fits.is_empty() { "no task numbering this code has used explains them (an unfinished run?)" } else { "more than one task numbering fits" };
+                if let Some((_, problem)) = damaged.iter().find(|(id, _)| matches!(seen[*id], Holds::Unknown)) {
+                    return Err(format!("{problem}, and what it holds can't be established without it: the run predates the manifest's task list, and {why}"));
+                }
+                let shown: Vec<String> = open.iter().take(8).map(|id| format!("t{id}")).collect();
                 return Err(format!(
-                    "what {} of its {count} results files hold can't be established ({}{}): they hold no results, the run predates the manifest's task list, and {}, so their move lengths would have to be guessed",
-                    silent.len(), shown.join(", "), if silent.len() > shown.len() { ", ..." } else { "" },
-                    if fits.is_empty() { "no task numbering this code has used explains them (an unfinished run?)" } else { "more than one task numbering fits" }
+                    "what {} of its {count} results files hold can't be established ({}{}): they hold no results, the run predates the manifest's task list, and {why}, so their move lengths would have to be guessed",
+                    open.len(), shown.join(", "), if open.len() > shown.len() { ", ..." } else { "" },
                 ));
             };
             rule.clone()
         };
         Ok(label.into_iter().enumerate().map(|(id, (h1, h2, length))| Task { id, h1, h2, length, windows: windows_of(windows, length) }).collect())
     };
-    (TaskSource::Derived, derive().and_then(|t| check_tasks(dir, cfg, t)))
+    let tasks = derive().and_then(|t| check_tasks(dir, cfg, t));
+    (TaskSource::Derived, tasks, damaged)
 }
 
 /// The task numberings the code has used, as (h1, h2, length) by task id: every (h1, h2) pair
@@ -564,6 +636,7 @@ mod tests {
             universes: vec![],
             task_source: TaskSource::Derived,
             tasks: Err(String::new()),
+            damaged: Vec::new(),
             stocks: Err(String::new()),
         };
         let days = [10, 11, 12, 14, 15];
