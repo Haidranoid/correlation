@@ -761,8 +761,21 @@ fn census(action: CensusCmd) -> Result<()> {
             for c in f.contributions.iter().take(10) {
                 println!("  {} offset {}d (moves {}d -> {}d, r {:+.3}{}): {}'s moves landing in these days {:+.2}% -> {t} {:+.2}% (at {:+.3}% per 1%, applied to log changes; for small moves Y ≈ X x M); share {:+.3} pts   [{}]",
                     c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader, c.leader_move_in_horizon_pct, c.implied_pct, c.move_per_pct, c.share_pct, c.window);
+                // X is the capped move already; say when a move was capped (api_numbers.md, polish).
+                let cap = c2_census::forecast::MOVE_CAP;
+                match c.clipped_moves {
+                    0 => {}
+                    1 => println!("      capped: 1 of {}'s {}-day moves was far outside anything seen in this correlation period (typical {:.2}%), so it counts as {cap:.0} typical moves",
+                        c.leader, c.h1, c.leader_typical_move_pct),
+                    n => println!("      capped: {n} of {}'s {}-day moves were far outside anything seen in this correlation period (typical {:.2}%), so each counts as {cap:.0} typical moves",
+                        c.leader, c.h1, c.leader_typical_move_pct),
+                }
             }
             println!("A leader's moves \"landing in these days\" are its market-relative moves whose predicted days fall in the days ahead; a move whose predicted days run past the last day counts in proportion to the days inside. The implied move is (1 + X/100)^M - 1: the % per 1% applies to log changes, so it is about X x M only for small moves.");
+            if f.contributions.iter().any(|c| c.clipped_moves > 0) {
+                let cap = c2_census::forecast::MOVE_CAP;
+                println!("A leader's move more than {cap:.0} of its typical moves in a relationship's correlation period is counted as {cap:.0}: the census clips at {cap:.0}, so it never measured the relationship beyond that.");
+            }
             match &f.skill {
                 Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, each {} trading days ahead), against {t}'s actual move relative to the market: \
                     direction right {:.1}% of the time (of {} with a direction); predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
