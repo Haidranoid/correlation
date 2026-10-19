@@ -686,15 +686,21 @@ fn census(action: CensusCmd) -> Result<()> {
                 },
             }
             match &e.check {
-                Check::Record(c) => println!("checked against the census's record: {} observations here, {} stored; sums of x, y, x^2, y^2 and xy {} (largest relative difference {:.1e}; the record keeps about 7 digits)",
-                    c.obs, c.stored_obs, if c.agrees() { "agree" } else { "DIFFER" }, c.max_rel_diff),
+                // Under a note (values recomputed today can differ, e.g. a stock gone from today's
+                // data), a disagreement is expected, not a fault.
+                Check::Record(c) => {
+                    let verdict = match (c.agrees(), &e.variable_note) {
+                        (true, None) => "agree".to_string(),
+                        (true, Some(_)) => "agree (though with today's data they could differ slightly; see the note above)".to_string(),
+                        (false, Some(_)) => "differ slightly, as expected with today's data (see the note above)".to_string(),
+                        (false, None) => "DIFFER".to_string(),
+                    };
+                    println!("checked against the census's record: {} observations here, {} stored; sums of x, y, x^2, y^2 and xy {verdict} (largest relative difference {:.1e}; the record keeps about 7 digits)",
+                        c.obs, c.stored_obs, c.max_rel_diff);
+                }
                 Check::Summary(c) => println!("nothing is stored for this pair to check against; the matrix's summary line {}: {} stocks and {} observations there, {} and {} here",
                     if c.agrees() { "agrees" } else { "DIFFERS" }, c.stored_stocks, c.stored_obs, c.stocks, c.obs),
                 Check::Nothing => println!("nothing stored to check against: the census never computed this matrix"),
-            }
-            if let (Check::Record(c), Some(_)) = (&e.check, &e.variable_note) {
-                println!("  ({}: this run's census variable started on another day, so values recomputed today can differ from the stored ones; see the note above)",
-                    if c.agrees() { "they agree here, but in general" } else { "expected" });
             }
             if e.matrix.found {
                 let cut = match e.matrix.fdr_r { Some(v) => format!("{v:.4}"), None if offset == 0 => "none (no significance test at offset 0)".into(), None => "none (no pair passed)".into() };
@@ -711,7 +717,8 @@ fn census(action: CensusCmd) -> Result<()> {
             match (&e.forecast_use, &e.move_size) {
                 (Ok(()), Some(s)) => {
                     let (m, step) = (s.per_pct, h1.max(h2));
-                    println!("how the Forecast uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move lengths and offset): each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
+                    let unless = if e.stored.as_ref().is_some_and(|s| s.significant) { "" } else { "; with \"significant relationships only\" it leaves this one out, since it didn't pass the significance test" };
+                    println!("how the Forecast uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move lengths and offset; of periods ending on the same day it takes the longest, and no longer one of this relationship ends that day{unless}): each of {a}'s recent {h1}-day moves relative to the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s move relative to the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{m:.4} - 1 for {b} (the % per 1% applies to log changes, so this is about X x {m:.4} only for small moves), spread evenly over those days. Only the days that fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. E.g. a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}.",
                         days(step), days(h2), tdays(offset), 100.0 * s.sd_a.exp_m1(), 100.0 * (m * s.sd_a).exp_m1());
                 }
                 (Err(why), _) => println!("not used by the Forecast: {why}"),
@@ -785,6 +792,20 @@ fn census(action: CensusCmd) -> Result<()> {
                 (c2_census::analyze::stock_profile_with(&store, &plan.var, &dir, &t, significant)?, gaps(&plan))
             };
             let full_history: std::collections::HashSet<u32> = meta.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
+            // Of a relationship's periods that end on the same day, the forecast uses the longest one
+            // it can (a rolling period with a size, `forecast::rel_order`); a shorter one's multiplier
+            // is never applied. Rows listed here: all stored ones, or with --significant the
+            // significant ones, as `c2 census forecast --significant` sees them.
+            let period_of = |r: &c2_census::analyze::ProfileRow| meta.windows.get(r.window_id as usize).map(|w| (w.length, w.last));
+            let relationship = |r: &c2_census::analyze::ProfileRow, last: i32| (r.leads, r.partner.clone(), r.h1, r.h2, r.lag, last);
+            let mut longest: std::collections::HashMap<(bool, String, u8, u8, u16, i32), usize> = std::collections::HashMap::new();
+            for r in rows.iter().filter(|r| r.move_per_pct.is_some()) {
+                if let Some((length, last)) = period_of(r).filter(|(length, _)| *length > 0) {
+                    let e = longest.entry(relationship(r, last)).or_default();
+                    *e = (*e).max(length);
+                }
+            }
+            let longer_used = |r: &c2_census::analyze::ProfileRow| period_of(r).is_some_and(|(length, last)| length > 0 && longest.get(&relationship(r, last)).is_some_and(|&l| l > length));
             let sig = rows.iter().filter(|r| r.significant).count();
             let scope = if gaps.periods == 0 { "across all correlation periods".to_string() } else { format!("across the {} correlation periods that today's data covers", gaps.of - gaps.periods) };
             if significant {
@@ -812,6 +833,8 @@ fn census(action: CensusCmd) -> Result<()> {
                     }).unwrap_or_default();
                     let period = if full_history.contains(&r.window_id) {
                         format!("full-history correlation period, {} days to {} (not used by the forecast)", r.period_days, r.period_end)
+                    } else if longer_used(r) {
+                        format!("correlation period {} days to {} (a longer period is used)", r.period_days, r.period_end)
                     } else {
                         format!("correlation period {} days to {}", r.period_days, r.period_end)
                     };
@@ -821,7 +844,9 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % per 1% is that relationship in price terms:");
             println!("the follower's move relative to the market per 1% move of the leader relative to the market, in that correlation period.");
-            println!("For rows from rolling correlation periods it is the multiplier `c2 census forecast` applies; the forecast doesn't use the full-history period.");
+            println!("For rows from rolling correlation periods it is the multiplier `c2 census forecast{}` applies, unless a longer correlation period of the same relationship ends the same day:",
+                if significant { " --significant" } else { "" });
+            println!("of those the forecast uses the longest (the shorter ones say \"a longer period is used\"). It doesn't use the full-history period.");
             println!("The 'after ... rose' counts use plain price moves. 'Chance made N' is how many pairs at least that strong appeared in the same period");
             println!("when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
             println!("The offset runs from the end of the leader's move to the end of the follower's. `c2 census explain` shows any one step by step.");
