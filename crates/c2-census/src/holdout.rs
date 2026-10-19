@@ -57,8 +57,19 @@ pub struct Report {
     pub first_day: i32,
     pub last_day: i32,
     pub days: usize,
+    /// Census pairs used. 0 for the census-pairs family means it had none for this holdout (no
+    /// usable correlation period of the needed kind ended before it): nothing was simulated, so
+    /// `strategy` and `curve` are empty and the prediction statistics are NaN; the benchmarks
+    /// still hold. Callers report that as "no census pairs", not as a failure.
     pub pairs: usize,
     pub windows_used: usize,
+    /// Census pairs only: rolling correlation periods that ended before the holdout but that
+    /// today's data doesn't cover exactly (`Plan::period_available`), so they were left out
+    /// (with the latest periods of each length, the latest covered one is used instead).
+    pub periods_unavailable: usize,
+    /// Census pairs only: stored pairs from the periods used that were left out because a stock
+    /// of the pair is not in today's data (`Plan::missing_stocks`).
+    pub pairs_skipped: usize,
     pub candidates: usize,
     pub benchmarks: Vec<Outcome>,
     /// (cost bps, strategy final, random median, share of random >= strategy)
@@ -128,11 +139,49 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
     // Decision days d = h0-1 .. t-2 (hold over d+1 in the holdout); scores on rebalance days.
     let days: Vec<usize> = (h0 - 1..t - 1).collect();
     let rebalance = opt.rebalance.max(1);
-    let (candidates, scores, pairs_used, windows_used): (Vec<usize>, Vec<Option<Vec<f64>>>, usize, usize) = match opt.family {
+    let ((candidates, scores, pairs_used, windows_used), skipped): (Scores, Skipped) = match opt.family {
         Family::CensusPairs => census_scores(store, plan, dir, opt, h0, t, &days, rebalance)?,
-        Family::PeerMomentum { peers, lookback, window } => peer_scores(var, h0, t, &days, rebalance, peers, lookback, window),
-        Family::Reversal { lookback, window } => reversal_scores(var, h0, t, &days, rebalance, lookback, window),
+        Family::PeerMomentum { peers, lookback, window } => (peer_scores(var, h0, t, &days, rebalance, peers, lookback, window), Skipped::default()),
+        Family::Reversal { lookback, window } => (reversal_scores(var, h0, t, &days, rebalance, lookback, window), Skipped::default()),
     };
+    // Benchmarks over the same days (close of the day before the holdout to the last close).
+    let bench = |ticker: &str| -> Option<f64> {
+        let id = store.id(ticker)?;
+        let (dates, close) = (store.dates(id), store.close(id));
+        let price = |day: i32| dates.binary_search(&day).ok().map(|k| close[k] as f64);
+        Some(opt.cash * price(var.days[t - 1])? / price(var.days[h0 - 1])?)
+    };
+    let mut benchmarks = Vec::new();
+    for (label, ticker) in [("Buy and hold SPY (S&P 500)", "SPY"), ("Buy and hold QQQ (Nasdaq-100)", "QQQ")] {
+        if let Some(v) = bench(ticker) {
+            benchmarks.push(Outcome { label: label.into(), final_value: v });
+        }
+    }
+    if matches!(opt.family, Family::CensusPairs) && pairs_used == 0 {
+        // No census pairs: a result in its own right (e.g. an early walk-forward year, before any
+        // correlation period of the needed kind ended), not a failure.
+        return Ok(Report {
+            first_day: var.days[h0],
+            last_day: var.days[t - 1],
+            days: days.len(),
+            pairs: 0,
+            windows_used,
+            periods_unavailable: skipped.periods,
+            pairs_skipped: skipped.pairs,
+            candidates: 0,
+            benchmarks,
+            strategy: Vec::new(),
+            hit_rate: f64::NAN,
+            hits: 0,
+            ic_mean: f64::NAN,
+            ic_t: f64::NAN,
+            ls_mean: f64::NAN,
+            ls_sharpe: f64::NAN,
+            ls_t: f64::NAN,
+            ls_turnover: f64::NAN,
+            curve: Vec::new(),
+        });
+    }
     let nc = candidates.len();
     anyhow::ensure!(nc >= 2 * opt.picks, "only {nc} stocks can be picked (history before the holdout too short?)");
     let vt = var.t;
@@ -257,19 +306,6 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         strategy.push((c, s, median, share));
     }
 
-    // Benchmarks over the same days (close of the day before the holdout to the last close).
-    let bench = |ticker: &str| -> Option<f64> {
-        let id = store.id(ticker)?;
-        let (dates, close) = (store.dates(id), store.close(id));
-        let price = |day: i32| dates.binary_search(&day).ok().map(|k| close[k] as f64);
-        Some(opt.cash * price(var.days[t - 1])? / price(var.days[h0 - 1])?)
-    };
-    let mut benchmarks = Vec::new();
-    for (label, ticker) in [("Buy and hold SPY (S&P 500)", "SPY"), ("Buy and hold QQQ (Nasdaq-100)", "QQQ")] {
-        if let Some(v) = bench(ticker) {
-            benchmarks.push(Outcome { label: label.into(), final_value: v });
-        }
-    }
     let hold_all: f64 = candidates
         .iter()
         .map(|&j| days.iter().map(|&d| 1.0 + ret(j, d)).product::<f64>())
@@ -342,6 +378,8 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         days: days.len(),
         pairs: pairs_used,
         windows_used,
+        periods_unavailable: skipped.periods,
+        pairs_skipped: skipped.pairs,
         candidates: nc,
         benchmarks,
         strategy,
@@ -360,16 +398,30 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
 
 type Scores = (Vec<usize>, Vec<Option<Vec<f64>>>, usize, usize);
 
+/// What census-pair scoring left out: correlation periods today's data doesn't cover, and
+/// stored pairs with a stock today's data doesn't have.
+#[derive(Clone, Copy, Debug, Default)]
+struct Skipped {
+    periods: usize,
+    pairs: usize,
+}
+
 /// Family A scores: stored census pairs from windows that ended before the holdout. The run's
 /// own task list says what each results file holds; the plan must fit the run (`check_plan`),
 /// so its windows are the run's and `column_of_run_id` turns record ids into its columns.
+/// Periods today's data doesn't cover exactly and pairs with a stock it no longer has are
+/// skipped and counted.
 #[allow(clippy::too_many_arguments)]
-fn census_scores(store: &Store, plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, days: &[usize], rebalance: usize) -> Result<Scores> {
+fn census_scores(store: &Store, plan: &Plan, dir: &Path, opt: &Options, h0: usize, t: usize, days: &[usize], rebalance: usize) -> Result<(Scores, Skipped)> {
     let var = &plan.var;
     let meta = RunMeta::load(dir)?;
     check_plan(plan, &meta, Some(store))?;
-    // Windows that ended before the holdout: the latest of each length, or all of them.
-    let before: Vec<usize> = plan.windows.iter().filter(|w| w.length > 0 && w.end <= h0).map(|w| w.id).collect();
+    // Windows that ended before the holdout (its first day): the latest of each length, or all
+    // of them, among those today's data covers. The others are only counted, by their dates.
+    let first_day = var.days.get(h0).copied().unwrap_or(i32::MAX);
+    let periods = plan.windows.iter().filter(|w| w.length > 0 && meta.windows[w.id].last < first_day).count();
+    let before: Vec<usize> = plan.windows.iter().filter(|w| w.length > 0 && plan.period_available(w.id) && w.end <= h0).map(|w| w.id).collect();
+    let mut skipped = Skipped { periods: periods - before.len(), pairs: 0 };
     let mut use_window = vec![false; plan.windows.len()];
     if opt.all_windows {
         for &w in &before {
@@ -405,8 +457,9 @@ fn census_scores(store: &Store, plan: &Plan, dir: &Path, opt: &Options, h0: usiz
             if r.flags & FLAG_NULL != 0 || r.lag == 0 || !use_window[r.window as usize] {
                 return;
             }
-            if let (Some(i), Some(j)) = (plan.column_of_run_id(r.leader), plan.column_of_run_id(r.target)) {
-                pairs.push(Pair { leader: i, target: j, h1: task.h1, lag: r.lag as usize, r: r.r as f64 });
+            match (plan.column_of_run_id(r.leader), plan.column_of_run_id(r.target)) {
+                (Some(i), Some(j)) => pairs.push(Pair { leader: i, target: j, h1: task.h1, lag: r.lag as usize, r: r.r as f64 }),
+                _ => skipped.pairs += 1,
             }
         })?;
     }
@@ -453,7 +506,7 @@ fn census_scores(store: &Store, plan: &Plan, dir: &Path, opt: &Options, h0: usiz
             })
         })
         .collect();
-    Ok((candidates, scores, pairs.len(), windows_used))
+    Ok(((candidates, scores, pairs.len(), windows_used), skipped))
 }
 
 /// Family C scores: peers from same-day correlation of the census variable over the `window`
@@ -568,7 +621,7 @@ pub fn current_picks(store: &Store, plan: &Plan, dir: &Path, family: Family, reb
     let opt = Options { family, rebalance, start: var.days[t - 1], end: i32::MAX, picks, costs_bps: vec![0.0], random_runs: 0, cash: 10_000.0, all_windows: false };
     let days = [t - 1];
     let (candidates, scores, _, _) = match family {
-        Family::CensusPairs => census_scores(store, plan, dir, &opt, t, t, &days, rebalance)?,
+        Family::CensusPairs => census_scores(store, plan, dir, &opt, t, t, &days, rebalance)?.0,
         Family::PeerMomentum { peers, lookback, window } => peer_scores(var, t, t, &days, rebalance, peers, lookback, window),
         Family::Reversal { lookback, window } => reversal_scores(var, t, t, &days, rebalance, lookback, window),
     };

@@ -180,25 +180,38 @@ pub(crate) fn task_summary(meta: &RunMeta, task: &Task) -> Result<Summary> {
     Ok(s)
 }
 
-/// Refuses unless `plan` can read the run in `meta`: its census variable starts on the run's
-/// first day, and its correlation periods are the run's, id by id, on the variable's rows (found
-/// by date). With `store`, also that the plan numbers the stocks as the run's records do
-/// (`Plan::for_run` translates through tickers; `Plan::new` is right only while the store is the
-/// one the run was made with). `Plan::for_run` passes all of these by construction.
+/// Refuses unless `plan` can read the run in `meta`.
+///
+/// A `Plan::for_run` plan must have been built for this run (`Plan::is_for`); what today's data
+/// can't reproduce is marked in it (unavailable periods, missing stocks, a variable note) and
+/// readers skip that, so it is accepted as it is. Any other plan (`Plan::new`) is right only
+/// while nothing changed: its census variable must start on the run's first day, and its
+/// correlation periods must be the run's, id by id, on the variable's rows (found by date).
+/// Either way, with `store`, the plan must number the stocks as the run's records do in that
+/// store (`Plan::for_run` translates through tickers; `Plan::new` is right only while the store
+/// is the one the run was made with).
 pub(crate) fn check_plan(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<()> {
     let name = &meta.name;
     let prepare = "prepare it from the run itself (Plan::for_run)";
-    let first = c2_data::date_string(plan.var.days[0]);
-    if let Some(theirs) = meta.manifest["variable_days"][0].as_str()
-        && theirs != first
-    {
-        bail!("census {name} was made with a census variable starting {theirs}, this one starts {first}, so its values can't be reproduced");
+    match plan.built_for() {
+        Some(other) if !plan.is_for(meta) => bail!("this calculation was prepared for census {other}, not for census {name}; {prepare}"),
+        Some(_) => {}
+        None => {
+            let first = c2_data::date_string(plan.var.days[0]);
+            if let Some(theirs) = meta.manifest["variable_days"][0].as_str()
+                && theirs != first
+            {
+                bail!("census {name} was made with a census variable starting {theirs}, this one starts {first}, so its values can't be reproduced; {prepare}");
+            }
+        }
     }
     if plan.windows.len() != meta.windows.len() {
         bail!("this calculation was prepared for {} correlation periods, census {name} has {}; {prepare}", plan.windows.len(), meta.windows.len());
     }
     for (w, theirs) in plan.windows.iter().zip(&meta.windows) {
-        if w.length != theirs.length || meta.window_rows_in(&plan.var.days, theirs.id) != Some(w.start..w.end) {
+        let rows = meta.window_rows_in(&plan.var.days, theirs.id);
+        let fits = w.length == theirs.length && if plan.period_available(theirs.id) { rows == Some(w.start..w.end) } else { rows.is_none() };
+        if !fits {
             bail!(
                 "this calculation was prepared for other correlation periods than census {name}'s (its period {} is {}..{}); {prepare}",
                 theirs.id, c2_data::date_string(theirs.first), c2_data::date_string(theirs.last)
@@ -270,19 +283,53 @@ fn bucket(lag: usize, h2: usize) -> &'static str {
 /// The tasks (what each results file holds) come from the run in `dir`. `plan` supplies the
 /// census variable, the period rows and the stock numbering, and must fit the run (see
 /// `check_plan`): `Plan::for_run` does. Its stock numbering can only be checked against a store:
-/// `replicate_run` does that too.
+/// `replicate_run` does that too. `replication` also says what was skipped.
 pub fn replicate(plan: &Plan, dir: &Path) -> Result<RepTable> {
-    replicate_in(plan, &RunMeta::load(dir)?, None)
+    Ok(replicate_in(plan, &RunMeta::load(dir)?, None)?.table)
 }
 
 /// `replicate`, also checking that `plan` numbers the stocks as the run's records do in `store`
 /// (a `Plan::new` plan doesn't once the store has been rebuilt since the run).
 pub fn replicate_run(store: &Store, plan: &Plan, dir: &Path) -> Result<RepTable> {
+    Ok(replicate_in(plan, &RunMeta::load(dir)?, Some(store))?.table)
+}
+
+/// The replication test (`replicate_run`) and what it had to leave out.
+#[derive(Clone, Default)]
+pub struct Replication {
+    pub table: RepTable,
+    /// Rolling correlation periods that today's data doesn't cover exactly
+    /// (`Plan::period_available`): their records aren't tested, and none of them serves as the
+    /// period after another.
+    pub periods_unavailable: usize,
+    /// Stored records left out because their period, or the period after it, is unavailable.
+    pub records_unavailable: usize,
+    /// Stored records left out because a stock of the pair is not in today's data
+    /// (`Plan::missing_stocks`).
+    pub records_missing_stock: usize,
+}
+
+/// `replicate_run`, with what it skipped: unavailable correlation periods and stocks today's
+/// data no longer has are left out and counted, never refused.
+pub fn replication(store: &Store, plan: &Plan, dir: &Path) -> Result<Replication> {
     replicate_in(plan, &RunMeta::load(dir)?, Some(store))
 }
 
-fn replicate_in(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<RepTable> {
+/// What became of one stored record in the replication test.
+enum Fate {
+    Tested((usize, usize, &'static str, bool), f64, f64),
+    /// No later period of its length (the end of the history), or too few observations there.
+    Untested,
+    Unavailable,
+    MissingStock,
+}
+
+fn replicate_in(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<Replication> {
     check_plan(plan, meta, store)?;
+    let mut out = Replication {
+        periods_unavailable: meta.windows.iter().filter(|w| w.length > 0 && !plan.period_available(w.id)).count(),
+        ..Default::default()
+    };
     let mut table: HashMap<(usize, usize, &'static str, bool), Rep> = HashMap::new();
     for task in meta.tasks()? {
         if task.length == 0 {
@@ -294,32 +341,54 @@ fn replicate_in(plan: &Plan, meta: &RunMeta, store: Option<&Store>) -> Result<Re
                 records.push(*r);
             }
         })?;
-        // Next non-overlapping window of the same length: the one starting at this one's end.
+        // Next non-overlapping window of the same length: the one whose first day is the trading
+        // day after this one's last (its first row is this one's end row). By date, so that
+        // unavailable periods (empty rows) can be told apart; only from a covered period.
         let next: HashMap<usize, usize> = task
             .windows
             .iter()
-            .filter_map(|&a| task.windows.iter().find(|&&b| plan.windows[b].start == plan.windows[a].end).map(|&b| (a, b)))
-            .collect();
-        let results: Vec<((usize, usize, &'static str, bool), f64, f64)> = records
-            .par_iter()
-            .filter_map(|r| {
-                let nw = *next.get(&(r.window as usize))?;
-                let (i, j) = (plan.column_of_run_id(r.leader)?, plan.column_of_run_id(r.target)?);
-                let rn = r_in_window(plan, meta.cfg.min_obs, &plan.windows[nw], task.h1, task.h2, r.lag as usize, i, j)?;
-                let key = (task.h1, task.h2, bucket(r.lag as usize, task.h2), r.flags & FLAG_NULL != 0);
-                Some((key, r.r as f64, rn))
+            .filter(|&&a| plan.period_available(a))
+            .filter_map(|&a| {
+                let day = *plan.var.days.get(plan.windows[a].end)?;
+                task.windows.iter().find(|&&b| meta.windows[b].first == day).map(|&b| (a, b))
             })
             .collect();
-        for (key, then, next) in results {
-            let e = table.entry(key).or_default();
-            e.pairs += 1;
-            e.same_sign += usize::from(then.signum() == next.signum());
-            e.signed_next += then.signum() * next;
-            e.abs_then += then.abs();
+        let fates: Vec<Fate> = records
+            .par_iter()
+            .map(|r| {
+                let a = r.window as usize;
+                if !plan.period_available(a) {
+                    return Fate::Unavailable;
+                }
+                let Some(&nw) = next.get(&a) else { return Fate::Untested };
+                if !plan.period_available(nw) {
+                    return Fate::Unavailable;
+                }
+                let (Some(i), Some(j)) = (plan.column_of_run_id(r.leader), plan.column_of_run_id(r.target)) else { return Fate::MissingStock };
+                match r_in_window(plan, meta.cfg.min_obs, &plan.windows[nw], task.h1, task.h2, r.lag as usize, i, j) {
+                    Some(rn) => Fate::Tested((task.h1, task.h2, bucket(r.lag as usize, task.h2), r.flags & FLAG_NULL != 0), r.r as f64, rn),
+                    None => Fate::Untested,
+                }
+            })
+            .collect();
+        for fate in fates {
+            match fate {
+                Fate::Tested(key, then, next) => {
+                    let e = table.entry(key).or_default();
+                    e.pairs += 1;
+                    e.same_sign += usize::from(then.signum() == next.signum());
+                    e.signed_next += then.signum() * next;
+                    e.abs_then += then.abs();
+                }
+                Fate::Untested => {}
+                Fate::Unavailable => out.records_unavailable += 1,
+                Fate::MissingStock => out.records_missing_stock += 1,
+            }
         }
     }
-    let mut out: RepTable = table.into_iter().collect();
-    out.sort_by(|a, b| (a.0.0, a.0.1, a.0.2, a.0.3).cmp(&(b.0.0, b.0.1, b.0.2, b.0.3)));
+    let mut rows: RepTable = table.into_iter().collect();
+    rows.sort_by(|a, b| (a.0.0, a.0.1, a.0.2, a.0.3).cmp(&(b.0.0, b.0.1, b.0.2, b.0.3)));
+    out.table = rows;
     Ok(out)
 }
 
@@ -452,16 +521,16 @@ pub fn words(pl: &[f64], pt: &[f64], h1: usize, h2: usize, lag: usize, first_e: 
 
 /// Every stored real lagged relationship involving `ticker` (as leader or target), strongest
 /// |z| first; with `significant_only`, just those that passed the false-discovery test.
-/// Builds the run's census variable first (under a second); `stock_profile_with` reuses one.
+/// Builds the run's census variable first (`run::variable_for`, as `Plan::for_run` does; under a
+/// second); `stock_profile_with` reuses one.
 pub fn stock_profile(store: &Store, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
     let meta = RunMeta::load(dir)?;
-    let cal = c2_data::Calendar::trading_days(store)?;
-    let var = crate::variable::production(store, &cal, meta.cfg.start)?;
+    let (var, _) = crate::run::variable_for(store, &meta)?;
     profile(store, &var, &meta, ticker, significant_only)
 }
 
 /// `stock_profile` with the run's census variable `var` (`Plan::var` of `Plan::for_run`, or
-/// `variable::production` with the run's start): sizes use its market-relative returns and the
+/// `run::variable_for`): sizes use its market-relative returns and the
 /// plain-terms counts its repaired closes, on its rows.
 ///
 /// What it reads comes from the run in `dir`: its task list (not whatever files `tasks/`
