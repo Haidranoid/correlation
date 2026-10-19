@@ -6,9 +6,13 @@
 //! correlates. A's h1-day move x ending at day g predicts B's h2-day move over
 //! (g + lag - h2, g + lag] of move_per_pct * x, where move_per_pct = r * sd(B's moves) / sd(A's
 //! moves) on the census's own observations in that relationship's correlation period
-//! (`moves::move_per_pct`, the "% per 1%" the stock timeline and the Explainer show). Each
-//! prediction is spread evenly over its h2 days; the forecast for a day is the mean over the
-//! relationships that cover it, accumulated into a path. So the forecast is B's move relative to
+//! (`moves::move_per_pct`, the "% per 1%" the stock timeline and the Explainer show). Each of
+//! A's moves is first capped at `MOVE_CAP` of its typical h1-day moves in that period: the census
+//! clips daily values at that many typical days, so it never measured the relationship beyond
+//! them, and a move far outside the period's range (such as a former blank-check company's first
+//! moves as an operating one) would otherwise be extrapolated without limit. Each prediction is
+//! spread evenly over its h2 days; the forecast for a day is the mean over the relationships
+//! that cover it, accumulated into a path. So the forecast is B's move relative to
 //! the market, which is its price path if the market stays flat. The actual line, the typical
 //! daily move and the track record are market-relative too, so like is compared with like.
 //!
@@ -41,6 +45,11 @@ use crate::moves;
 use crate::run::{FLAG_FDR, FLAG_NULL, Record};
 use crate::variable::{self, Variable};
 
+/// A leader's move is capped at this many of its typical h1-day moves in the relationship's
+/// correlation period before the multiplier applies: the census clips daily values at this many
+/// typical days (`variable::CLIP`), so a relationship was never measured beyond it.
+pub const MOVE_CAP: f64 = variable::CLIP as f64;
+
 /// A relationship in which the chosen stock (B) follows.
 #[derive(Clone)]
 struct Rel {
@@ -52,6 +61,9 @@ struct Rel {
     r: f32,
     /// `moves::move_per_pct`: the multiplier applied to A's market-relative moves.
     beta: f64,
+    /// A's typical h1-day market-relative move in the period (`moves::MoveSize::sd_a`, a log
+    /// change); its moves are capped at `MOVE_CAP` of these.
+    sd_a: f64,
     significant: bool,
     /// Variable row of the period's last day, and its length in trading days.
     window_end: usize,
@@ -113,13 +125,24 @@ pub struct Contribution {
     pub window_id: usize,
     pub period_days: usize,
     /// For reference: the leader's market-relative moves feeding this forecast, summed (in %),
-    /// each counted whole even when only part of the days it predicts fall inside the horizon.
-    /// The row's arithmetic uses `leader_move_in_horizon_pct`.
+    /// each counted whole even when only part of the days it predicts fall inside the horizon,
+    /// and as they happened (before the cap). The row's arithmetic uses
+    /// `leader_move_in_horizon_pct`.
     pub leader_move_pct: f64,
     /// The part of the leader's moves that lands in these days (in %): 100 (e^L - 1) with
     /// L = sum of x_i w_i, where x_i is one of the leader's market-relative h1-day moves (a log
-    /// change) and w_i the share of the h2 days it predicts that fall inside the horizon.
+    /// change, capped at +-`MOVE_CAP` x `leader_typical_move_pct`) and w_i the share of the h2
+    /// days it predicts that fall inside the horizon.
     pub leader_move_in_horizon_pct: f64,
+    /// How many of the leader's moves feeding this row were capped: each was more than
+    /// `MOVE_CAP` typical moves (`leader_typical_move_pct`) from zero, far outside anything seen
+    /// in this correlation period, so it counts as exactly `MOVE_CAP` typical moves, the most
+    /// the census itself ever measured.
+    pub clipped_moves: usize,
+    /// The leader's typical h1-day move relative to the market in this correlation period (in %:
+    /// 100 x the standard deviation of its log moves on the census's observations,
+    /// `moves::MoveSize::sd_a`).
+    pub leader_typical_move_pct: f64,
     /// The multiplier applied to them (`moves::move_per_pct`): the stock's move relative to the
     /// market per 1% move of the leader relative to the market. The stock timeline and the
     /// Explainer show this same number as "% per 1%".
@@ -242,14 +265,15 @@ pub fn prepare(store: &Store, var: &Variable, dir: &Path, ticker: &str) -> Resul
             if lag < h2 {
                 return None;
             }
-            let beta = moves::move_per_pct(&leaders[leader as usize].rel, &target_rel, r.r as f64, h1, h2, lag, span.clone())?;
+            let size = moves::move_size(&leaders[leader as usize].rel, &target_rel, r.r as f64, h1, h2, lag, span.clone())?;
             Some(Rel {
                 leader,
                 lag,
                 h1,
                 h2,
                 r: r.r,
-                beta,
+                beta: size.per_pct,
+                sd_a: size.sd_a,
                 significant: r.flags & FLAG_FDR != 0,
                 window_end: span.end - 1,
                 period_days: span.len(),
@@ -301,13 +325,15 @@ fn usable<'a>(d: &'a ForecastData, t0: usize, opt: &Options) -> Vec<&'a Rel> {
 
 /// One relationship's predicted market-relative log returns for days t0+1..=t0+horizon, which
 /// of those days it covers (makes a prediction for, even one of 0), and the leader moves that
-/// fed them: summed whole (`used`), and weighted by the share of each one's h2 days inside the
-/// horizon (`landed`, so the path's total is beta x landed).
+/// fed them: summed whole as they happened (`used`), and capped and weighted by the share of
+/// each one's h2 days inside the horizon (`landed`, so the path's total is beta x landed), with
+/// how many were capped.
 struct RelPath {
     daily: Vec<f64>,
     covers: Vec<bool>,
     used: f64,
     landed: f64,
+    clipped: usize,
 }
 
 /// A relationship covers a day at most once: its observations step by max(h1, h2) >= h2, so
@@ -315,7 +341,8 @@ struct RelPath {
 fn rel_path(d: &ForecastData, r: &Rel, t0: usize, horizon: usize) -> RelPath {
     let a = &d.leaders[r.leader as usize].rel;
     let step = r.h1.max(r.h2);
-    let mut p = RelPath { daily: vec![0.0; horizon], covers: vec![false; horizon], used: 0.0, landed: 0.0 };
+    let cap = MOVE_CAP * r.sd_a;
+    let mut p = RelPath { daily: vec![0.0; horizon], covers: vec![false; horizon], used: 0.0, landed: 0.0, clipped: 0 };
     // Leader moves ending at g = t0, t0 - step, ... (all known at t0) whose target interval
     // (g + lag - h2, g + lag] overlaps (t0, t0 + horizon].
     let mut g = t0;
@@ -324,6 +351,12 @@ fn rel_path(d: &ForecastData, r: &Rel, t0: usize, horizon: usize) -> RelPath {
             let x = moves::move_sum(a, g, r.h1);
             if x.is_finite() {
                 p.used += x;
+                let x = if x.abs() > cap {
+                    p.clipped += 1;
+                    cap.copysign(x)
+                } else {
+                    x
+                };
                 let per_day = r.beta * x / r.h2 as f64;
                 let mut inside = 0;
                 for day in (g + r.lag + 1 - r.h2)..=(g + r.lag) {
@@ -412,6 +445,8 @@ pub fn forecast_from(d: &ForecastData, as_of: i32, opt: &Options) -> Result<Fore
             period_days: r.period_days,
             leader_move_pct: 100.0 * p.used.exp_m1(),
             leader_move_in_horizon_pct: 100.0 * p.landed.exp_m1(),
+            clipped_moves: p.clipped,
+            leader_typical_move_pct: 100.0 * r.sd_a,
             move_per_pct: r.beta,
             // The sum of this relationship's daily path, up to rounding.
             implied_pct: 100.0 * (r.beta * p.landed).exp_m1(),
@@ -499,7 +534,7 @@ mod tests {
     use super::*;
 
     fn rel(leader: u32, window_end: usize, period_days: usize, window_id: usize) -> Rel {
-        Rel { leader, lag: 2, h1: 1, h2: 1, r: 0.5, beta: 1.0, significant: true, window_end, period_days, window: String::new(), window_id }
+        Rel { leader, lag: 2, h1: 1, h2: 1, r: 0.5, beta: 1.0, sd_a: f64::INFINITY, significant: true, window_end, period_days, window: String::new(), window_id }
     }
 
     fn data(rels: Vec<Rel>, leader_moves: &[f64]) -> ForecastData {
@@ -591,5 +626,34 @@ mod tests {
         assert!((c.implied_pct / 100.0 + 1.0 - (1.0 + c.leader_move_in_horizon_pct / 100.0).powf(c.move_per_pct)).abs() < 1e-12);
         // The forecast's own path adds up to the same.
         assert!(((1.0 + f.predicted_pct[6] / 100.0).ln() - 2.0 * l).abs() < 1e-12);
+    }
+
+    #[test]
+    fn a_move_far_outside_its_period_is_capped() {
+        // As above, but A's typical 1-day move in the period is 1%, so its moves are capped at
+        // +-5 typical moves (0.05). Its -50% move on t0 (2 of 5 predicted days inside) counts as
+        // -0.05; its -3% move on t0-5 is used as it is. L = 0.4 x -0.05 - 0.03 = -0.05.
+        let mut r = rel(0, 300, 252, 1);
+        (r.lag, r.h2, r.beta, r.sd_a) = (10, 5, 2.0, 0.01);
+        let mut d = data(vec![r], &[0.0]);
+        d.leaders[0].rel[350] = -0.5;
+        d.leaders[0].rel[345] = -0.03;
+        let opt = Options { significant_only: false, horizon: 7, max_age: None };
+        let f = forecast_from(&d, 350, &opt).unwrap();
+        let c = &f.contributions[0];
+        let l = 0.4 * -0.05 - 0.03;
+        assert_eq!(c.clipped_moves, 1);
+        assert!((c.leader_typical_move_pct - 1.0).abs() < 1e-12);
+        // As it happened, counted whole: -0.53.
+        assert!((c.leader_move_pct - 100.0 * f64::exp_m1(-0.53)).abs() < 1e-9);
+        assert!((c.leader_move_in_horizon_pct - 100.0 * f64::exp_m1(l)).abs() < 1e-9);
+        assert!((c.implied_pct - 100.0 * f64::exp_m1(2.0 * l)).abs() < 1e-9);
+        assert!((c.implied_pct / 100.0 + 1.0 - (1.0 + c.leader_move_in_horizon_pct / 100.0).powf(c.move_per_pct)).abs() < 1e-12);
+        assert!(((1.0 + f.predicted_pct[6] / 100.0).ln() - 2.0 * l).abs() < 1e-12);
+        // Up to the cap nothing changes: +0.05 exactly is used as it is.
+        d.leaders[0].rel[350] = 0.05;
+        let c = &forecast_from(&d, 350, &opt).unwrap().contributions[0];
+        assert_eq!(c.clipped_moves, 0);
+        assert!((c.leader_move_in_horizon_pct - 100.0 * f64::exp_m1(0.4 * 0.05 - 0.03)).abs() < 1e-9);
     }
 }
