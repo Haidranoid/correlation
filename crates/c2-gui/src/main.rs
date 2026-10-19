@@ -13,7 +13,8 @@
 //!   Explainer one relationship recomputed from prices step by step and checked against what the
 //!            census stored (the pair's record, else its matrix's summary), or why it never
 //!            computed it
-//!   Census   real vs chance by lag for each horizon pair; a ticker's strongest stored pairs
+//!   Census   real vs chance by offset for each pair of move lengths; a ticker's strongest stored
+//!            pairs
 //!   Holdout  the $10,000 test for either signal family, with equity curves
 //!   Data     price store summary and the decade quality table
 //!
@@ -177,10 +178,13 @@ struct RunPlan {
     plan: Plan,
 }
 
-/// The one run plan kept in memory, with the name of the run it is for. Shared by the plan job
-/// (Stock timeline, Forecast, Explainer) and the holdout's worker so that only one is built at a
-/// time.
-type PlanSlot = Arc<Mutex<Option<(String, Arc<RunPlan>)>>>;
+/// The one run plan kept in memory, with the run it is for and the generation of the price store
+/// it was built from. Shared by the plan job (Stock timeline, Forecast, Explainer) and the
+/// holdout's worker so that only one is built at a time.
+type PlanSlot = Arc<Mutex<PlanEntry>>;
+
+/// The slot's content: nothing, or ((run, store generation), its plan).
+type PlanEntry = Option<((String, u64), Arc<RunPlan>)>;
 
 /// The Strongest tab's data: the ranking, and per correlation period of the run (by its id) its
 /// length and last day, for each row's strongest relationship.
@@ -200,17 +204,56 @@ struct RankLine {
 
 /// Self-check mode (`C2_GUI_SCREENSHOT=<path prefix>`, `C2_GUI_TAB=<tab>`): open a tab, wait for
 /// its data (or its error), save the window's pixels and exit. After `C2_GUI_TIMEOUT` seconds
-/// (default 600) it saves whatever is shown.
+/// (default 600) it saves whatever is shown; it waits at least `C2_GUI_WAIT` seconds (default 0),
+/// e.g. for a change made to the data while it runs. `C2_GUI_PLAN` builds the run's plan first
+/// (as a Stock timeline, Forecast or Explainer visit would), for tabs that show what it notes.
 struct Shot {
     prefix: String,
     frames: u32,
     requested: bool,
     started: Instant,
     timeout: Duration,
+    min_wait: Duration,
+    plan: bool,
 }
 
 /// Run name typing settles after this long without a keystroke (or on Enter).
 const RUN_IDLE: Duration = Duration::from_millis(1200);
+
+/// How often the price store's files are checked for a rebuild (`c2 update`, `c2 ingest`).
+const STORE_CHECK: Duration = Duration::from_secs(3);
+
+/// The price store's files as last seen: size, modification time and inode of `prices.bin` and
+/// `symbols.tsv` (a rebuild renames new files over both).
+type StoreStamp = Vec<(u64, Option<std::time::SystemTime>, u64)>;
+
+/// A store opened in the background: the store, its summary line, the Data tab's table, and the
+/// files' stamp it was opened from.
+type OpenedStore = (Arc<Store>, String, Vec<c2_data::quality::DecadeRow>, Option<StoreStamp>);
+
+fn store_dir() -> PathBuf {
+    c2_data::data_dir().join("store")
+}
+
+/// The store's files as they are now; None while one is missing or a rebuild is writing them
+/// (its temporary files exist).
+fn store_stamp(dir: &Path) -> Option<StoreStamp> {
+    use std::os::unix::fs::MetadataExt;
+    if ["prices.bin.tmp", "symbols.tsv.tmp"].iter().any(|f| dir.join(f).exists()) {
+        return None;
+    }
+    ["prices.bin", "symbols.tsv"].iter().map(|f| std::fs::metadata(dir.join(f)).ok().map(|m| (m.len(), m.modified().ok(), m.ino()))).collect()
+}
+
+/// Opens the price store in `dir` (stamped first, so a rebuild during the open shows up as a
+/// change at the next check).
+fn open_store(dir: &Path) -> Result<OpenedStore, String> {
+    let stamp = store_stamp(dir);
+    let store = Store::open(dir).map_err(|e| format!("{e:#}"))?;
+    let decades = c2_data::quality::decade_table(&store);
+    let note = format!("{} symbols, {} daily rows, in {}", store.symbols.len(), store.rows(), dir.display());
+    Ok((Arc::new(store), note, decades, stamp))
+}
 
 /// A census process started from this window (Start / resume), watched until it exits so that a
 /// refusal ("census X is already running") or a failure is shown, not just written to run.out.
@@ -232,6 +275,16 @@ struct App {
     store: Option<Arc<Store>>,
     store_note: String,
     decades: Vec<c2_data::quality::DecadeRow>,
+    /// The store's files as opened, when they were last checked, a changed stamp waiting to read
+    /// the same twice (a rebuild writes two files), the reopen in flight (key: the generation it
+    /// makes), the generation of the store in use (plans are keyed by it), and the note shown
+    /// after a reload.
+    store_stamp: Option<StoreStamp>,
+    store_checked: Instant,
+    store_settling: Option<Option<StoreStamp>>,
+    store_reload: Job<u64, OpenedStore>,
+    store_gen: u64,
+    store_changed: Option<(Instant, String)>,
     status: Option<serde_json::Value>,
     status_err: String,
     pid: Option<u32>,
@@ -242,9 +295,11 @@ struct App {
     /// (true = an error).
     launch: Option<Launch>,
     launch_note: Option<(bool, String)>,
-    // Census tab: the lag table and the run it was read from.
+    // Census tab: the table of real vs chance by offset, the run it was read from, and what
+    // reading it found when it found nothing to show.
     lag_table: BTreeMap<(usize, usize), BTreeMap<usize, LagRow>>,
     lag_table_run: String,
+    lag_note: String,
     pair: (usize, usize),
     ticker: String,
     /// Key: (run, ticker).
@@ -257,7 +312,8 @@ struct App {
     costs: String,
     random: usize,
     plan_slot: PlanSlot,
-    holdout: Job<HoldoutKey, Report>,
+    /// The holdout's report, and what the run's plan on today's prices left out (`plan_note`).
+    holdout: Job<HoldoutKey, (Report, Option<String>)>,
     holdout_started: Option<Instant>,
     shot: Option<Shot>,
     // Stock timeline tab.
@@ -271,7 +327,8 @@ struct App {
     plan: Job<String, Arc<RunPlan>>,
     // Status tab statistics: of the run (key: run), and every run (key: refresh count, and the
     // run shown, which the list marks as in use).
-    stats: Job<String, DatasetStats>,
+    /// The run's statistics and how many of each matrix's strongest pairs it stores (`keep_real`).
+    stats: Job<String, (DatasetStats, usize)>,
     runs: Job<(u64, String), Vec<RunInfo>>,
     runs_refresh: u64,
     /// Local time offset from UTC in seconds (from `date +%z`).
@@ -334,6 +391,8 @@ struct Timeline {
     /// false: stocks whose moves show up in this one later (they move first); true: stocks this
     /// one moves first.
     stock_first: bool,
+    /// Self-check (`C2_GUI_SELECT`): select the first row shown once the rows are there.
+    select_first: bool,
 }
 
 #[derive(Default)]
@@ -510,15 +569,17 @@ fn local_time(unix: u64, offset: i64) -> String {
 /// The plan of census `run`: its own description read from its directory (`RunMeta`), and the
 /// census variable built from today's prices with the run's own settings together with the run's
 /// own correlation periods (matched by date), universes and tasks (`Plan::for_run`), so period
-/// and task ids mean what they meant in that run. From the shared slot when it holds this run's,
-/// else built now in its place. Errors (naming the problem) when the run can't be reproduced on
-/// today's prices.
-fn plan_for_run(slot: &Mutex<Option<(String, Arc<RunPlan>)>>, store: &Store, run: &str, dir: &Path) -> Result<Arc<RunPlan>, String> {
+/// and task ids mean what they meant in that run. What today's prices don't cover is marked in
+/// the plan, not refused (`Plan::period_available`, `missing_stocks`, `variable_note`). From the
+/// shared slot when it holds this run's plan for this store (`store_gen`), else built now in its
+/// place. Errors (naming the problem) only when the run can't be read.
+fn plan_for_run(slot: &Mutex<PlanEntry>, store: &Store, store_gen: u64, run: &str, dir: &Path) -> Result<Arc<RunPlan>, String> {
     // The slot only ever holds nothing or a complete plan (it is emptied before a build and
     // filled after it succeeds), so a lock poisoned by a panicking worker is still usable.
     let mut guard = slot.lock().unwrap_or_else(|e| e.into_inner());
+    let key = (run.to_string(), store_gen);
     if let Some((k, p)) = guard.as_ref()
-        && k == run
+        && *k == key
     {
         return Ok(p.clone());
     }
@@ -527,8 +588,67 @@ fn plan_for_run(slot: &Mutex<Option<(String, Arc<RunPlan>)>>, store: &Store, run
     let meta = RunMeta::load(dir).map_err(|e| format!("{e:#}"))?;
     let plan = Plan::for_run(store, &meta).map_err(|e| format!("{e:#}"))?;
     let rp = Arc::new(RunPlan { meta, plan });
-    *guard = Some((run.to_string(), rp.clone()));
+    *guard = Some((key, rp.clone()));
     Ok(rp)
+}
+
+/// What the Explainer leaves out of a length's periods, or None when today's data covers them
+/// all: `of_length` are the run's periods of `length` days (0 = full history) in date order,
+/// `covered` the ones today's data covers. The latest left-out one is named with the explainer's
+/// reason (`explain::period_unavailable`); as in `c2 census explain` without an end date, the
+/// latest period today's data covers is named when later ones are passed over.
+fn uncovered_note(rp: &RunPlan, length: usize, of_length: &[usize], covered: &[usize]) -> Option<String> {
+    let left_out: Vec<usize> = of_length.iter().copied().filter(|id| !covered.contains(id)).collect();
+    let &latest = left_out.last()?;
+    let d = c2_data::date_string;
+    let span = |id: usize| format!("{}..{}", d(rp.meta.windows[id].first), d(rp.meta.windows[id].last));
+    let why = c2_census::explain::period_unavailable(&rp.plan, &rp.meta, latest).unwrap_or_default();
+    let mut note = if length == 0 {
+        format!("The run's full-history correlation period {} can't be explained with today's data: {why}.", span(latest))
+    } else if left_out.len() == 1 {
+        format!("One of the run's {} {length}-day correlation periods, {}, can't be explained with today's data, so it isn't offered: {why}.", of_length.len(), span(latest))
+    } else {
+        format!(
+            "{} of the run's {} {length}-day correlation periods can't be explained with today's data, so they aren't offered. The latest of them, {}: {why}.",
+            left_out.len(),
+            of_length.len(),
+            span(latest)
+        )
+    };
+    if of_length.last() == Some(&latest)
+        && let Some(&last_covered) = covered.last()
+    {
+        note.push_str(&format!(" The latest one today's data covers is {}.", span(last_covered)));
+    }
+    Some(note)
+}
+
+/// What the run's plan on today's prices leaves out, in words, or None when it leaves out
+/// nothing: correlation periods today's data doesn't cover exactly, stocks it no longer has, and
+/// why values recomputed today may differ from the stored ones (an older census variable).
+fn plan_note(rp: &RunPlan) -> Option<String> {
+    let plan = &rp.plan;
+    let (periods, places) = plan.unavailable();
+    let mut parts = Vec::new();
+    if periods > 0 {
+        let last = plan.var.days.last().map(|d| c2_data::date_string(*d)).unwrap_or_default();
+        parts.push(format!(
+            "{periods} of its {} correlation periods aren't covered exactly by today's price data (which ends {last}), so they are left out",
+            plan.windows.len()
+        ));
+    }
+    if places > 0 {
+        let stocks: HashSet<u32> = plan.missing_stocks.iter().flatten().copied().collect();
+        let (is, their) = if stocks.len() == 1 { ("is", "its") } else { ("are", "their") };
+        parts.push(format!(
+            "{} of its stocks {is} no longer in today's price data (in {places} of its periods' stock lists), so {their} pairs are left out",
+            stocks.len()
+        ));
+    }
+    if let Some(note) = &plan.variable_note {
+        parts.push(note.clone());
+    }
+    (!parts.is_empty()).then(|| format!("Census '{}' read on today's price data: {}.", rp.meta.name, parts.join("; ")))
 }
 
 /// A correlation period of a run as the tables show it: its length ("756 days", or "all history")
@@ -588,30 +708,31 @@ fn timeline_view(data: &TimelineData, vk: &TimelineViewKey) -> TimelineView {
     TimelineView { rows: rows.into_iter().cloned().collect(), lengths, horizons: pairs, total_sig, recent_end, full_days }
 }
 
-/// How a forecast's track record compares with luck, from its hit rate over the `n_hit` forecasts
-/// where both the predicted and the actual move had a direction (`Skill::directional`) and its
-/// predicted vs actual correlation over all `n_corr` forecasts: (colour, sentence). Skill can be
-/// negative: a record that points the wrong way more often than luck explains is worse than
-/// chance, not "good".
-fn track_record_verdict(hit_rate: f64, n_hit: usize, corr: f64, n_corr: usize) -> (egui::Color32, &'static str) {
+/// How a forecast's track record compares with luck: (colour, sentence). Two measures: the hit
+/// rate over the `n_hit` forecasts where both the predicted and the actual move had a direction
+/// (`Skill::directional`), and the predicted vs actual correlation over all `n_corr` forecasts.
+/// Each is beyond luck when its z is 2 or more either way. The sentence names the measure that
+/// did, and gives the other, so a record isn't described by a measure that didn't fire. Green:
+/// one or both better than luck and none worse; red: one or both worse and none better; yellow:
+/// neither, or the two in opposite directions. Skill can be negative: a record that points the
+/// wrong way more often than luck explains is worse than chance, not "good".
+fn track_record_verdict(hit_rate: f64, n_hit: usize, corr: f64, n_corr: usize) -> (egui::Color32, String) {
     let z_hit = (hit_rate - 0.5) / (0.25 / n_hit.max(1) as f64).sqrt();
     let z_corr = corr * (n_corr.max(1) as f64).sqrt();
-    let better = z_hit >= 2.0 || z_corr >= 2.0;
-    let worse = z_hit <= -2.0 || z_corr <= -2.0;
-    match (better, worse) {
-        (false, false) => (YELLOW_NOTE, "That is within what luck produces, so treat the forecast line as noise."),
-        (true, false) => (
-            GREEN_NOTE,
-            "That is better than luck usually produces for one stock, but with thousands of stocks some look this good by chance; check the holdout before trusting it.",
-        ),
-        (false, true) => (
-            RED_NOTE,
-            "That is worse than chance: these forecasts pointed the wrong way more than luck explains. Don't use this forecast.",
-        ),
-        (true, true) => (
-            YELLOW_NOTE,
-            "The two measures disagree (one better than luck, the other worse), so the record doesn't support the forecast; treat the forecast line as noise.",
-        ),
+    // Each measure: 1 better than luck, -1 worse, 0 within what luck produces.
+    let side = |z: f64| if z >= 2.0 { 1 } else if z <= -2.0 { -1 } else { 0 };
+    let (right, c) = (format!("{:.0}%", 100.0 * hit_rate), format!("{corr:+.2}"));
+    let caveat = "with thousands of stocks some look this good by chance, so check the holdout before trusting it.";
+    match (side(z_hit), side(z_corr)) {
+        (0, 0) => (YELLOW_NOTE, format!("Both are within what luck produces (direction right {right} of the time, correlation {c}), so treat the forecast line as noise.")),
+        (1, 1) => (GREEN_NOTE, format!("Both beat luck: its direction was right {right} of the time and its predicted sizes lined up with what happened (correlation {c}); {caveat}")),
+        (1, 0) => (GREEN_NOTE, format!("Its direction was right more often than luck explains ({right} of the time), though its predicted sizes were within luck (correlation {c}); {caveat}")),
+        (0, 1) => (GREEN_NOTE, format!("Its predicted sizes lined up with what happened beyond luck (correlation {c}), though its direction was right only {right} of the time, within luck; {caveat}")),
+        (-1, -1) => (RED_NOTE, format!("Both are worse than luck: its direction was right only {right} of the time and its predicted sizes went the wrong way (correlation {c}). Don't use this forecast.")),
+        (-1, 0) => (RED_NOTE, format!("Its direction was wrong more often than luck explains (right only {right} of the time), though its predicted sizes were within luck (correlation {c}). Don't use this forecast.")),
+        (0, -1) => (RED_NOTE, format!("Its predicted sizes went the wrong way (correlation {c}, beyond luck), though its direction was right {right} of the time. Don't use this forecast.")),
+        (1, -1) => (YELLOW_NOTE, format!("The two measures disagree: its direction was right more often than luck explains ({right} of the time), but its predicted sizes went the wrong way (correlation {c}, beyond luck); treat the forecast line as noise.")),
+        _ => (YELLOW_NOTE, format!("The two measures disagree: its predicted sizes lined up with what happened beyond luck (correlation {c}), but its direction was wrong more often than luck explains (right only {right} of the time); treat the forecast line as noise.")),
     }
 }
 
@@ -704,14 +825,11 @@ fn category_axis(labels: Vec<String>) -> impl Fn(egui_plot::GridMark, &std::ops:
 
 impl App {
     fn new() -> App {
-        let dir = c2_data::data_dir().join("store");
-        let (store, store_note, decades) = match Store::open(&dir) {
-            Ok(s) => {
-                let d = c2_data::quality::decade_table(&s);
-                let note = format!("{} symbols, {} daily rows, in {}", s.symbols.len(), s.rows(), dir.display());
-                (Some(Arc::new(s)), note, d)
-            }
-            Err(e) => (None, format!("No price store yet ({e:#}). Run `c2 ingest`."), Vec::new()),
+        let dir = store_dir();
+        // Store::open's error already says to run `c2 ingest`.
+        let (store, store_note, decades, store_stamp) = match open_store(&dir) {
+            Ok((s, note, d, stamp)) => (Some(s), note, d, stamp),
+            Err(e) => (None, format!("No price store yet: {e}"), Vec::new(), store_stamp(&dir)),
         };
         // Self-checks can open another run than the one in use (`C2_GUI_RUN`).
         let run_name = std::env::var("C2_GUI_RUN").ok().filter(|r| !r.trim().is_empty()).unwrap_or_else(run::latest_run);
@@ -723,6 +841,12 @@ impl App {
             store,
             store_note,
             decades,
+            store_stamp,
+            store_checked: Instant::now(),
+            store_settling: None,
+            store_reload: Job::default(),
+            store_gen: 0,
+            store_changed: None,
             status: None,
             status_err: String::new(),
             pid: None,
@@ -733,6 +857,7 @@ impl App {
             launch_note: None,
             lag_table: BTreeMap::new(),
             lag_table_run: String::new(),
+            lag_note: String::new(),
             pair: (1, 1),
             ticker: "AAPL".into(),
             pairs: Job::default(),
@@ -751,6 +876,8 @@ impl App {
                 requested: false,
                 started: Instant::now(),
                 timeout: Duration::from_secs(std::env::var("C2_GUI_TIMEOUT").ok().and_then(|s| s.parse().ok()).unwrap_or(600)),
+                min_wait: Duration::from_secs(std::env::var("C2_GUI_WAIT").ok().and_then(|s| s.parse().ok()).unwrap_or(0)),
+                plan: std::env::var("C2_GUI_PLAN").is_ok(),
             }),
             tl: Timeline { input: "NAD".into(), window: "all".into(), max_shown: 40, ..Default::default() },
             fc: ForecastView { horizon: 21, amount: "10000".into(), ..Default::default() },
@@ -798,34 +925,90 @@ impl App {
             return;
         }
         self.run_name = name.to_string();
+        self.clear_results();
+        self.tl.selected = None;
+        self.ex.pending_window = None;
+        if let Some(sel) = self.ex.selected.take() {
+            self.ex.pending_end = Some(sel);
+        }
+        self.message.clear();
+        // Read the new run's status now, so the Start / Stop buttons reflect it this frame.
+        self.last_poll = Instant::now() - Duration::from_secs(10);
+        self.poll();
+    }
+
+    /// Drops everything read from the run or through the price store: results, jobs in flight,
+    /// views made from them and the run's plan. The choices on each tab stay, and their results
+    /// are read again when a tab asks for them.
+    fn clear_results(&mut self) {
         self.rank.clear();
         self.rank_view = None;
         self.tl.job.clear();
         self.tl.view = None;
-        self.tl.selected = None;
         self.fc.data.clear();
         self.fc.job.clear();
         self.plan.clear();
-        // Free the old run's census variable now unless a worker is using the slot.
+        // Free the plan's census variable now unless a worker is using the slot (its entry is
+        // keyed by run and store, so a stale one is never reused).
         if let Ok(mut guard) = self.plan_slot.try_lock() {
             *guard = None;
         }
         self.ex.job.clear();
         self.ex.key = None;
-        self.ex.pending_window = None;
-        if let Some(sel) = self.ex.selected.take() {
-            self.ex.pending_end = Some(sel);
-        }
         self.stats.clear();
         self.pairs.clear();
         self.lag_table.clear();
         self.lag_table_run.clear();
+        self.lag_note.clear();
         self.holdout.clear();
         self.holdout_started = None;
-        self.message.clear();
-        // Read the new run's status now, so the Start / Stop buttons reflect it this frame.
-        self.last_poll = Instant::now() - Duration::from_secs(10);
-        self.poll();
+    }
+
+    /// Reopens the price store when its files change (`c2 update` and `c2 ingest` rebuild it), so
+    /// new runs can be read and the newest periods aren't taken for gaps in the data. Checked every
+    /// few seconds; the store is reopened in the background once its files read the same at two
+    /// checks in a row with no rebuild writing them (a rebuild renames two files in, one after the
+    /// other).
+    fn watch_store(&mut self) {
+        if self.store_checked.elapsed() < STORE_CHECK || self.store_reload.is_running() {
+            return;
+        }
+        self.store_checked = Instant::now();
+        let dir = store_dir();
+        let now = store_stamp(&dir);
+        if now == self.store_stamp {
+            self.store_settling = None;
+            return;
+        }
+        if now.is_some() && self.store_settling.as_ref() == Some(&now) {
+            self.store_settling = None;
+            self.store_reload.start(self.store_gen + 1, move || open_store(&dir));
+        } else {
+            self.store_settling = Some(now);
+        }
+    }
+
+    /// Puts a reopened store in place of the old one and drops everything read through the old
+    /// one. A store that can't be opened yet is tried again after the next change check.
+    fn apply_store_reload(&mut self) {
+        let Some((generation, res)) = self.store_reload.done.take() else { return };
+        match res {
+            Ok((store, note, decades, stamp)) => {
+                self.store = Some(store);
+                self.store_note = note;
+                self.decades = decades;
+                self.store_stamp = stamp;
+                self.store_gen = generation;
+                self.clear_results();
+                // The Explainer keeps its period by date: which periods today's data covers (and
+                // so their positions in its list) may have changed.
+                if let Some(sel) = self.ex.selected {
+                    self.ex.pending_end = Some(sel);
+                }
+                self.store_changed = Some((Instant::now(), "Price data changed; reloaded".to_string()));
+            }
+            Err(e) => self.store_changed = Some((Instant::now(), format!("Price data changed but can't be read yet ({e}); trying again"))),
+        }
     }
 
     /// Collects every finished background job, whichever tab is shown. Self-checks report how
@@ -859,6 +1042,9 @@ impl App {
         report("list of runs", self.runs.poll(), self.runs.took);
         report("stored pairs", self.pairs.poll(), self.pairs.took);
         report("holdout", self.holdout.poll(), self.holdout.took);
+        if report("price store reopened", self.store_reload.poll(), self.store_reload.took) {
+            self.apply_store_reload();
+        }
     }
 
     /// True while any background job is computing (the window then checks for results often).
@@ -873,6 +1059,7 @@ impl App {
             || self.runs.is_running()
             || self.pairs.is_running()
             || self.holdout.is_running()
+            || self.store_reload.is_running()
     }
 
     /// Whether the shown tab has everything it asked for (a result or an error), for self-checks.
@@ -968,7 +1155,7 @@ impl App {
         // The number of lead-lag correlations this run tested, from the same run's statistics (the
         // Status tab's) once they have been read.
         let tested = match self.stats.get(&run) {
-            Some(Ok(st)) => format!("when {} lead-lag correlations are tested, as in census '{run}'", big(st.lagged.correlations)),
+            Some(Ok((st, _))) => format!("when {} lead-lag correlations are tested, as in census '{run}'", big(st.lagged.correlations)),
             _ => "when every pair of stocks is tested at every offset, move length and correlation period".to_string(),
         };
         ui.label(format!(
@@ -1165,6 +1352,11 @@ impl App {
             ui.label(format!("Census '{run}' stored no lead-lag relationships for {want}."));
             return;
         }
+        // What the run's plan on today's prices left out (its relationships from uncovered
+        // periods aren't shown).
+        if let Some(note) = self.plan_note_for(&run) {
+            ui.colored_label(YELLOW_NOTE, note);
+        }
         // The ticker of the rows loaded (the job's key), never a newer one typed in the box.
         let t = want;
         self.update_timeline_view(&job_key);
@@ -1217,8 +1409,12 @@ impl App {
         self.update_timeline_view(&job_key);
         let Some((_, view)) = &self.tl.view else { return };
         let rows = &view.rows;
-        let all_rows = match self.tl.job.get(&job_key) {
-            Some(Ok(data)) => &data.rows,
+        if self.tl.select_first && !rows.is_empty() {
+            self.tl.select_first = false;
+            self.tl.selected = rows.first().map(key);
+        }
+        let (all_rows, full_history) = match self.tl.job.get(&job_key) {
+            Some(Ok(data)) => (&data.rows, &data.full_history),
             _ => return,
         };
         let selected = self.tl.selected.clone();
@@ -1233,8 +1429,8 @@ impl App {
             } else {
                 format!("B = {t}, which follows; A = the stock that moves first. A point at +k days: when that stock moves, {t} tends to move k trading days \
                          later (offset from the end of A's move to the end of {t}'s); height = how far {t} tends to move beyond what the market did, per 1% \
-                         that A moves beyond the market (the multiplier the Forecast tab applies). Orange = passed the significance test; grey = within what \
-                         chance produces.")
+                         that A moves beyond the market (the multiplier the Forecast tab applies, except to the full-history period, which it doesn't use). \
+                         Orange = passed the significance test; grey = within what chance produces.")
             });
             let y_of = |r: &ProfileRow| if show_r { r.r as f64 } else { r.move_per_pct.unwrap_or(r.r as f64) };
             let x_of = |r: &ProfileRow| r.lag as f64;
@@ -1262,9 +1458,10 @@ impl App {
                     p.text(Text::new("", PlotPoint::new(0.0, 0.0), today).color(egui::Color32::WHITE).anchor(egui::Align2::LEFT_BOTTOM));
                 });
             ui.strong("Relationships (click one for details)");
-            egui::ScrollArea::vertical().id_salt("tl_rows").max_height(260.0).show(ui, |ui| {
+            // Scrolls sideways too, so the last columns stay reachable in a narrow window.
+            egui::ScrollArea::both().id_salt("tl_rows").max_height(260.0).show(ui, |ui| {
                 egui::Grid::new("tl_grid").striped(true).show(ui, |ui| {
-                    for h in ["", "A -> B", "offset", "move lengths", "B per 1% of A (vs market)", "r", "z", "chance", "in your words (in the correlation period)", "period", "ending"] {
+                    for h in ["", "A -> B", "offset", "move lengths", "B per 1% of A\n(vs market)", "r", "z", "chance", "in your words (in the correlation period)", "period", "ending"] {
                         ui.strong(h);
                     }
                     ui.end_row();
@@ -1312,9 +1509,16 @@ impl App {
                         }
                         ui.label(format!("Shown: the {}-day correlation period ending {} (r {:+.3} over {} observations).", r.period_days, r.period_end, r.r, r.obs));
                         if let Some(m) = r.move_per_pct {
+                            // The Forecast uses rolling periods only: its track record could never
+                            // check the full-history one.
+                            let use_note = if full_history.contains(&r.window_id) {
+                                "the Forecast tab doesn't apply it: it never uses the full-history correlation period, which its track record could never check"
+                            } else {
+                                "the multiplier the Forecast tab applies"
+                            };
                             ui.label(format!(
                                 "Size: when {a} moves 1% beyond what the market did over {}, {b} tends to move {m:+.2}% beyond the market over the {} \
-                                 ending {} later (the multiplier the Forecast tab applies).",
+                                 ending {} later ({use_note}).",
                                 days_label(r.h1 as usize),
                                 days_label(r.h2 as usize),
                                 tdays(r.lag as usize)
@@ -1505,6 +1709,9 @@ impl App {
                 ui.label(w);
             });
         }
+        if let Some(note) = self.plan_note_for(&run) {
+            ui.colored_label(YELLOW_NOTE, note);
+        }
         let t = &f.ticker;
         let h = f.predicted_pct.len();
         let amount: f64 = self.fc.amount.trim().replace([',', '$'], "").parse().unwrap_or(10_000.0);
@@ -1526,7 +1733,7 @@ impl App {
         if let Some(Some(a)) = f.actual_pct.last() {
             ui.label(format!("What happened: {t} moved {a:+.2}% beyond what the market did over those {h} trading days (${:.2} had the market been flat).", val(*a)));
         } else if f.actual_pct.iter().any(|a| a.is_some()) {
-            ui.label(format!("What happened so far ({t}'s move beyond the market) is drawn in blue; the data ends before the full horizon."));
+            ui.label(format!("What happened so far ({t}'s move beyond the market) is drawn in blue; the data ends before the last day ahead."));
         }
         match &f.skill {
             Some(s) => {
@@ -1582,15 +1789,20 @@ impl App {
             p.bar_chart(BarChart::new("daily forecast", bars));
         });
         ui.strong(format!("Largest shares of the forecast at day {h} ({} relationships say something about these days)", f.contributions.len()));
+        // Each row multiplies out exactly: alone implies = (1 + move/100)^(% per 1%) - 1, with the
+        // move that lands in the days shown (`leader_move_in_horizon_pct`), not all of the
+        // leader's moves feeding the forecast (`leader_move_pct`, only on hover).
         ui.label(format!(
-            "Each row: the leader's move beyond the market so far, times how far {t} tends to move beyond the market per 1% of it (the same \
-             '% per 1%' the Stock timeline shows), is what that relationship alone implies for {t}'s move beyond the market."
+            "Leader's move: its moves beyond the market that land in the {h} days shown (a move whose predicted days run past the last day counts \
+             in proportion). {t} per 1%: how far {t} tends to move beyond the market per 1% the leader moves beyond it (the Stock timeline's \
+             '% per 1%'). Alone implies = (1 + move/100)^(% per 1%) - 1: the % per 1% applies to log changes, so it is about move x % per 1% \
+             only for small moves."
         ));
         let mut open: Option<(String, String, usize, usize, usize, usize)> = None;
         egui::ScrollArea::vertical().id_salt("fc_rows").show(ui, |ui| {
             egui::Grid::new("fc_grid").striped(true).show(ui, |ui| {
                 let per = format!("{t} per 1%");
-                for c in ["leader", "offset", "move lengths", "r", "", "leader's move vs market", &per, "alone implies vs market", "share of forecast", "correlation period", ""] {
+                for c in ["leader", "offset", "move lengths", "r", "", "leader's move\nlanding in these days", &per, "alone implies", "share of forecast", "correlation period", ""] {
                     ui.strong(c);
                 }
                 ui.end_row();
@@ -1600,7 +1812,8 @@ impl App {
                     ui.label(format!("{} -> {}", days_label(c.h1), days_label(c.h2)));
                     ui.label(format!("{:+.3}", c.r));
                     ui.label(if c.significant { "★" } else { "" });
-                    ui.label(format!("{:+.2}%", c.leader_move_pct));
+                    ui.label(format!("{:+.2}%", c.leader_move_in_horizon_pct))
+                        .on_hover_text(format!("All its moves feeding the forecast, each counted whole: {:+.2}%", c.leader_move_pct));
                     ui.label(format!("{:+.3}%", c.move_per_pct));
                     ui.label(format!("{:+.2}%", c.implied_pct));
                     ui.label(format!("{:+.3} pts", c.share_pct));
@@ -1620,12 +1833,20 @@ impl App {
     /// The current run's plan (`plan_for_run`): its description, the census variable for every
     /// stock and the run's own correlation periods, universes and tasks, built in the background
     /// (in the slot it shares with the holdout). Ok(None) while it is being built.
+    /// `plan_note` for `run`'s plan if one has been built (this builds none).
+    fn plan_note_for(&self, run: &str) -> Option<String> {
+        match self.plan.get(&run.to_string()) {
+            Some(Ok(rp)) => plan_note(rp),
+            _ => None,
+        }
+    }
+
     fn need_plan(&mut self) -> Result<Option<Arc<RunPlan>>, String> {
         let Some(store) = self.store.clone() else { return Err(self.store_note.clone()) };
         let run = self.run_name.clone();
         if self.plan.wants(&run) {
-            let (slot, dir, r) = (self.plan_slot.clone(), self.dir(), run.clone());
-            self.plan.start(run.clone(), move || plan_for_run(&slot, &store, &r, &dir));
+            let (slot, dir, r, generation) = (self.plan_slot.clone(), self.dir(), run.clone(), self.store_gen);
+            self.plan.start(run.clone(), move || plan_for_run(&slot, &store, generation, &r, &dir));
         }
         match self.plan.get(&run) {
             None => Ok(None),
@@ -1654,19 +1875,27 @@ impl App {
             }
         };
         let plan = &rp.plan;
+        // The run's periods of a length that today's data covers, in date order: the ones that can
+        // be recomputed and so can be chosen (the others are counted below the choices).
+        let covered = |len: usize| -> Vec<usize> { plan.windows.iter().filter(|w| w.length == len && plan.period_available(w.id)).map(|w| w.id).collect() };
         // A period id from a row of this run (the plan's periods are the run's own).
         if let Some((run, w)) = self.ex.pending_window.take()
             && run == self.run_name
             && let Some(win) = plan.windows.get(w)
+            && let Some(pos) = covered(win.length).iter().position(|&id| id == w)
         {
             self.ex.length = win.length;
-            self.ex.pos = plan.windows.iter().filter(|x| x.length == win.length && x.id < w).count();
+            self.ex.pos = pos;
         }
+        // A period by length and last day (a run switch, a store reload, a self-check): the
+        // covered one of that length ending on or before that day, else the earliest covered
+        // (`explain::find_window` picks only covered periods).
         if let Some((len, end)) = self.ex.pending_end.take()
             && let Some(w) = c2_census::explain::find_window(plan, len, end)
+            && let Some(pos) = covered(len).iter().position(|&id| id == w)
         {
             self.ex.length = len;
-            self.ex.pos = plan.windows.iter().filter(|x| x.length == len && x.id < w).count();
+            self.ex.pos = pos;
         }
         let mut lengths: Vec<usize> = plan.windows.iter().map(|w| w.length).collect();
         lengths.sort_by_key(|&l| if l == 0 { usize::MAX } else { l });
@@ -1683,8 +1912,15 @@ impl App {
         // B's move no longer than A's), and below, only the offsets the census uses for B's.
         let (h1s, h2s, h1, h2) = move_length_choices(&plan.tasks, self.ex.length, self.ex.h1, self.ex.h2);
         (self.ex.h1, self.ex.h2) = (h1, h2);
-        let full_days = plan.windows.iter().find(|w| w.length == 0).map(|w| w.end - w.start).unwrap_or(0);
-        let len_label = move |l: usize| if l == 0 { format!("{full_days} days (all history)") } else { format!("{l} days") };
+        let full_days = plan.windows.iter().find(|w| w.length == 0 && plan.period_available(w.id)).map(|w| w.end - w.start);
+        let len_label = move |l: usize| match (l, full_days) {
+            (0, Some(d)) => format!("{d} days (all history)"),
+            (0, None) => "all history".to_string(),
+            _ => format!("{l} days"),
+        };
+        // In the list of lengths, those of which today's data covers no period.
+        let none_covered: Vec<usize> = lengths.iter().copied().filter(|&l| covered(l).is_empty()).collect();
+        let len_choice = |l: usize| if none_covered.contains(&l) { format!("{} (none covered by today's price data)", len_label(l)) } else { len_label(l) };
         ui.label(
             "Pick two stocks, the length of move to measure for each, the offset between them and a correlation period. Every step below is \
              recomputed from prices and checked against what the census stored: the stored record's sums when it kept this pair, else its \
@@ -1733,15 +1969,16 @@ impl App {
         let before = self.ex.length;
         ui.horizontal_wrapped(|ui| {
             ui.label("Correlation period:");
-            egui::ComboBox::from_id_salt("ex_len").selected_text(len_label(self.ex.length)).show_ui(ui, |ui| {
+            egui::ComboBox::from_id_salt("ex_len").selected_text(len_choice(self.ex.length)).show_ui(ui, |ui| {
                 for &l in &lengths {
-                    ui.selectable_value(&mut self.ex.length, l, len_label(l));
+                    ui.selectable_value(&mut self.ex.length, l, len_choice(l));
                 }
             });
             if self.ex.length != before {
                 self.ex.pos = usize::MAX;
             }
-            let ends: Vec<String> = plan.windows.iter().filter(|w| w.length == self.ex.length).map(|w| c2_data::date_string(plan.var.days[w.end - 1])).collect();
+            // Only the periods today's data covers can be chosen.
+            let ends: Vec<String> = covered(self.ex.length).iter().map(|&id| c2_data::date_string(rp.meta.windows[id].last)).collect();
             self.ex.pos = self.ex.pos.min(ends.len().saturating_sub(1));
             if ends.len() > 1 {
                 ui.label("ending");
@@ -1752,8 +1989,13 @@ impl App {
                 ui.spinner();
             }
         });
-        let window = plan.windows.iter().filter(|w| w.length == self.ex.length).nth(self.ex.pos).map(|w| w.id);
-        self.ex.selected = window.map(|w| (plan.windows[w].length, plan.var.days[plan.windows[w].end - 1]));
+        let ids = covered(self.ex.length);
+        let of_length: Vec<usize> = plan.windows.iter().filter(|w| w.length == self.ex.length).map(|w| w.id).collect();
+        if let Some(note) = uncovered_note(&rp, self.ex.length, &of_length, &ids) {
+            ui.colored_label(YELLOW_NOTE, note);
+        }
+        let window = ids.get(self.ex.pos).copied();
+        self.ex.selected = window.map(|w| (plan.windows[w].length, rp.meta.windows[w].last));
         let run = self.run_name.clone();
         if h1s.is_empty() {
             ui.label(format!("Census '{run}' computed no lead-lag correlations for {} correlation periods.", len_label(self.ex.length)));
@@ -1795,14 +2037,15 @@ impl App {
         if let Some((k, Ok(e))) = &done
             && k.0 == self.run_name
         {
-            self.explain_steps(ui, e, rp.meta.cfg.keep_real);
+            self.explain_steps(ui, e, &rp);
         }
         self.ex.job.done = done;
     }
 
-    /// The steps of one explanation; `keep_real` is how many of each matrix's strongest pairs
-    /// the run stores.
-    fn explain_steps(&mut self, ui: &mut egui::Ui, e: &Explained, keep_real: usize) {
+    /// The steps of one explanation of the run `rp` describes.
+    fn explain_steps(&mut self, ui: &mut egui::Ui, e: &Explained, rp: &RunPlan) {
+        // How many of each matrix's strongest pairs the run stores.
+        let keep_real = rp.meta.cfg.keep_real;
         use c2_census::explain::DaySteps;
         let (a, b) = (e.a.ticker.clone(), e.b.ticker.clone());
         let (h1, h2, lag) = (e.h1, e.h2, e.lag);
@@ -1848,6 +2091,23 @@ impl App {
                 inu(&e.a),
                 inu(&e.b)
             ));
+            // What today's data can't reproduce of this period and of this run.
+            let missing = rp.plan.missing_stocks.get(e.window).map_or(0, Vec::len);
+            if missing > 0 {
+                ui.colored_label(
+                    YELLOW_NOTE,
+                    format!(
+                        "{missing} of the census's {} stocks in this period {} no longer in today's price data, so the census's results for {} can't be \
+                         recomputed here.",
+                        e.universe,
+                        if missing == 1 { "is" } else { "are" },
+                        if missing == 1 { "it" } else { "them" }
+                    ),
+                );
+            }
+            if let Some(note) = &e.variable_note {
+                ui.colored_label(YELLOW_NOTE, format!("Note: {}", sentence(note)));
+            }
             ui.label(format!(
                 "Each observation pairs {a}'s move over {} with {b}'s move over {} that ends {}. Observations step forward {} at a time so no \
                  two share a day: {} observations in this period.",
@@ -2065,8 +2325,10 @@ impl App {
                     c.obs,
                     if c.max_rel_diff > 0.0 { format!("to {:.0e}", c.max_rel_diff) } else { "exactly".to_string() }
                 )),
+                // A disagreement is expected when this run's census variable started on another
+                // day (`variable_note`, below); otherwise it is a real discrepancy, in red.
                 Check::Record(c) => ui.colored_label(
-                    egui::Color32::LIGHT_RED,
+                    if e.variable_note.is_some() { YELLOW_NOTE } else { egui::Color32::LIGHT_RED },
                     format!(
                         "Checked against the census's record of this pair: they DIFFER ({} observations here, {} stored; sums differ by up to {:.1e} of \
                          their size, where under 1e-6 is expected). The census stored something other than what its code computes from today's prices.",
@@ -2088,6 +2350,20 @@ impl App {
                 ),
                 Check::Nothing => ui.label("The census never computed this matrix, so nothing is stored to check against."),
             };
+            if e.variable_note.is_some()
+                && let Check::Record(c) = &e.check
+            {
+                ui.colored_label(
+                    YELLOW_NOTE,
+                    if c.agrees() {
+                        "(They agree here, but this run's census variable started on another day, so values recomputed today can differ from the stored \
+                         ones: see step 1.)"
+                    } else {
+                        "(Expected here: this run's census variable started on another day, so values recomputed today can differ from the stored ones: \
+                         see step 1.)"
+                    },
+                );
+            }
             ui.label(format!("For comparison, the correlation of the raw % moves (no market adjustment or volatility scaling) is {:+.3}.", e.r_raw));
 
             // 5. Chance.
@@ -2095,7 +2371,7 @@ impl App {
             ui.heading("5. Could it be chance?");
             let m = &e.matrix;
             let az = e.z.abs();
-            let formula = if e.chance_analytic >= 1.0 { format!("{:.0}", e.chance_analytic) } else { format!("{:.3}", e.chance_analytic) };
+            let formula = if e.chance_analytic >= 1.0 { commas(e.chance_analytic) } else { format!("{:.3}", e.chance_analytic) };
             if let Err(why) = &e.census_computed {
                 ui.label(format!(
                     "The census never computed this matrix ({why}), so there is no measured chance count. A bell-curve formula predicts about {formula} \
@@ -2213,9 +2489,24 @@ impl App {
                         if lag == 0 { "the same day".to_string() } else { format!("{} later", tdays(lag)) }
                     ));
                     match &e.forecast_use {
+                        // As `forecast::rel_path` applies it: per move of A, on log changes, only the
+                        // part of the predicted days inside the forecast's days ahead.
                         Ok(()) => ui.label(format!(
-                            "This is the multiplier the Forecast tab applies to {a}'s latest move beyond the market (when this is the most recent \
-                             correlation period of the relationship), and the Stock timeline's '% per 1%'."
+                            "How the Forecast tab uses it (on as-of days when this is the most recent correlation period of {a} -> {b} at these move \
+                             lengths and offset; for each such relationship it uses the latest rolling period that ended by the as-of day): each of \
+                             {a}'s recent {}-day moves beyond the market (the latest ending on the as-of day, then every {} before it) predicts {b}'s \
+                             move beyond the market over the {} ending {} after it: a move of X% predicts (1 + X/100)^{:.3} - 1 for {b} (the % per 1% \
+                             applies to log changes, so this is about X x {:.3} only for small moves), spread evenly over those days. Only the days that \
+                             fall in the forecast's days ahead count, and each day's forecast is the average over the relationships covering it. For \
+                             example a typical move of {a}, {:+.2}%, predicts {:+.2}% for {b}. The Stock timeline shows the same number as '% per 1%'.",
+                            h1,
+                            days_label(step),
+                            days_label(h2),
+                            tdays(lag),
+                            s.per_pct,
+                            s.per_pct,
+                            100.0 * s.sd_a.exp_m1(),
+                            100.0 * (s.per_pct * s.sd_a).exp_m1()
                         )),
                         // The reason names the Forecast itself ("the Forecast uses only ...").
                         Err(why) => ui.label(sentence(why)),
@@ -2236,7 +2527,11 @@ impl App {
             && self.stats.wants(&run)
         {
             let dir = self.dir();
-            self.stats.start(run, move || c2_census::analyze::dataset_stats(&store, &dir).map_err(|e| format!("{e:#}")));
+            self.stats.start(run, move || {
+                let stats = c2_census::analyze::dataset_stats(&store, &dir).map_err(|e| format!("{e:#}"))?;
+                let keep_real = RunMeta::load(&dir).map_err(|e| format!("{e:#}"))?.cfg.keep_real;
+                Ok((stats, keep_real))
+            });
         }
     }
 
@@ -2262,7 +2557,9 @@ impl App {
                     ui.spinner();
                 }
             });
-            // The list for this run, else (for the moment it takes to read) the last one.
+            // The list for this run, else (for the moment it takes to read) the last one, whose
+            // in-use mark is then taken from the run name here, not from the list.
+            let current = matches!(&self.runs.done, Some((k, _)) if *k == runs_key);
             let runs = match &self.runs.done {
                 Some((k, Err(e))) if *k == runs_key => {
                     ui.colored_label(egui::Color32::LIGHT_RED, e);
@@ -2274,30 +2571,34 @@ impl App {
                     return;
                 }
             };
-            egui::Grid::new("runs_grid").striped(true).show(ui, |ui| {
-                for h in ["run", "kind", "data through", "started", "time computing", "correlations computed", "GPU multiply-adds", "state"] {
-                    ui.strong(h);
-                }
-                ui.end_row();
-                for r in runs {
-                    // "in use": the run this window shows (the Run name box); "default": the one
-                    // the app and `c2` open when no run is named (census/LATEST).
-                    let marks: Vec<&str> = [(r.in_use, "in use"), (r.latest, "default"), (r.from_update, "new data")].iter().filter(|m| m.0).map(|m| m.1).collect();
-                    let name = if marks.is_empty() { r.name.clone() } else { format!("{}  ({})", r.name, marks.join(", ")) };
-                    ui.label(name);
-                    ui.label(&r.kind);
-                    ui.label(&r.data_last_day);
-                    ui.label(local_time(r.started_unix, off));
-                    ui.label(if r.sessions > 1 { format!("{} in {} sessions", run::hms(r.seconds), r.sessions) } else { run::hms(r.seconds) });
-                    ui.label(format!("{} + {} chance", big(r.correlations_real), big(r.correlations_null)));
-                    ui.label(big(r.multiply_adds));
-                    ui.label(if r.state == "finished" {
-                        format!("finished {}", r.finished_unix.map(|t| local_time(t, off)).unwrap_or_default())
-                    } else {
-                        format!("{} ({:.0}%)", r.state, 100.0 * r.fraction)
-                    });
+            // Scrolls sideways when a long run name with its marks widens it past the window.
+            egui::ScrollArea::horizontal().id_salt("runs_h").show(ui, |ui| {
+                egui::Grid::new("runs_grid").striped(true).show(ui, |ui| {
+                    for h in ["run", "kind", "data through", "started", "time computing", "correlations computed", "GPU multiply-adds", "state"] {
+                        ui.strong(h);
+                    }
                     ui.end_row();
-                }
+                    for r in runs {
+                        // "in use": the run this window shows (the Run name box); "default": the one
+                        // the app and `c2` open when no run is named (census/LATEST).
+                        let in_use = if current { r.in_use } else { r.name == run_name };
+                        let marks: Vec<&str> = [(in_use, "in use"), (r.latest, "default"), (r.from_update, "new data")].iter().filter(|m| m.0).map(|m| m.1).collect();
+                        let name = if marks.is_empty() { r.name.clone() } else { format!("{}  ({})", r.name, marks.join(", ")) };
+                        ui.label(name);
+                        ui.label(&r.kind);
+                        ui.label(&r.data_last_day);
+                        ui.label(local_time(r.started_unix, off));
+                        ui.label(if r.sessions > 1 { format!("{} in {} sessions", run::hms(r.seconds), r.sessions) } else { run::hms(r.seconds) });
+                        ui.label(format!("{} + {} chance", big(r.correlations_real), big(r.correlations_null)));
+                        ui.label(big(r.multiply_adds));
+                        ui.label(if r.state == "finished" {
+                            format!("finished {}", r.finished_unix.map(|t| local_time(t, off)).unwrap_or_default())
+                        } else {
+                            format!("{} ({:.0}%)", r.state, 100.0 * r.fraction)
+                        });
+                        ui.end_row();
+                    }
+                });
             });
             let last_full = runs.iter().filter(|r| r.kind == "full" && r.finished_unix.is_some()).max_by_key(|r| r.finished_unix);
             ui.label(match last_full {
@@ -2328,8 +2629,8 @@ impl App {
             }
             ui.separator();
             ui.heading(format!("What census '{run_name}' found"));
-            let st = match self.stats.get(&run_name) {
-                Some(Ok(st)) => st,
+            let (st, keep_real) = match self.stats.get(&run_name) {
+                Some(Ok((st, keep_real))) => (st, *keep_real),
                 Some(Err(e)) => {
                     ui.label(format!("This run has no output to summarize yet ({e})."));
                     return;
@@ -2366,7 +2667,7 @@ impl App {
                         format!("{} real vs {} on shuffled data: x{:.2}", commas(lt.real[k]), commas(lt.null[k]), lt.real[k] / lt.null[k].max(1.0)),
                     );
                 }
-                row("stored relationships", format!("{} (each matrix's strongest 100 plus every significant one); {} chance ones stored for comparison", commas(st.stored_real as f64), commas(st.stored_null as f64)));
+                row("stored relationships", format!("{} (each matrix's strongest {keep_real} plus every significant one); {} chance ones stored for comparison", commas(st.stored_real as f64), commas(st.stored_null as f64)));
                 row(
                     "significant (passed the false-discovery test)",
                     format!("{} relationships: {} distinct pairs, {} stocks, in {} of {} matrices", commas(lt.significant as f64), commas(st.significant_pairs as f64), commas(st.significant_stocks as f64), commas(st.fdr_matrices as f64), commas(lt.matrices as f64)),
@@ -2568,21 +2869,31 @@ impl App {
         match &self.status {
             Some(s) => {
                 let frac = s["fraction_done"].as_f64().unwrap_or(0.0) as f32;
-                let state = s["state"].as_str().unwrap_or("?").to_string();
+                // As the runs list reads it: running while a process computes the run (whatever
+                // status.json says), interrupted when the file says running but nothing does.
+                let file_state = s["state"].as_str().unwrap_or("?");
+                let state = match (self.pid, file_state) {
+                    (Some(_), _) => "running",
+                    (None, "running") => "interrupted",
+                    (None, other) => other,
+                };
                 ui.label(format!(
                     "State: {state}  ·  process: {}  ·  control: {}",
                     self.pid.map(|p| format!("running (pid {p})")).unwrap_or_else(|| "not running".into()),
                     self.control
                 ));
                 ui.add(egui::ProgressBar::new(frac).show_percentage());
-                ui.label(format!(
-                    "{} of {} work units (one pair of move lengths in one correlation period) · ETA {}",
-                    s["units_done"], s["units_total"], run::hms(s["eta_seconds"].as_f64().unwrap_or(-1.0))
-                ));
+                // An estimate of the time left only means something while it runs.
+                let eta = if self.pid.is_some() { format!(" · ETA {}", run::hms(s["eta_seconds"].as_f64().unwrap_or(-1.0))) } else { String::new() };
+                ui.label(format!("{} of {} work units (one pair of move lengths in one correlation period){eta}", s["units_done"], s["units_total"]));
             }
             None => {
                 ui.label(&self.status_err);
             }
+        }
+        // What this run's plan on today's prices leaves out, once a tab has built it.
+        if let Some(note) = self.plan_note_for(&self.run_name) {
+            ui.colored_label(YELLOW_NOTE, note);
         }
         ui.add_space(8.0);
         // While a new run name is being typed, the buttons wait for it to be switched to, so they
@@ -2598,7 +2909,7 @@ impl App {
             }
             if ui.add_enabled(settled, egui::Button::new("Pause (frees the GPU)")).clicked() {
                 let _ = run::set_control(&dir, "pause");
-                self.message = "pausing after the current window".into();
+                self.message = "pausing after the work unit in progress".into();
             }
             if ui.add_enabled(settled, egui::Button::new("Resume")).clicked() {
                 let _ = run::set_control(&dir, "run");
@@ -2608,7 +2919,7 @@ impl App {
                 && let Some(pid) = self.pid
             {
                 let _ = std::process::Command::new("kill").arg(pid.to_string()).status();
-                self.message = format!("asked pid {pid} to stop after committing the current window");
+                self.message = format!("asked pid {pid} to stop after committing the work unit in progress");
             }
         });
         if !self.message.is_empty() {
@@ -2636,9 +2947,13 @@ impl App {
     fn load_lag_table(&mut self) {
         self.lag_table.clear();
         self.lag_table_run = self.run_name.clone();
-        let Ok(entries) = std::fs::read_dir(self.dir().join("tasks")) else {
-            self.message = "no census output yet".into();
-            return;
+        self.lag_note.clear();
+        let entries = match std::fs::read_dir(self.dir().join("tasks")) {
+            Ok(entries) => entries,
+            Err(e) => {
+                self.lag_note = format!("Census '{}' has no output to summarize yet ({e}).", self.run_name);
+                return;
+            }
         };
         for e in entries.flatten() {
             let path = e.path();
@@ -2664,6 +2979,9 @@ impl App {
                 row.matrices += 1;
                 row.fdr += usize::from(f.get(cfdr).is_some_and(|v| !v.is_empty()));
             }
+        }
+        if self.lag_table.is_empty() {
+            self.lag_note = format!("Census '{}' has no finished matrices to summarize yet.", self.run_name);
         }
         if !self.lag_table.contains_key(&self.pair)
             && let Some(k) = self.lag_table.keys().next()
@@ -2697,6 +3015,9 @@ impl App {
                     }
                 });
         });
+        if self.lag_table_run == self.run_name && !self.lag_note.is_empty() {
+            ui.colored_label(YELLOW_NOTE, &self.lag_note);
+        }
         if let Some(rows) = self.lag_table.get(&self.pair).cloned() {
             ui.label("Pairs with |z| ≥ 4, summed over all correlation periods. Real / chance near 1 means no lead-lag beyond chance (offset 0 is the same period, moving together).");
             let points: Vec<[f64; 2]> = rows.iter().filter(|(k, _)| **k > 0).map(|(k, r)| [*k as f64, r.real_z4 / r.null_z4.max(1.0)]).collect();
@@ -2807,8 +3128,8 @@ impl App {
             ui.colored_label(egui::Color32::LIGHT_RED, &self.store_note);
         }
         // Only a result of the current run (a run switch clears it anyway).
-        let (run, r) = match &self.holdout.done {
-            Some((k, Ok(r))) if k.0 == self.run_name => (&k.0, r),
+        let (run, census_pairs, (r, note)) = match &self.holdout.done {
+            Some((k, Ok(r))) if k.0 == self.run_name => (&k.0, k.1 == 0, r),
             Some((k, Err(e))) if k.0 == self.run_name => {
                 ui.colored_label(egui::Color32::LIGHT_RED, e);
                 return;
@@ -2816,10 +3137,39 @@ impl App {
             _ => return,
         };
         ui.separator();
-        ui.label(format!(
-            "Census '{run}': {} .. {} ({} trading days) · {} stocks could be picked · picks beat the market {:.1}% of the time · rank IC t = {:+.2} · long-short t = {:+.2}",
-            c2_data::date_string(r.first_day), c2_data::date_string(r.last_day), r.days, r.candidates, 100.0 * r.hit_rate, r.ic_t, r.ls_t
-        ));
+        if let Some(note) = note {
+            ui.colored_label(YELLOW_NOTE, note);
+        }
+        let (first, last) = (c2_data::date_string(r.first_day), c2_data::date_string(r.last_day));
+        if census_pairs && r.pairs == 0 {
+            // Nothing was simulated: no correlation period of the needed kind ended before the
+            // holdout. The benchmarks still hold.
+            ui.label(format!(
+                "Census '{run}': no census pairs for this holdout ({first} .. {last}): none of its correlation periods with B moves of the \
+                 rebalance length ended before {first}, so nothing was simulated. The benchmarks over the same days:"
+            ));
+        } else {
+            ui.label(format!(
+                "Census '{run}': {first} .. {last} ({} trading days) · {} stocks could be picked · picks beat the market {:.1}% of the time · rank IC t = {:+.2} · long-short t = {:+.2}",
+                r.days, r.candidates, 100.0 * r.hit_rate, r.ic_t, r.ls_t
+            ));
+        }
+        if census_pairs && r.pairs > 0 {
+            ui.label(format!("Picks come from {} stored pairs of {} correlation periods that ended before the holdout.", commas(r.pairs as f64), r.windows_used));
+        }
+        let mut left_out = Vec::new();
+        if r.periods_unavailable > 0 {
+            left_out.push(format!(
+                "{} correlation periods that ended before the holdout but aren't covered exactly by today's price data (the latest covered ones were used instead)",
+                r.periods_unavailable
+            ));
+        }
+        if r.pairs_skipped > 0 {
+            left_out.push(format!("{} stored pairs with a stock that is no longer in today's price data", commas(r.pairs_skipped as f64)));
+        }
+        if census_pairs && !left_out.is_empty() {
+            ui.colored_label(YELLOW_NOTE, format!("Left out: {}.", left_out.join("; ")));
+        }
         egui::Grid::new("holdout_results").striped(true).show(ui, |ui| {
             for h in ["", "final value", "return", "random guessers (median)", "share of random at least as good"] {
                 ui.strong(h);
@@ -2845,6 +3195,9 @@ impl App {
         let series = |f: fn(&(i32, f64, f64, f64, f64)) -> f64| -> PlotPoints {
             PlotPoints::from(r.curve.iter().enumerate().filter(|(_, c)| f(c).is_finite()).map(|(k, c)| [k as f64, f(c)]).collect::<Vec<_>>())
         };
+        if r.curve.is_empty() {
+            return;
+        }
         Plot::new("equity").legend(Legend::default()).show(ui, |p| {
             p.line(Line::new("picks (first cost level)", series(|c| c.1)));
             p.line(Line::new("SPY", series(|c| c.2)));
@@ -2856,7 +3209,7 @@ impl App {
     fn start_holdout(&mut self) {
         let Some(store) = self.store.clone() else { return };
         self.holdout_started = Some(Instant::now());
-        let (run, dir, slot) = (self.run_name.clone(), self.dir(), self.plan_slot.clone());
+        let (run, dir, slot, generation) = (self.run_name.clone(), self.dir(), self.plan_slot.clone(), self.store_gen);
         let family = if self.family == 0 {
             Family::CensusPairs
         } else {
@@ -2870,7 +3223,7 @@ impl App {
             // This run's plan (`Plan::for_run`, built if the slot holds another run's): its own
             // correlation periods, task numbering and stock ids, by which its records are looked
             // up. The holdout refuses any other plan (e.g. a `Plan::new` one after a store rebuild).
-            let rp = plan_for_run(&slot, &store, &run, &dir)?;
+            let rp = plan_for_run(&slot, &store, generation, &run, &dir)?;
             let plan = &rp.plan;
             let opt = Options {
                 family,
@@ -2883,7 +3236,8 @@ impl App {
                 cash: 10_000.0,
                 all_windows: false,
             };
-            c2_census::holdout::holdout(&store, plan, &dir, &opt).map_err(|e| format!("{e:#}"))
+            let report = c2_census::holdout::holdout(&store, plan, &dir, &opt).map_err(|e| format!("{e:#}"))?;
+            Ok((report, plan_note(&rp)))
         });
     }
 
@@ -2952,6 +3306,7 @@ impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.check_launch();
         self.poll();
+        self.watch_store();
         // Results arrive whichever tab is shown.
         self.poll_jobs();
         if self.shot.is_some() {
@@ -2975,6 +3330,13 @@ impl eframe::App for App {
                 ui.selectable_value(&mut self.tab, Tab::Census, "Census");
                 ui.selectable_value(&mut self.tab, Tab::Holdout, "Holdout");
                 ui.selectable_value(&mut self.tab, Tab::Data, "Data");
+                // For a minute after the price store was reopened (or failed to reopen).
+                if let Some((at, note)) = &self.store_changed
+                    && at.elapsed() < Duration::from_secs(60)
+                {
+                    ui.separator();
+                    ui.colored_label(YELLOW_NOTE, note);
+                }
             });
         });
         egui::CentralPanel::default().show(ctx, |ui| match self.tab {
@@ -2991,9 +3353,13 @@ impl eframe::App for App {
         // save the window and exit.
         if let Some(mut shot) = self.shot.take() {
             shot.frames += 1;
-            let ready = self.tab_ready();
+            if shot.plan {
+                let _ = self.need_plan();
+            }
+            let ready = self.tab_ready() && (!shot.plan || self.plan.get(&self.run_name).is_some());
             let timed_out = shot.started.elapsed() >= shot.timeout;
-            if !shot.requested && shot.frames > 30 && (ready || timed_out) {
+            let waited = shot.started.elapsed() >= shot.min_wait;
+            if !shot.requested && shot.frames > 30 && waited && (ready || timed_out) {
                 if !ready {
                     eprintln!("c2-gui self-check: saving after {:.0}s although the tab is still waiting", shot.started.elapsed().as_secs_f64());
                 }
@@ -3056,6 +3422,7 @@ impl App {
                 if let Some(w) = env("C2_GUI_WINDOW") {
                     self.tl.window = w;
                 }
+                self.tl.select_first = env("C2_GUI_SELECT").is_some();
                 self.tl.significant_only = env("C2_GUI_SIGNIFICANT").is_some();
                 let t = self.tl.input.clone();
                 self.request_timeline(&t);
@@ -3207,17 +3574,35 @@ mod tests {
         // The review's case: reliably wrong over 200 forecasts.
         let (c, text) = track_record_verdict(0.35, 200, -0.25, 200);
         assert_eq!(c, RED_NOTE);
-        assert!(text.contains("worse than chance"), "{text}");
+        assert!(text.contains("Both are worse than luck") && text.contains("right only 35%"), "{text}");
         // One significantly negative measure is enough.
         assert_eq!(track_record_verdict(0.5, 225, -0.14, 225).0, RED_NOTE);
         let (c, text) = track_record_verdict(0.60, 200, 0.25, 200);
         assert_eq!(c, GREEN_NOTE);
-        assert!(text.contains("better than luck"), "{text}");
+        assert!(text.contains("Both beat luck") && text.contains("holdout"), "{text}");
         assert!(track_record_verdict(0.52, 200, 0.05, 200).1.contains("within what luck produces"));
         // Mixed: direction right more often than luck, sizes moving the opposite way.
         let (c, text) = track_record_verdict(0.60, 200, -0.20, 200);
         assert_eq!(c, YELLOW_NOTE);
         assert!(text.contains("disagree"), "{text}");
+    }
+
+    #[test]
+    fn track_record_names_the_measure_that_fired() {
+        // Like ADM: only the correlation is beyond luck (wrong way); the direction was right 55%
+        // of the time, so the text must not say it pointed the wrong way.
+        let (c, text) = track_record_verdict(0.55, 200, -0.17, 200);
+        assert_eq!(c, RED_NOTE);
+        assert!(text.contains("predicted sizes went the wrong way (correlation -0.17, beyond luck)") && text.contains("right 55% of the time"), "{text}");
+        assert!(!text.contains("wrong more often"), "{text}");
+        // Like LAMR: only the correlation is beyond luck (right way), at 45% right.
+        let (c, text) = track_record_verdict(0.45, 200, 0.17, 200);
+        assert_eq!(c, GREEN_NOTE);
+        assert!(text.contains("predicted sizes lined up") && text.contains("right only 45% of the time, within luck"), "{text}");
+        // Only the direction, wrong way.
+        let (c, text) = track_record_verdict(0.40, 200, 0.05, 200);
+        assert_eq!(c, RED_NOTE);
+        assert!(text.contains("direction was wrong more often than luck explains (right only 40%"), "{text}");
     }
 
     #[test]
