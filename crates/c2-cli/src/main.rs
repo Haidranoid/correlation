@@ -77,6 +77,7 @@ enum CensusCmd {
     /// Run or resume a census (Ctrl-C stops after committing; run again to resume).
     Run {
         /// Reduced grid (horizons 1, 5, 21; 1- and 3-year windows) for a quick end-to-end run.
+        /// Only for a new run: an existing one always continues with its own settings.
         #[arg(long)]
         smoke: bool,
         /// Run name (directory under <data dir>/census/).
@@ -85,18 +86,24 @@ enum CensusCmd {
     },
     /// Show progress and ETA.
     Status {
-        #[arg(long, default_value_t = c2_census::run::latest_run())]
-        name: String,
+        /// Census to show (default: the census running now if there is exactly one, else the
+        /// default census named in census/LATEST).
+        #[arg(long)]
+        name: Option<String>,
     },
     /// Pause after the current window and release the GPU.
     Pause {
-        #[arg(long, default_value_t = c2_census::run::latest_run())]
-        name: String,
+        /// Census to pause (default: the census running now if there is exactly one, else the
+        /// default census named in census/LATEST).
+        #[arg(long)]
+        name: Option<String>,
     },
     /// Continue a paused census.
     Resume {
-        #[arg(long, default_value_t = c2_census::run::latest_run())]
-        name: String,
+        /// Census to continue (default: the census running now if there is exactly one, else
+        /// the default census named in census/LATEST).
+        #[arg(long)]
+        name: Option<String>,
     },
     /// The $10,000 holdout test: predict the last year from census pairs found before it.
     Holdout {
@@ -197,14 +204,20 @@ enum CensusCmd {
     },
     /// Stop a running census cleanly (it finishes the window in progress); `run` resumes it.
     Stop {
-        #[arg(long, default_value_t = c2_census::run::latest_run())]
-        name: String,
+        /// Census to stop (default: the census running now if there is exactly one, else the
+        /// default census named in census/LATEST).
+        #[arg(long)]
+        name: Option<String>,
     },
     /// Check the engine against research/census_oracle.json (exact r from Python).
     Validate {
         #[arg(long, default_value = "research/census_oracle.json")]
         oracle: std::path::PathBuf,
     },
+    /// Save each census run's stock list: a copy of the store's symbols.tsv, which the stock
+    /// numbers in its results refer to, for every run that has none yet and whose list the
+    /// store still holds. `c2 ingest` and `c2 update` do this before they rebuild the store.
+    SnapshotSymbols,
 }
 
 fn main() -> Result<()> {
@@ -398,6 +411,7 @@ fn store_dir() -> std::path::PathBuf {
 }
 
 fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<String>) -> Result<()> {
+    use anyhow::Context;
     if zips.is_empty() {
         let home = std::env::var_os("HOME").map(std::path::PathBuf::from).unwrap_or_default();
         zips.push(home.join("programming/correlation/data/stooq/d_us_txt.zip"));
@@ -406,6 +420,10 @@ fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<S
     let markets: Vec<&str> = markets.iter().map(|s| s.as_str()).collect();
     let dir = store_dir();
     let until = until.map(|u| c2_data::parse_date(&u)).transpose()?;
+    // Census results hold store ids, which a rebuilt store renumbers: first give every run
+    // without one a copy of the symbol table its ids refer to (as `c2 update` does).
+    println!("Stock lists of the census runs, saved before the store is rebuilt:");
+    snapshot_symbols().context("could not save the stock lists of the existing census runs, so the store was not rebuilt")?;
     let r = c2_data::ingest::ingest_stooq_until(&paths, &markets, &dir, until)?;
     println!("Ingested {} files ({} empty) into {}: {} rows in {:.1}s", r.files, r.empty, dir.display(), r.rows, r.seconds);
     for (folder, n) in &r.by_folder {
@@ -474,6 +492,10 @@ fn census(action: CensusCmd) -> Result<()> {
             println!("  oracle's 50 strongest lag-1 pairs screened in by the GPU pass: {}/{}", r.top50_found, r.top50_total);
             Ok(())
         }
+        CensusCmd::SnapshotSymbols => {
+            println!("Stock lists of the census runs in {}:", c2_data::data_dir().join("census").display());
+            snapshot_symbols()
+        }
         CensusCmd::Holdout { name, start, picks, costs, random, all_windows, walk_forward, family, rebalance, peers, lookback, peer_window } => {
             let fam = match family.as_str() {
                 "census" => c2_census::holdout::Family::CensusPairs,
@@ -484,10 +506,10 @@ fn census(action: CensusCmd) -> Result<()> {
             let rebalance = rebalance.unwrap_or(match family.as_str() { "peers" => 21, "reversal" => lookback, _ => 1 });
             let store = c2_data::Store::open(&store_dir())?;
             let dir = run::run_dir(&name);
-            let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
-            let cfg = if m["config"].as_str().unwrap_or("").contains("full_history=true") { c2_census::grid::Config::full() } else { c2_census::grid::Config::smoke() };
             let t0 = Instant::now();
-            let plan = run::Plan::new(&store, cfg)?;
+            // The run's own settings, correlation periods, stocks and task numbering, on today's data.
+            let meta = c2_census::meta::RunMeta::load(&dir)?;
+            let plan = run::Plan::for_run(&store, &meta)?;
             if walk_forward {
                 let (y0, mo, d) = c2_data::civil_from_days(c2_data::parse_date(&start)?);
                 let last = *plan.var.days.last().unwrap();
@@ -626,9 +648,12 @@ fn census(action: CensusCmd) -> Result<()> {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
             let as_of = match as_of { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
+            let dir = run::run_dir(&name);
+            // The census variable with the run's own settings.
+            let meta = c2_census::meta::RunMeta::load(&dir)?;
             let cal = c2_data::Calendar::trading_days(&store)?;
-            let var = c2_census::variable::production(&store, &cal, c2_census::grid::Config::full().start)?;
-            let data = c2_census::forecast::prepare(&store, &var, &run::run_dir(&name), &t)?;
+            let var = c2_census::variable::production(&store, &cal, meta.cfg.start)?;
+            let data = c2_census::forecast::prepare(&store, &var, &dir, &t)?;
             let f = c2_census::forecast::forecast_from(&data, as_of, &c2_census::forecast::Options {
                 significant_only: significant,
                 horizon: days,
@@ -663,9 +688,12 @@ fn census(action: CensusCmd) -> Result<()> {
         CensusCmd::Stock { ticker, name, significant, limit } => {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
+            let dir = run::run_dir(&name);
+            // The census variable with the run's own settings.
+            let meta = c2_census::meta::RunMeta::load(&dir)?;
             let cal = c2_data::Calendar::trading_days(&store)?;
-            let var = c2_census::variable::production(&store, &cal, c2_census::grid::Config::full().start)?;
-            let rows = c2_census::analyze::stock_profile_with(&store, &var, &run::run_dir(&name), &t, significant)?;
+            let var = c2_census::variable::production(&store, &cal, meta.cfg.start)?;
+            let rows = c2_census::analyze::stock_profile_with(&store, &var, &dir, &t, significant)?;
             let sig = rows.iter().filter(|r| r.significant).count();
             if significant {
                 println!("{t}: {sig} lead-lag relationships passed the significance test across all correlation periods");
@@ -701,10 +729,10 @@ fn census(action: CensusCmd) -> Result<()> {
         CensusCmd::Replicate { name } => {
             let store = c2_data::Store::open(&store_dir())?;
             let dir = run::run_dir(&name);
-            let m: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("manifest.json"))?)?;
-            let cfg = if m["config"].as_str().unwrap_or("").contains("full_history=true") { c2_census::grid::Config::full() } else { c2_census::grid::Config::smoke() };
             let t0 = Instant::now();
-            let plan = run::Plan::new(&store, cfg)?;
+            // The run's own settings, correlation periods, stocks and task numbering, on today's data.
+            let meta = c2_census::meta::RunMeta::load(&dir)?;
+            let plan = run::Plan::for_run(&store, &meta)?;
             let table = c2_census::analyze::replicate(&plan, &dir)?;
             println!("Replication in the next non-overlapping window ({:.0}s). 'Chance' rows are pairs picked from sign-flip null matrices.", t0.elapsed().as_secs_f64());
             println!("{:>4} {:>4} {:>16} {:>7} {:>10} {:>11} {:>16} {:>14}", "h1", "h2", "lag", "kind", "pairs", "same sign", "mean |r| then", "mean r next*");
@@ -717,10 +745,13 @@ fn census(action: CensusCmd) -> Result<()> {
             Ok(())
         }
         CensusCmd::Stop { name } => {
+            let name = control_target(name);
             let dir = run::run_dir(&name);
-            match running_pid(&dir) {
+            match run::running_pid(&dir) {
                 Some(pid) => {
-                    std::process::Command::new("kill").arg(pid.to_string()).status()?;
+                    // SIGTERM: the census's handler commits the window in progress, then exits.
+                    let sent = std::process::Command::new("kill").arg(pid.to_string()).status()?.success();
+                    anyhow::ensure!(sent, "could not signal census {name}'s process (pid {pid})");
                     println!("asked census {name} (pid {pid}) to stop; it commits the window in progress first. `c2 census run --name {name}` resumes.");
                 }
                 None => println!("census {name} is not running"),
@@ -728,12 +759,17 @@ fn census(action: CensusCmd) -> Result<()> {
             Ok(())
         }
         CensusCmd::Status { name } => {
-            let dir = run::run_dir(&name);
-            match running_pid(&dir) {
+            let name = control_target(name);
+            let dir = existing_run_dir(&name)?;
+            match run::running_pid(&dir) {
                 Some(pid) => println!("process: running (pid {pid})"),
                 None => println!("process: not running"),
             }
-            let s: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(dir.join("status.json"))?)?;
+            let Ok(text) = std::fs::read_to_string(dir.join("status.json")) else {
+                println!("census {name}: no progress recorded yet (control: {})", run::control_state(&dir));
+                return Ok(());
+            };
+            let s: serde_json::Value = serde_json::from_str(&text)?;
             let age = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH)?.as_secs().saturating_sub(s["updated_unix"].as_u64().unwrap_or(0));
             println!("census {name}: {} (control: {}), {}/{} windows, {:.2}% of work, ETA {}, status written {age}s ago",
                 s["state"].as_str().unwrap_or("?"), run::control_state(&dir), s["units_done"], s["units_total"],
@@ -741,40 +777,38 @@ fn census(action: CensusCmd) -> Result<()> {
             Ok(())
         }
         CensusCmd::Pause { name } => {
-            run::set_control(&run::run_dir(&name), "pause")?;
-            println!("pausing {name} after the current window (the GPU is released while paused)");
+            let name = control_target(name);
+            let dir = existing_run_dir(&name)?;
+            run::set_control(&dir, "pause")?;
+            match run::running_pid(&dir) {
+                Some(pid) => println!("pausing census {name} (pid {pid}) after the current window (the GPU is released while paused); `c2 census resume` continues it"),
+                None => println!("census {name} is not running; when it next starts it waits, paused, until `c2 census resume --name {name}`"),
+            }
             Ok(())
         }
         CensusCmd::Resume { name } => {
-            run::set_control(&run::run_dir(&name), "run")?;
-            println!("resuming {name}");
+            let name = control_target(name);
+            let dir = existing_run_dir(&name)?;
+            let was_paused = run::control_state(&dir) == "pause";
+            run::set_control(&dir, "run")?;
+            match run::running_pid(&dir) {
+                Some(pid) => println!("resuming census {name} (pid {pid})"),
+                None if was_paused => println!("census {name} is not running; it is no longer paused, so it runs as soon as it is started"),
+                None => println!("census {name} is not running and was not paused"),
+            }
             Ok(())
         }
         CensusCmd::Run { smoke, name } => {
-            let store = c2_data::Store::open(&store_dir())?;
-            let cfg = if smoke { c2_census::grid::Config::smoke() } else { c2_census::grid::Config::full() };
             let dir = run::run_dir(&name);
-            let log_path = dir.clone();
-            let log = move |msg: &str| {
-                let line = format!("[{}] {msg}", hms_now());
-                println!("{line}");
-                if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(log_path.join("run.log")) {
-                    use std::io::Write;
-                    let _ = writeln!(f, "{line}");
-                }
-            };
-            std::fs::create_dir_all(&dir)?;
-            if let Some(pid) = running_pid(&dir) {
+            // Fail before the plan is built. What keeps a second writer out is the lock that
+            // `run::run` holds on the run (it also writes the run's pid file).
+            if let Some(pid) = run::running_pid(&dir) {
                 anyhow::bail!("census {name} is already running (pid {pid})");
             }
-            std::fs::write(dir.join("pid"), std::process::id().to_string())?;
-            let t0 = Instant::now();
-            let plan = run::Plan::new(&store, cfg)?;
-            let units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
-            let sizes: Vec<usize> = plan.universes.iter().map(|u| u.len()).collect();
-            log(&format!("plan: {} stocks in the variable, {} windows (universe {}..{} stocks), {} tasks, {} units; built in {:.1}s",
-                plan.var.n, plan.windows.len(), sizes.iter().min().unwrap_or(&0), sizes.iter().max().unwrap_or(&0),
-                plan.tasks.len(), units, t0.elapsed().as_secs_f64()));
+            let cfg = run_settings(&name, &dir, smoke)?;
+            let store = c2_data::Store::open(&store_dir())?;
+            let log = census_log(&dir, None);
+            let plan = census_plan(&store, cfg, &name, &dir, &log)?;
             let stop = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
             let s2 = stop.clone();
             ctrlc::set_handler(move || {
@@ -786,11 +820,101 @@ fn census(action: CensusCmd) -> Result<()> {
     }
 }
 
-/// Pid of a live `c2` process recorded in the run directory, if any.
-fn running_pid(dir: &std::path::Path) -> Option<u32> {
-    let pid: u32 = std::fs::read_to_string(dir.join("pid")).ok()?.trim().parse().ok()?;
-    let exe = std::fs::read_link(format!("/proc/{pid}/exe")).ok()?;
-    (pid != std::process::id() && exe.file_name()?.to_str()?.starts_with("c2")).then_some(pid)
+/// The census a control command (status, stop, pause, resume) acts on: `--name`, else the
+/// census running now if there is exactly one (a census `c2 update` started is not the default
+/// until it finishes), else the default census (census/LATEST).
+fn control_target(name: Option<String>) -> String {
+    if let Some(name) = name {
+        return name;
+    }
+    let running = c2_census::run::running_runs();
+    if let [one] = &running[..] {
+        return one.clone();
+    }
+    let latest = c2_census::run::latest_run();
+    if !running.is_empty() {
+        eprintln!("{} censuses are running ({}), so this acts on the default census, {latest}; use --name to choose", running.len(), running.join(", "));
+    }
+    latest
+}
+
+/// `<data dir>/census/<name>`, which must exist.
+fn existing_run_dir(name: &str) -> Result<std::path::PathBuf> {
+    let dir = c2_census::run::run_dir(name);
+    anyhow::ensure!(dir.is_dir(), "there is no census {name} ({} does not exist)", dir.display());
+    Ok(dir)
+}
+
+/// The settings `c2 census run` uses: an existing run continues with its own (its manifest's);
+/// a new one gets the full grid, or with `--smoke` the reduced one.
+fn run_settings(name: &str, dir: &std::path::Path, smoke: bool) -> Result<c2_census::grid::Config> {
+    use c2_census::grid::Config;
+    let new = if smoke { Config::smoke() } else { Config::full() };
+    if !dir.join("manifest.json").exists() {
+        return Ok(new);
+    }
+    let meta = c2_census::meta::RunMeta::load(dir)?;
+    anyhow::ensure!(
+        !smoke || meta.config_text == new.to_text(),
+        "census {name} already exists with other settings than --smoke's ({}); --smoke only chooses the settings of a new run, so leave it out to continue {name} with its own, or choose a new --name",
+        meta.config_text
+    );
+    Ok(meta.cfg)
+}
+
+/// The log of a census run, shared by `c2 census run` and `c2 update`: each message, stamped
+/// with the local time, is printed and appended to `<dir>/run.log` (and to `also`, if given).
+/// `analyze::run_history` reads run.log: a "plan:" line opens a session (see `census_plan`),
+/// and the time stamps after it measure how long the census computed.
+fn census_log(dir: &std::path::Path, also: Option<std::path::PathBuf>) -> impl Fn(&str) + Sync + use<> {
+    let files: Vec<std::path::PathBuf> = std::iter::once(dir.join("run.log")).chain(also).collect();
+    move |msg: &str| {
+        use std::io::Write;
+        let line = format!("[{}] {msg}", hms_now());
+        println!("{line}");
+        for path in &files {
+            if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(path) {
+                let _ = writeln!(f, "{line}");
+            }
+        }
+    }
+}
+
+/// Builds the plan of a census about to run (or resume) in `dir` and logs its "plan:" line,
+/// which opens a session in run.log.
+fn census_plan(store: &c2_data::Store, cfg: c2_census::grid::Config, name: &str, dir: &std::path::Path, log: &dyn Fn(&str)) -> Result<c2_census::run::Plan> {
+    std::fs::create_dir_all(dir)?;
+    let t0 = Instant::now();
+    let plan = c2_census::run::Plan::new(store, cfg)?;
+    let units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
+    let sizes: Vec<usize> = plan.universes.iter().map(|u| u.len()).collect();
+    log(&format!("plan: {} stocks in the variable, {} windows (universe {}..{} stocks), {} tasks, {} units; built in {:.1}s",
+        plan.var.n, plan.windows.len(), sizes.iter().min().unwrap_or(&0), sizes.iter().max().unwrap_or(&0),
+        plan.tasks.len(), units, t0.elapsed().as_secs_f64()));
+    if c2_census::run::control_state(dir) == "pause" {
+        log(&format!("census {name} is paused: it waits, without the GPU, until `c2 census resume --name {name}`"));
+    }
+    Ok(plan)
+}
+
+/// Gives every census run without its own copy of its stock list (the store's symbols.tsv,
+/// which the stock numbers in its results refer to) a copy, where the store still holds that
+/// list, and prints what happened to each run.
+fn snapshot_symbols() -> Result<()> {
+    use c2_census::meta::Snapshot;
+    let done = c2_census::meta::snapshot_symbols_for_all_runs()?;
+    if done.is_empty() {
+        println!("  (no census runs)");
+    }
+    for (name, outcome) in done {
+        let what = match outcome {
+            Snapshot::Written => "written: saved a copy of the store's symbols.tsv, which is still the one it was made with",
+            Snapshot::AlreadyThere => "already there: it has its own copy",
+            Snapshot::Unrecoverable => "unrecoverable: it has no copy, and the store has been rebuilt since it ran, so its results can't be matched to stocks",
+        };
+        println!("  {name:<32} {what}");
+    }
+    Ok(())
 }
 
 /// Local time of day for log lines. The UTC offset comes from `date +%z` once (std has no time

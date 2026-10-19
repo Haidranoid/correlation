@@ -1,17 +1,24 @@
 //! Scheduled data refresh and the forward prediction log (SPEC.md section 5).
 //!
 //! `c2 update` ingests any Stooq zip dropped into `<data dir>/inbox/` (Stooq downloads now need
-//! a CAPTCHA, so fetching is manual for the time being), archives it under `raw/stooq/<date>/`,
-//! reruns the census under a dated run name if the data changed (a full census takes ~6 minutes,
-//! so "refine as new data arrives" currently means rerun; per-pair running sums are stored for a
-//! future live tracker), and appends today's picks for each family to an append-only forward log,
-//! written before the outcomes exist. `c2 forward-report` scores past entries once their holding
-//! period has passed.
+//! a CAPTCHA, so fetching is manual for the time being) and archives it under
+//! `raw/stooq/<date>/`. Then, whenever the default census (`census/LATEST`) is not a finished
+//! full census of the price data as it now is, it runs one under a dated run name and makes it
+//! the default (a full census takes ~12 minutes, so "refine as new data arrives" currently means
+//! rerun; per-pair running sums are stored for a future live tracker). That check looks at the
+//! census itself, not at whether this update ingested anything, so data ingested by `c2 ingest`,
+//! `--smoke` or `--no-census`, or a census that failed or was stopped, is caught up on by the
+//! next plain `c2 update`. Last, it appends today's picks for each family to an append-only
+//! forward log, written before the outcomes exist. `c2 forward-report` scores past entries once
+//! their holding period has passed.
 
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use anyhow::{Context, Result};
+use c2_census::grid::Config;
 use c2_census::holdout::Family;
 use c2_census::meta::{self, RunMeta};
 use c2_census::run;
@@ -23,10 +30,14 @@ pub struct UpdateOptions {
     pub no_census: bool,
 }
 
+fn update_log() -> PathBuf {
+    c2_data::data_dir().join("update.log")
+}
+
 fn log(msg: &str) {
     let line = format!("[{}] {msg}", super::hms_now());
     println!("{line}");
-    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(c2_data::data_dir().join("update.log")) {
+    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(update_log()) {
         let _ = writeln!(f, "{line}");
     }
 }
@@ -51,11 +62,13 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
         }
     }
     let store_dir = super::store_dir();
-    let before = fingerprint(&store_dir);
-    let mut changed = false;
     if zips.is_empty() {
         log(&format!("no new zips in {}", inbox.display()));
     } else {
+        // `--smoke` ingests and archives the inbox too: the store it builds is the one a plain
+        // update would build, and the census step below goes by whether the default census is
+        // out of date with the store, so the next plain `c2 update` still runs the full census.
+        let before = fingerprint(&store_dir);
         // Census records hold store ids, which a rebuilt store renumbers: first give every run
         // without one a copy of the symbol table its ids refer to.
         let saved = meta::snapshot_symbols_for_all_runs().context("could not save the stock lists of the existing census runs, so the store was not rebuilt")?;
@@ -71,7 +84,7 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
         let r = c2_data::ingest::ingest_stooq(&paths, &["us"], &store_dir)?;
         log(&format!("ingested {} files, {} rows from {} zip(s)", r.files, r.rows, zips.len()));
         let after = fingerprint(&store_dir);
-        changed = after != before;
+        let changed = after != before;
         let stamp = after.map(|(_, d)| c2_data::date_string(d)).unwrap_or_else(|| "unknown".into());
         let raw = data.join("raw/stooq").join(&stamp);
         std::fs::create_dir_all(&raw)?;
@@ -94,24 +107,141 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
     }
 
     let store = Store::open(&store_dir)?;
-    if changed && !opt.no_census {
-        let last = fingerprint(&store_dir).map(|(_, d)| c2_data::date_string(d)).unwrap_or_default();
-        let name = format!("{}{last}", if opt.smoke { "smoke-" } else { "main-" });
-        let cfg = if opt.smoke { c2_census::grid::Config::smoke() } else { c2_census::grid::Config::full() };
-        log(&format!("running census {name} on the new data"));
-        // A new run: today's plan is its plan.
-        let plan = run::Plan::new(&store, cfg)?;
-        let dir = run::run_dir(&name);
-        std::fs::create_dir_all(&dir)?;
-        let stop = std::sync::atomic::AtomicBool::new(false);
-        run::run(&store, &plan, &dir, &stop, &|m: &str| log(m))?;
-        if opt.smoke {
-            log(&format!("smoke test: census {name} is not made the default; the default stays {}", run::latest_run()));
-        } else {
-            run::set_latest(&name)?;
+    // Whether to run a census depends on the default census and today's store, not on whether
+    // this update ingested anything.
+    let today = Today::of(&store)?;
+    match latest_out_of_date(&today) {
+        None => log(&format!("census {} is a finished full census of the current price data; no census to run", run::latest_run())),
+        Some(why) if opt.no_census => log(&format!("no census run (--no-census), although {why}; the next plain `c2 update` runs it")),
+        Some(why) => {
+            if !census(&store, &today, opt.smoke, &why)? {
+                return Ok(());
+            }
         }
     }
     forward_log(&store)
+}
+
+/// What the manifest of a census made on the price store as it is now records about the store.
+struct Today {
+    rows: u64,
+    symbols_fnv64: String,
+    last_day: String,
+}
+
+impl Today {
+    fn of(store: &Store) -> Result<Today> {
+        let symbols = std::fs::read(super::store_dir().join("symbols.tsv")).context("read the store's symbols.tsv")?;
+        let last = *Calendar::trading_days(store)?.days.last().context("the price store has no trading days")?;
+        Ok(Today { rows: store.rows() as u64, symbols_fnv64: format!("{:016x}", meta::fnv64(&symbols)), last_day: c2_data::date_string(last) })
+    }
+
+    /// Why the run whose manifest is `m` is not a census with settings `cfg` of today's store
+    /// (None if it is one). The store fields are the ones `run::run` writes and checks before
+    /// resuming: rows, the fingerprint of its symbol table (which also changes with any
+    /// symbol's first or last day or row count) and the census variable's last day.
+    fn differs(&self, m: &serde_json::Value, cfg: &Config) -> Option<String> {
+        let last = m["variable_days"][1].as_str();
+        if m["config"].as_str() != Some(cfg.to_text().as_str()) {
+            Some(format!("it was made with other census settings ({})", m["config"].as_str().unwrap_or("unrecorded")))
+        } else if m["store_rows"].as_u64() != Some(self.rows) || m["symbols_tsv_fnv64"].as_str() != Some(self.symbols_fnv64.as_str()) || last != Some(self.last_day.as_str()) {
+            Some(format!("it was made on other price data ({} rows to {} then, {} rows to {} now)", m["store_rows"], last.unwrap_or("?"), self.rows, self.last_day))
+        } else {
+            None
+        }
+    }
+}
+
+/// The `state` in a run's status.json ("finished", "stopped", "running"), or "" without one.
+fn run_state(dir: &Path) -> String {
+    let status: serde_json::Value = std::fs::read_to_string(dir.join("status.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+    status["state"].as_str().unwrap_or("").to_string()
+}
+
+/// The default census named in census/LATEST, if there is one (`run::latest_run` falls back to
+/// "main").
+fn latest_name() -> Option<String> {
+    std::fs::read_to_string(c2_data::data_dir().join("census/LATEST")).ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty())
+}
+
+fn default_stays() -> String {
+    match latest_name() {
+        Some(name) => format!("the default census stays {name}"),
+        None => "there is still no default census".into(),
+    }
+}
+
+/// Why the default census (census/LATEST) is not a finished full census of today's store, or
+/// None if it is one (then there is nothing to compute).
+fn latest_out_of_date(today: &Today) -> Option<String> {
+    let Some(name) = latest_name() else { return Some("there is no default census yet (census/LATEST)".into()) };
+    let meta = match RunMeta::load(&run::run_dir(&name)) {
+        Ok(meta) => meta,
+        Err(e) => return Some(format!("the default census {name} can't be read ({e:#})")),
+    };
+    if let Some(why) = today.differs(&meta.manifest, &Config::full()) {
+        return Some(format!("the default census {name} is out of date: {why}"));
+    }
+    match run_state(&meta.dir).as_str() {
+        "finished" => None,
+        "" => Some(format!("the default census {name} is not finished (it has no status)")),
+        state => Some(format!("the default census {name} is not finished ({state})")),
+    }
+}
+
+/// Where today's census goes: `<prefix><last data day>`, or that name with `-2`, `-3`, ... after
+/// it while a run of the name already holds a census of other data or settings (which could
+/// not be resumed). A run of the name made with `cfg` on today's store is used again:
+/// `run::run` resumes it if it was interrupted and reports it complete if it is.
+fn census_name(prefix: &str, today: &Today, cfg: &Config) -> String {
+    (1..)
+        .map(|k| if k == 1 { format!("{prefix}{}", today.last_day) } else { format!("{prefix}{}-{k}", today.last_day) })
+        .find(|name| {
+            let dir = run::run_dir(name);
+            !dir.join("manifest.json").exists() || RunMeta::load(&dir).is_ok_and(|m| today.differs(&m.manifest, cfg).is_none())
+        })
+        .expect("a free run name")
+}
+
+/// Runs today's census because the default census is out of date (`why`): the full grid, which
+/// then becomes the default, or with `smoke` the reduced grid, which never does. Its plan and
+/// progress go to the run's own run.log as with `c2 census run` (so the Status tab's history
+/// shows its computing time), and to update.log. Ctrl-C or `c2 census stop` stops it cleanly
+/// after the window in progress. False when it stopped before finishing.
+fn census(store: &Store, today: &Today, smoke: bool, why: &str) -> Result<bool> {
+    let cfg = if smoke { Config::smoke() } else { Config::full() };
+    let name = census_name(if smoke { "smoke-" } else { "main-" }, today, &cfg);
+    let dir = run::run_dir(&name);
+    if let Some(pid) = run::running_pid(&dir) {
+        log(&format!("census {name} is already running (pid {pid}); this update leaves it to finish{}", if smoke { "" } else { ", and the next `c2 update` makes it the default" }));
+        return Ok(true);
+    }
+    // `analyze::run_history` recognizes update-started runs by this line ("running census NAME ").
+    log(&format!("running census {name} because {why}"));
+    let census_log = super::census_log(&dir, Some(update_log()));
+    let plan = super::census_plan(store, cfg, &name, &dir, &census_log)?;
+    let stop = Arc::new(AtomicBool::new(false));
+    let flag = stop.clone();
+    ctrlc::set_handler(move || {
+        eprintln!("stopping after the current window...");
+        flag.store(true, Ordering::Relaxed);
+    })?;
+    run::run(store, &plan, &dir, &stop, &census_log)?;
+    // `run::run` also returns normally when stopped; only a finished run may become the default.
+    if run_state(&dir) != "finished" {
+        log(&format!(
+            "census {name} stopped before it finished, so {}; the next `c2 update{}` or `c2 census run --name {name}` resumes it",
+            default_stays(), if smoke { " --smoke" } else { "" }
+        ));
+        return Ok(false);
+    }
+    if smoke {
+        log(&format!("smoke test: census {name} is not made the default; {}", default_stays()));
+    } else {
+        run::set_latest(&name)?;
+        log(&format!("census {name} is now the default census"));
+    }
+    Ok(true)
 }
 
 /// Appends today's picks for each family (once per data day and family) from the latest finished
@@ -222,4 +352,29 @@ pub fn install_timer(enable: bool) -> Result<()> {
     }
     println!("installed and started c2-update.timer (weekdays 18:30 New York time); `systemctl --user list-timers c2-update.timer` shows the next run");
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_census_is_current_only_for_the_same_settings_and_store() {
+        let today = Today { rows: 100, symbols_fnv64: "00000000000000aa".into(), last_day: "2025-06-27".into() };
+        let manifest = |config: String, rows: u64, fnv: &str, last: &str| {
+            serde_json::json!({ "config": config, "store_rows": rows, "symbols_tsv_fnv64": fnv, "variable_days": ["2001-12-31", last] })
+        };
+        let full = Config::full();
+        let same = manifest(full.to_text(), 100, "00000000000000aa", "2025-06-27");
+        assert_eq!(today.differs(&same, &full), None);
+        // A smoke census (as `update --smoke` used to make the default) is no full census of the data.
+        assert!(today.differs(&manifest(Config::smoke().to_text(), 100, "00000000000000aa", "2025-06-27"), &full).is_some());
+        assert_eq!(today.differs(&manifest(Config::smoke().to_text(), 100, "00000000000000aa", "2025-06-27"), &Config::smoke()), None);
+        // Any change to the store: rows, its symbol table, or the last day of data.
+        assert!(today.differs(&manifest(full.to_text(), 99, "00000000000000aa", "2025-06-27"), &full).is_some());
+        assert!(today.differs(&manifest(full.to_text(), 100, "00000000000000ab", "2025-06-27"), &full).is_some());
+        assert!(today.differs(&manifest(full.to_text(), 100, "00000000000000aa", "2025-06-26"), &full).is_some());
+        // A manifest that records none of it never counts as current.
+        assert!(today.differs(&serde_json::json!({}), &full).is_some());
+    }
 }
