@@ -160,7 +160,7 @@ enum CensusCmd {
         #[arg(long)]
         end: Option<String>,
     },
-    /// Forecast a stock's price path from its leaders' recent moves.
+    /// Forecast a stock's move relative to the market from its leaders' recent moves.
     Forecast {
         ticker: String,
         #[arg(long, default_value_t = c2_census::run::latest_run())]
@@ -174,7 +174,7 @@ enum CensusCmd {
         /// Trading days ahead.
         #[arg(long, default_value_t = 21)]
         days: usize,
-        /// Use only relationships from census windows that ended within this many years.
+        /// Use only relationships from correlation periods that ended within this many years.
         #[arg(long)]
         max_age_years: Option<f64>,
     },
@@ -590,14 +590,18 @@ fn census(action: CensusCmd) -> Result<()> {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
             let as_of = match as_of { Some(d) => c2_data::parse_date(&d)?, None => i32::MAX };
-            let f = c2_census::forecast::forecast(&store, &run::run_dir(&name), &t, as_of, &c2_census::forecast::Options {
+            let cal = c2_data::Calendar::trading_days(&store)?;
+            let var = c2_census::variable::production(&store, &cal, c2_census::grid::Config::full().start)?;
+            let data = c2_census::forecast::prepare(&store, &var, &run::run_dir(&name), &t)?;
+            let f = c2_census::forecast::forecast_from(&data, as_of, &c2_census::forecast::Options {
                 significant_only: significant,
                 horizon: days,
                 max_age: max_age_years.map(|y| (y * 252.0) as usize),
             })?;
-            println!("{t} as of {}: ${:.2}; {} relationships where {t} follows another stock{}; typical daily move {:.2}%", c2_data::date_string(f.as_of), f.last_price, f.relationships,
-                if significant { " (significant only)" } else { "" }, 100.0 * f.daily_sd);
-            println!("{:>5} {:>11} {:>12} {:>11} {:>12} {:>9}", "day", "predicted", "predicted $", "actual", "actual $", "covering");
+            println!("{t} as of {}: ${:.2}; {} relationships where {t} follows another stock{}; typical daily move relative to the market {:.2}%", c2_data::date_string(f.as_of),
+                f.last_price, f.relationships, if significant { " (significant only)" } else { "" }, 100.0 * f.daily_sd);
+            println!("Moves are relative to the market; the $ columns are the price those moves give if the market is flat.");
+            println!("{:>5} {:>11} {:>12} {:>11} {:>12} {:>9}", "day", "predicted", "if flat", "actual", "if flat", "covering");
             for (j, (p, a)) in f.predicted_pct.iter().zip(&f.actual_pct).enumerate() {
                 if j < 5 || (j + 1) % 5 == 0 || j + 1 == f.predicted_pct.len() {
                     let ad = a.map(|v| format!("{v:+.2}%")).unwrap_or_default();
@@ -607,21 +611,25 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             println!("\nLargest shares of the forecast at day {}:", f.predicted_pct.len());
             for c in f.contributions.iter().take(10) {
-                println!("  {:<6} offset {:>3}d (moves {}d -> {}d, r {:+.3}{}): its move {:+.2}% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
-                    c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader_move_pct, c.implied_pct, c.share_pct, c.window);
+                println!("  {:<6} offset {:>3}d (moves {}d -> {}d, r {:+.3}{}): its move {:+.2}% x {:+.3}% per 1% implies {:+.2}% for {t}; share {:+.3} pts   [{}]",
+                    c.leader, c.lag, c.h1, c.h2, c.r, if c.significant { ", significant" } else { "" }, c.leader_move_pct, c.move_per_pct, c.implied_pct, c.share_pct, c.window);
             }
             match &f.skill {
-                Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, {}-day horizon): direction right {:.1}% of the time; \
-                    predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
-                    s.forecasts, s.horizon, 100.0 * s.hit_rate, s.corr, s.slope, s.mean_abs_predicted_pct, s.mean_abs_actual_pct),
+                Some(s) => println!("\nTrack record: the same forecast made every 21 trading days in the past ({} forecasts, {}-day horizon), against {t}'s actual move relative to the market: \
+                    direction right {:.1}% of the time (of {} with a direction); predicted vs actual correlation {:+.3} (slope {:+.2}); average size predicted {:.2}% vs actual {:.2}%.",
+                    s.forecasts, s.horizon, 100.0 * s.hit_rate, s.directional, s.corr, s.slope, s.mean_abs_predicted_pct, s.mean_abs_actual_pct),
                 None => println!("\nTrack record: too few past forecasts to judge."),
             }
+            println!("\nRelative to the market means a stock's move minus its usual share of the market's move (beta x market), which is what the census correlates.");
+            println!("Each leader's moves are multiplied by that relationship's % per 1% (the same number `c2 census stock` shows).");
             Ok(())
         }
         CensusCmd::Stock { ticker, name, significant, limit } => {
             let store = c2_data::Store::open(&store_dir())?;
             let t = ticker.trim().to_uppercase();
-            let rows = c2_census::analyze::stock_profile(&store, &run::run_dir(&name), &t, significant)?;
+            let cal = c2_data::Calendar::trading_days(&store)?;
+            let var = c2_census::variable::production(&store, &cal, c2_census::grid::Config::full().start)?;
+            let rows = c2_census::analyze::stock_profile_with(&store, &var, &run::run_dir(&name), &t, significant)?;
             let sig = rows.iter().filter(|r| r.significant).count();
             if significant {
                 println!("{t}: {sig} lead-lag relationships passed the significance test across all correlation periods");
@@ -636,7 +644,7 @@ fn census(action: CensusCmd) -> Result<()> {
                 }
                 for r in part {
                     let (a, b) = if leads { (t.as_str(), r.partner.as_str()) } else { (r.partner.as_str(), t.as_str()) };
-                    let size = r.move_per_pct.map(|m| format!("{b} {m:+.2}% per 1% {a} move")).unwrap_or_else(|| "size n/a".into());
+                    let size = r.move_per_pct.map(|m| format!("{b} {m:+.2}% per 1% {a} move, relative to the market")).unwrap_or_else(|| "size n/a".into());
                     let moves = format!("{a} over {}d -> {b} over {}d", r.h1, r.h2);
                     let words = r.words.map(|w| {
                         let c = w.period;
@@ -647,8 +655,9 @@ fn census(action: CensusCmd) -> Result<()> {
                         r.lag, r.r, r.z, r.chance, r.chance_z, if r.significant { "  SIGNIFICANT" } else { "" }, r.period_days, r.period_end, r.obs);
                 }
             }
-            println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % move is that relationship in price terms:");
-            println!("the follower's typical move beyond the market per 1% move of the leader, in that correlation period. 'Chance made N' is how many pairs");
+            println!("\nr is the census correlation (market-adjusted, volatility-normalized returns); the % per 1% is that relationship in price terms:");
+            println!("the follower's move relative to the market per 1% move of the leader relative to the market, in that correlation period");
+            println!("(the multiplier `c2 census forecast` applies). The 'after ... rose' counts use plain price moves. 'Chance made N' is how many pairs");
             println!("at least that strong appeared in the same period when the relationship was scrambled; if N is not far below 1, the pair is likely noise.");
             println!("The offset runs from the end of the leader's move to the end of the follower's. `c2 census explain` shows any one step by step.");
             Ok(())

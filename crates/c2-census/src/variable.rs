@@ -32,6 +32,93 @@ impl Variable {
     pub fn col<'a>(&self, m: &'a [f32], j: usize) -> &'a [f32] {
         &m[j * self.t..(j + 1) * self.t]
     }
+
+    /// Market-relative daily log returns of column `j` by row: the census's residual before it
+    /// is divided by volatility (`residuals` of `log_returns` of the repaired closes, against
+    /// this variable's market). Summed over h days it is the stock's h-day move relative to the
+    /// market. NaN where unavailable.
+    pub fn market_relative(&self, j: usize) -> Vec<f64> {
+        residuals(&log_returns(self.col(&self.close, j)), &self.market).resid
+    }
+}
+
+/// Daily log returns of one close column as the census computes them: ln(c[d] / c[d - 1]) in
+/// f32, NaN on row 0 and next to a missing close.
+pub fn log_returns(c: &[f32]) -> Vec<f32> {
+    let mut r = vec![f32::NAN; c.len()];
+    fill_log_returns(c, &mut r);
+    r
+}
+
+fn fill_log_returns(c: &[f32], r: &mut [f32]) {
+    for d in 1..c.len() {
+        r[d] = (c[d] / c[d - 1]).ln();
+    }
+}
+
+/// One stock's market beta and market-relative daily log return by row.
+pub struct Residuals {
+    /// Beta to the market from the valid (return, market) pairs in rows d-252..d-1 (at least
+    /// 126 of them); NaN where unavailable.
+    pub beta: Vec<f64>,
+    /// ret[d] - beta[d] * market[d]; NaN where unavailable.
+    pub resid: Vec<f64>,
+}
+
+/// The census's market residual for one stock (`ret` from `log_returns`), exactly as
+/// `production` computes it: everything at row d uses only rows before d except d's own return.
+pub fn residuals(ret: &[f32], market: &[f64]) -> Residuals {
+    let (t, r) = (ret.len(), ret);
+    let (mut beta, mut resid) = (vec![f64::NAN; t], vec![f64::NAN; t]);
+    // Sliding sums over valid (r, m) pairs.
+    let (mut sr, mut sm, mut srm, mut smm, mut k) = (0f64, 0f64, 0f64, 0f64, 0usize);
+    let valid = |d: usize| r[d].is_finite() && market[d].is_finite();
+    for d in 0..t {
+        if d >= 1 && valid(d - 1) {
+            let (a, b) = (r[d - 1] as f64, market[d - 1]);
+            sr += a; sm += b; srm += a * b; smm += b * b; k += 1;
+        }
+        if d > LOOKBACK && valid(d - 1 - LOOKBACK) {
+            let (a, b) = (r[d - 1 - LOOKBACK] as f64, market[d - 1 - LOOKBACK]);
+            sr -= a; sm -= b; srm -= a * b; smm -= b * b; k -= 1;
+        }
+        if k >= MIN_OBS && valid(d) {
+            let kf = k as f64;
+            let var_m = smm - sm * sm / kf;
+            if var_m > 0.0 {
+                beta[d] = (srm - sr * sm / kf) / var_m;
+                resid[d] = r[d] as f64 - beta[d] * market[d];
+            }
+        }
+    }
+    Residuals { beta, resid }
+}
+
+/// The census variable from one stock's residuals, exactly as `production` computes it:
+/// (resid[d] - mean) / sd with the mean and sd of the residuals in rows d-252..d-1 (at least 126
+/// of them), clipped at +-CLIP. Writes rows where it is defined into `v` (the rest are left as
+/// they are) and, with `keep`, that trailing mean and sd into its two slices.
+pub fn standardize(resid: &[f64], v: &mut [f32], mut keep: Option<(&mut [f64], &mut [f64])>) {
+    let (mut s, mut ss, mut k) = (0f64, 0f64, 0usize);
+    for d in 0..resid.len() {
+        if d >= 1 && resid[d - 1].is_finite() {
+            s += resid[d - 1]; ss += resid[d - 1] * resid[d - 1]; k += 1;
+        }
+        if d > LOOKBACK && resid[d - 1 - LOOKBACK].is_finite() {
+            let e = resid[d - 1 - LOOKBACK];
+            s -= e; ss -= e * e; k -= 1;
+        }
+        if k >= MIN_OBS && resid[d].is_finite() {
+            let var = (ss - s * s / k as f64) / k as f64;
+            if var > 1e-12 {
+                if let Some((mean, sd)) = keep.as_mut() {
+                    mean[d] = s / k as f64;
+                    sd[d] = var.sqrt();
+                }
+                v[d] = ((resid[d] - s / k as f64) / var.sqrt()).clamp(-CLIP as f64, CLIP as f64) as f32;
+            }
+        }
+    }
 }
 
 fn median(v: &mut [f32]) -> f32 {
@@ -56,11 +143,7 @@ pub fn production(store: &Store, cal: &Calendar, from: i32) -> Result<Variable> 
 
     // Daily log returns.
     let mut ret = vec![f32::NAN; t * n];
-    ret.par_chunks_mut(t).zip(panel.close.par_chunks(t)).for_each(|(r, c)| {
-        for d in 1..t {
-            r[d] = (c[d] / c[d - 1]).ln();
-        }
-    });
+    ret.par_chunks_mut(t).zip(panel.close.par_chunks(t)).for_each(|(r, c)| fill_log_returns(c, r));
     let dollar_volume: Vec<f32> = panel.close.iter().zip(&panel.volume).map(|(c, v)| c * v).collect();
 
     // Liquidity flag, re-evaluated every 21 rows from the previous 252 rows (point-in-time).
@@ -110,47 +193,7 @@ pub fn production(store: &Store, cal: &Calendar, from: i32) -> Result<Variable> 
 
     // Trailing beta (rows d-252..d-1), residual, trailing residual volatility, census variable.
     let mut v = vec![f32::NAN; t * n];
-    v.par_chunks_mut(t).enumerate().for_each(|(j, out)| {
-        let r = &ret[j * t..(j + 1) * t];
-        let mut resid = vec![f64::NAN; t];
-        // Sliding sums over valid (r, m) pairs.
-        let (mut sr, mut sm, mut srm, mut smm, mut k) = (0f64, 0f64, 0f64, 0f64, 0usize);
-        let valid = |d: usize| r[d].is_finite() && market[d].is_finite();
-        for d in 0..t {
-            if d >= 1 && valid(d - 1) {
-                let (a, b) = (r[d - 1] as f64, market[d - 1]);
-                sr += a; sm += b; srm += a * b; smm += b * b; k += 1;
-            }
-            if d > LOOKBACK && valid(d - 1 - LOOKBACK) {
-                let (a, b) = (r[d - 1 - LOOKBACK] as f64, market[d - 1 - LOOKBACK]);
-                sr -= a; sm -= b; srm -= a * b; smm -= b * b; k -= 1;
-            }
-            if k >= MIN_OBS && valid(d) {
-                let kf = k as f64;
-                let var_m = smm - sm * sm / kf;
-                if var_m > 0.0 {
-                    let beta = (srm - sr * sm / kf) / var_m;
-                    resid[d] = r[d] as f64 - beta * market[d];
-                }
-            }
-        }
-        let (mut s, mut ss, mut k) = (0f64, 0f64, 0usize);
-        for d in 0..t {
-            if d >= 1 && resid[d - 1].is_finite() {
-                s += resid[d - 1]; ss += resid[d - 1] * resid[d - 1]; k += 1;
-            }
-            if d > LOOKBACK && resid[d - 1 - LOOKBACK].is_finite() {
-                let e = resid[d - 1 - LOOKBACK];
-                s -= e; ss -= e * e; k -= 1;
-            }
-            if k >= MIN_OBS && resid[d].is_finite() {
-                let var = (ss - s * s / k as f64) / k as f64;
-                if var > 1e-12 {
-                    out[d] = ((resid[d] - s / k as f64) / var.sqrt()).clamp(-CLIP as f64, CLIP as f64) as f32;
-                }
-            }
-        }
-    });
+    v.par_chunks_mut(t).enumerate().for_each(|(j, out)| standardize(&residuals(&ret[j * t..(j + 1) * t], &market).resid, out, None));
 
     Ok(Variable { days: panel.days, ids, t, n, v, close: panel.close, dollar_volume, market })
 }

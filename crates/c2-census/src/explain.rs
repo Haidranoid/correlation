@@ -1,9 +1,9 @@
 //! Step-by-step recomputation of one stored relationship from prices, for the GUI's explainer.
 //!
-//! Nothing here feeds the census. The daily standardization is a line-for-line copy of
-//! `variable::production` that also keeps its intermediate values (beta, residual, trailing mean
-//! and sd), and the explainer reports how far its result is from the census's own values, so a
-//! mismatch would show rather than hide.
+//! Nothing here feeds the census. The daily standardization runs `variable::production`'s own
+//! per-column steps (`log_returns`, `residuals`, `standardize`) and keeps their intermediate
+//! values (beta, residual, trailing mean and sd), and the explainer reports how far its result
+//! is from the census's own values.
 
 use std::path::{Path, PathBuf};
 
@@ -12,7 +12,7 @@ use anyhow::{Context, Result};
 use crate::analyze::{Words, read_records, words};
 use crate::grid;
 use crate::run::{FLAG_FDR, FLAG_NULL, FLAG_TOP, Plan, Record};
-use crate::variable::{CLIP, LOOKBACK, MIN_OBS};
+use crate::variable;
 
 pub struct Request {
     pub leader: String,
@@ -100,8 +100,14 @@ pub struct Explained {
     pub r: f64,
     pub z: f64,
     pub r_raw: f64,
-    /// r x sd(follower raw moves) / sd(leader raw moves): % move per 1%, as in the timeline.
+    /// `moves::move_per_pct` with this r: r x sd(B's market-relative h2-day moves) / sd(A's
+    /// market-relative h1-day moves) over the period's observations, i.e. B's move relative to
+    /// the market per 1% move of A relative to the market. The timeline's "% per 1%" and the
+    /// forecast's multiplier for the stored relationship (equal up to the f32 rounding of the
+    /// stored r). NaN if fewer than 10 observations have both moves.
     pub move_per_pct: f64,
+    /// Its parts: the two standard deviations (log changes) and the observations used.
+    pub move_size: Option<crate::moves::MoveSize>,
     pub stored: Option<Stored>,
     pub matrix: Matrix,
     /// Pairs tested in the matrix and how many chance alone would give at |z| >= this one.
@@ -110,57 +116,16 @@ pub struct Explained {
     pub words: Option<Words>,
 }
 
-/// Production standardization for variable column `j`, keeping the intermediates.
+/// Production standardization for variable column `j`, keeping the intermediates: the same
+/// functions `variable::production` runs on every column.
 fn day_steps(plan: &Plan, j: usize) -> DaySteps {
     let var = &plan.var;
-    let t = var.t;
     let c = var.col(&var.close, j);
-    let market = &var.market;
-    let mut r = vec![f32::NAN; t];
-    for d in 1..t {
-        r[d] = (c[d] / c[d - 1]).ln();
-    }
-    let (mut beta, mut resid) = (vec![f64::NAN; t], vec![f64::NAN; t]);
-    let (mut sr, mut sm, mut srm, mut smm, mut k) = (0f64, 0f64, 0f64, 0f64, 0usize);
-    let valid = |d: usize| r[d].is_finite() && market[d].is_finite();
-    for d in 0..t {
-        if d >= 1 && valid(d - 1) {
-            let (a, b) = (r[d - 1] as f64, market[d - 1]);
-            sr += a; sm += b; srm += a * b; smm += b * b; k += 1;
-        }
-        if d > LOOKBACK && valid(d - 1 - LOOKBACK) {
-            let (a, b) = (r[d - 1 - LOOKBACK] as f64, market[d - 1 - LOOKBACK]);
-            sr -= a; sm -= b; srm -= a * b; smm -= b * b; k -= 1;
-        }
-        if k >= MIN_OBS && valid(d) {
-            let kf = k as f64;
-            let var_m = smm - sm * sm / kf;
-            if var_m > 0.0 {
-                beta[d] = (srm - sr * sm / kf) / var_m;
-                resid[d] = r[d] as f64 - beta[d] * market[d];
-            }
-        }
-    }
-    let (mut mean, mut sd, mut v) = (vec![f64::NAN; t], vec![f64::NAN; t], vec![f32::NAN; t]);
-    let (mut s, mut ss, mut k) = (0f64, 0f64, 0usize);
-    for d in 0..t {
-        if d >= 1 && resid[d - 1].is_finite() {
-            s += resid[d - 1]; ss += resid[d - 1] * resid[d - 1]; k += 1;
-        }
-        if d > LOOKBACK && resid[d - 1 - LOOKBACK].is_finite() {
-            let e = resid[d - 1 - LOOKBACK];
-            s -= e; ss -= e * e; k -= 1;
-        }
-        if k >= MIN_OBS && resid[d].is_finite() {
-            let var = (ss - s * s / k as f64) / k as f64;
-            if var > 1e-12 {
-                mean[d] = s / k as f64;
-                sd[d] = var.sqrt();
-                v[d] = ((resid[d] - s / k as f64) / var.sqrt()).clamp(-CLIP as f64, CLIP as f64) as f32;
-            }
-        }
-    }
-    DaySteps { close: c.to_vec(), ret: r, beta, resid, mean, sd, v, v_census: var.col(&var.v, j).to_vec(), ..Default::default() }
+    let ret = variable::log_returns(c);
+    let res = variable::residuals(&ret, &var.market);
+    let (mut mean, mut sd, mut v) = (vec![f64::NAN; var.t], vec![f64::NAN; var.t], vec![f32::NAN; var.t]);
+    variable::standardize(&res.resid, &mut v, Some((&mut mean, &mut sd)));
+    DaySteps { close: c.to_vec(), ret, beta: res.beta, resid: res.resid, mean, sd, v, v_census: var.col(&var.v, j).to_vec(), ..Default::default() }
 }
 
 fn column(plan: &Plan, store: &c2_data::Store, ticker: &str) -> Result<usize> {
@@ -261,13 +226,10 @@ pub fn explain(store: &c2_data::Store, plan: &Plan, dir: &Path, req: &Request) -
     let z = r.clamp(-0.999_999, 0.999_999).atanh() * ((m as f64 - 3.0).max(1.0)).sqrt();
     let raw: Vec<(f64, f64)> = obs.iter().map(|o| (o.a_move, o.b_move)).filter(|p| p.0.is_finite() && p.1.is_finite()).collect();
     let r_raw = pearson(&raw);
-    let sd = |v: &mut dyn Iterator<Item = f64>| {
-        let v: Vec<f64> = v.collect();
-        let n = v.len() as f64;
-        let mu = v.iter().sum::<f64>() / n;
-        (v.iter().map(|x| (x - mu) * (x - mu)).sum::<f64>() / n).sqrt()
-    };
-    let move_per_pct = r * sd(&mut raw.iter().map(|p| p.1)) / sd(&mut raw.iter().map(|p| p.0));
+    // Size in price terms from the market-relative returns (`resid`), on the period's rows
+    // (shown rows 1..=len): the timeline's "% per 1%" and the forecast's multiplier.
+    let move_size = crate::moves::move_size(&a.resid, &b.resid, r, h1, h2, lag, 1..1 + len);
+    let move_per_pct = move_size.map_or(f64::NAN, |s| s.per_pct);
 
     let (path, matrix) = find_matrix(dir, req.window, h1, h2, lag).unwrap_or_default();
     let stored = if matrix.found {
@@ -307,6 +269,7 @@ pub fn explain(store: &c2_data::Store, plan: &Plan, dir: &Path, req: &Request) -
         z,
         r_raw,
         move_per_pct,
+        move_size,
         stored,
         matrix,
         pairs_tested,
