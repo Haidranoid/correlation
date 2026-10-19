@@ -263,6 +263,20 @@ impl RunMeta {
     pub fn id_map(&self, store: &Store) -> Result<IdMap> {
         Ok(IdMap::new(&self.stocks()?.symbols, &store.symbols))
     }
+
+    /// The run's id of `ticker` (what its records call that stock): through today's store and
+    /// `ids` (this run's `id_map(store)`), which also settles a ticker listed twice by exchange;
+    /// else the run's own table, for a stock today's store no longer has. None if the run's
+    /// store didn't have it (or its stock list can't be recovered).
+    pub fn run_id_of(&self, store: &Store, ids: &IdMap, ticker: &str) -> Option<u32> {
+        store.id(ticker).and_then(|c| ids.run(c)).or_else(|| self.stocks().ok()?.id(ticker))
+    }
+
+    /// Ids of the correlation periods that `days` (e.g. a census variable's) doesn't cover
+    /// exactly (`window_rows_in` is None): readers leave their results out.
+    pub fn uncovered_windows(&self, days: &[i32]) -> Vec<usize> {
+        (0..self.windows.len()).filter(|&w| self.window_rows_in(days, w).is_none()).collect()
+    }
 }
 
 fn read_windows(dir: &Path) -> Result<Vec<RunWindow>> {
