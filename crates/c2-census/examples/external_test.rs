@@ -79,7 +79,10 @@ const SYN_LOAD: f64 = 0.3;
 /// Out-of-sample tallies of relationships picked from the noise externals (real data).
 const NOISE_SRC: usize = 10;
 const DIRS: [&str; 3] = ["ext->stock", "ext->ext", "stock->ext"];
-const OFFSETS: [&str; 2] = ["same day", "predictive"];
+/// Offset classes: 0 = offset 0; 1 = offset >= 1 beyond the follower's reporting delay; 2 = (B an
+/// external) offset >= 1 but shorter than B's move length plus its reporting delay and
+/// measurement span, so B's move can describe the same physical days as A's: timing, not a lead.
+const OFFSETS: [&str; 3] = ["same day", "predictive", "within delay"];
 
 const USAGE: &str = "external_test: does non-stock data lead US stock moves? (census-faithful test)
 
@@ -91,7 +94,8 @@ const USAGE: &str = "external_test: does non-stock data lead US stock moves? (ce
   --periods LIST    correlation period ids (default 222,242,262,282,284)
   --pairs LIST      move-length pairs as A:B, e.g. 1:1,5:21 (default all 36)
   --synthetic-only  skip the catalogs; only the injected synthetic series (pipeline check)
-  --noise N         add N independent noise series as a regular category (null calibration)
+  --noise N         add N pure-noise calibration series (reported apart from the headline; 220 recommended)
+  --catalogs LIST   only these catalogs, e.g. data-markets,data-other,data-weather (default: every catalog_*.csv)
   --selftest        run the self-checks only
   --browse RUN [--series TEXT] [--period ID] [--min-z Z] [--null] [--limit N]
                     print a finished run's stored entries (|z| >= 3.5), strongest first
@@ -111,6 +115,8 @@ struct Args {
     browse: Option<Vec<String>>,
     command: String,
     noise: usize,
+    /// Only these catalogs (names after `catalog_`); empty = every catalog present.
+    catalogs: Vec<String>,
 }
 
 fn next_val(it: &mut impl Iterator<Item = String>, name: &str) -> Result<String> {
@@ -129,6 +135,7 @@ fn parse_args() -> Result<Args> {
         browse: None,
         command: std::env::args().skip(1).collect::<Vec<_>>().join(" "),
         noise: 0,
+        catalogs: Vec::new(),
     };
     let mut it = std::env::args().skip(1);
     while let Some(x) = it.next() {
@@ -138,6 +145,7 @@ fn parse_args() -> Result<Args> {
             "--external" => a.external = next_val(&mut it, "--external")?.into(),
             "--synthetic-only" => a.synthetic_only = true,
             "--noise" => a.noise = next_val(&mut it, "--noise")?.parse()?,
+            "--catalogs" => a.catalogs = next_val(&mut it, "--catalogs")?.split(',').map(|s| s.trim().to_string()).collect(),
             "--selftest" => a.selftest = true,
             "--periods" => {
                 a.periods = next_val(&mut it, "--periods")?.split(',').map(|s| s.trim().parse()).collect::<Result<_, _>>()?;
@@ -381,6 +389,19 @@ fn bridged(obs: &[(i32, f64)]) -> Vec<bool> {
     out
 }
 
+/// Trading rows by which an external's value can trail the days it describes: its
+/// known_after_days (calendar days, an upper bound in rows) plus its measurement span.
+fn delay_rows(m: &Meta) -> usize {
+    let span = match m.frequency.as_str() {
+        "weekly" => 5,
+        "monthly" => 21,
+        "quarterly" => 63,
+        "annual" | "yearly" => 252,
+        _ => 0,
+    };
+    m.known_after.max(0) as usize + span
+}
+
 fn days_in_month(y: i32, m: u32) -> u32 {
     match m {
         1 | 3 | 5 | 7 | 8 | 10 | 12 => 31,
@@ -587,7 +608,7 @@ fn single_contract(notes: &str) -> bool {
 /// Per catalog: (name, series listed, series loaded).
 type CatalogCounts = Vec<(String, usize, usize)>;
 
-fn read_catalogs(dir: &Path, warn: &mut Vec<String>) -> Result<(Vec<Series>, CatalogCounts)> {
+fn read_catalogs(dir: &Path, only: &[String], warn: &mut Vec<String>) -> Result<(Vec<Series>, CatalogCounts)> {
     let mut files: Vec<PathBuf> = std::fs::read_dir(dir)
         .with_context(|| format!("no external data folder {}", dir.display()))?
         .filter_map(|e| e.ok().map(|e| e.path()))
@@ -597,6 +618,10 @@ fn read_catalogs(dir: &Path, warn: &mut Vec<String>) -> Result<(Vec<Series>, Cat
     let (mut out, mut summary, mut seen) = (Vec::new(), Vec::new(), HashSet::new());
     for f in files {
         let cname = f.file_stem().and_then(|s| s.to_str()).unwrap_or("").trim_start_matches("catalog_").to_string();
+        if !only.is_empty() && !only.contains(&cname) {
+            warn.push(format!("catalog {cname} present but not included in this run (--catalogs)"));
+            continue;
+        }
         let rows = parse_csv(&std::fs::read_to_string(&f)?);
         let Some(header) = rows.first() else { continue };
         let col = |name: &str| header.iter().position(|h| h.trim().eq_ignore_ascii_case(name));
@@ -642,7 +667,7 @@ fn read_catalogs(dir: &Path, warn: &mut Vec<String>) -> Result<(Vec<Series>, Cat
             if bad > 0 {
                 warn.push(format!("{cname}: {id}: {bad} unreadable or duplicate rows dropped"));
             }
-            if obs.len() < 30 {
+            if obs.len() < 2 {
                 warn.push(format!("{cname}: {id}: only {} observations; skipped", obs.len()));
                 continue;
             }
@@ -1317,7 +1342,10 @@ fn run_period(gpu: &Gpu, cx: &Ctx, p: &Window, exts_in: &[usize], t0: &Instant) 
     let mut dx = DevPanel::F32(st.alloc_zeros::<f32>(kmax * n)?);
     let mut dy = DevPanel::F32(st.alloc_zeros::<f32>(kmax * n)?);
     let mut dc = gpu.alloc_product(Precision::Fp32, n)?;
-    let (mut hx, mut hy, mut hc) = (vec![0f32; kmax * n], vec![0f32; kmax * n], vec![0f32; n * n]);
+    let (mut hx, mut hy, mut hyr) = (vec![0f32; kmax * n], vec![0f32; kmax * n], vec![0f32; kmax * n]);
+    // The product comes back into page-locked (cached, not write-combined) host memory: about
+    // twice the transfer rate of pageable memory. Every element is written before it is read.
+    let mut hc_pin = unsafe { gpu.ctx.alloc_pinned_with_flags::<f32>(n * n, 0)? };
     let mut rng = Rng(p.id as u64 * 7919);
     for &(h1, h2) in &cx.pairs {
         let (step, g0) = (h1.max(h2), h1.max(h2) - 1);
@@ -1356,45 +1384,64 @@ fn run_period(gpu: &Gpu, cx: &Ctx, p: &Window, exts_in: &[usize], t0: &Instant) 
             let thr = [3.0, 4.0, 5.0, STORE_Z].map(|z| (z / ((m as f64 - 3.0).max(1.0)).sqrt()).tanh());
             let mut hists: Vec<Vec<u32>> = Vec::with_capacity(NULLS + 1);
             let mut cnts: Vec<Vec<u64>> = Vec::with_capacity(NULLS + 1);
+            // B's real panel once per offset; a null copy flips the sign of whole observations, which
+            // is exact in f32 and leaves each column's sum of squares unchanged.
+            let ysr: Vec<(f64, f64)> = hyr[..m0 * n]
+                .par_chunks_mut(m0)
+                .enumerate()
+                .map(|(c, yc)| {
+                    let pc = &prefix[c * ld..(c + 1) * ld];
+                    let (mut sy, mut syy) = (0f64, 0f64);
+                    for q in 0..m0 {
+                        if q < m {
+                            let et = g0 + q * step + lag;
+                            let y = ((pc[et + 1] - pc[et + 1 - h2]) / sh2) as f32;
+                            yc[q] = y;
+                            sy += y as f64;
+                            syy += (y as f64) * (y as f64);
+                        } else {
+                            yc[q] = 0.0;
+                        }
+                    }
+                    (sy, syy)
+                })
+                .collect();
+            let syy: Vec<f64> = ysr.iter().map(|v| v.1).collect();
             for copy in 0..=NULLS {
                 let seed = if copy == 0 { 0 } else { null_seed(task, p.id, lag, copy - 1) };
-                let signs: Vec<f64> = (0..m).map(|q| if seed == 0 { 1.0 } else { c2_engine::sign_flip(seed, q as u32) }).collect();
-                let ys: Vec<(f64, f64)> = hy[..m0 * n]
-                    .par_chunks_mut(m0)
-                    .enumerate()
-                    .map(|(c, yc)| {
-                        let pc = &prefix[c * ld..(c + 1) * ld];
-                        let (mut sy, mut syy) = (0f64, 0f64);
-                        for q in 0..m0 {
-                            if q < m {
-                                let et = g0 + q * step + lag;
-                                let y = (((pc[et + 1] - pc[et + 1 - h2]) / sh2) * signs[q]) as f32;
+                let sy: Vec<f64> = if copy == 0 {
+                    ysr.iter().map(|v| v.0).collect()
+                } else {
+                    let signs: Vec<f32> = (0..m).map(|q| c2_engine::sign_flip(seed, q as u32) as f32).collect();
+                    hy[..m0 * n]
+                        .par_chunks_mut(m0)
+                        .zip(hyr[..m0 * n].par_chunks(m0))
+                        .map(|(yc, yr)| {
+                            let mut sy = 0f64;
+                            for q in 0..m0 {
+                                let y = if q < m { yr[q] * signs[q] } else { 0.0 };
                                 yc[q] = y;
                                 sy += y as f64;
-                                syy += (y as f64) * (y as f64);
-                            } else {
-                                yc[q] = 0.0;
                             }
-                        }
-                        (sy, syy)
-                    })
-                    .collect();
+                            sy
+                        })
+                        .collect()
+                };
                 let tg = Instant::now();
                 if let DevPanel::F32(d) = &mut dy {
-                    st.memcpy_htod(&hy[..m0 * n], d)?;
+                    st.memcpy_htod(if copy == 0 { &hyr[..m0 * n] } else { &hy[..m0 * n] }, d)?;
                 }
                 gpu.xprod(Precision::Fp32, None, &dx, &dy, &mut dc, n, m0)?;
                 if let DevProduct::F32(d) = &dc {
-                    st.memcpy_dtoh(d, &mut hc[..])?;
+                    st.memcpy_dtoh(d, &mut hc_pin)?;
                 }
                 st.synchronize()?;
+                let hc = hc_pin.as_slice()?;
                 out.gpu_secs += tg.elapsed().as_secs_f64();
                 out.products += 1;
                 let ts = Instant::now();
-                let sy: Vec<f64> = ys.iter().map(|v| v.0).collect();
-                let syy: Vec<f64> = ys.iter().map(|v| v.1).collect();
                 let f = factors(&sx, &sxx, &sy, &syy, m);
-                let sc = scan(&hc, n, e, &f, &colcat, excl0, ncat, &thr);
+                let sc = scan(hc, n, e, &f, &colcat, excl0, ncat, &thr);
                 // Spot check against exact f64 sums, real and first null copy, first offset.
                 if li == 0 && copy <= 1 {
                     for _ in 0..48 {
@@ -1491,6 +1538,16 @@ impl Data<'_> {
     }
     fn is_syn(&self, gid: u32) -> bool {
         gid >= EXT_BASE && self.ext[(gid - EXT_BASE) as usize].meta.category == SYN
+    }
+    /// Offset class of an entry (see `OFFSETS`).
+    fn offset_class(&self, e: &Entry) -> usize {
+        if e.lag == 0 {
+            0
+        } else if e.dir != 0 && (e.lag as usize) < e.h2 as usize + delay_rows(&self.ext[(e.b - EXT_BASE) as usize].meta) {
+            2
+        } else {
+            1
+        }
     }
     /// The category an entry is counted under (as in the GPU scan).
     fn entry_cat(&self, e: &Entry) -> usize {
@@ -1897,7 +1954,7 @@ fn main() -> Result<()> {
     // External series.
     say(&t0, "reading the external catalogs");
     let mut warn = Vec::new();
-    let (mut series, catalogs) = if args.synthetic_only { (Vec::new(), Vec::new()) } else { read_catalogs(&args.external, &mut warn)? };
+    let (mut series, catalogs) = if args.synthetic_only { (Vec::new(), Vec::new()) } else { read_catalogs(&args.external, &args.catalogs, &mut warn)? };
     let n_catalog = series.len();
     let (syn_series, syn_specs) = synthetic(&var, &store, &col_of, args.noise)?;
     series.extend(syn_series);
@@ -1977,16 +2034,24 @@ fn main() -> Result<()> {
     let mut survivors: Vec<Survivor> = Vec::new();
     let mut null_surv = [0usize; NULLS];
     let mut noise_surv = 0usize;
+    // Per direction: (real, null copies summed, noise externals) survivors.
+    let mut surv_dir = [[0usize; 3]; 3];
+    // ext->stock predictive at |z| >= 4, by (A is a US-listed ETF, picked from a null copy).
+    let mut oos_etf: HashMap<(bool, bool), Oos> = HashMap::new();
+    let is_etf = |g: u32| g >= EXT_BASE && ext[(g - EXT_BASE) as usize].meta.id.starts_with("etf_");
     for &(from, to) in &transitions {
         let src = by_period[&from];
         for copy in 0..=NULLS {
             for dir in 0..3 {
-                for pred in 0..2 {
+                for pred in 0..3 {
+                    if dir == 0 && pred == 2 {
+                        continue;
+                    }
                     // Every non-synthetic entry, strongest first; headline ones exclude single-contract series too.
                     let mut cand: Vec<(f64, &Entry)> = src
                         .entries
                         .iter()
-                        .filter(|e| e.copy as usize == copy && e.dir as usize == dir && usize::from(e.lag > 0) == pred && !d.is_syn(e.a) && !d.is_syn(e.b))
+                        .filter(|e| e.copy as usize == copy && e.dir as usize == dir && !d.is_syn(e.a) && !d.is_syn(e.b) && d.offset_class(e) == pred)
                         .map(|e| (e.z().abs(), e))
                         .collect();
                     cand.sort_by(|a, b| b.0.total_cmp(&a.0));
@@ -1998,11 +2063,15 @@ fn main() -> Result<()> {
                         let head = cat < excl0;
                         if head {
                             o4.tally(en, *nx);
+                            if dir == 0 && pred == 1 {
+                                oos_etf.entry((is_etf(en.a), copy > 0)).or_default().tally(en, *nx);
+                            }
                         }
                         if copy == 0 && Some(cat) == noise_cat {
                             n4.tally(en, *nx);
                             if pred == 1 && nx.is_some_and(|(rq, zq)| rq * en.r as f64 > 0.0 && zq.abs() >= 3.0) {
                                 noise_surv += 1;
+                                surv_dir[dir][2] += 1;
                             }
                         }
                         if pred == 1 {
@@ -2014,8 +2083,10 @@ fn main() -> Result<()> {
                             {
                                 if copy == 0 {
                                     survivors.push(Survivor { from, to, e: **en, zp: en.z(), rq, zq });
+                                    surv_dir[dir][0] += 1;
                                 } else {
                                     null_surv[copy - 1] += 1;
+                                    surv_dir[dir][1] += 1;
                                 }
                             }
                         }
@@ -2059,6 +2130,35 @@ fn main() -> Result<()> {
     writeln!(sum, "offset >= 1 = predictive. 'chance' is the mean of the 3 sign-flip null copies (the census's null); a real/chance")?;
     writeln!(sum, "ratio near 1 means no more strong correlations than noise produces.")?;
     writeln!(sum)?;
+    writeln!(sum, "== Method (rules chosen) ==")?;
+    for line in [
+        "Stocks: the production census variable and the census run's own stock universe for each correlation period.",
+        "Timing: an observation dated d with known_after_days k counts from the first trading day on or after d + k",
+        "  (calendar days); the weekly Trends-style series dated by week start with k = 7 land on the first trading day",
+        "  after the week ends (self-checked).",
+        "logdiff/diff: the move on trading day t is the change in the latest known level since t-1, so release days",
+        "  carry the whole move and other days are 0. A change across a gap longer than the series' normal spacing",
+        "  (the 90th percentile of its previous 250 gaps plus 2 days; exactly 1 day for series observed every day, so a",
+        "  prediction market's roll gap or an outage is never bridged) is not counted as a move.",
+        "anomaly/anomaly_log1p: value (or ln(1 + value)) minus the mean over the 15 days centred on the same date in each",
+        "  of the 10 previous years (at least 3 years); anomalies landing on the same trading day are averaged.",
+        "level: value (averaged over the days landing on a trading day) minus its mean over the previous 252 trading days.",
+        "Standardization, exactly as the census does for stocks: minus the trailing 252-day mean, divided by the trailing",
+        "  252-day sd (both through t-1, at least 126 values), clipped at +-5. No value when the trailing year holds no",
+        "  non-zero move at all, so a sparse 0/1 indicator can never divide by a zero or round-off sd.",
+        "Live: a series has values while its latest observation is recent for its frequency (10 trading days for daily,",
+        "  15 weekly, 50 monthly, 140 quarterly, 300 annual); elsewhere it is missing, which counts as 0 in sums.",
+        "Joining a period: >= 90% of the period's trading days have a value AND >= 10 of them carry a non-zero move (so a",
+        "  single event can't dominate a correlation through a tiny trailing sd; the +-5 clip bounds each day too).",
+        "Single-contract series (flagged finite-life in a catalog's notes) are kept in category single_contract, outside",
+        "  every headline number; so are the noise calibration series and the synthetic controls.",
+        "At offset 0 with equal move lengths, ext->stock and stock->ext hold the same correlations transposed.",
+        "Grid, sums / sqrt(move length), >= 30 observations, the 3 sign-flip null copies (census seeds), the false-",
+        "  discovery rule and its placebo: copies of the census's code; checked against stored census records below.",
+    ] {
+        writeln!(sum, "{line}")?;
+    }
+    writeln!(sum)?;
 
     // Catalogs and series.
     writeln!(sum, "== What was tested ==")?;
@@ -2091,6 +2191,35 @@ fn main() -> Result<()> {
         writeln!(sum, "   {}", tf.into_iter().collect::<Vec<_>>().join(", "))?;
     }
     writeln!(sum)?;
+    // Considered but not tested: every catalog series that joined no period, with the reason.
+    let catalog_ext: Vec<&ExtInfo> = ext.iter().filter(|x| x.meta.category != SYN && x.meta.category != NOISE).collect();
+    let untested: Vec<(&ExtInfo, String)> = catalog_ext.iter().filter_map(|x| not_tested(x).map(|r| (*x, r))).collect();
+    writeln!(sum, "Considered but not tested: {} of {} catalog series joined no correlation period. A series joins a period only", untested.len(), catalog_ext.len())?;
+    writeln!(sum, "with values on >= 90% of its trading days and >= {MIN_ACTIVE} non-zero moves there; annual data (about 5 changes per")?;
+    writeln!(sum, "1260-day period, about 20 in full history) mostly can't pass, so it is reported here rather than dropped.")?;
+    let full_idx: Vec<usize> = periods.iter().enumerate().filter(|(_, p)| p.length == 0).map(|(i, _)| i).collect();
+    let full_only = |x: &ExtInfo| x.per.iter().enumerate().all(|(i, p)| p.2 == full_idx.contains(&i)) && !full_idx.is_empty();
+    writeln!(sum, "{:<16} {:>10} {:>10} {:>12} {:>12} {:>12}   annual series (joined / considered)", "category", "considered", "joined", "full hist only", "too sparse", "too short")?;
+    for c in &cats {
+        let xs: Vec<&&ExtInfo> = catalog_ext.iter().filter(|x| &x.meta.category == c).collect();
+        if xs.is_empty() {
+            continue;
+        }
+        let sparse = untested.iter().filter(|(x, r)| &x.meta.category == c && r.starts_with("too sparse")).count();
+        let short = untested.iter().filter(|(x, r)| &x.meta.category == c && r.starts_with("too short")).count();
+        let annual: Vec<&&&ExtInfo> = xs.iter().filter(|x| matches!(x.meta.frequency.as_str(), "annual" | "yearly")).collect();
+        let annual_joined = annual.iter().filter(|x| x.per.iter().any(|p| p.2)).count();
+        writeln!(sum, "{:<16} {:>10} {:>10} {:>12} {:>12} {:>12}   {}", c, xs.len(), xs.len() - sparse - short, xs.iter().filter(|x| full_only(x)).count(), sparse, short,
+            if annual.is_empty() { "-".to_string() } else { format!("{annual_joined} / {}", annual.len()) })?;
+    }
+    for (label, key) in [("Too sparse to test", "too sparse"), ("Too short or gappy", "too short")] {
+        let ids: Vec<String> = untested.iter().filter(|(_, r)| r.starts_with(key)).map(|(x, _)| format!("{} ({})", x.meta.id, if x.meta.frequency.is_empty() { "?" } else { &x.meta.frequency })).collect();
+        if !ids.is_empty() {
+            let shown: Vec<String> = ids.iter().take(60).cloned().collect();
+            writeln!(sum, "{label} ({}): {}{}", ids.len(), shown.join(", "), if ids.len() > 60 { format!(", ... and {} more (externals.csv, column status)", ids.len() - 60) } else { String::new() })?;
+        }
+    }
+    writeln!(sum)?;
     writeln!(sum, "Correlation periods (the census's own, with its stock universes):")?;
     for (pi, p) in periods.iter().enumerate() {
         let o = &outs[pi];
@@ -2105,7 +2234,7 @@ fn main() -> Result<()> {
     let lag_count: usize = pairs.iter().map(|&(_, h2)| grid::lags(h2).len()).sum();
     writeln!(sum, "Grid: {} move-length pairs (A and B each over 1, 3, 5, 10, 21, 63 days), {} offsets in all (0 plus the census's", pairs.len(), lag_count)?;
     writeln!(sum, "predictive offsets for each B move length), only where >= {} non-overlapping observations fit the period", cfg.min_obs)?;
-    writeln!(sum, "(63-day moves fit only in full history). {} block matrices; {} real correlations tested (excluding synthetic),", th(matrices as f64), th(tested as f64))?;
+    writeln!(sum, "(63-day moves fit only in full history). {} block matrices; {} real correlations of the catalog series tested,", th(matrices as f64), th(tested as f64))?;
     writeln!(sum, "{} null-copy correlations as chance. Stock->stock pairs are not recomputed (the census has them).", th(nulls_n as f64))?;
     let products: usize = outs.iter().map(|o| o.products).sum();
     let (gs, ss): (f64, f64) = outs.iter().fold((0.0, 0.0), |a, o| (a.0 + o.gpu_secs, a.1 + o.scan_secs));
@@ -2160,15 +2289,51 @@ fn main() -> Result<()> {
         }
         writeln!(sum, "{:<12} {:<11} {:>14} {:>14} {:>6}   {:>12} {:>12} {:>6}   {:>10} {:>10} {:>6}", "stock->stock", OFFSETS[pred], th(r[0]), th(c[0]), ratio(r[0], c[0]), th(r[1]), th(c[1]), ratio(r[1], c[1]), th(r[2]), th(c[2]), ratio(r[2], c[2]))?;
     }
+    // Split by offset class from the stored entries (|z| >= 4).
+    let mut tab: HashMap<(bool, usize, usize), [f64; 2]> = HashMap::new();
+    for o in &outs {
+        for e in o.entries.iter().filter(|e| e.z().abs() >= 4.0 && !d.is_syn(e.a) && !d.is_syn(e.b)) {
+            let cat = d.entry_cat(e);
+            let noise = Some(cat) == noise_cat;
+            if cat >= excl0 && !noise {
+                continue;
+            }
+            let t = tab.entry((noise, e.dir as usize, d.offset_class(e))).or_default();
+            if e.copy == 0 {
+                t[0] += 1.0;
+            } else {
+                t[1] += 1.0 / NULLS as f64;
+            }
+        }
+    }
+    let tab_line = |noise: bool, dir: usize, k: usize| -> String {
+        let v = tab.get(&(noise, dir, k)).copied().unwrap_or_default();
+        format!("{}/{} = {}", th(v[0]), th(v[1]), ratio(v[0], v[1]))
+    };
+    let mut split = String::new();
+    writeln!(split, "Offsets split by timing (|z| >= 4, from the stored entries). 'within delay': a stock->ext or ext->ext offset shorter")?;
+    writeln!(split, "than B's move length plus B's known_after_days and measurement span (5 rows weekly, 21 monthly, ...), so B's")?;
+    writeln!(split, "move can describe the same physical days as A's: timing, not a lead. 'predictive' is only what lies beyond that.")?;
+    writeln!(split, "{:<12} {:<13} {:>26} {:>26}", "direction", "offset class", "real/chance", "noise externals")?;
+    for dir in 0..3 {
+        for k in 0..3 {
+            if dir == 0 && k == 2 {
+                continue;
+            }
+            writeln!(split, "{:<12} {:<13} {:>26} {:>26}", DIRS[dir], OFFSETS[k], tab_line(false, dir, k), tab_line(true, dir, k))?;
+        }
+    }
     if noise_cat.is_some() {
         writeln!(sum, "Noise externals (the baseline):")?;
         for dir in 0..3 {
             for pred in 0..2 {
                 let (r, c, _) = aggn(&|x| x.dir == dir && usize::from(x.lag > 0) == pred);
-                writeln!(sum, "{:<12} {:<11} {:>14} {:>14} {:>6}   {:>12} {:>12} {:>6}   {:>10} {:>10} {:>6}", format!("noise {}", &DIRS[dir][..DIRS[dir].find('-').unwrap()]), OFFSETS[pred], th(r[0]), th(c[0]), ratio(r[0], c[0]), th(r[1]), th(c[1]), ratio(r[1], c[1]), th(r[2]), th(c[2]), ratio(r[2], c[2]))?;
+                writeln!(sum, "{:<12} {:<11} {:>14} {:>14} {:>6}   {:>12} {:>12} {:>6}   {:>10} {:>10} {:>6}", DIRS[dir], OFFSETS[pred], th(r[0]), th(c[0]), ratio(r[0], c[0]), th(r[1]), th(c[1]), ratio(r[1], c[1]), th(r[2]), th(c[2]), ratio(r[2], c[2]))?;
             }
         }
     }
+    writeln!(sum)?;
+    sum.push_str(&split);
     writeln!(sum)?;
     writeln!(sum, "By correlation period, |z| >= 4:")?;
     writeln!(sum, "{:<8} {:<12} {:>24} {:>24} {:>17}   stock->stock predictive (census)", "period", "direction", "same day real/chance", "predictive real/chance", "noise predictive")?;
@@ -2243,6 +2408,7 @@ fn main() -> Result<()> {
         }
     }
     if let Some(nc) = noise_cat {
+        writeln!(sum, "The same rule on the noise externals' blocks alone (the baseline):")?;
         for dir in 0..3 {
             for pred in 0..2 {
                 let rows: Vec<&&MRow> = all_rows.iter().filter(|x| x.cat == nc && x.dir == dir && usize::from(x.lag > 0) == pred).collect();
@@ -2250,7 +2416,7 @@ fn main() -> Result<()> {
                 let pf = rows.iter().filter(|x| x.cplacebo.is_some()).count();
                 let n: u64 = rows.iter().map(|x| x.cfdr_n).sum();
                 let pn: u64 = rows.iter().map(|x| x.cplacebo_n).sum();
-                writeln!(sum, "{:<12} {:<11} {:>9} {:>14} {:>14} {:>16} {:>16}", format!("noise {}", &DIRS[dir][..DIRS[dir].find('-').unwrap()]), OFFSETS[pred], rows.len(), format!("{f} ({})", pct(f as f64, rows.len() as f64)), format!("{pf} ({})", pct(pf as f64, rows.len() as f64)), th(n as f64), th(pn as f64))?;
+                writeln!(sum, "{:<12} {:<11} {:>9} {:>14} {:>14} {:>16} {:>16}", DIRS[dir], OFFSETS[pred], rows.len(), format!("{f} ({})", pct(f as f64, rows.len() as f64)), format!("{pf} ({})", pct(pf as f64, rows.len() as f64)), th(n as f64), th(pn as f64))?;
             }
         }
     }
@@ -2287,7 +2453,10 @@ fn main() -> Result<()> {
         writeln!(sum, "{}", if rule == 0 { "Picked: every |z| >= 4" } else { "Picked: the top 1,000 by |z| per period, direction and offset class" })?;
         writeln!(sum, "{:<12} {:<11} {:<7} {:>9} {:>11} {:>9} {:>9} {:>8} {:>8}", "direction", "offset", "picked", "kept", "same sign", "mean r", "rep z>=2", "rep z>=3", "dropped")?;
         for dir in 0..3 {
-            for pred in 0..2 {
+            for pred in 0..3 {
+                if dir == 0 && pred == 2 {
+                    continue;
+                }
                 for (label, copies) in [("real", vec![0usize]), ("null 1", vec![1]), ("null 2-3", vec![2, 3]), ("noise", vec![NOISE_SRC])] {
                     if label == "noise" && noise_cat.is_none() {
                         continue;
@@ -2360,58 +2529,83 @@ fn main() -> Result<()> {
     writeln!(sum, "the null copies instead, the same test passes {} on average ({:?} per copy); picked from the noise externals, {}.", th(null_mean), null_surv, th(noise_surv as f64))?;
     writeln!(sum, "Per million predictive pairs tested: real {:.2}, null copies {:.2}, noise externals {:.2}: the numbers to beat.",
         1e6 * nsurv as f64 / pr.max(1.0), 1e6 * null_mean / pr.max(1.0), 1e6 * noise_surv as f64 / pn.max(1.0))?;
-    let by_dir: Vec<usize> = (0..3).map(|dir| survivors.iter().filter(|s| s.e.dir as usize == dir).count()).collect();
-    writeln!(sum, "Real survivors by direction: {} {}, {} {}, {} {}.", DIRS[0], by_dir[0], DIRS[1], by_dir[1], DIRS[2], by_dir[2])?;
-    let mut shown: HashSet<(u32, u32)> = HashSet::new();
+    writeln!(sum, "By direction, per million predictive pairs tested (real / null copies, mean / noise externals):")?;
+    for dir in 0..3 {
+        let tested_dir = |ok: &dyn Fn(usize) -> bool| -> f64 { all_rows.iter().filter(|x| ok(x.cat) && x.dir == dir && x.lag > 0 && sources.contains(&x.period)).map(|x| x.pairs as f64).sum() };
+        let (pr_d, pn_d) = (tested_dir(&|g| g < excl0), tested_dir(&|g| Some(g) == noise_cat));
+        let v = surv_dir[dir];
+        writeln!(sum, "  {:<11} {} survivors ({:.2} per million) / {:.1} ({:.2}) / {} ({:.2})", DIRS[dir], th(v[0] as f64), 1e6 * v[0] as f64 / pr_d.max(1.0),
+            v[1] as f64 / NULLS as f64, 1e6 * v[1] as f64 / NULLS as f64 / pr_d.max(1.0), v[2], 1e6 * v[2] as f64 / pn_d.max(1.0))?;
+    }
+    let etf = |g: u32| g >= EXT_BASE && ext[(g - EXT_BASE) as usize].meta.id.starts_with("etf_");
+    let es_ext = survivors.iter().filter(|s| s.e.dir == 0 && !etf(s.e.a)).count();
+    writeln!(sum, "ext->stock survivors led by US-listed ETFs (market data from the price store, not outside information): {}; by all other external series: {es_ext}.",
+        survivors.iter().filter(|s| s.e.dir == 0 && etf(s.e.a)).count())?;
     let mut surv_csv = String::from("from,to,direction,a,b,h1,h2,offset,obs,r_from,z_from,r_to,z_to,z_222,z_242,z_262,z_282,z_284\n");
-    let mut lines = 0;
+    let track_of = |e: &Entry| -> Vec<String> {
+        [222usize, 242, 262, 282, 284].iter().map(|&w| d.stat(e.a, e.b, w, e.h1 as usize, e.h2 as usize, e.lag as usize).map(|s| format!("{:+.1}", s.1)).unwrap_or_else(|| "-".into())).collect()
+    };
     for sv in &survivors {
         let e = &sv.e;
-        let track: Vec<String> = [222usize, 242, 262, 282, 284].iter().map(|&w| d.stat(e.a, e.b, w, e.h1 as usize, e.h2 as usize, e.lag as usize).map(|s| format!("{:+.1}", s.1)).unwrap_or_else(|| "-".into())).collect();
-        let _ = writeln!(surv_csv, "{},{},{},{},{},{},{},{},{},{:.4},{:.2},{:.4},{:.2},{}", sv.from, sv.to, DIRS[e.dir as usize], csv_field(&d.name(e.a)), csv_field(&d.name(e.b)), e.h1, e.h2, e.lag, e.m, e.r, sv.zp, sv.rq, sv.zq, track.join(","));
-        if lines >= 25 || !shown.insert((e.a, e.b)) {
-            continue;
-        }
-        lines += 1;
-        let (h1, h2, lag) = (e.h1 as usize, e.h2 as usize, e.lag as usize);
+        let _ = writeln!(surv_csv, "{},{},{},{},{},{},{},{},{},{:.4},{:.2},{:.4},{:.2},{}", sv.from, sv.to, DIRS[e.dir as usize], csv_field(&d.name(e.a)), csv_field(&d.name(e.b)), e.h1, e.h2, e.lag, e.m, e.r, sv.zp, sv.rq, sv.zq, track_of(e).join(","));
+    }
+    let groups: [(usize, Option<bool>, &str); 4] = [
+        (0, Some(false), "ext->stock, external series other than US-listed ETFs"),
+        (0, Some(true), "ext->stock, US-listed ETFs leading stocks"),
+        (1, None, "ext->ext"),
+        (2, None, "stock->ext"),
+    ];
+    for (dir, want_etf, title) in groups {
         writeln!(sum)?;
-        writeln!(sum, "{}. {} -> {} ({}): A over {h1} day(s), B over {h2} day(s), offset {lag}. Found in {} (r {:+.3}, z {:+.1}), next period {} (r {:+.3}, z {:+.1}).",
-            lines, d.name(e.a), d.name(e.b), DIRS[e.dir as usize], sv.from, e.r, sv.zp, sv.to, sv.rq, sv.zq)?;
-        writeln!(sum, "   z in 222/242/262/282/full history: {}", track.join(" / "))?;
-        let (inside, rest) = plain(&d, e.a, e.b, sv.from, h1, h2, lag, lo);
-        let bn = d.name(e.b);
-        for (label, q) in [(format!("inside {}", sv.from), inside), ("rest of history (2005-2025, not sharing a day with it)".to_string(), rest)] {
-            let Some(q) = q else { continue };
-            writeln!(sum, "   {label}: after {}'s {h1}-day move was in its top quarter (typically {}), {bn} rose over the {h2} day(s) ending {lag} day(s) after it in {} of {} cases ({}),",
-                d.name(e.a), d.describe_raw(e.a, q.top_typ), q.top_up, q.top, pct(q.top_up as f64, q.top as f64))?;
-            writeln!(sum, "     after its bottom quarter (typically {}) in {} of {} ({}), vs {} of all {} cases normally.", d.describe_raw(e.a, q.bot_typ), q.bot_up, q.bot, pct(q.bot_up as f64, q.bot as f64), pct(q.base_up as f64, q.cases as f64), q.cases)?;
+        writeln!(sum, "-- {title} (strongest first, best move lengths and offset per pair, at most 10) --")?;
+        let mut shown: HashSet<(u32, u32)> = HashSet::new();
+        let mut lines = 0;
+        for sv in survivors.iter().filter(|s| s.e.dir as usize == dir && want_etf.is_none_or(|w| etf(s.e.a) == w)) {
+            let e = &sv.e;
+            if lines >= 10 || !shown.insert((e.a, e.b)) {
+                continue;
+            }
+            lines += 1;
+            let (h1, h2, lag) = (e.h1 as usize, e.h2 as usize, e.lag as usize);
+            writeln!(sum, "{}. {} -> {}: A over {h1} day(s), B over {h2} day(s), offset {lag}. Found in {} (r {:+.3}, z {:+.1}), next period {} (r {:+.3}, z {:+.1}).",
+                lines, d.name(e.a), d.name(e.b), sv.from, e.r, sv.zp, sv.to, sv.rq, sv.zq)?;
+            writeln!(sum, "   z in 222/242/262/282/full history: {}", track_of(e).join(" / "))?;
+            let (inside, rest) = plain(&d, e.a, e.b, sv.from, h1, h2, lag, lo);
+            let bn = d.name(e.b);
+            for (label, q) in [(format!("inside {}", sv.from), inside), ("rest of history (2005-2025, sharing no day with it)".to_string(), rest)] {
+                let Some(q) = q else { continue };
+                writeln!(sum, "   {label}: after {}'s {h1}-day move was in its top quarter (typically {}), {bn} rose over the {h2} day(s) ending {lag} day(s) after it in {} of {} cases ({}),",
+                    d.name(e.a), d.describe_raw(e.a, q.top_typ), q.top_up, q.top, pct(q.top_up as f64, q.top as f64))?;
+                writeln!(sum, "     after its bottom quarter (typically {}) in {} of {} ({}), vs {} of all {} cases normally.", d.describe_raw(e.a, q.bot_typ), q.bot_up, q.bot, pct(q.bot_up as f64, q.bot as f64), pct(q.base_up as f64, q.cases as f64), q.cases)?;
+            }
+        }
+        if lines == 0 {
+            writeln!(sum, "(none)")?;
         }
     }
     writeln!(sum)?;
 
-    // Most active series (stored entries, |z| >= 4).
-    let mut per_series: HashMap<u32, [f64; 4]> = HashMap::new(); // real pred, null pred, real same day, null same day
+    // Series with the most excess against stocks (stored entries, |z| >= 4): ext->stock predictive
+    // with the series as A, and stock->ext beyond the reporting delay with the series as B.
+    let mut per_series: HashMap<u32, [f64; 4]> = HashMap::new(); // ES real, ES chance, SE real, SE chance
     for o in &outs {
-        for e in o.entries.iter().filter(|e| e.z().abs() >= 4.0) {
+        for e in o.entries.iter().filter(|e| e.dir != 1 && e.z().abs() >= 4.0 && d.offset_class(e) == 1) {
             let w = if e.copy == 0 { 1.0 } else { 1.0 / NULLS as f64 };
-            let k = if e.lag > 0 { 0 } else { 2 } + usize::from(e.copy > 0);
-            for g in [e.a, e.b] {
-                if g >= EXT_BASE {
-                    per_series.entry(g).or_default()[k] += w;
-                }
-            }
+            let (g, k) = if e.dir == 0 { (e.a, 0) } else { (e.b, 2) };
+            per_series.entry(g).or_default()[k + usize::from(e.copy > 0)] += w;
         }
     }
     let mut ps: Vec<(u32, [f64; 4])> = per_series.into_iter().collect();
     ps.sort_by(|a, b| (b.1[0] - b.1[1]).total_cmp(&(a.1[0] - a.1[1])));
-    writeln!(sum, "== Series with the most excess strong predictive correlations (|z| >= 4, as A or B, all periods) ==")?;
-    writeln!(sum, "{:<28} {:<14} {:>10} {:>10} {:>7}   {:>10} {:>10}", "series", "category", "real", "chance", "ratio", "same day", "chance")?;
+    writeln!(sum, "== Series with the most excess strong predictive correlations with stocks (|z| >= 4, all periods) ==")?;
+    writeln!(sum, "ext->stock with the series moving first, and stock->ext beyond its reporting delay with the series following.")?;
+    writeln!(sum, "{:<30} {:<14} {:>10} {:>10} {:>7}   {:>10} {:>10} {:>7}", "series", "category", "ext->stock", "chance", "ratio", "stock->ext", "chance", "ratio")?;
     for (g, v) in ps.iter().filter(|x| !d.is_syn(x.0) && Some(ext[(x.0 - EXT_BASE) as usize].cat) != noise_cat).take(25) {
         let x = &ext[(g - EXT_BASE) as usize];
-        writeln!(sum, "{:<28} {:<14} {:>10} {:>10} {:>7}   {:>10} {:>10}", x.meta.id, catname(x.cat), th(v[0]), th(v[1]), ratio(v[0], v[1]), th(v[2]), th(v[3]))?;
+        writeln!(sum, "{:<30} {:<14} {:>10} {:>10} {:>7}   {:>10} {:>10} {:>7}", x.meta.id, catname(x.cat), th(v[0]), th(v[1]), ratio(v[0], v[1]), th(v[2]), th(v[3]), ratio(v[2], v[3]))?;
     }
     if let Some((g, v)) = ps.iter().find(|x| x.0 >= EXT_BASE && Some(ext[(x.0 - EXT_BASE) as usize].cat) == noise_cat) {
-        writeln!(sum, "For reference, the noise series with the largest excess: {} {} real vs {} chance ({}).", ext[(g - EXT_BASE) as usize].meta.id, th(v[0]), th(v[1]), ratio(v[0], v[1]))?;
+        writeln!(sum, "For reference, the noise series with the largest ext->stock excess: {} {} real vs {} chance ({}).", ext[(g - EXT_BASE) as usize].meta.id, th(v[0]), th(v[1]), ratio(v[0], v[1]))?;
     }
     writeln!(sum)?;
 
@@ -2436,6 +2630,22 @@ fn main() -> Result<()> {
     writeln!(sum, "== The decisive numbers ==")?;
     writeln!(sum, "ext->stock, predictive offsets: {} real vs {} chance correlations at |z| >= 4 (ratio {}); pure-noise externals {}.", th(rp[1]), th(cp[1]), ratio(rp[1], cp[1]), ratio(rpn[1], cpn[1]))?;
     writeln!(sum, "Noise externals picked at |z| >= 4: same sign in the next period {} of {} ({}).", th(noise_ss.same as f64), th(noise_ss.n as f64), pct(noise_ss.same as f64, noise_ss.n as f64))?;
+    // US-listed ETFs (market data from the price store) vs every other external series.
+    let mut etf_tab: HashMap<bool, [f64; 2]> = HashMap::new();
+    for o in &outs {
+        for e in o.entries.iter().filter(|e| e.dir == 0 && e.lag > 0 && e.z().abs() >= 4.0 && d.entry_cat(e) < excl0) {
+            let t = etf_tab.entry(is_etf(e.a)).or_default();
+            if e.copy == 0 { t[0] += 1.0 } else { t[1] += 1.0 / NULLS as f64 }
+        }
+    }
+    for etf in [false, true] {
+        let v = etf_tab.get(&etf).copied().unwrap_or_default();
+        let (r, n) = (oos_etf.get(&(etf, false)).cloned().unwrap_or_default(), oos_etf.get(&(etf, true)).cloned().unwrap_or_default());
+        writeln!(sum, "ext->stock predictive, {}: {} real vs {} chance at |z| >= 4 ({}); next-period same sign {} of {} ({}) vs null-picked {} ({}); mean signed r {:+.4} vs {:+.4}.",
+            if etf { "US-listed ETFs only" } else { "all external series except US-listed ETFs" }, th(v[0]), th(v[1]), ratio(v[0], v[1]),
+            th(r.same as f64), th(r.n as f64), pct(r.same as f64, r.n as f64), th(n.n as f64), pct(n.same as f64, n.n as f64),
+            r.sum_sr / r.n.max(1) as f64, n.sum_sr / n.n.max(1) as f64)?;
+    }
     writeln!(sum, "ext->stock, predictive, picked at |z| >= 4: same sign in the next period {} of {} times ({}), null-picked {} ({}); mean signed r {:+.4} vs {:+.4}.",
         th(real_ss.same as f64), th(real_ss.n as f64), pct(real_ss.same as f64, real_ss.n as f64), th(null_ss.n as f64), pct(null_ss.same as f64, null_ss.n as f64),
         real_ss.sum_sr / real_ss.n.max(1) as f64, null_ss.sum_sr / null_ss.n.max(1) as f64)?;
@@ -2460,7 +2670,7 @@ fn main() -> Result<()> {
     writeln!(sum, "Browse: cargo run --release -p c2-census --example external_test -- --browse {} --series <id or ticker> --min-z 4", args.run)?;
 
     // CSV outputs.
-    let mut ex = String::from("row,id,name,category,subcategory,region,catalog,transform,known_after_days,frequency,units,live_gap_rows,first,last,observations");
+    let mut ex = String::from("row,id,name,category,subcategory,region,catalog,transform,known_after_days,frequency,units,live_gap_rows,first,last,observations,status");
     for p in &periods {
         let _ = write!(ex, ",coverage_{0},active_{0},joins_{0}", p.id);
     }
@@ -2468,7 +2678,11 @@ fn main() -> Result<()> {
     for (i, x) in ext.iter().enumerate() {
         let s = &x.meta;
         let (first, last) = series_span(&x.var, &var.days);
-        let _ = write!(ex, "{i},{},{},{},{},{},{},{},{},{},{},{},{},{},{}", s.id, csv_field(&s.name), csv_field(catname(x.cat)), csv_field(&s.subcategory), csv_field(&s.region), s.catalog, s.transform.name(), s.known_after, csv_field(&s.frequency), csv_field(&s.units), x.var.gap, first, last, x.var.raw.iter().filter(|v| v.is_finite() && **v != 0.0).count());
+        let status = not_tested(x).unwrap_or_else(|| {
+            let joined: Vec<String> = periods.iter().zip(&x.per).filter(|(_, p)| p.2).map(|(w, _)| w.id.to_string()).collect();
+            format!("joins {}", joined.join(" "))
+        });
+        let _ = write!(ex, "{i},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}", s.id, csv_field(&s.name), csv_field(catname(x.cat)), csv_field(&s.subcategory), csv_field(&s.region), s.catalog, s.transform.name(), s.known_after, csv_field(&s.frequency), csv_field(&s.units), x.var.gap, first, last, x.var.raw.iter().filter(|v| v.is_finite() && **v != 0.0).count(), csv_field(&status));
         for pr in &x.per {
             let _ = write!(ex, ",{:.3},{},{}", pr.0, pr.1, u8::from(pr.2));
         }
@@ -2508,6 +2722,20 @@ fn main() -> Result<()> {
     print!("{sum}");
     say(&t0, &format!("done: {}", out_dir.join("summary.txt").display()));
     Ok(())
+}
+
+/// Why a series joined no correlation period (None if it joined one).
+fn not_tested(x: &ExtInfo) -> Option<String> {
+    if x.per.iter().any(|p| p.2) {
+        return None;
+    }
+    let max_active = x.per.iter().map(|p| p.1).max().unwrap_or(0);
+    let max_cov = x.per.iter().map(|p| p.0).fold(0f64, f64::max);
+    Some(if max_active < MIN_ACTIVE {
+        format!("too sparse to test: at most {max_active} non-zero moves in any correlation period (needs {MIN_ACTIVE})")
+    } else {
+        format!("too short or gappy: values on at most {:.0}% of a period's trading days (needs 90%)", 100.0 * max_cov)
+    })
 }
 
 fn series_span(v: &ExtVar, days: &[i32]) -> (String, String) {
@@ -2678,6 +2906,7 @@ fn controls(d: &Data, periods: &[&Window], syn: &[SynSpec], outs: &[PeriodOut], 
     let mut hdd = find_ext(d, &["cpc_hdd_gas_conus"], &[]);
     hdd.extend(find_ext(d, &["_hdd", "heating degree"], &["cpc_hdd_gas_conus"]));
     let gas = find_ext(d, &["etf_ung", "dhhngsp"], &[]);
+    let (mut link, mut lead) = (f64::NEG_INFINITY, 0f64);
     if hdd.is_empty() || gas.is_empty() {
         writeln!(s, "  NOT RUN: {} degree-day series, {} natural gas series", hdd.len(), gas.len())?;
     } else {
@@ -2711,9 +2940,17 @@ fn controls(d: &Data, periods: &[&Window], syn: &[SynSpec], outs: &[PeriodOut], 
                     }
                 }
                 let n3 = all.iter().filter(|z| **z >= 3.0).count();
-                writeln!(s, "{line}   all HDD: median {:+.2} (n {}, {n3} with z >= 3)", median(&mut all), all.len())?;
+                let med = median(&mut all);
+                if weather_first {
+                    lead = lead.max(med.abs());
+                } else {
+                    link = link.max(med);
+                }
+                writeln!(s, "{line}   all HDD: median {med:+.2} (n {}, {n3} with z >= 3)", all.len())?;
             }
         }
+        writeln!(s, "    -> {} (physical same-day link: best median z {link:+.2}, expected >= 2); tradable lead: largest |median z| {lead:.2} (none expected: markets trade the forecasts)",
+            if link >= 2.0 { "PASS" } else { "WEAK" })?;
     }
     // Synthetic positive controls: found at the right offsets and move lengths?
     writeln!(s, "Synthetic positive controls (a stock's census moves shifted in time, x{SYN_LOAD}, plus noise; expected r = 0.29 x overlap):")?;
@@ -2761,7 +2998,8 @@ fn controls(d: &Data, periods: &[&Window], syn: &[SynSpec], outs: &[PeriodOut], 
         writeln!(s, "  syn_eex_y2 follows syn_eex_x by 2 days (ext->ext): 1/1 at offset 2 z {}; at offset 1 z {} -> {}", zs.iter().map(|z| format!("{z:+.1}")).collect::<Vec<_>>().join("/"), z0.iter().map(|z| format!("{z:+.1}")).collect::<Vec<_>>().join("/"), if pass { "PASS" } else { "FAIL" })?;
     }
     // Placebos: sunspots, lunar phase, and the synthetic noise series.
-    writeln!(s, "Placebos (should look like chance): real vs chance at |z| >= 4 involving the series, predictive and same day; out-of-sample same sign")?;
+    writeln!(s, "Placebos (should look like chance against stocks): real vs chance at |z| >= 4 between the series and stocks (ext->stock and")?;
+    writeln!(s, "stock->ext; ext->ext is left out because calendar series relate trivially to each other), predictive and same day; out-of-sample same sign")?;
     let placebo_groups: Vec<(String, Vec<u32>)> = vec![
         ("sunspots".into(), find_ext(d, &["sunspot", "silso"], &[])),
         ("solar radio flux F10.7".into(), find_ext(d, &["f107"], &[])),
@@ -2778,7 +3016,7 @@ fn controls(d: &Data, periods: &[&Window], syn: &[SynSpec], outs: &[PeriodOut], 
         let mut c = [0f64; 4];
         let mut same = (0usize, 0usize);
         for o in outs {
-            for e in o.entries.iter().filter(|e| (set.contains(&e.a) || set.contains(&e.b)) && e.z().abs() >= 4.0) {
+            for e in o.entries.iter().filter(|e| e.dir != 1 && (set.contains(&e.a) || set.contains(&e.b)) && e.z().abs() >= 4.0) {
                 let k = if e.lag > 0 { 0 } else { 2 } + usize::from(e.copy > 0);
                 c[k] += if e.copy == 0 { 1.0 } else { 1.0 / NULLS as f64 };
                 if e.copy == 0
