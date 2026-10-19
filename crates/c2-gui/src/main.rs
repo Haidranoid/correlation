@@ -10,8 +10,9 @@
 //!            each relationship's history across census windows
 //!   Forecast the stock's predicted price path from its leaders' recent moves, the actual path
 //!            when the as-of date is in the past, and the forecast's track record
-//!   Explainer one relationship recomputed from prices step by step: the daily values checked
-//!            against the census's own code, the correlation against the one the census stored
+//!   Explainer one relationship recomputed from prices step by step and checked against what the
+//!            census stored (the pair's record, else its matrix's summary), or why it never
+//!            computed it
 //!   Census   real vs chance by lag for each horizon pair; a ticker's strongest stored pairs
 //!   Holdout  the $10,000 test for either signal family, with equity curves
 //!   Data     price store summary and the decade quality table
@@ -20,7 +21,7 @@
 //! a key that starts with the run's name, so switching runs on the Status tab never shows or
 //! reuses another run's results.
 
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::{Receiver, TryRecvError, channel};
 use std::sync::{Arc, Mutex};
@@ -33,7 +34,7 @@ use c2_data::Store;
 use eframe::egui;
 use c2_census::analyze::ProfileRow;
 use c2_census::analyze::{Counts, DatasetStats, RunInfo, Words};
-use c2_census::explain::Explained;
+use c2_census::explain::{Check, Explained};
 use c2_census::forecast::{Forecast, ForecastData};
 use c2_census::grid;
 use egui_plot::{Arrows, Bar, BarChart, HLine, Legend, Line, LineStyle, MarkerShape, Plot, PlotPoint, PlotPoints, Points, Polygon, Text, VLine};
@@ -168,14 +169,25 @@ type ExplainKey = (String, String, String, usize, usize, usize, usize, Option<i6
 /// (run, signal family, first holdout day, stocks held, rebalance days, costs, random accounts).
 type HoldoutKey = (String, usize, String, usize, usize, String, usize);
 
-/// The one census plan kept in memory, with the name of the run it is for: the census variable
-/// and that run's own correlation periods, universes and tasks (`Plan::for_run`). Shared by the
-/// plan job (Stock timeline, Forecast, Explainer) and the holdout's worker so that only one is
-/// built at a time.
-type PlanSlot = Arc<Mutex<Option<(String, Arc<Plan>)>>>;
+/// A census run's own description (`RunMeta`: settings, periods, tasks, stock list) and its plan
+/// on today's prices (`Plan::for_run`): the census variable and the run's own correlation
+/// periods, universes and tasks, so period and task ids mean what they meant in that run.
+struct RunPlan {
+    meta: RunMeta,
+    plan: Plan,
+}
 
-/// A Strongest-tab row with the move lengths of its strongest relationship (h1, h2).
-type RankEntry = (c2_census::analyze::RankRow, Option<(u8, u8)>);
+/// The one run plan kept in memory, with the name of the run it is for. Shared by the plan job
+/// (Stock timeline, Forecast, Explainer) and the holdout's worker so that only one is built at a
+/// time.
+type PlanSlot = Arc<Mutex<Option<(String, Arc<RunPlan>)>>>;
+
+/// The Strongest tab's data: the ranking, and per correlation period of the run (by its id) its
+/// length and last day, for each row's strongest relationship.
+struct Ranking {
+    rows: Vec<c2_census::analyze::RankRow>,
+    periods: Vec<(String, String)>,
+}
 
 /// (job generation, find text, sort) of the Strongest tab's prepared rows.
 type RankViewKey = (u64, String, usize);
@@ -183,7 +195,7 @@ type RankViewKey = (u64, String, usize);
 /// One prepared row of the Strongest tab: the stock and its other cells, already formatted.
 struct RankLine {
     ticker: String,
-    cells: [String; 8],
+    cells: [String; 13],
 }
 
 /// Self-check mode (`C2_GUI_SCREENSHOT=<path prefix>`, `C2_GUI_TAB=<tab>`): open a tab, wait for
@@ -256,15 +268,16 @@ struct App {
     ex: ExplainView,
     /// The current run's plan: the census variable and the run's own periods, universes and
     /// tasks, used by the Stock timeline, Forecast and Explainer tabs. Key: run.
-    plan: Job<String, Arc<Plan>>,
-    // Status tab statistics: of the run (key: run), and every run (key: refresh count).
+    plan: Job<String, Arc<RunPlan>>,
+    // Status tab statistics: of the run (key: run), and every run (key: refresh count, and the
+    // run shown, which the list marks as in use).
     stats: Job<String, DatasetStats>,
-    runs: Job<u64, Vec<RunInfo>>,
+    runs: Job<(u64, String), Vec<RunInfo>>,
     runs_refresh: u64,
     /// Local time offset from UTC in seconds (from `date +%z`).
     utc_offset: i64,
     // Strongest tab. Key: run.
-    rank: Job<String, Vec<RankEntry>>,
+    rank: Job<String, Ranking>,
     rank_view: Option<(RankViewKey, Vec<RankLine>)>,
     rank_filter: String,
     /// 0 = count x strength (sum of |r|), 1 = significant (sum of |r| over significant ones),
@@ -433,6 +446,15 @@ const YELLOW_NOTE: egui::Color32 = egui::Color32::from_rgb(230, 200, 90);
 const GREEN_NOTE: egui::Color32 = egui::Color32::from_rgb(120, 220, 120);
 const RED_NOTE: egui::Color32 = egui::Color32::from_rgb(240, 120, 100);
 
+/// `text` as a sentence: capitalized, ending in a full stop.
+fn sentence(text: &str) -> String {
+    let mut chars = text.chars();
+    match chars.next() {
+        Some(first) => format!("{}{}.", first.to_uppercase(), chars.as_str().trim_end_matches('.')),
+        None => String::new(),
+    }
+}
+
 fn days_label(d: usize) -> String {
     if d == 1 { "1 day".into() } else { format!("{d} days") }
 }
@@ -485,12 +507,13 @@ fn local_time(unix: u64, offset: i64) -> String {
     format!("{} {:02}:{:02}", c2_data::date_string(t.div_euclid(86_400) as i32), secs / 3600, secs % 3600 / 60)
 }
 
-/// The plan of census `run`: the census variable built from today's prices with the run's own
-/// settings, and the run's own correlation periods (matched by date), universes and tasks, read
-/// from its directory (`Plan::for_run`), so period and task ids mean what they meant in that run.
-/// From the shared slot when it holds this run's, else built now in its place. Errors (naming
-/// the problem) when the run can't be reproduced on today's prices.
-fn plan_for_run(slot: &Mutex<Option<(String, Arc<Plan>)>>, store: &Store, run: &str, dir: &Path) -> Result<Arc<Plan>, String> {
+/// The plan of census `run`: its own description read from its directory (`RunMeta`), and the
+/// census variable built from today's prices with the run's own settings together with the run's
+/// own correlation periods (matched by date), universes and tasks (`Plan::for_run`), so period
+/// and task ids mean what they meant in that run. From the shared slot when it holds this run's,
+/// else built now in its place. Errors (naming the problem) when the run can't be reproduced on
+/// today's prices.
+fn plan_for_run(slot: &Mutex<Option<(String, Arc<RunPlan>)>>, store: &Store, run: &str, dir: &Path) -> Result<Arc<RunPlan>, String> {
     // The slot only ever holds nothing or a complete plan (it is emptied before a build and
     // filled after it succeeds), so a lock poisoned by a panicking worker is still usable.
     let mut guard = slot.lock().unwrap_or_else(|e| e.into_inner());
@@ -502,41 +525,16 @@ fn plan_for_run(slot: &Mutex<Option<(String, Arc<Plan>)>>, store: &Store, run: &
     // Free the other run's variable before building this one.
     *guard = None;
     let meta = RunMeta::load(dir).map_err(|e| format!("{e:#}"))?;
-    let plan = Arc::new(Plan::for_run(store, &meta).map_err(|e| format!("{e:#}"))?);
-    *guard = Some((run.to_string(), plan.clone()));
-    Ok(plan)
+    let plan = Plan::for_run(store, &meta).map_err(|e| format!("{e:#}"))?;
+    let rp = Arc::new(RunPlan { meta, plan });
+    *guard = Some((run.to_string(), rp.clone()));
+    Ok(rp)
 }
 
-/// Move lengths (h1, h2) of each row's strongest relationship, found by its stored record
-/// (leader, follower, offset, r and z identify it). `RankRow` doesn't carry them yet.
-fn rank_move_lengths(store: &Store, dir: &Path, rows: &[c2_census::analyze::RankRow]) -> Result<Vec<Option<(u8, u8)>>, String> {
-    let mut wanted: HashMap<(u32, u32, u16, u32, u32), Vec<usize>> = HashMap::new();
-    for (k, r) in rows.iter().enumerate() {
-        let (Some(me), Some(other)) = (store.id(&r.ticker), store.id(&r.best_partner)) else { continue };
-        let (leader, target) = if r.best_leads { (me, other) } else { (other, me) };
-        wanted.entry((leader as u32, target as u32, r.best_lag, r.best_r.to_bits(), r.best_z.to_bits())).or_default().push(k);
-    }
-    let mut out = vec![None; rows.len()];
-    let entries = std::fs::read_dir(dir.join("tasks")).map_err(|e| format!("{}: {e}", dir.display()))?;
-    for e in entries.flatten() {
-        let path = e.path();
-        if path.extension().and_then(|x| x.to_str()) != Some("rec") {
-            continue;
-        }
-        let bytes = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-        for chunk in bytes.chunks_exact(run::RECORD_BYTES) {
-            let r = run::Record::from_bytes(chunk);
-            if r.flags & FLAG_NULL != 0 || r.lag == 0 {
-                continue;
-            }
-            if let Some(ks) = wanted.get(&(r.leader, r.target, r.lag, r.r.to_bits(), r.z.abs().to_bits())) {
-                for &k in ks {
-                    out[k] = Some((r.h1, r.h2));
-                }
-            }
-        }
-    }
-    Ok(out)
+/// A correlation period of a run as the tables show it: its length ("756 days", or "all history")
+/// and its last day.
+fn period_label(w: &c2_census::meta::RunWindow) -> (String, String) {
+    (if w.length == 0 { "all history".to_string() } else { format!("{} days", w.length) }, c2_data::date_string(w.last))
 }
 
 /// The timeline's rows for its filters `vk`: each relationship's strongest correlation period
@@ -658,11 +656,12 @@ fn significance_verdict(cutoff: f64, exact_r: f64, stored: Option<(f32, bool)>, 
 /// One line per period for the plain-terms counts.
 fn words_text(w: &Words, a: &str, b: &str, h1: usize, h2: usize, lag: usize) -> Vec<String> {
     let (up, down) = (100.0 * w.up.exp_m1(), -100.0 * w.down.exp_m1());
+    let ending = if lag == 0 { "ending the same day".to_string() } else { format!("ending {} later", tdays(lag)) };
     let line = |c: &Counts, intro: String| {
         format!(
-            "{intro}: after {a} rose {up:.1}% or more over {} ({} times), {b} rose over the {} ending {} later in {}. \
+            "{intro}: after {a} rose {up:.1}% or more over {} ({} times), {b} rose over the {} {ending} in {}. \
              After {a} fell {down:.1}% or more ({} times), {b} rose in {}. Overall {b} rose in {}.",
-            days_label(h1), c.a_up, days_label(h2), tdays(lag), share(c.a_up_b_up, c.a_up), c.a_down, share(c.a_down_b_up, c.a_down), share(c.b_up, c.cases)
+            days_label(h1), c.a_up, days_label(h2), share(c.a_up_b_up, c.a_up), c.a_down, share(c.a_down_b_up, c.a_down), share(c.b_up, c.cases)
         )
     };
     let mut out = vec![line(&w.period, format!("In the correlation period ({} observations)", w.period.cases))];
@@ -674,9 +673,8 @@ fn words_text(w: &Words, a: &str, b: &str, h1: usize, h2: usize, lag: usize) -> 
     out
 }
 
-fn day_cells(s: &c2_census::explain::DaySteps, market: f64, d: usize) -> [String; 8] {
+fn day_cells(s: &c2_census::explain::DaySteps, market: f64, d: usize) -> [String; 7] {
     let f = |v: f64, text: String| if v.is_finite() { text } else { "none".to_string() };
-    let same = s.v[d] == s.v_census[d] || (s.v[d].is_nan() && s.v_census[d].is_nan());
     [
         format!("${:.2} -> ${:.2}", s.close[d - 1], s.close[d]),
         f(s.ret[d] as f64, format!("{:+.3}%", 100.0 * s.ret[d])),
@@ -685,7 +683,6 @@ fn day_cells(s: &c2_census::explain::DaySteps, market: f64, d: usize) -> [String
         f(s.resid[d], format!("{:+.3}%", 100.0 * s.resid[d])),
         f(s.sd[d], format!("{:+.3}% / {:.3}%", 100.0 * s.mean[d], 100.0 * s.sd[d])),
         f(s.v[d] as f64, format!("{:+.3}", s.v[d])),
-        format!("{}{}", if s.v_census[d].is_finite() { format!("{:+.3}", s.v_census[d]) } else { "none".into() }, if same { "  (same)" } else { "  (DIFFERENT)" }),
     ]
 }
 
@@ -886,7 +883,7 @@ impl App {
         // they show that error and wait for nothing else.
         let plan_failed = matches!(self.plan.get(run), Some(Err(_)));
         match self.tab {
-            Tab::Status => self.runs.get(&self.runs_refresh).is_some() && (!has_store || self.stats.get(run).is_some()),
+            Tab::Status => self.runs.get(&(self.runs_refresh, run.clone())).is_some() && (!has_store || self.stats.get(run).is_some()),
             Tab::Strongest => !has_store || (self.rank.get(run).is_some() && self.stats.get(run).is_some()),
             Tab::Stock => !has_store || self.tl.want.as_ref().is_none_or(|t| plan_failed || self.tl.job.get(&(run.clone(), t.clone())).is_some()),
             Tab::Forecast => {
@@ -924,11 +921,12 @@ impl App {
             let dir = self.dir();
             self.rank.start(run.clone(), move || {
                 let rows = c2_census::analyze::stock_ranking(&store, &dir).map_err(|e| format!("{e:#}"))?;
-                let lengths = rank_move_lengths(&store, &dir, &rows)?;
-                Ok(rows.into_iter().zip(lengths).collect())
+                // Each row's strongest relationship names its period by the run's own id.
+                let periods = RunMeta::load(&dir).map_err(|e| format!("{e:#}"))?.windows.iter().map(period_label).collect();
+                Ok(Ranking { rows, periods })
             });
         }
-        let rank = match self.rank.get(&run) {
+        let ranking = match self.rank.get(&run) {
             None => {
                 ui.horizontal(|ui| {
                     ui.spinner();
@@ -943,13 +941,14 @@ impl App {
                 }
                 return;
             }
-            Some(Ok(rank)) => rank,
+            Some(Ok(ranking)) => ranking,
         };
+        let rank = &ranking.rows;
         if rank.is_empty() {
             ui.label(format!("Census '{run}' has no stored lead-lag relationships yet."));
             return;
         }
-        let with_sig = rank.iter().filter(|r| r.0.significant > 0).count();
+        let with_sig = rank.iter().filter(|r| r.significant > 0).count();
         const SORTS: [&str; 4] = [
             "number x strength (sum of |r|)",
             "significant relationships (sum of |r| over those)",
@@ -975,35 +974,29 @@ impl App {
         ui.label(format!(
             "Stocks with both many stored lead-lag correlations and strong ones rank highest (score = sum of |r|). Most stored correlations are within \
              what chance produces {tested}; {with_sig} stocks have relationships that passed the significance test ('sig.'), and \
-             'periods' counts how many separate correlation periods those come from (1 usually means one event, such as the 2020 crash). Click a stock for its timeline."
+             'periods' counts how many separate correlation periods those come from (1 usually means one event, such as the 2020 crash). The \
+             columns from 'strongest' on describe the stock's strongest relationship and its correlation period. Click a stock for its timeline."
         ));
         // Filtered, sorted and formatted only when the result, the find text or the sort changes.
         let view_key: RankViewKey = (self.rank.generation, self.rank_filter.trim().to_uppercase(), self.rank_sort);
         if self.rank_view.as_ref().is_none_or(|(k, _)| *k != view_key) {
             let (filter, sort) = (&view_key.1, view_key.2);
-            let mut rows: Vec<&RankEntry> = rank.iter().filter(|r| filter.is_empty() || r.0.ticker.contains(filter.as_str())).filter(|r| sort != 1 || r.0.significant > 0).collect();
+            let mut rows: Vec<&c2_census::analyze::RankRow> = rank.iter().filter(|r| filter.is_empty() || r.ticker.contains(filter.as_str())).filter(|r| sort != 1 || r.significant > 0).collect();
             let score = |r: &c2_census::analyze::RankRow| match sort {
                 1 => r.sig_sum_abs_r,
                 2 => r.max_abs_r as f64,
                 3 => r.stored as f64,
                 _ => r.sum_abs_r,
             };
-            rows.sort_by(|a, b| score(&b.0).total_cmp(&score(&a.0)).then_with(|| a.0.ticker.cmp(&b.0.ticker)));
+            rows.sort_by(|a, b| score(b).total_cmp(&score(a)).then_with(|| a.ticker.cmp(&b.ticker)));
             let lines = rows
                 .iter()
                 .take(1000)
-                .map(|(r, lengths)| {
+                .map(|r| {
+                    // The strongest relationship, laid out as on the Stock timeline: best_h1 is the
+                    // move length of whichever stock moves first (A), best_h2 the follower's (B).
                     let (a, b) = if r.best_leads { (&r.ticker, &r.best_partner) } else { (&r.best_partner, &r.ticker) };
-                    let rel = match lengths {
-                        Some((h1, h2)) => format!(
-                            "{a} moves over {}, {b} follows over {} ending {} later, r {:+.3}",
-                            days_label(*h1 as usize),
-                            days_label(*h2 as usize),
-                            days_label(r.best_lag as usize),
-                            r.best_r
-                        ),
-                        None => format!("{a} moves, {b} follows {} later, r {:+.3}", days_label(r.best_lag as usize), r.best_r),
-                    };
+                    let (period, ending) = ranking.periods.get(r.best_window as usize).cloned().unwrap_or_default();
                     RankLine {
                         ticker: r.ticker.clone(),
                         cells: [
@@ -1013,8 +1006,13 @@ impl App {
                             format!("{:.3}", r.max_abs_r),
                             if r.significant > 0 { format!("{} ({}↗ {}↙)", r.significant, r.leads, r.follows) } else { "0".into() },
                             if r.significant > 0 { r.windows.to_string() } else { String::new() },
-                            rel,
+                            format!("{a} -> {b}"),
+                            days_label(r.best_lag as usize),
+                            format!("{} -> {}", days_label(r.best_h1 as usize), days_label(r.best_h2 as usize)),
+                            format!("{:+.3}", r.best_r),
                             format!("{:.1}", r.best_z),
+                            period,
+                            ending,
                         ],
                     }
                 })
@@ -1023,9 +1021,9 @@ impl App {
         }
         let mut open: Option<String> = None;
         if let Some((_, lines)) = &self.rank_view {
-            egui::ScrollArea::vertical().id_salt("rank").show(ui, |ui| {
+            egui::ScrollArea::both().id_salt("rank").show(ui, |ui| {
                 egui::Grid::new("rank_grid").striped(true).show(ui, |ui| {
-                    for h in ["#", "stock", "score", "relationships", "mean |r|", "max |r|", "sig.", "periods", "strongest relationship", "z"] {
+                    for h in ["#", "stock", "score", "relationships", "mean |r|", "max |r|", "sig.", "periods", "strongest: A -> B", "offset", "move lengths", "r", "z", "period", "ending"] {
                         ui.strong(h);
                     }
                     ui.end_row();
@@ -1144,8 +1142,8 @@ impl App {
             let dir = self.dir();
             let t = want.clone();
             self.tl.job.start(job_key.clone(), move || {
-                let rows = c2_census::analyze::stock_profile_with(&store, &plan.var, &dir, &t, false).map_err(|e| format!("{e:#}"))?;
-                let full_history = plan.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
+                let rows = c2_census::analyze::stock_profile_with(&store, &plan.plan.var, &dir, &t, false).map_err(|e| format!("{e:#}"))?;
+                let full_history = plan.meta.windows.iter().filter(|w| w.length == 0).map(|w| w.id as u32).collect();
                 Ok(TimelineData { rows, full_history })
             });
         }
@@ -1455,7 +1453,7 @@ impl App {
                 Ok(Some(plan)) => {
                     let (dir, ticker) = (self.dir(), self.fc.ticker.clone());
                     self.fc.data.start(data_key.clone(), move || {
-                        c2_census::forecast::prepare(&store, &plan.var, &dir, &ticker).map(Arc::new).map_err(|e| format!("{e:#}"))
+                        c2_census::forecast::prepare(&store, &plan.plan.var, &dir, &ticker).map(Arc::new).map_err(|e| format!("{e:#}"))
                     });
                 }
                 Ok(None) => waiting = Some(format!("Building the census variable for every stock, for census '{run}' (a few seconds)…")),
@@ -1619,10 +1617,10 @@ impl App {
         }
     }
 
-    /// The current run's plan (`plan_for_run`): the census variable for every stock and the run's
-    /// own correlation periods, universes and tasks, built in the background (in the slot it
-    /// shares with the holdout). Ok(None) while it is being built.
-    fn need_plan(&mut self) -> Result<Option<Arc<Plan>>, String> {
+    /// The current run's plan (`plan_for_run`): its description, the census variable for every
+    /// stock and the run's own correlation periods, universes and tasks, built in the background
+    /// (in the slot it shares with the holdout). Ok(None) while it is being built.
+    fn need_plan(&mut self) -> Result<Option<Arc<RunPlan>>, String> {
         let Some(store) = self.store.clone() else { return Err(self.store_note.clone()) };
         let run = self.run_name.clone();
         if self.plan.wants(&run) {
@@ -1638,8 +1636,8 @@ impl App {
 
     fn explain_tab(&mut self, ui: &mut egui::Ui) {
         ui.heading("How one correlation is calculated");
-        let plan = match self.need_plan() {
-            Ok(Some(plan)) => plan,
+        let rp = match self.need_plan() {
+            Ok(Some(rp)) => rp,
             Ok(None) => {
                 ui.horizontal(|ui| {
                     ui.spinner();
@@ -1655,6 +1653,7 @@ impl App {
                 return;
             }
         };
+        let plan = &rp.plan;
         // A period id from a row of this run (the plan's periods are the run's own).
         if let Some((run, w)) = self.ex.pending_window.take()
             && run == self.run_name
@@ -1664,7 +1663,7 @@ impl App {
             self.ex.pos = plan.windows.iter().filter(|x| x.length == win.length && x.id < w).count();
         }
         if let Some((len, end)) = self.ex.pending_end.take()
-            && let Some(w) = c2_census::explain::find_window(&plan, len, end)
+            && let Some(w) = c2_census::explain::find_window(plan, len, end)
         {
             self.ex.length = len;
             self.ex.pos = plan.windows.iter().filter(|x| x.length == len && x.id < w).count();
@@ -1688,8 +1687,8 @@ impl App {
         let len_label = move |l: usize| if l == 0 { format!("{full_days} days (all history)") } else { format!("{l} days") };
         ui.label(
             "Pick two stocks, the length of move to measure for each, the offset between them and a correlation period. Every step below is \
-             recomputed from prices. The daily census values are checked against the census's own code (the census doesn't store daily values); \
-             the correlation in step 4 is checked against the one the census stored.",
+             recomputed from prices and checked against what the census stored: the stored record's sums when it kept this pair, else its \
+             summary of the matrix.",
         );
         ui.horizontal_wrapped(|ui| {
             ui.label("Stock A (moves first):");
@@ -1718,14 +1717,15 @@ impl App {
                     ui.selectable_value(&mut self.ex.h2, h, days_label(h));
                 }
             });
-            let lags: Vec<usize> = grid::lags(self.ex.h2).into_iter().filter(|&k| k > 0).collect();
-            if !lags.contains(&self.ex.lag) {
-                self.ex.lag = lags.iter().copied().find(|&k| k >= self.ex.lag).or(lags.last().copied()).unwrap_or(self.ex.h2);
-            }
+            // The offsets the census computes for B's move length: 0, the same-day reference, then
+            // the predictive ones.
+            let lags: Vec<usize> = grid::lags(self.ex.h2);
+            self.ex.lag = nearest(&lags, self.ex.lag);
+            let lag_label = |k: usize| if k == 0 { "0 days (same day, for reference)".to_string() } else { days_label(k) };
             ui.label("offset");
-            egui::ComboBox::from_id_salt("ex_lag").selected_text(days_label(self.ex.lag)).show_ui(ui, |ui| {
+            egui::ComboBox::from_id_salt("ex_lag").selected_text(lag_label(self.ex.lag)).show_ui(ui, |ui| {
                 for &k in &lags {
-                    ui.selectable_value(&mut self.ex.lag, k, days_label(k));
+                    ui.selectable_value(&mut self.ex.lag, k, lag_label(k));
                 }
             });
             ui.label("from the end of A's move to the end of B's");
@@ -1770,7 +1770,7 @@ impl App {
             && self.ex.job.wants(k)
             && let Some(store) = self.store.clone()
         {
-            let (plan2, dir, k2) = (plan.clone(), self.dir(), k.clone());
+            let (rp2, k2) = (rp.clone(), k.clone());
             self.ex.job.start(k.clone(), move || {
                 let req = c2_census::explain::Request {
                     leader: k2.1,
@@ -1781,7 +1781,7 @@ impl App {
                     window: k2.6,
                     threshold: k2.7.map(|t| t as f64 / 10_000.0),
                 };
-                c2_census::explain::explain(&store, &plan2, &dir, &req).map_err(|e| format!("{e:#}"))
+                c2_census::explain::explain_with(&store, &rp2.plan, &rp2.meta, &req).map_err(|e| format!("{e:#}"))
             });
         }
         if let (Some(k), Some((done_key, Err(err)))) = (&key, &self.ex.job.done)
@@ -1795,12 +1795,14 @@ impl App {
         if let Some((k, Ok(e))) = &done
             && k.0 == self.run_name
         {
-            self.explain_steps(ui, e);
+            self.explain_steps(ui, e, rp.meta.cfg.keep_real);
         }
         self.ex.job.done = done;
     }
 
-    fn explain_steps(&mut self, ui: &mut egui::Ui, e: &Explained) {
+    /// The steps of one explanation; `keep_real` is how many of each matrix's strongest pairs
+    /// the run stores.
+    fn explain_steps(&mut self, ui: &mut egui::Ui, e: &Explained, keep_real: usize) {
         use c2_census::explain::DaySteps;
         let (a, b) = (e.a.ticker.clone(), e.b.ticker.clone());
         let (h1, h2, lag) = (e.h1, e.h2, e.lag);
@@ -1817,6 +1819,21 @@ impl App {
             area = area.vertical_scroll_offset(y);
         }
         area.show(ui, |ui| {
+            // Whether the census computed this at all, and what offset 0 is, before anything else.
+            if let Err(why) = &e.census_computed {
+                ui.add_space(6.0);
+                ui.colored_label(YELLOW_NOTE, format!("The census never computed this: {why}. The steps below show what it would have found."));
+            }
+            if e.same_day {
+                ui.add_space(6.0);
+                ui.colored_label(
+                    YELLOW_NOTE,
+                    format!(
+                        "Offset 0 is the same-day reference: {b}'s move ends the same day as {a}'s. The census computes it to compare its later \
+                         offsets with; it is not a prediction."
+                    ),
+                );
+            }
             // 1. Period and observations.
             ui.add_space(6.0);
             ui.heading("1. The correlation period and the moves being compared");
@@ -1832,11 +1849,11 @@ impl App {
                 inu(&e.b)
             ));
             ui.label(format!(
-                "Each observation pairs {a}'s move over {} with {b}'s move over {} that ends {} after {a}'s ends. Observations step forward \
-                 {} at a time so no two share a day: {} observations in this period.",
+                "Each observation pairs {a}'s move over {} with {b}'s move over {} that ends {}. Observations step forward {} at a time so no \
+                 two share a day: {} observations in this period.",
                 days_label(h1),
                 days_label(h2),
-                tdays(lag),
+                if lag == 0 { format!("the same day as {a}'s") } else { format!("{} after {a}'s ends", tdays(lag)) },
                 days_label(step),
                 n_obs
             ));
@@ -1902,7 +1919,7 @@ impl App {
             if resp.changed() {
                 self.ex.day = Some(day);
             }
-            const STEPS: [&str; 8] = [
+            const STEPS: [&str; 7] = [
                 "closing price: day before -> that day",
                 "1. daily return r = ln(close / previous close)",
                 "2. market return m that day (average of the liquid stocks)",
@@ -1910,7 +1927,6 @@ impl App {
                 "4. residual e = r - beta x m (the stock's own move)",
                 "5. mean / sd of e over the previous 252 days",
                 "6. census value v = (e - mean) / sd, kept within +-5",
-                "   the census's own code, same day",
             ];
             let (ca, cb) = (day_cells(&e.a, e.market[day], day), day_cells(&e.b, e.market[day], day));
             egui::Grid::new("ex_day").striped(true).num_columns(3).show(ui, |ui| {
@@ -1925,14 +1941,11 @@ impl App {
                     ui.end_row();
                 }
             });
-            let diff = |s: &DaySteps| if s.max_diff.is_finite() { format!("{}", s.max_diff) } else { "a value is missing on one side".into() };
-            ui.label(format!(
-                "Recomputed here for every day of the period and compared with what the census's own code computes from the same prices (the census \
-                 doesn't store daily values; step 4 checks the stored correlation). Largest difference: {a} {}, {b} {}.",
-                diff(&e.a),
-                diff(&e.b)
-            ));
-            let series = |s: &DaySteps| -> Vec<[f64; 2]> { s.v_census.iter().enumerate().filter(|(_, v)| v.is_finite()).map(|(i, v)| [i as f64, *v as f64]).collect() };
+            ui.label(
+                "Recomputed here for every day of the period with the census's own code (the census doesn't store daily values; step 4 checks the \
+                 result against what it stored).",
+            );
+            let series = |s: &DaySteps| -> Vec<[f64; 2]> { s.v.iter().enumerate().filter(|(_, v)| v.is_finite()).map(|(i, v)| [i as f64, *v as f64]).collect() };
             Plot::new("ex_vals")
                 .height(140.0)
                 .legend(Legend::default())
@@ -1998,7 +2011,7 @@ impl App {
                 .height(260.0)
                 .legend(Legend::default())
                 .x_axis_label(format!("{a}'s move{unit}"))
-                .y_axis_label(format!("{b}'s move {lag} days later{unit}"))
+                .y_axis_label(if lag == 0 { format!("{b}'s move the same day{unit}") } else { format!("{b}'s move {lag} days later{unit}") })
                 .show(ui, |p| {
                     p.hline(HLine::new("", 0.0).color(egui::Color32::DARK_GRAY));
                     p.vline(VLine::new("", 0.0).color(egui::Color32::DARK_GRAY));
@@ -2011,31 +2024,69 @@ impl App {
                     }
                 });
             ui.label(format!(
-                "r = {:+.4} from n = {} observations. r measures how consistently {b}'s later move lines up with {a}'s move: 0 = no relation, +1 = always \
+                "r = {:+.4} from n = {} observations. r measures how consistently {b}'s {}move lines up with {a}'s move: 0 = no relation, +1 = always \
                  the same direction in proportion, -1 = always the opposite. z = atanh(r) x sqrt(n - 3) = {:+.2}: how many standard errors r is from 0. \
                  One pair on its own reaches |z| of 2 by chance about 5% of the time, and 4 about 6 times in 100,000.",
-                e.r, e.n, e.z
+                e.r,
+                e.n,
+                if lag == 0 { "" } else { "later " },
+                e.z
             ));
-            let missing: Vec<&str> = [&e.a, &e.b].iter().filter(|s| !s.in_universe).map(|s| s.ticker.as_str()).collect();
-            match &e.stored {
-                None if !missing.is_empty() => ui.label(format!(
-                    "The census never computed this pair in this period because {} did not qualify (see step 1); the r above is what it would have been.",
-                    missing.join(" and ")
-                )),
-                Some(s) => ui.label(format!(
+            // What the census did with this pair: stored it, never computed it (and why), or
+            // computed it without keeping it. Then what the numbers above were checked against.
+            let never = e.never_computed();
+            match (&e.stored, &never) {
+                (Some(s), _) => ui.label(format!(
                     "The census stored this pair for this period: r = {:+.6} (recomputed here: {:+.6}; difference {:.1e}). Its GPU estimate of r (the fast \
-                     8-bit first pass, which decides what is stored and applies the significance test) was {:+.4}{}; it {} the significance test.",
+                     8-bit first pass, which decides what is stored and applies the significance test) was {:+.4}{}; {}.",
                     s.record.r,
                     e.r,
                     (s.record.r as f64 - e.r).abs(),
                     s.record.r_int8,
                     if s.top { "; among the strongest in its matrix" } else { "" },
-                    if s.significant { "passed" } else { "did not pass" }
+                    if e.same_day {
+                        "offset 0 gets no significance test"
+                    } else if s.significant {
+                        "it passed the significance test"
+                    } else {
+                        "it did not pass the significance test"
+                    }
                 )),
-                None => ui.label(
-                    "The census computed this pair but did not store it for this period: it keeps the strongest 100 of each matrix plus any that pass \
-                     the significance test.",
+                (None, Some(why)) => ui.label(format!("The census never computed this pair here: {why}. The r above is what it would have been.")),
+                (None, None) => ui.label(format!(
+                    "The census computed this pair but did not store it for this period: it keeps the strongest {keep_real} of each matrix plus any that \
+                     pass the significance test."
+                )),
+            };
+            match &e.check {
+                Check::Record(c) if c.agrees() => ui.label(format!(
+                    "Checked against the census's record of this pair: the same {} observations, and the sums of x, y, x·x, y·y and x·y it stored agree \
+                     with the ones recomputed here {} (the record keeps about 7 significant digits).",
+                    c.obs,
+                    if c.max_rel_diff > 0.0 { format!("to {:.0e}", c.max_rel_diff) } else { "exactly".to_string() }
+                )),
+                Check::Record(c) => ui.colored_label(
+                    egui::Color32::LIGHT_RED,
+                    format!(
+                        "Checked against the census's record of this pair: they DIFFER ({} observations here, {} stored; sums differ by up to {:.1e} of \
+                         their size, where under 1e-6 is expected). The census stored something other than what its code computes from today's prices.",
+                        c.obs, c.stored_obs, c.max_rel_diff
+                    ),
                 ),
+                Check::Summary(c) if c.agrees() => ui.label(format!(
+                    "Nothing is stored for this pair to check against; the matrix's summary agrees with what is recomputed here: {} stocks and {} \
+                     observations.",
+                    c.stored_stocks, c.stored_obs
+                )),
+                Check::Summary(c) => ui.colored_label(
+                    egui::Color32::LIGHT_RED,
+                    format!(
+                        "Nothing is stored for this pair to check against, and the matrix's summary DIFFERS: {} stocks and {} observations there, {} and \
+                         {} here.",
+                        c.stored_stocks, c.stored_obs, c.stocks, c.obs
+                    ),
+                ),
+                Check::Nothing => ui.label("The census never computed this matrix, so nothing is stored to check against."),
             };
             ui.label(format!("For comparison, the correlation of the raw % moves (no market adjustment or volatility scaling) is {:+.3}.", e.r_raw));
 
@@ -2045,7 +2096,13 @@ impl App {
             let m = &e.matrix;
             let az = e.z.abs();
             let formula = if e.chance_analytic >= 1.0 { format!("{:.0}", e.chance_analytic) } else { format!("{:.3}", e.chance_analytic) };
-            if m.found {
+            if let Err(why) = &e.census_computed {
+                ui.label(format!(
+                    "The census never computed this matrix ({why}), so there is no measured chance count. A bell-curve formula predicts about {formula} \
+                     of the {} correlations at |z| of {az:.2} or more by chance alone; stock moves have fatter tails, so the real count would be higher.",
+                    big(e.pairs_tested)
+                ));
+            } else {
                 let k = if az >= 5.0 { 2 } else if az >= 4.0 { 1 } else { 0 };
                 ui.label(format!(
                     "In this period, with these move lengths and this offset, the census correlated each of the {} stocks with every other: {} correlations. \
@@ -2058,15 +2115,6 @@ impl App {
                     k + 3,
                     if az < 3.0 { format!(" (this pair's |z| is only {az:.2})") } else { String::new() }
                 ));
-            } else {
-                ui.label(format!(
-                    "Among the {} correlations in this matrix ({} stocks, each against every other), a bell-curve formula predicts about {formula} at |z| of {az:.2} \
-                     or more by chance alone; stock moves have fatter tails, so the real chance count is higher.",
-                    big(e.pairs_tested),
-                    e.universe
-                ));
-            }
-            if m.found {
                 let mut real = Vec::new();
                 let mut null = Vec::new();
                 for k in 0..3 {
@@ -2089,11 +2137,10 @@ impl App {
                 ));
                 match m.fdr_r {
                     // The census's own verdict when it stored the pair (the same flag as step 4).
-                    Some(t) => ui.label(significance_verdict(t, e.r, e.stored.as_ref().map(|s| (s.record.r_int8, s.significant)), missing.is_empty())),
+                    Some(t) => ui.label(significance_verdict(t, e.r, e.stored.as_ref().map(|s| (s.record.r_int8, s.significant)), never.is_none())),
+                    None if e.same_day => ui.label("The census doesn't run the significance test at offset 0 (the same-day reference)."),
                     None => ui.label("No pair in this matrix passed the significance test: nothing stood out from chance."),
                 };
-            } else {
-                ui.label("This census run has no summary for this matrix (the stocks may not have qualified, or this run used a smaller grid).");
             }
 
             // 6. Plain terms.
@@ -2146,29 +2193,38 @@ impl App {
             ui.add_space(8.0);
             ui.heading("7. Size: how far B moves beyond the market per 1% that A does (the timeline's '% per 1%')");
             match &e.move_size {
-                Some(s) => ui.label(format!(
-                    "% per 1% = r x (typical size of {b}'s {}-day moves beyond the market / typical size of {a}'s {}-day moves beyond the market) \
-                     = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}, from the {} observations where both moves are known. So when {a} moves 1% beyond what the \
-                     market did over {}, {b} tends to move {:+.3}% beyond the market over the {} ending {} later. The Forecast tab multiplies each \
-                     leader's latest move beyond the market by this number, and the Stock timeline shows it as '% per 1%'.",
-                    h2,
-                    h1,
-                    e.r,
-                    100.0 * s.sd_b,
-                    100.0 * s.sd_a,
-                    s.per_pct,
-                    s.pairs,
-                    days_label(h1),
-                    s.per_pct,
-                    days_label(h2),
-                    tdays(lag)
-                )),
-                None => ui.label(format!(
-                    "Fewer than {} observations have both moves, too few to size this relationship: the Forecast tab leaves it out and the Stock \
-                     timeline shows no '% per 1%' for it.",
-                    c2_census::moves::MIN_PAIRS
-                )),
-            };
+                Some(s) => {
+                    ui.label(format!(
+                        "% per 1% = r x (typical size of {b}'s {}-day moves beyond the market / typical size of {a}'s {}-day moves beyond the market) \
+                         = {:+.4} x ({:.2}% / {:.2}%) = {:+.3}, over {} observations{}. So when {a} moves 1% beyond what the market did over {}, {b} \
+                         tends to move {:+.3}% beyond the market over the {} ending {}.",
+                        h2,
+                        h1,
+                        e.move_size_r,
+                        100.0 * s.sd_b,
+                        100.0 * s.sd_a,
+                        s.per_pct,
+                        s.pairs,
+                        // The Forecast and the timeline use the r the census stored.
+                        if e.stored.is_some() { ", with r as the census stored it" } else { "" },
+                        days_label(h1),
+                        s.per_pct,
+                        days_label(h2),
+                        if lag == 0 { "the same day".to_string() } else { format!("{} later", tdays(lag)) }
+                    ));
+                    match &e.forecast_use {
+                        Ok(()) => ui.label(format!(
+                            "This is the multiplier the Forecast tab applies to {a}'s latest move beyond the market (when this is the most recent \
+                             correlation period of the relationship), and the Stock timeline's '% per 1%'."
+                        )),
+                        // The reason names the Forecast itself ("the Forecast uses only ...").
+                        Err(why) => ui.label(sentence(why)),
+                    };
+                }
+                None => {
+                    ui.label(format!("Fewer than {} observations have both moves, so there is no size.", c2_census::moves::MIN_PAIRS));
+                }
+            }
             ui.add_space(12.0);
         });
     }
@@ -2186,10 +2242,12 @@ impl App {
 
     fn status_stats(&mut self, ui: &mut egui::Ui) {
         let run_name = self.run_name.clone();
-        // Every run (independent of the one chosen), and the chosen run's statistics: switching
-        // runs rereads only the latter.
-        if self.runs.wants(&self.runs_refresh) {
-            self.runs.start(self.runs_refresh, || Ok(c2_census::analyze::run_history()));
+        // Every run, marked with the one shown here (the Run name box) and the default census, and
+        // the shown run's statistics.
+        let runs_key = (self.runs_refresh, run_name.clone());
+        if self.runs.wants(&runs_key) {
+            let r = run_name.clone();
+            self.runs.start(runs_key.clone(), move || Ok(c2_census::analyze::run_history_using(&r)));
         }
         self.want_stats();
         let off = self.utc_offset;
@@ -2204,13 +2262,14 @@ impl App {
                     ui.spinner();
                 }
             });
-            let runs = match self.runs.get(&self.runs_refresh) {
-                Some(Ok(runs)) => runs,
-                Some(Err(e)) => {
+            // The list for this run, else (for the moment it takes to read) the last one.
+            let runs = match &self.runs.done {
+                Some((k, Err(e))) if *k == runs_key => {
                     ui.colored_label(egui::Color32::LIGHT_RED, e);
                     return;
                 }
-                None => {
+                Some((_, Ok(runs))) => runs,
+                _ => {
                     ui.label("Reading the census output…");
                     return;
                 }
@@ -2221,14 +2280,10 @@ impl App {
                 }
                 ui.end_row();
                 for r in runs {
-                    let mut name = r.name.clone();
-                    // The run this window shows (the Run name box), not just the default one.
-                    if r.name == run_name {
-                        name.push_str("  (in use)");
-                    }
-                    if r.from_update {
-                        name.push_str("  (new data)");
-                    }
+                    // "in use": the run this window shows (the Run name box); "default": the one
+                    // the app and `c2` open when no run is named (census/LATEST).
+                    let marks: Vec<&str> = [(r.in_use, "in use"), (r.latest, "default"), (r.from_update, "new data")].iter().filter(|m| m.0).map(|m| m.1).collect();
+                    let name = if marks.is_empty() { r.name.clone() } else { format!("{}  ({})", r.name, marks.join(", ")) };
                     ui.label(name);
                     ui.label(&r.kind);
                     ui.label(&r.data_last_day);
@@ -2292,6 +2347,9 @@ impl App {
                 }
             };
             let lt = &st.lagged;
+            if let Some(e) = &st.stock_list_error {
+                ui.colored_label(YELLOW_NOTE, format!("The run's stock names can't be recovered, so the per-stock charts below have counts but no names: {e}"));
+            }
             egui::Grid::new("st_head").striped(true).show(ui, |ui| {
                 let mut row = |k: &str, v: String| {
                     ui.label(k);
@@ -2313,7 +2371,15 @@ impl App {
                     "significant (passed the false-discovery test)",
                     format!("{} relationships: {} distinct pairs, {} stocks, in {} of {} matrices", commas(lt.significant as f64), commas(st.significant_pairs as f64), commas(st.significant_stocks as f64), commas(st.fdr_matrices as f64), commas(lt.matrices as f64)),
                 );
-                row("the same test run on pure chance fired in", format!("{} matrices (close to the line above means the 'significant' ones are mostly chance too)", st.placebo_matrices));
+                row(
+                    "the same test run on pure chance fired in",
+                    if st.placebo_recorded {
+                        format!("{} matrices (close to the line above means the 'significant' ones are mostly chance too)", st.placebo_matrices)
+                    } else {
+                        // Older runs' summaries have no column for it: 0 would be a false count.
+                        "not recorded by this run (it was made before the census kept this count)".to_string()
+                    },
+                );
             });
             ui.add_space(6.0);
             let ratio = |t: &c2_census::analyze::Tally| t.real[1] / t.null[1].max(1.0);
@@ -2801,9 +2867,11 @@ impl App {
         let costs: Vec<f64> = self.costs.split(',').filter_map(|c| c.trim().parse().ok()).collect();
         let key: HoldoutKey = (run.clone(), self.family, start.clone(), picks, rebalance, self.costs.clone(), random);
         self.holdout.start(key, move || {
-            // This run's plan (built if the slot holds another run's): its own correlation periods
-            // and task numbering, by which its records are looked up.
-            let plan = plan_for_run(&slot, &store, &run, &dir)?;
+            // This run's plan (`Plan::for_run`, built if the slot holds another run's): its own
+            // correlation periods, task numbering and stock ids, by which its records are looked
+            // up. The holdout refuses any other plan (e.g. a `Plan::new` one after a store rebuild).
+            let rp = plan_for_run(&slot, &store, &run, &dir)?;
+            let plan = &rp.plan;
             let opt = Options {
                 family,
                 rebalance,
@@ -2815,7 +2883,7 @@ impl App {
                 cash: 10_000.0,
                 all_windows: false,
             };
-            c2_census::holdout::holdout(&store, &plan, &dir, &opt).map_err(|e| format!("{e:#}"))
+            c2_census::holdout::holdout(&store, plan, &dir, &opt).map_err(|e| format!("{e:#}"))
         });
     }
 
