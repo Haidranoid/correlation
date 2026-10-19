@@ -111,6 +111,11 @@ pub struct Summary {
 /// malformed line is an error.
 pub fn read_summary(path: &Path) -> Result<Summary> {
     let text = std::fs::read_to_string(path).with_context(|| format!("read {}", path.display()))?;
+    parse_summary(&text, &path.display().to_string())
+}
+
+/// `read_summary` of a summary's text; `what` names it in errors.
+fn parse_summary(text: &str, what: &str) -> Result<Summary> {
     let complete = match text.rfind('\n') {
         Some(k) => &text[..=k],
         None => "",
@@ -119,7 +124,7 @@ pub fn read_summary(path: &Path) -> Result<Summary> {
     let Some(header) = lines.next() else { return Ok(Summary::default()) };
     let names: Vec<&str> = header.split(',').collect();
     let col = |n: &str| names.iter().position(|h| *h == n);
-    let need = |n: &str| col(n).with_context(|| format!("{}: its header has no {n} column", path.display()));
+    let need = |n: &str| col(n).with_context(|| format!("{what}: its header has no {n} column"));
     let (cw, ch1, ch2, clag, cn, cobs) = (need("window")?, need("h1")?, need("h2")?, need("lag")?, need("stocks")?, need("obs")?);
     let real = [need("real_z3")?, need("real_z4")?, need("real_z5")?];
     let null = [need("null_z3")?, need("null_z4")?, need("null_z5")?];
@@ -129,7 +134,7 @@ pub fn read_summary(path: &Path) -> Result<Summary> {
         .enumerate()
         .map(|(k, line)| {
             let f: Vec<&str> = line.split(',').collect();
-            let bad = || anyhow!("{} line {}: {line:?} doesn't fit its header", path.display(), k + 2);
+            let bad = || anyhow!("{what} line {}: {line:?} doesn't fit its header", k + 2);
             let field = |c: usize| f.get(c).copied().ok_or_else(bad);
             let int = |c: usize| field(c)?.parse::<usize>().map_err(|_| bad());
             let num = |c: usize| field(c)?.parse::<f64>().map_err(|_| bad());
@@ -1182,17 +1187,11 @@ mod tests {
 
     #[test]
     fn summaries_read_by_header() {
-        let dir = std::env::temp_dir().join(format!("c2-summary-test-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
         let old = "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null,screened,truncated\n\
                    4,1,1,0,300,252,7336,2990,1574,261.0,9.7,0.3,,100,50,100,0\n\
                    4,1,1,1,300,251,3000,20,1,2900.5,19.0,0.7,0.2817,100,50,100,0\n";
         let new = format!("{}4,1,1,1,300,251,3000,20,1,2900.5,19.0,0.7,0.2817,120,50,140,0,0.3012\n4,1,1,2,300,250,1,0,0,1.0,0,0,,100,50,100,0,\n4,1,1,3,30", crate::run::SUMMARY_HEADER);
-        let (a, b, c) = (dir.join("a.csv"), dir.join("b.csv"), dir.join("c.csv"));
-        std::fs::write(&a, old).unwrap();
-        std::fs::write(&b, new).unwrap();
-        std::fs::write(&c, "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null\n4,1,1,x,1,1,1,1,1,1,1,1,,1,1\n").unwrap();
-        let (sa, sb) = (read_summary(&a).unwrap(), read_summary(&b).unwrap());
+        let (sa, sb) = (parse_summary(old, "a").unwrap(), parse_summary(&new, "b").unwrap());
         assert!(!sa.placebo_recorded && sb.placebo_recorded);
         assert_eq!(sa.lines.len(), 2);
         let l = &sa.lines[1];
@@ -1201,7 +1200,13 @@ mod tests {
         // The cut-off last line (no newline) is ignored; an empty placebo field did not fire.
         assert_eq!(sb.lines.len(), 2);
         assert_eq!((sb.lines[0].placebo_fdr_r, sb.lines[0].stored_real, sb.lines[1].placebo_fdr_r, sb.lines[1].fdr_r), (Some(0.3012), 120, None, None));
-        assert!(read_summary(&c).is_err());
-        std::fs::remove_dir_all(&dir).unwrap();
+        // A header alone, or nothing at all: no matrices.
+        assert!(parse_summary(crate::run::SUMMARY_HEADER, "h").unwrap().lines.is_empty());
+        assert!(parse_summary("", "e").unwrap().lines.is_empty());
+        // A field that isn't a number, a line with too few fields, a header without a needed column.
+        let short = "window,h1,h2,lag,stocks,obs,real_z3,real_z4,real_z5,null_z3,null_z4,null_z5,fdr_r,stored_real,stored_null\n";
+        assert!(parse_summary(&format!("{short}4,1,1,x,1,1,1,1,1,1,1,1,,1,1\n"), "c").is_err());
+        assert!(parse_summary(&format!("{short}4,1,1,1,1,1\n"), "d").is_err());
+        assert!(parse_summary("window,h1,h2,lag\n4,1,1,1\n", "f").is_err());
     }
 }
