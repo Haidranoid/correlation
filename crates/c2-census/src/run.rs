@@ -9,6 +9,8 @@
 //!   progress.log       "task window rec_bytes csv_bytes" per committed window
 //!   status.json        progress and ETA, rewritten every few seconds
 //!   control            "run" or "pause" (`c2 census pause|resume`)
+//!   symbols.tsv        copy of the store's symbol table the run's store ids refer to
+//!   lock, pid          held / written by the one process running the census (`running_pid`)
 //!
 //! A unit of work is one window of one task (all its lags). The GPU thread computes it and hands
 //! each lag's histograms and screened entries to the finisher thread, which recomputes stored
@@ -24,11 +26,12 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc;
 use std::time::{Duration, Instant};
 
-use anyhow::{Result, bail};
+use anyhow::{Context, Result, anyhow, bail};
 use c2_data::{Calendar, Store};
 use rayon::prelude::*;
 
 use crate::grid::{self, Config, Task, Window};
+use crate::meta::{self, RunMeta};
 use crate::variable::{self, Variable};
 
 pub const RECORD_BYTES: usize = 52;
@@ -106,6 +109,15 @@ pub fn latest_run() -> String {
     std::fs::read_to_string(c2_data::data_dir().join("census/LATEST")).map(|s| s.trim().to_string()).ok().filter(|s| !s.is_empty()).unwrap_or_else(|| "main".into())
 }
 
+/// Makes `name` the default census (`census/LATEST`). The only writer of LATEST; atomic, so a
+/// reader never sees it empty or half written.
+pub fn set_latest(name: &str) -> Result<()> {
+    anyhow::ensure!(!name.trim().is_empty() && !name.contains('/'), "{name:?} is not a census name");
+    let dir = c2_data::data_dir().join("census");
+    std::fs::create_dir_all(&dir)?;
+    write_atomic(&dir.join("LATEST"), name.trim())
+}
+
 pub fn run_dir(name: &str) -> PathBuf {
     c2_data::data_dir().join("census").join(name)
 }
@@ -120,9 +132,14 @@ pub struct Plan {
     pub tasks: Vec<Task>,
     /// Estimated cost of each (task, window position).
     pub cost: Vec<Vec<f64>>,
+    /// Store id as the run's records hold it -> variable column, and back. The identity on
+    /// `var.ids` for a new run; through tickers for `Plan::for_run`.
+    run_col: HashMap<u32, usize>,
+    col_run: Vec<Option<u32>>,
 }
 
 impl Plan {
+    /// The plan for starting (or resuming) a run with `cfg` on this store.
     pub fn new(store: &Store, cfg: Config) -> Result<Plan> {
         let cal = Calendar::trading_days(store)?;
         let var = variable::production(store, &cal, cfg.start)?;
@@ -130,32 +147,106 @@ impl Plan {
         let windows = grid::windows(&cfg, first_row, var.t);
         let universes: Vec<Vec<usize>> = windows.par_iter().map(|w| universe(&var, w)).collect();
         let tasks = grid::tasks(&cfg, &windows);
-        let cost = tasks
+        let cost = unit_costs(&cfg, &windows, &universes, &tasks);
+        let col_run: Vec<Option<u32>> = var.ids.iter().map(|&id| Some(id as u32)).collect();
+        let run_col = var.ids.iter().enumerate().map(|(c, &id)| (id as u32, c)).collect();
+        Ok(Plan { cfg, var, windows, universes, tasks, cost, run_col, col_run })
+    }
+
+    /// The plan of an existing run, rebuilt on today's store: the census variable from the
+    /// current store with the run's settings, and the run's own correlation periods (by date),
+    /// universes (`universes.bin`, translated to today's variable columns) and tasks. So
+    /// `windows[id]` and `tasks[id]` mean what they meant in that run, and
+    /// `column_of_run_id` turns a record's leader or target into a variable column.
+    /// Errors, naming the problem, if the run can't be reproduced on today's store: its task
+    /// list or stock list is unknown, the census variable starts on a different day, a
+    /// correlation period isn't covered exactly, or one of its stocks is missing.
+    pub fn for_run(store: &Store, meta: &RunMeta) -> Result<Plan> {
+        let name = &meta.name;
+        let tasks = meta.tasks()?.to_vec();
+        let stocks = meta.stocks()?;
+        let ids = meta.id_map(store)?;
+        let cfg = meta.cfg.clone();
+        let cal = Calendar::trading_days(store)?;
+        let var = variable::production(store, &cal, cfg.start)?;
+        // The variable's warm-up rows fix the phase of its 21-day liquidity re-checks, so a
+        // different first day (older code) means different values throughout.
+        let first = meta.manifest["variable_days"][0].as_str().unwrap_or("unrecorded");
+        let today = c2_data::date_string(var.days[0]);
+        if first != today {
+            bail!("census {name} was made with a census variable starting {first}; today's starts {today}, so its values can't be reproduced");
+        }
+        let windows = meta
+            .windows
             .iter()
-            .map(|t| {
-                t.windows
-                    .iter()
-                    .map(|&wid| {
-                        let (w, n) = (&windows[wid], universes[wid].len() as f64);
-                        let rows: usize = grid::lags(t.h2)
-                            .into_iter()
-                            .map(|k| grid::observations(w.end - w.start, t.h1, t.h2, k))
-                            .filter(|&m| m >= cfg.min_obs)
-                            // Each product also pays a fixed cost (writing and scanning the n x n result)
-                            // worth about 2,000 rows of INT8 arithmetic on the RTX 5080 (test-results.md, M0).
-                            .map(|m| m.div_ceil(32) * 32 + 2000)
-                            .sum();
-                        n * n * rows as f64 * (1 + cfg.nulls) as f64
-                    })
-                    .collect()
+            .map(|w| {
+                let rows = meta.window_rows_in(&var.days, w.id).ok_or_else(|| {
+                    let what = if w.length == 0 { "full-history".to_string() } else { format!("{}-day", w.length) };
+                    anyhow!("census {name}: its {what} correlation period {}..{} is not covered exactly by today's price data, so it can't be reproduced",
+                        c2_data::date_string(w.first), c2_data::date_string(w.last))
+                })?;
+                Ok(Window { id: w.id, length: w.length, start: rows.start, end: rows.end })
             })
-            .collect();
-        Ok(Plan { cfg, var, windows, universes, tasks, cost })
+            .collect::<Result<Vec<_>>>()?;
+        let col_of: HashMap<usize, usize> = var.ids.iter().enumerate().map(|(c, &id)| (id, c)).collect();
+        let universes = meta
+            .universes
+            .iter()
+            .zip(&meta.windows)
+            .map(|(u, w)| {
+                u.iter()
+                    .map(|&rid| {
+                        let ticker = stocks.ticker(rid).unwrap_or("?");
+                        let period = format!("{}..{}", c2_data::date_string(w.first), c2_data::date_string(w.last));
+                        let cur = ids.current(rid).ok_or_else(|| anyhow!("census {name}: {ticker}, one of the stocks of its correlation period {period}, is not in today's price store"))?;
+                        col_of.get(&cur).copied().ok_or_else(|| anyhow!("census {name}: {ticker}, one of the stocks of its correlation period {period}, is no longer among the census's stocks"))
+                    })
+                    .collect::<Result<Vec<usize>>>()
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let cost = unit_costs(&cfg, &windows, &universes, &tasks);
+        let col_run: Vec<Option<u32>> = var.ids.iter().map(|&id| ids.run(id)).collect();
+        let run_col = col_run.iter().enumerate().filter_map(|(c, r)| r.map(|r| (r, c))).collect();
+        Ok(Plan { cfg, var, windows, universes, tasks, cost, run_col, col_run })
     }
 
     pub fn total_cost(&self) -> f64 {
         self.cost.iter().flatten().sum()
     }
+
+    /// Variable column of a stock as the run's records name it (`Record::leader` / `target`).
+    pub fn column_of_run_id(&self, run_id: u32) -> Option<usize> {
+        self.run_col.get(&run_id).copied()
+    }
+
+    /// The run's store id of a variable column (what its records call that stock).
+    pub fn run_id_of_column(&self, col: usize) -> Option<u32> {
+        self.col_run.get(col).copied().flatten()
+    }
+}
+
+/// Estimated cost of each (task, window position).
+fn unit_costs(cfg: &Config, windows: &[Window], universes: &[Vec<usize>], tasks: &[Task]) -> Vec<Vec<f64>> {
+    tasks
+        .iter()
+        .map(|t| {
+            t.windows
+                .iter()
+                .map(|&wid| {
+                    let (w, n) = (&windows[wid], universes[wid].len() as f64);
+                    let rows: usize = grid::lags(t.h2)
+                        .into_iter()
+                        .map(|k| grid::observations(w.end - w.start, t.h1, t.h2, k))
+                        .filter(|&m| m >= cfg.min_obs)
+                        // Each product also pays a fixed cost (writing and scanning the n x n result)
+                        // worth about 2,000 rows of INT8 arithmetic on the RTX 5080 (test-results.md, M0).
+                        .map(|m| m.div_ceil(32) * 32 + 2000)
+                        .sum();
+                    n * n * rows as f64 * (1 + cfg.nulls) as f64
+                })
+                .collect()
+        })
+        .collect()
 }
 
 /// A window's stocks: >= 90% of days with a census value, and over the window's last 252 days
@@ -181,31 +272,52 @@ fn universe(var: &Variable, w: &Window) -> Vec<usize> {
 }
 
 fn config_text(cfg: &Config) -> String {
-    format!(
-        "horizons={:?} lengths={:?} full_history={} step={} start={} min_obs={} nulls={} keep_real={} keep_null={} floor_z={} fdr_q={}",
-        cfg.horizons, cfg.lengths, cfg.full_history, cfg.step, c2_data::date_string(cfg.start), cfg.min_obs, cfg.nulls,
-        cfg.keep_real, cfg.keep_null, cfg.floor_z, cfg.fdr_q
-    )
+    cfg.to_text()
 }
 
-/// FNV-1a, for fingerprinting files in the manifest.
-fn fnv(bytes: &[u8]) -> u64 {
-    bytes.iter().fold(0xcbf2_9ce4_8422_2325u64, |h, &b| (h ^ b as u64).wrapping_mul(0x100_0000_01b3))
-}
-
-fn write_atomic(path: &Path, text: &str) -> Result<()> {
-    let tmp = path.with_extension("tmp");
-    std::fs::write(&tmp, text)?;
-    std::fs::rename(tmp, path)?;
+/// Writes `bytes` to `path` through a temporary file in the same directory and a rename, so
+/// readers see the old or the new content, never a part.
+pub(crate) fn write_atomic_bytes(path: &Path, bytes: &[u8]) -> Result<()> {
+    let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("file");
+    let tmp = path.with_file_name(format!(".{name}.{}.tmp", std::process::id()));
+    std::fs::write(&tmp, bytes).with_context(|| format!("write {}", tmp.display()))?;
+    std::fs::rename(&tmp, path).with_context(|| format!("rename {} to {}", tmp.display(), path.display()))?;
     Ok(())
 }
 
-/// Writes manifest, windows and universes on first start; on resume checks the config matches.
+fn write_atomic(path: &Path, text: &str) -> Result<()> {
+    write_atomic_bytes(path, text.as_bytes())
+}
+
+/// What a run directory's `windows.csv` and `universes.bin` hold for a plan.
+fn layout(plan: &Plan) -> (String, Vec<u8>) {
+    let mut w = String::from("id,length,first,last,stocks\n");
+    let mut u = Vec::new();
+    for (win, uni) in plan.windows.iter().zip(&plan.universes) {
+        w.push_str(&format!("{},{},{},{},{}\n", win.id, win.length, c2_data::date_string(plan.var.days[win.start]),
+                            c2_data::date_string(plan.var.days[win.end - 1]), uni.len()));
+        u.extend_from_slice(&(uni.len() as u32).to_le_bytes());
+        for &j in uni {
+            u.extend_from_slice(&(plan.var.ids[j] as u32).to_le_bytes());
+        }
+    }
+    (w, u)
+}
+
+fn run_name(dir: &Path) -> String {
+    dir.file_name().and_then(|n| n.to_str()).unwrap_or("?").to_string()
+}
+
+/// Writes the run's description on first start (the manifest last, so a manifest means the
+/// rest is there); on resume refuses unless the plan is the run's own: same settings, price
+/// data, task list, correlation periods and universes.
 fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
     std::fs::create_dir_all(dir.join("tasks"))?;
+    let name = run_name(dir);
     let manifest = dir.join("manifest.json");
     let cfg = config_text(&plan.cfg);
     let days = serde_json::json!([c2_data::date_string(plan.var.days[0]), c2_data::date_string(*plan.var.days.last().unwrap())]);
+    let (windows_csv, universes_bin) = layout(plan);
     if manifest.exists() {
         let old: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&manifest)?)?;
         if old["config"].as_str() != Some(cfg.as_str()) {
@@ -215,14 +327,40 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
         // would file records under the wrong windows.
         if old["store_rows"].as_u64() != Some(store.rows() as u64) || old["variable_days"] != days || old["windows"].as_u64() != Some(plan.windows.len() as u64) {
             bail!(
-                "the price data changed since census {} started (rows {} -> {}, days {} -> {}, windows {} -> {}); \
+                "the price data changed since census {} started (rows {} -> {}, days {} -> {}, correlation periods {} -> {}); \
                  start a new run with a different --name",
                 dir.display(), old["store_rows"], store.rows(), old["variable_days"], days, old["windows"], plan.windows.len()
             );
         }
+        // Progress is also recorded by task id, and what a task id holds depends on the code that
+        // made the run (the pairing of move lengths changed once already): the run's own task list
+        // must be this plan's, or results would be filed under the wrong move lengths.
+        let fresh = || format!("start a new run with a different --name (census {name} itself stays readable)");
+        let meta = RunMeta::load(dir).with_context(|| format!("can't check census {name} before resuming it; {}", fresh()))?;
+        let theirs = meta.tasks().with_context(|| format!("can't check which move lengths census {name}'s results files hold, so resuming could mix them; {}", fresh()))?;
+        if let Some(id) = (0..theirs.len().max(plan.tasks.len())).find(|&id| {
+            let key = |t: &Task| (t.h1, t.h2, t.length, t.windows.clone());
+            theirs.get(id).map(key) != plan.tasks.get(id).map(key)
+        }) {
+            let say = |t: Option<&Task>| t.map(|t| meta::describe_task(t.h1, t.h2, t.length)).unwrap_or_else(|| "nothing".into());
+            bail!(
+                "census {name} numbers its results files differently from this version ({} files there, {} now; t{id} holds {} there but {} now), so resuming would mix them; {}",
+                theirs.len(), plan.tasks.len(), say(theirs.get(id)), say(plan.tasks.get(id)), fresh()
+            );
+        }
+        if std::fs::read_to_string(dir.join("windows.csv")).ok().as_deref() != Some(windows_csv.as_str())
+            || std::fs::read(dir.join("universes.bin")).ok().as_deref() != Some(universes_bin.as_slice())
+        {
+            bail!("census {name}'s correlation periods or their stocks differ from what this version would use, so resuming would mix them; {}", fresh());
+        }
         return Ok(());
     }
-    let symbols = std::fs::read(c2_data::data_dir().join("store/symbols.tsv")).unwrap_or_default();
+    // The symbol table the run's store ids refer to: saved with the run, and fingerprinted.
+    let symbols = std::fs::read(c2_data::data_dir().join("store/symbols.tsv")).context("read the store's symbols.tsv")?;
+    let same = std::str::from_utf8(&symbols).ok().and_then(|t| c2_data::store::parse_symbols(t).ok()).is_some_and(|s| {
+        s.len() == store.symbols.len() && s.iter().zip(&store.symbols).all(|(a, b)| a.ticker == b.ticker && a.exchange == b.exchange)
+    });
+    anyhow::ensure!(same, "the store's symbols.tsv no longer matches the open store (was it rebuilt just now?); start the census again");
     let git = std::process::Command::new("git")
         .args(["-C", env!("CARGO_MANIFEST_DIR"), "rev-parse", "HEAD"])
         .output()
@@ -239,30 +377,23 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
         "git_dirty": dirty,
         "store_symbols": store.symbols.len(),
         "store_rows": store.rows(),
-        "symbols_tsv_fnv64": format!("{:016x}", fnv(&symbols)),
+        "symbols_tsv_fnv64": format!("{:016x}", meta::fnv64(&symbols)),
         "variable_days": days,
         "variable_stocks": plan.var.n,
         "windows": plan.windows.len(),
         "tasks": plan.tasks.len(),
+        // What each tasks/t<id> file holds: [A's move length, B's move length, period length].
+        "task_list": plan.tasks.iter().map(|t| [t.h1, t.h2, t.length]).collect::<Vec<_>>(),
         "git_commit": git.trim(),
         "created_unix": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH)?.as_secs(),
         "record_bytes": RECORD_BYTES,
         "variable": "market-residual daily log return / trailing 252-day residual sd (both through t-1), clipped +-5; horizon sums divided by sqrt(h)",
         "null": "sign-flip: target observations times a random +-1 shared by all stocks on that observation (keeps volatility alignment)",
     });
+    write_atomic_bytes(&dir.join("symbols.tsv"), &symbols)?;
+    write_atomic(&dir.join("windows.csv"), &windows_csv)?;
+    write_atomic_bytes(&dir.join("universes.bin"), &universes_bin)?;
     write_atomic(&manifest, &serde_json::to_string_pretty(&m)?)?;
-    let mut w = String::from("id,length,first,last,stocks\n");
-    let mut u = Vec::new();
-    for (win, uni) in plan.windows.iter().zip(&plan.universes) {
-        w.push_str(&format!("{},{},{},{},{}\n", win.id, win.length, c2_data::date_string(plan.var.days[win.start]),
-                            c2_data::date_string(plan.var.days[win.end - 1]), uni.len()));
-        u.extend_from_slice(&(uni.len() as u32).to_le_bytes());
-        for &j in uni {
-            u.extend_from_slice(&(plan.var.ids[j] as u32).to_le_bytes());
-        }
-    }
-    write_atomic(&dir.join("windows.csv"), &w)?;
-    std::fs::write(dir.join("universes.bin"), u)?;
     Ok(())
 }
 
@@ -450,12 +581,23 @@ const R_BINS: usize = 1024;
 fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut String) {
     let u = &res.unit;
     let nh = 1 + cfg.nulls;
+    // The GPU matrices are np x np; entries in padding columns (>= n) are not pairs. Their r is
+    // exactly 0 (zero data and zero stats), so they only land in the lowest |r| bin and are only
+    // pulled off the GPU when a cut-off is 0, i.e. when the matrix has fewer real pairs than it
+    // keeps. Drop them before choosing what to keep, so the counts written agree with the records.
+    let np = u.np as i64;
+    let is_pair = |&(idx, _): &(i64, f32)| ((idx % np) as usize) < u.n && ((idx / np) as usize) < u.n;
     // (lag index, entry, null?, flags)
     let mut chosen: Vec<(usize, i64, f32, bool, u8)> = Vec::new();
     for (li, (k, m, _)) in u.lags.iter().enumerate() {
         let thr = &res.thr[li * 3..li * 3 + 3];
         let (rc, nc) = (res.cnt[li * 2] as usize, res.cnt[li * 2 + 1] as usize);
-        let mut real = res.real[li * CAP_REAL..li * CAP_REAL + rc.min(CAP_REAL)].to_vec();
+        let pulled = &res.real[li * CAP_REAL..li * CAP_REAL + rc.min(CAP_REAL)];
+        let mut real: Vec<(i64, f32)> = pulled.iter().copied().filter(is_pair).collect();
+        // Entries pulled off the GPU, padding excluded. Exact unless a cut-off of 0 met a matrix
+        // too big for the cap, which needs fewer than keep_real pairs with |r| >= 1/1024 among
+        // more than 64 stocks (with real data a cut-off of 0 means 10 stocks or fewer).
+        let screened = rc - (pulled.len() - real.len());
         real.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()));
         let fdr = if *k > 0 && thr[2] <= 1.0 { Some(thr[2]) } else { None };
         let mut stored = 0;
@@ -472,7 +614,7 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
             chosen.push((li, idx, r8, false, flags));
             stored += 1;
         }
-        let mut null = res.null[li * CAP_NULL..li * CAP_NULL + nc.min(CAP_NULL)].to_vec();
+        let mut null: Vec<(i64, f32)> = res.null[li * CAP_NULL..li * CAP_NULL + nc.min(CAP_NULL)].iter().copied().filter(is_pair).collect();
         null.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()));
         let stored_null = null.len().min(cfg.keep_null);
         for &(idx, r8) in null.iter().take(cfg.keep_null) {
@@ -486,15 +628,12 @@ fn finish_unit(res: &UnitResult, cfg: &Config, out: &mut Vec<u8>, csv: &mut Stri
             "{},{},{},{},{},{},{},{},{},{:.1},{:.1},{:.1},{},{},{},{},{},{}\n",
             res.window, u.h1, u.h2, k, u.n, m,
             tail(real_h, 3.0, *m), tail(real_h, 4.0, *m), tail(real_h, 5.0, *m), null_mean(3.0), null_mean(4.0), null_mean(5.0),
-            fdr.map(|t| format!("{t:.4}")).unwrap_or_default(), stored, stored_null, rc, u8::from(rc > CAP_REAL),
+            fdr.map(|t| format!("{t:.4}")).unwrap_or_default(), stored, stored_null, screened, u8::from(rc > CAP_REAL),
             placebo.map(|t| format!("{t:.4}")).unwrap_or_default(),
         ));
     }
-    let np = u.np as i64;
     let records: Vec<Record> = chosen
         .par_iter()
-        // Padding columns (>= n) are never real pairs.
-        .filter(|&&(_, idx, _, _, _)| ((idx % np) as usize) < u.n && ((idx / np) as usize) < u.n)
         .map(|&(li, idx, r8, null, flags)| {
             let (k, m, seeds) = &u.lags[li];
             let (i, j) = ((idx % np) as usize, (idx / np) as usize);
@@ -541,8 +680,11 @@ fn write_status(dir: &Path, state: &str, done_units: usize, total_units: usize, 
 }
 
 /// Runs (or resumes) the census in `dir` until finished or `stop` is set. Progress lines go to
-/// `log` every ~15 s.
+/// `log` every ~15 s. Holds `<dir>/lock` throughout, so a second writer on the same run fails
+/// at once ("census X is already running (pid N)").
 pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn Fn(&str) + Sync)) -> Result<()> {
+    std::fs::create_dir_all(dir)?;
+    let _lock = RunLock::acquire(dir)?;
     prepare_dir(dir, plan, store)?;
     let progress = read_progress(dir)?;
     let total_units: usize = plan.tasks.iter().map(|t| t.windows.len()).sum();
@@ -633,6 +775,136 @@ pub fn run(store: &Store, plan: &Plan, dir: &Path, stop: &AtomicBool, log: &(dyn
         let fin = finisher.join().map_err(|_| anyhow::anyhow!("finisher thread panicked"))?;
         worker.and(fin)
     })
+}
+
+/// The one writer's hold on a run directory: an exclusive `flock` on `<dir>/lock` for as long
+/// as this lives. The holder's pid is written into the lock file ("pid\n", read back only when
+/// complete) and into `<dir>/pid` (for older readers). Dropping it removes `pid` if it is still
+/// ours; the lock goes with the file.
+struct RunLock {
+    file: File,
+    pid_path: PathBuf,
+}
+
+impl RunLock {
+    fn acquire(dir: &Path) -> Result<RunLock> {
+        let name = run_name(dir);
+        let path = dir.join("lock");
+        let mut file = OpenOptions::new().read(true).write(true).create(true).truncate(false).open(&path).with_context(|| format!("open {}", path.display()))?;
+        // A status check holds the lock for an instant while it tests it, so retry briefly.
+        let mut tries = 0;
+        loop {
+            match file.try_lock() {
+                Ok(()) => break,
+                Err(std::fs::TryLockError::WouldBlock) if tries < 10 => {
+                    tries += 1;
+                    std::thread::sleep(Duration::from_millis(20));
+                }
+                Err(std::fs::TryLockError::WouldBlock) => {
+                    return Err(match holder_pid(dir) {
+                        Some(pid) => anyhow!("census {name} is already running (pid {pid})"),
+                        None => anyhow!("census {name} is already running (another process holds {})", path.display()),
+                    });
+                }
+                Err(std::fs::TryLockError::Error(e)) => return Err(e).with_context(|| format!("lock {}", path.display())),
+            }
+        }
+        // Older c2 binaries take no lock but leave their pid.
+        if let Some(pid) = legacy_pid(dir) {
+            bail!("census {name} is already running (pid {pid})");
+        }
+        let pid = std::process::id();
+        file.set_len(0)?;
+        file.write_all(format!("{pid}\n").as_bytes())?;
+        file.sync_data()?;
+        let pid_path = dir.join("pid");
+        write_atomic(&pid_path, &pid.to_string())?;
+        Ok(RunLock { file, pid_path })
+    }
+}
+
+impl Drop for RunLock {
+    fn drop(&mut self) {
+        // Still holding the lock: clear the pid so no later reader can take it for a holder's.
+        let _ = self.file.set_len(0);
+        if std::fs::read_to_string(&self.pid_path).is_ok_and(|p| p.trim() == std::process::id().to_string()) {
+            let _ = std::fs::remove_file(&self.pid_path);
+        }
+    }
+}
+
+/// True when some process holds `<dir>/lock` (tested by trying to take it for an instant).
+fn lock_held(dir: &Path) -> bool {
+    let Ok(f) = File::open(dir.join("lock")) else { return false };
+    matches!(f.try_lock(), Err(std::fs::TryLockError::WouldBlock))
+}
+
+/// `pid` from `path` if it is a live `c2*` process that started before `path` was last written
+/// (so not a pid reused since). `path` holds "pid", or "pid\n" when `complete_line`.
+fn live_c2_pid(path: &Path, complete_line: bool) -> Option<u32> {
+    let text = std::fs::read_to_string(path).ok()?;
+    let text = if complete_line { text.strip_suffix('\n')? } else { text.trim() };
+    let pid: u32 = text.parse().ok().filter(|&p| p > 0)?;
+    let exe = std::fs::read_link(format!("/proc/{pid}/exe")).ok()?;
+    if !exe.file_name()?.to_str()?.starts_with("c2") {
+        return None;
+    }
+    let written = std::fs::metadata(path).ok()?.modified().ok()?.duration_since(std::time::UNIX_EPOCH).ok()?.as_secs_f64();
+    match process_start_unix(pid) {
+        Some(started) if started > written + 2.0 => None,
+        _ => Some(pid),
+    }
+}
+
+/// The pid of the process holding `<dir>/lock`, as it wrote it into the lock file (else into
+/// `<dir>/pid`), checked to be a live c2 process that wrote it.
+fn holder_pid(dir: &Path) -> Option<u32> {
+    for _ in 0..10 {
+        if let Some(pid) = live_c2_pid(&dir.join("lock"), true) {
+            return Some(pid);
+        }
+        // Just locked, pid not written yet.
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    live_c2_pid(&dir.join("pid"), false)
+}
+
+/// Seconds since 1970 at which process `pid` started (Linux: /proc/stat's boot time plus the
+/// process's start in clock ticks, which /proc reports at 100 per second).
+fn process_start_unix(pid: u32) -> Option<f64> {
+    let stat = std::fs::read_to_string(format!("/proc/{pid}/stat")).ok()?;
+    // Fields after the command name, which is in parentheses and may contain spaces; the start
+    // time is field 22 overall, the 20th after the name.
+    let after = &stat[stat.rfind(')')? + 1..];
+    let ticks: f64 = after.split_whitespace().nth(19)?.parse().ok()?;
+    let boot: f64 = std::fs::read_to_string("/proc/stat").ok()?.lines().find_map(|l| l.strip_prefix("btime "))?.trim().parse().ok()?;
+    Some(boot + ticks / 100.0)
+}
+
+/// A live `c2*` process other than this one, named in `<dir>/pid` and started before the file
+/// was written: how runs started by older binaries, which take no lock, show they are running.
+fn legacy_pid(dir: &Path) -> Option<u32> {
+    live_c2_pid(&dir.join("pid"), false).filter(|&pid| pid != std::process::id())
+}
+
+/// The pid of the process running the census in `dir`, if one is: whoever holds `<dir>/lock`
+/// (taken by `run` for its whole duration), or, for runs started by older binaries, a live
+/// `c2*` process named in `<dir>/pid`. Never returns 0.
+pub fn running_pid(dir: &Path) -> Option<u32> {
+    if lock_held(dir) { holder_pid(dir) } else { legacy_pid(dir) }
+}
+
+/// Names of the census runs that are running now (see `running_pid`), sorted.
+pub fn running_runs() -> Vec<String> {
+    let Ok(entries) = std::fs::read_dir(c2_data::data_dir().join("census")) else { return Vec::new() };
+    let mut out: Vec<String> = entries
+        .flatten()
+        .map(|e| e.path())
+        .filter(|p| p.is_dir() && running_pid(p).is_some())
+        .filter_map(|p| p.file_name().and_then(|n| n.to_str()).map(String::from))
+        .collect();
+    out.sort();
+    out
 }
 
 /// cuBLASLt's INT8 kernels need matrix widths that are multiples of 4; use 16.
@@ -798,4 +1070,60 @@ fn gpu_worker(
 #[cfg(not(feature = "cuda"))]
 fn gpu_worker(_: &Plan, _: mpsc::Receiver<Prepared>, _: mpsc::SyncSender<UnitResult>, _: &AtomicBool, _: &Path, _: &(dyn Fn(&str) + Sync)) -> Result<()> {
     bail!("this build has no GPU support")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A matrix of 5 stocks on a 16-wide GPU matrix: every cut-off is 0, so the GPU hands back
+    /// all 240 entries, 220 of them padding with r = 0. The counts written must match the
+    /// records: 20 real pairs and 20 null pairs, not 100 and 50 padded with non-pairs.
+    #[test]
+    fn padding_never_counts_as_stored() {
+        let cfg = Config::smoke();
+        let (n, w) = (5usize, 40usize);
+        let mut prefix = vec![0f64; (w + 1) * n];
+        for j in 0..n {
+            for r in 0..w {
+                let v = ((r * 7 + j * 13) % 11) as f64 - 5.0;
+                prefix[j * (w + 1) + r + 1] = prefix[j * (w + 1) + r] + v;
+            }
+        }
+        let lags = vec![(0, 40, vec![3, 5, 7]), (1, 39, vec![9, 11, 13])];
+        let unit = UnitData { h1: 1, h2: 1, w, n, np: pad_width(n), prefix, ids: vec![10, 11, 12, 13, 14], lags };
+        let np = unit.np as i64;
+        let all: Vec<(i64, f32)> = (0..np * np)
+            .filter(|&idx| idx % np != idx / np)
+            .map(|idx| (idx, if idx % np < n as i64 && idx / np < n as i64 { 0.1 + (idx % 7) as f32 * 0.01 } else { 0.0 }))
+            .collect();
+        assert_eq!(all.len(), 240);
+        let block = |cap: usize| -> Vec<(i64, f32)> {
+            let mut v = vec![(0i64, 0f32); 2 * cap];
+            for li in 0..2 {
+                v[li * cap..li * cap + all.len()].copy_from_slice(&all);
+            }
+            v
+        };
+        let nh = 1 + cfg.nulls;
+        let res = UnitResult {
+            task: 0, window: 3, pos: 0, gpu_ms: 0.0, unit: Arc::new(unit),
+            hist: vec![0; 2 * nh * R_BINS],
+            thr: vec![0.0, 0.0, 2.0, 0.0, 0.0, 2.0],
+            cnt: vec![240, 240, 240, 240],
+            real: block(CAP_REAL),
+            null: block(CAP_NULL),
+        };
+        let (mut out, mut csv) = (Vec::new(), String::new());
+        finish_unit(&res, &cfg, &mut out, &mut csv);
+        let recs: Vec<Record> = out.chunks_exact(RECORD_BYTES).map(Record::from_bytes).collect();
+        assert!(recs.iter().all(|r| r.leader >= 10 && r.target >= 10 && r.leader != r.target));
+        for (li, line) in csv.lines().enumerate() {
+            let f: Vec<&str> = line.split(',').collect();
+            let (real, null) = (recs.iter().filter(|r| r.lag as usize == li && r.flags & FLAG_NULL == 0).count(), recs.iter().filter(|r| r.lag as usize == li && r.flags & FLAG_NULL != 0).count());
+            assert_eq!((real, null), (20, 20));
+            // stored_real, stored_null, screened
+            assert_eq!((f[13], f[14], f[15]), ("20", "20", "20"), "{line}");
+        }
+    }
 }

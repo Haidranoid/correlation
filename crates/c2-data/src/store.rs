@@ -133,6 +133,30 @@ pub fn write(dir: &Path, series: &[Series]) -> Result<()> {
     Ok(())
 }
 
+/// Parses a `symbols.tsv` (the store's, or a census run's copy of it). Line k after the header
+/// describes store id k.
+pub fn parse_symbols(tsv: &str) -> Result<Vec<SymbolInfo>> {
+    tsv.lines()
+        .skip(1)
+        .enumerate()
+        .map(|(k, line)| {
+            let f: Vec<&str> = line.split('\t').collect();
+            if f.len() < 7 || f[0].parse::<usize>().ok() != Some(k) {
+                bail!("symbols.tsv line {} is not symbol {k}: {line:?}", k + 2);
+            }
+            Ok(SymbolInfo {
+                ticker: f[1].to_string(),
+                exchange: f[2].to_string(),
+                kind: Kind::parse(f[3]),
+                first: crate::parse_date(f[4])?,
+                last: crate::parse_date(f[5])?,
+                rows: f[6].parse()?,
+                source: f.get(7).unwrap_or(&"").to_string(),
+            })
+        })
+        .collect()
+}
+
 fn bytes_of<T: Copy>(v: &[T]) -> &[u8] {
     unsafe { std::slice::from_raw_parts(v.as_ptr() as *const u8, std::mem::size_of_val(v)) }
 }
@@ -170,23 +194,7 @@ impl Store {
             bail!("price store is truncated");
         }
 
-        let tsv = std::fs::read_to_string(dir.join("symbols.tsv"))?;
-        let symbols: Vec<SymbolInfo> = tsv
-            .lines()
-            .skip(1)
-            .map(|line| {
-                let f: Vec<&str> = line.split('\t').collect();
-                Ok(SymbolInfo {
-                    ticker: f[1].to_string(),
-                    exchange: f[2].to_string(),
-                    kind: Kind::parse(f[3]),
-                    first: crate::parse_date(f[4])?,
-                    last: crate::parse_date(f[5])?,
-                    rows: f[6].parse()?,
-                    source: f.get(7).unwrap_or(&"").to_string(),
-                })
-            })
-            .collect::<Result<_>>()?;
+        let symbols = parse_symbols(&std::fs::read_to_string(dir.join("symbols.tsv"))?)?;
         if symbols.len() != n {
             bail!("symbols.tsv has {} symbols, prices.bin {n}", symbols.len());
         }
