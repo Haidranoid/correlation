@@ -131,12 +131,16 @@ pub struct ProfileRow {
     /// the sign-flip nulls, at the largest of |z| 3/4/5 below this pair's |z|).
     pub chance: f64,
     pub chance_z: u8,
-    /// The tested relationship in price terms: r x (target return volatility / leader return
-    /// volatility) over the same observations, i.e. the target's typical % move beyond the market
-    /// per 1% move of the leader. Same sign as r. None if prices are missing.
+    /// The tested relationship in price terms (`moves::move_per_pct`): r x (sd of the follower's
+    /// market-relative h2-day moves / sd of the leader's market-relative h1-day moves) on the
+    /// census's observations in the period, i.e. the follower's move relative to the market per
+    /// 1% move of the leader relative to the market. Same sign as r, and exactly the multiplier
+    /// the forecast applies to this relationship. None if fewer than 10 observations have both
+    /// moves.
     pub move_per_pct: Option<f64>,
-    /// The same relationship counted in plain terms from prices: how often the follower rose
-    /// after the leader's big moves, in the period and over the rest of the history.
+    /// The same relationship counted in plain terms from prices (raw moves of the closes the
+    /// census uses, bad prints repaired): how often the follower rose after the leader's big
+    /// moves, in the period and over the rest of the history.
     pub words: Option<Words>,
 }
 
@@ -231,122 +235,132 @@ pub fn words(pl: &[f64], pt: &[f64], h1: usize, h2: usize, lag: usize, first_e: 
 
 /// Every stored real lagged relationship involving `ticker` (as leader or target), strongest
 /// |z| first; with `significant_only`, just those that passed the false-discovery test.
+/// Builds the census variable first (under a second); `stock_profile_with` reuses one.
 pub fn stock_profile(store: &c2_data::Store, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+    let cal = c2_data::Calendar::trading_days(store)?;
+    let var = crate::variable::production(store, &cal, grid::Config::full().start)?;
+    stock_profile_with(store, &var, dir, ticker, significant_only)
+}
+
+/// `stock_profile` with the run's census variable `var` (`Plan::var`, or
+/// `variable::production` with the run's start): sizes use its market-relative returns and the
+/// plain-terms counts its repaired closes, on its rows.
+pub fn stock_profile_with(store: &c2_data::Store, var: &crate::variable::Variable, dir: &Path, ticker: &str, significant_only: bool) -> Result<Vec<ProfileRow>> {
+    use crate::forecast::{Period, period_rows, read_periods};
     use crate::run::FLAG_FDR;
     let id = store.id(ticker).ok_or_else(|| anyhow::anyhow!("{ticker} is not in the price store"))? as u32;
-    let cal = c2_data::Calendar::trading_days(store)?;
-    // Window id -> (first day, last day, calendar rows).
-    let windows: Vec<(i32, i32, std::ops::Range<usize>, bool)> = std::fs::read_to_string(dir.join("windows.csv"))?
-        .lines()
-        .skip(1)
-        .map(|l| {
-            let f: Vec<&str> = l.split(',').collect();
-            let (a, b) = (c2_data::parse_date(f[2])?, c2_data::parse_date(f[3])?);
-            Ok((a, b, cal.range(a, b), f[1] == "0"))
-        })
-        .collect::<Result<_>>()?;
+    let periods = read_periods(dir)?;
+    // Variable rows of a period for display (as before, by date range), and exactly (for sizes
+    // and counts, which are left out when its dates are not the variable's trading days).
+    let span = |p: &Period| var.days.partition_point(|&d| d < p.first)..var.days.partition_point(|&d| d <= p.last);
+    let exact: Vec<Option<std::ops::Range<usize>>> = periods.iter().map(|p| period_rows(&var.days, p)).collect();
     // The census's whole history: the full-history window, else the union of windows.
-    let (lo, hi) = windows
-        .iter()
-        .find(|w| w.3)
-        .map(|w| (w.2.start, w.2.end))
-        .unwrap_or_else(|| (windows.iter().map(|w| w.2.start).min().unwrap_or(0), windows.iter().map(|w| w.2.end).max().unwrap_or(0)));
-    let base = lo.saturating_sub(300);
-    let mut records: Vec<(Record, f64, u8)> = Vec::new();
+    let (lo, hi) = periods.iter().find(|p| p.length == 0).map(|p| (span(p).start, span(p).end)).unwrap_or_else(|| {
+        (periods.iter().map(|p| span(p).start).min().unwrap_or(0), periods.iter().map(|p| span(p).end).max().unwrap_or(0))
+    });
     let mut tasks: Vec<PathBuf> = std::fs::read_dir(dir.join("tasks"))?.flatten().map(|e| e.path()).filter(|p| p.extension().and_then(|x| x.to_str()) == Some("rec")).collect();
     tasks.sort();
-    for path in tasks {
-        let recs: Vec<Record> = read_records(&path)?
-            .into_iter()
-            .filter(|r| r.flags & FLAG_NULL == 0 && r.lag > 0 && (r.leader == id || r.target == id))
-            .filter(|r| !significant_only || r.flags & FLAG_FDR != 0)
-            .collect();
-        if recs.is_empty() {
-            continue;
-        }
-        // Chance tail counts per (window, lag) from this task's summary.
-        let mut chance: HashMap<(u32, u16), [f64; 3]> = HashMap::new();
-        if let Ok(text) = std::fs::read_to_string(path.with_extension("csv")) {
-            let mut lines = text.lines();
-            let header: Vec<&str> = lines.next().unwrap_or("").split(',').collect();
-            let col = |n: &str| header.iter().position(|h| *h == n);
-            if let (Some(cw), Some(cl), Some(c3), Some(c4), Some(c5)) = (col("window"), col("lag"), col("null_z3"), col("null_z4"), col("null_z5")) {
-                for line in lines {
-                    let f: Vec<&str> = line.split(',').collect();
-                    let num = |i: usize| f.get(i).and_then(|v| v.parse::<f64>().ok()).unwrap_or(f64::NAN);
-                    chance.insert((num(cw) as u32, num(cl) as u16), [num(c3), num(c4), num(c5)]);
-                }
-            }
-        }
-        for r in recs {
-            let (az, tails) = (r.z.abs(), chance.get(&(r.window, r.lag)).copied().unwrap_or([f64::NAN; 3]));
-            let (chance_z, chance_n) = if az >= 5.0 { (5, tails[2]) } else if az >= 4.0 { (4, tails[1]) } else { (3, tails[0]) };
-            records.push((r, chance_n, chance_z));
-        }
+    let per_task: Vec<Vec<(Record, f64, u8)>> = tasks.par_iter().map(|path| task_rows(path, id, significant_only)).collect::<Result<_>>()?;
+    let records: Vec<(Record, f64, u8)> = per_task.into_iter().flatten().filter(|(r, _, _)| (r.window as usize) < periods.len()).collect();
+    // Each involved stock's log closes and market-relative daily returns, by variable row,
+    // built once per partner (in parallel) and dropped after its rows are made.
+    let col_of: HashMap<u32, usize> = var.ids.iter().enumerate().map(|(c, &i)| (i as u32, c)).collect();
+    let series = |id: u32| {
+        col_of.get(&id).map(|&j| {
+            let lc: Vec<f64> = var.col(&var.close, j).iter().map(|&c| if c > 0.0 { (c as f64).ln() } else { f64::NAN }).collect();
+            (lc, var.market_relative(j))
+        })
+    };
+    let mine = series(id);
+    let mut by_partner: std::collections::BTreeMap<u32, Vec<usize>> = std::collections::BTreeMap::new();
+    for (i, (r, _, _)) in records.iter().enumerate() {
+        by_partner.entry(if r.leader == id { r.target } else { r.leader }).or_default().push(i);
     }
-    // Log closes on calendar rows base.. for every symbol involved.
-    let mut ids: Vec<u32> = records.iter().flat_map(|(r, _, _)| [r.leader, r.target]).collect();
-    ids.sort_unstable();
-    ids.dedup();
-    let prices: HashMap<u32, Vec<f64>> = ids
+    let by_partner: Vec<(u32, Vec<usize>)> = by_partner.into_iter().collect();
+    let mut rows: Vec<(usize, ProfileRow)> = by_partner
         .par_iter()
-        .map(|&s| {
-            let (d, c) = (store.dates(s as usize), store.close(s as usize));
-            let v = (base..cal.days.len())
-                .map(|k| d.binary_search(&cal.days[k]).ok().map(|i| c[i] as f64).filter(|p| *p > 0.0).map(f64::ln).unwrap_or(f64::NAN))
+        .flat_map_iter(|(partner, idx)| {
+            let theirs = series(*partner);
+            let rows: Vec<(usize, ProfileRow)> = idx
+                .iter()
+                .map(|&i| {
+                    let (r, chance_n, chance_z) = &records[i];
+                    let p = &periods[r.window as usize];
+                    let (h1, h2, lag) = (r.h1 as usize, r.h2 as usize, r.lag as usize);
+                    let (mut words_, mut move_per_pct) = (None, None);
+                    if let (Some(rows), Some(me), Some(them)) = (&exact[r.window as usize], &mine, &theirs) {
+                        let ((pl, al), (pt, at)) = if r.leader == id { ((&me.0, &me.1), (&them.0, &them.1)) } else { ((&them.0, &them.1), (&me.0, &me.1)) };
+                        let step = h1.max(h2);
+                        let m = grid::observations(rows.len(), h1, h2, lag);
+                        // Leader moves end at rows.start + max(h1, h2) - 1 + q * step.
+                        words_ = words(pl, pt, h1, h2, lag, rows.start + step - 1, m, step, rows.start, rows.end, lo, hi, None);
+                        move_per_pct = crate::moves::move_per_pct(al, at, r.r as f64, h1, h2, lag, rows.clone());
+                    }
+                    let (leader, target) = (store.symbols[r.leader as usize].ticker.clone(), store.symbols[r.target as usize].ticker.clone());
+                    let row = ProfileRow {
+                        window: format!("{}..{}", c2_data::date_string(p.first), c2_data::date_string(p.last)),
+                        period_days: span(p).len() as u32,
+                        period_end: c2_data::date_string(p.last),
+                        window_id: r.window,
+                        partner: if r.leader == id { target } else { leader },
+                        leads: r.leader == id,
+                        h1: r.h1,
+                        h2: r.h2,
+                        lag: r.lag,
+                        obs: r.obs,
+                        r: r.r,
+                        z: r.z,
+                        significant: r.flags & FLAG_FDR != 0,
+                        chance: *chance_n,
+                        chance_z: *chance_z,
+                        move_per_pct,
+                        words: words_,
+                    };
+                    (i, row)
+                })
                 .collect();
-            (s, v)
+            rows
         })
         .collect();
-    let mut rows: Vec<ProfileRow> = records
-        .par_iter()
-        .map(|(r, chance_n, chance_z)| {
-            let (first, last, range, _) = &windows[r.window as usize];
-            let (h1, h2, lag) = (r.h1 as usize, r.h2 as usize, r.lag as usize);
-            let (pl, pt) = (&prices[&r.leader], &prices[&r.target]);
-            let step = h1.max(h2);
-            let m = crate::grid::observations(range.len(), h1, h2, lag);
-            // Grid rows relative to `base`: leader moves end at range.start + g0 + q * step.
-            let first_e = range.start + step - 1 - base;
-            let (p0, p1) = (range.start - base, range.end - base);
-            let words = words(pl, pt, h1, h2, lag, first_e, m, step, p0, p1, lo - base, hi - base, None);
-            let ratio = {
-                let obs: Vec<(f64, f64)> = (0..m)
-                    .filter_map(|q| {
-                        let e = first_e + q * step;
-                        let (x, y) = (pl.get(e)? - pl.get(e.checked_sub(h1)?)?, pt.get(e + lag)? - pt.get((e + lag).checked_sub(h2)?)?);
-                        (x.is_finite() && y.is_finite()).then_some((x, y))
-                    })
-                    .collect();
-                let n = obs.len() as f64;
-                let (sx, sy) = (obs.iter().map(|o| o.0).sum::<f64>(), obs.iter().map(|o| o.1).sum::<f64>());
-                let (vx, vy) = (obs.iter().map(|o| o.0 * o.0).sum::<f64>() - sx * sx / n, obs.iter().map(|o| o.1 * o.1).sum::<f64>() - sy * sy / n);
-                (n >= 10.0 && vx > 0.0 && vy > 0.0).then(|| (vy / vx).sqrt())
-            };
-            let (leader, target) = (store.symbols[r.leader as usize].ticker.clone(), store.symbols[r.target as usize].ticker.clone());
-            ProfileRow {
-                window: format!("{}..{}", c2_data::date_string(*first), c2_data::date_string(*last)),
-                period_days: range.len() as u32,
-                period_end: c2_data::date_string(*last),
-                window_id: r.window,
-                partner: if r.leader == id { target } else { leader },
-                leads: r.leader == id,
-                h1: r.h1,
-                h2: r.h2,
-                lag: r.lag,
-                obs: r.obs,
-                r: r.r,
-                z: r.z,
-                significant: r.flags & FLAG_FDR != 0,
-                chance: *chance_n,
-                chance_z: *chance_z,
-                move_per_pct: ratio.map(|k| r.r as f64 * k),
-                words,
-            }
-        })
-        .collect();
+    // Task-file order, then strongest |z| first (a stable sort, so ties keep that order).
+    rows.sort_by_key(|(i, _)| *i);
+    let mut rows: Vec<ProfileRow> = rows.into_iter().map(|(_, row)| row).collect();
     rows.sort_by(|a, b| b.z.abs().total_cmp(&a.z.abs()));
     Ok(rows)
+}
+
+/// The real lagged records of one task file involving store id `id`, with the chance counts of
+/// their matrices (mean sign-flip null pairs at the largest of |z| 3/4/5 below each one's |z|).
+fn task_rows(path: &Path, id: u32, significant_only: bool) -> Result<Vec<(Record, f64, u8)>> {
+    use crate::run::FLAG_FDR;
+    let recs = crate::forecast::scan_records(path, |r| {
+        r.flags & FLAG_NULL == 0 && r.lag > 0 && (r.leader == id || r.target == id) && (!significant_only || r.flags & FLAG_FDR != 0)
+    })?;
+    if recs.is_empty() {
+        return Ok(Vec::new());
+    }
+    // Chance tail counts per (window, lag) from this task's summary.
+    let mut chance: HashMap<(u32, u16), [f64; 3]> = HashMap::new();
+    if let Ok(text) = std::fs::read_to_string(path.with_extension("csv")) {
+        let mut lines = text.lines();
+        let header: Vec<&str> = lines.next().unwrap_or("").split(',').collect();
+        let col = |n: &str| header.iter().position(|h| *h == n);
+        if let (Some(cw), Some(cl), Some(c3), Some(c4), Some(c5)) = (col("window"), col("lag"), col("null_z3"), col("null_z4"), col("null_z5")) {
+            for line in lines {
+                let f: Vec<&str> = line.split(',').collect();
+                let num = |i: usize| f.get(i).and_then(|v| v.parse::<f64>().ok()).unwrap_or(f64::NAN);
+                chance.insert((num(cw) as u32, num(cl) as u16), [num(c3), num(c4), num(c5)]);
+            }
+        }
+    }
+    Ok(recs
+        .into_iter()
+        .map(|r| {
+            let (az, tails) = (r.z.abs(), chance.get(&(r.window, r.lag)).copied().unwrap_or([f64::NAN; 3]));
+            let (chance_z, chance_n) = if az >= 5.0 { (5, tails[2]) } else if az >= 4.0 { (4, tails[1]) } else { (3, tails[0]) };
+            (r, chance_n, chance_z)
+        })
+        .collect())
 }
 
 /// One stock's standing in the census: how many of its stored lagged relationships passed the
