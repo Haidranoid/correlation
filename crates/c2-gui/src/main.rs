@@ -16,6 +16,8 @@
 //!   Census   real vs chance by offset for each pair of move lengths; a ticker's strongest stored
 //!            pairs
 //!   Holdout  the $10,000 test for either signal family, with equity curves
+//!   Together same-day co-movement: portfolio check, best diversifiers, hedge finder and groups
+//!            map (`together.rs`; they don't read the census)
 //!   Data     price store summary and the decade quality table
 //!
 //! Everything read from a census run is computed on a background thread (`Job`) and cached under
@@ -40,6 +42,8 @@ use c2_census::forecast::{Forecast, ForecastData};
 use c2_census::grid;
 use egui_plot::{Arrows, Bar, BarChart, HLine, Legend, Line, LineStyle, MarkerShape, Plot, PlotPoint, PlotPoints, Points, Polygon, Text, VLine};
 
+mod together;
+
 #[derive(PartialEq, Clone, Copy)]
 enum Tab {
     Status,
@@ -49,6 +53,7 @@ enum Tab {
     Explain,
     Census,
     Holdout,
+    Together,
     Data,
 }
 
@@ -350,6 +355,8 @@ struct App {
     /// 0 = count x strength (sum of |r|), 1 = significant (sum of |r| over significant ones),
     /// 2 = strongest single |r|, 3 = most relationships.
     rank_sort: usize,
+    // Together tab (keyed by the store generation, not the run).
+    tg: together::TogetherView,
 }
 
 /// Key of one relationship regardless of window: (partner, stock leads?, lag, h1, h2).
@@ -1017,6 +1024,7 @@ impl App {
             rank_view: None,
             rank_filter: String::new(),
             rank_sort: 0,
+            tg: together::TogetherView::new(),
         }
     }
 
@@ -1107,6 +1115,7 @@ impl App {
                 self.store_stamp = stamp;
                 self.store_gen = generation;
                 self.clear_results();
+                self.tg.clear();
                 // The Explainer keeps its period by date: which periods today's data covers (and
                 // so their positions in its list) may have changed.
                 if let Some(sel) = self.ex.selected {
@@ -1162,6 +1171,7 @@ impl App {
         report("list of runs", self.runs.poll(), self.runs.took);
         report("stored pairs", self.pairs.poll(), self.pairs.took);
         report("holdout", self.holdout.poll(), self.holdout.took);
+        self.tg.poll(&report);
         if report("price store reopened", self.store_reload.poll(), self.store_reload.took) {
             self.apply_store_reload();
         }
@@ -1179,6 +1189,7 @@ impl App {
             || self.runs.is_running()
             || self.pairs.is_running()
             || self.holdout.is_running()
+            || self.tg.is_running()
             || self.store_reload.is_running()
     }
 
@@ -1211,6 +1222,7 @@ impl App {
             }
             Tab::Census => !self.pairs.is_running(),
             Tab::Holdout => !has_store || (!self.holdout.is_running() && self.holdout.done.is_some()),
+            Tab::Together => !has_store || self.tg.ready(),
             Tab::Data => true,
         }
     }
@@ -3538,6 +3550,7 @@ impl eframe::App for App {
                 ui.selectable_value(&mut self.tab, Tab::Explain, "Explainer");
                 ui.selectable_value(&mut self.tab, Tab::Census, "Census");
                 ui.selectable_value(&mut self.tab, Tab::Holdout, "Holdout");
+                ui.selectable_value(&mut self.tab, Tab::Together, "Together");
                 ui.selectable_value(&mut self.tab, Tab::Data, "Data");
                 // For a minute after the price store was reopened, and for as long as changed
                 // files can't be opened (the store read before stays in use).
@@ -3557,6 +3570,7 @@ impl eframe::App for App {
             Tab::Explain => self.explain_tab(ui),
             Tab::Census => self.census_tab(ui),
             Tab::Holdout => self.holdout_tab(ui),
+            Tab::Together => self.together_tab(ui),
             Tab::Data => self.data_tab(ui),
         });
         // Self-check: once the tab has drawn and has its data or its error (or the time is up),
@@ -3623,6 +3637,33 @@ impl App {
                 self.start_holdout();
             }
             Some("data") => self.tab = Tab::Data,
+            // C2_GUI_MODE: portfolio, diversify, hedge or groups; C2_GUI_HOLDINGS, C2_GUI_TICKER
+            // (the hedge finder's), C2_GUI_SELECT (a group's number, from 1).
+            Some("together") => {
+                self.tab = Tab::Together;
+                if let Some(h) = env("C2_GUI_HOLDINGS") {
+                    self.tg.holdings = h;
+                }
+                if let Some(t) = env("C2_GUI_TICKER") {
+                    self.tg.hedge_input = t;
+                }
+                match env("C2_GUI_MODE").as_deref() {
+                    Some("diversify") => {
+                        self.tg.mode = together::Mode::Diversify;
+                        self.start_portfolio();
+                    }
+                    Some("hedge") => {
+                        self.tg.mode = together::Mode::Hedge;
+                        self.start_hedge();
+                    }
+                    Some("groups") => {
+                        self.tg.mode = together::Mode::Groups;
+                        self.start_groups();
+                        self.tg.selected = env("C2_GUI_SELECT").and_then(|g| g.parse::<usize>().ok()).and_then(|g| g.checked_sub(1));
+                    }
+                    _ => self.start_portfolio(),
+                }
+            }
             Some("strongest") => self.tab = Tab::Strongest,
             Some("stock") => {
                 self.tab = Tab::Stock;

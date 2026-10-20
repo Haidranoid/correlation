@@ -9,7 +9,13 @@
   - It replicates before costs in the paper's years (Sharpe 0.37 for 2003–2019 against the paper's 0.62; shuffled groups did as well in 0.5% of draws).
   - It fades after 2012 as the paper said, and with the paper's settings it is gone since 2020.
   - The edge is the market's slow followers, not stock-to-stock lead-lag: on market-relative returns it vanishes.
-  - After 5 bps costs it loses money in every period, including the 16 unseen months. See "Signal family B" at the end.
+  - After 5 bps costs it loses money in every period, including the 16 unseen months. See "Signal family B" near the end.
+- **New: same-day co-movement tools**, for the part of correlation that is real and lasting. See "Same-day co-movement tools" at the end:
+  - **Portfolio check** (`c2 portfolio`): independent bets, share of risk, near-duplicates, correlations now and a year earlier.
+  - **Best diversifiers** (`c2 diversify`).
+  - **Hedge finder** (`c2 hedge`).
+  - **Groups map** (`c2 groups`): 20 groups of the 1,000 most-traded stocks, the fund each tracks, and how stable each group has been over 5 years.
+  - All four are also in the GUI's new **Together** tab.
 - **Census before this:** `main-2025-06-27`, made on the old store. It has 36 move-length pairs (A and B each over 1, 3, 5, 10, 21 or 63 days) and 358.7 billion real correlations. See "Follow-up: your terms, a wider census…".
 - **Code review fixes:** all 15 findings of a full code review, plus the verifiers' later findings, are fixed and verified. See "Code review fixes" at the end. The forecast and "% per 1%" are now relative to the market. Each run is read by its own settings, periods and stock list, and a second writer can't share a run.
 - **Outside data:** 1,753 non-stock series were tested with the census's method. The series cover weather, climate, crypto, markets and macro, politics, news sentiment, Google Trends, prediction markets, prosperity, population and immigration, and space weather. None leads US stocks beyond chance. See "Outside data" at the end.
@@ -47,6 +53,10 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census holdout --family reversal --lookback 5` | Positive control (short-term reversal) |
 | `c2 census clusters [--all-exchanges] [--metric pearson] [--returns relative]` | Family B, cluster lead-lag, as the paper tested it (by year, shuffled-group null) |
 | `c2 census holdout --family clusters [--walk-forward]` | Family B against random guessers |
+| `c2 portfolio AAPL 30 MSFT 20 SPY 50` | Portfolio check: independent bets, share of risk, near-duplicates, correlations now and a year earlier |
+| `c2 diversify HOLDINGS… [--max-volatility 75]` | Best diversifiers: what moves least with the portfolio; hedges listed apart |
+| `c2 hedge TICKER` | What tracks a stock most closely and what moves most opposite, with hedge ratios |
+| `c2 groups [--groups 20] [--stocks 1000]` | Groups of stocks that move together (market taken out), the fund each tracks, stability over 5 years |
 | `c2 census replicate` | Do stored pairs keep their sign in the next window? |
 | `c2 census validate` | Engine vs the Python oracle |
 | `c2 ingest`, `c2 data-check`, `c2 bench` | Build a new price store and make it the default, check the data, benchmark the hardware |
@@ -60,7 +70,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 - its ranking signal was, if anything, slightly reversed (z = −2.79)
 - nothing tradable
 
-**Native GUI:** `c2-gui` (or **correlation2** in the app grid) has Status, Census, Holdout and Data tabs. Every tab was checked with screenshots, but you haven't tried it yet.
+**Native GUI:** `c2-gui` (or **correlation2** in the app grid) has Status, Census, Holdout and Data tabs (and later Strongest, Stock timeline, Forecast, Explainer and Together). Every tab was checked with screenshots, but you haven't tried it yet.
 
 **Data updates and the forward log (first version):**
 - `c2 update` ingests a Stooq zip dropped in `~/.local/share/correlation2/inbox/` into a new price store, which becomes the default (the old store is kept). It reruns the census if the data changed, and appends the next period's picks to an append-only forward log.
@@ -79,7 +89,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 
 **Your call:**
 - **Better data:** delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
-- **Direction:** every prediction family is now tested, and none pays after costs. Next is the same-day co-movement tools (portfolio check, best diversifiers, groups map, hedge finder), which are being built.
+- **Direction:** every prediction family is now tested, and none pays after costs. The same-day co-movement tools are built (Together tab). Possible next steps: let the portfolio check read a broker export, add a "since" date to compare any two periods, or alert when a group's stability breaks.
 - **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
 
 ---
@@ -806,3 +816,59 @@ The paper reported a Sharpe of 0.62 for 2000–2019 before costs, fading after 2
 - **Net:** after realistic costs it doesn't pay in any period, and the paper's own settings have nothing left since 2020.
 
 Several variants were tried, so a single p of 0.025 among them is weak evidence on its own.
+
+## Same-day co-movement tools (2026-10-20; `c2 portfolio`, `c2 diversify`, `c2 hedge`, `c2 groups`, GUI Together tab)
+
+**Why:** every prediction family failed after costs. Same-day co-movement, on the other hand, is real and lasting: the census found it persists almost perfectly from one period to the next. So the tool now also answers risk questions.
+
+**Data** (`crates/c2-census/src/together.rs`):
+- **Universe:** one panel of daily returns of every stock and fund (ETF) still trading, 6 years up to the last day. That is about 10,000 symbols, of which 3,681 pass the candidate screen: a close on 90% of days, last close $5 or more, median dollar volume $5M or more.
+- **Funds included:** unlike the census, funds are in, because bond, gold and sector funds are natural diversifiers and hedges.
+- **Missing days:** a day without a close is missing, never filled with 0. A holding with a shorter history shortens the window instead, and the window used is printed.
+- **A year earlier:** every correlation is shown for the last year and the year before. "new" means there was no half-year of data then.
+- **Plain words:** one scale everywhere: 0.9 or more almost always together, 0.6 usually, 0.3 often, −0.3 to 0.3 mostly independent, then often, usually and almost always opposite.
+- **Speed:** the first answer takes about 1 s, the rest milliseconds; the groups map takes 0.8 s.
+
+**The four tools:**
+- **Portfolio check** (`c2 portfolio AAPL 30 MSFT 20 SPY 50`; no amounts means equal weights):
+  - portfolio and holding volatility, beta to SPY;
+  - how many independent bets the holdings amount to, (weighted average volatility / portfolio volatility)², which is 1 when they move as one and N when they move independently;
+  - each holding's share of the risk (the shares sum to 100%), and its correlation with the rest;
+  - near-duplicates (0.8 or more), and the correlation table now and a year earlier.
+- **Best diversifiers** (`c2 diversify …`):
+  - Ranking: the stocks and funds that move least with the portfolio, lowest correlation first.
+  - Correlation is the ranking because it doesn't change with size or leverage. A first version ranked by independent bets added at 10% of the money, and leveraged inverse funds (a −2× Palantir fund, inverse bitcoin) topped it, because their own volatility inflated the number.
+  - Funds that move almost exactly alike (0.95 or more) are shown once, under the least volatile: SH stands for SPXS, SPXU, SDS and SPDN.
+  - Set aside: cash-like funds (under 3% a year) and very volatile ones (over 75% a year, `--max-volatility`).
+  - Funds at −0.3 or lower with the portfolio, or −0.5 or lower with SPY, are listed separately as hedges.
+- **Hedge finder** (`c2 hedge XOM`):
+  - What tracks a stock most closely and what moves most opposite to it.
+  - For each: the hedge ratio (dollars per $1 of the stock), the risk left after that hedge (√(1 − r²)) and the correlation a year earlier.
+- **Groups map** (`c2 groups`):
+  - **Method:** the 1,000 most-traded stocks are split into 20 groups by spectral clustering of their correlations, after removing the market (the equal-weight average of these stocks, times each stock's beta).
+  - **Labels:** each group is named by the fund that follows its average most closely. Among funds within 0.02 of the best, leveraged ones are passed over and the most traded of the rest is used.
+  - **Stability:** for each group, the share of its pairs that are grouped together again when the same grouping is made on each of the 5 earlier years alone, against chance (about 5%). The figure is shown only when at least 30 pairs can be compared.
+  - **In the GUI:** a heatmap of the correlations in group order. Hover a cell for a pair, click to select its group.
+
+**Checks:**
+- **Unit tests** (7):
+  - holdings parsing and its errors;
+  - independent bets: copies of one fund = 1, independent ones = N;
+  - risk shares sum to 1;
+  - a late holding shortens the window and gets "new" a year earlier;
+  - a planted hedge ratio of 0.5 is found;
+  - the diversifier ranking, with a 3× fund collapsed under its 1× version;
+  - planted sectors and their funds are recovered, with stability 100% against chance of a third.
+- **Real data:**
+  - SPY+IVV+VOO = 1.0 bet; GOOG/GOOGL +1.00 near-duplicates.
+  - SPY's trackers have hedge ratios of 1.00 (VOO), 0.50 (2× funds) and 0.33 (3× funds), and its opposites are the inverse funds.
+  - XOM is tracked by XLE (+0.90), the energy funds and CVX.
+  - The groups label as SOXX (chips), XLP (staples), XOP (energy, kept together 54–84% of pairs in each of 5 earlier years), VFH (banks), FXU (utilities and REITs), GDX (miners, 45–89%), WCLD (cloud software), IBIT (crypto stocks).
+
+**What the last year looks like** (2025-10-17..2026-10-19). It was unusual, and the "a year earlier" column shows it:
+- **Large caps moved apart:** AAPL, MSFT, GOOGL, AMZN, META and NVDA correlated only +0.07 to +0.54 with each other, against about +0.5 the year before. AAPL's correlation with SPY was +0.32, against +0.75 a year earlier.
+- **Oil moved against stocks:** XOM was −0.32 with SPY (+0.45 the year before).
+- **No data error:** the same-day offset is the best match for every stock (no date shift), and the largest moves are real events such as earnings jumps (MSFT +15.5% on 2026-07-30), not bad prices.
+- **What it means:** energy and utilities are diversifiers for a tech portfolio this year, but they were not a year ago (+0.46 to +0.51). A diversifier picked from one year can stop working the next.
+
+**Data note:** Stooq files a few funds under stocks (SPYM, SPYU, ETHD), so their kind shows as "stock".
