@@ -2,6 +2,7 @@
 
 use std::time::Instant;
 
+mod together;
 mod update;
 
 use anyhow::Result;
@@ -83,6 +84,58 @@ enum Cmd {
     Census {
         #[command(subcommand)]
         action: CensusCmd,
+    },
+    /// Portfolio check: how much your holdings move together on the same day, how many
+    /// independent bets they amount to, each one's share of the risk, and near-duplicates.
+    /// Holdings: tickers, each with an amount or none (equal weights), e.g. `AAPL 30 MSFT 20 SPY 50`.
+    Portfolio {
+        #[arg(required = true)]
+        holdings: Vec<String>,
+        /// Look as of this day (default: the last day of data).
+        #[arg(long)]
+        as_of: Option<String>,
+    },
+    /// Best diversifiers: the stocks and funds that add the most independent bets to your holdings.
+    Diversify {
+        #[arg(required = true)]
+        holdings: Vec<String>,
+        /// Percent of the portfolio each candidate is added at (for the volatility column).
+        #[arg(long, default_value_t = 10.0)]
+        weight: f64,
+        /// Leave out candidates more volatile than this, percent a year (mostly leveraged funds).
+        #[arg(long, default_value_t = 75.0)]
+        max_volatility: f64,
+        /// Rows per list.
+        #[arg(long, default_value_t = 15)]
+        show: usize,
+        #[arg(long)]
+        as_of: Option<String>,
+    },
+    /// Hedge finder: what tracks a stock most closely and what moves most opposite to it.
+    Hedge {
+        ticker: String,
+        #[arg(long, default_value_t = 15)]
+        show: usize,
+        #[arg(long)]
+        as_of: Option<String>,
+    },
+    /// Groups map: groups of stocks that move together once the market is taken out, the fund
+    /// each tracks, and how stable each group has been.
+    Groups {
+        /// Number of groups.
+        #[arg(long, default_value_t = 20)]
+        groups: usize,
+        /// Stocks grouped, the most traded.
+        #[arg(long, default_value_t = 1000)]
+        stocks: usize,
+        /// Earlier years to compare each group with.
+        #[arg(long, default_value_t = 5)]
+        years_back: usize,
+        /// Members listed per group.
+        #[arg(long, default_value_t = 15)]
+        members: usize,
+        #[arg(long)]
+        as_of: Option<String>,
     },
 }
 
@@ -352,6 +405,10 @@ fn main() -> Result<()> {
         Cmd::DataCheck => data_check(),
         Cmd::Store { action } => store(action),
         Cmd::Census { action } => census(action),
+        Cmd::Portfolio { holdings, as_of } => together::portfolio(&holdings, &as_of),
+        Cmd::Diversify { holdings, weight, max_volatility, show, as_of } => together::diversify(&holdings, weight, max_volatility, show, &as_of),
+        Cmd::Hedge { ticker, show, as_of } => together::hedge(&ticker, show, &as_of),
+        Cmd::Groups { groups, stocks, years_back, members, as_of } => together::groups(groups, stocks, years_back, members, &as_of),
     }
 }
 

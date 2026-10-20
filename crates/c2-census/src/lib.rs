@@ -3,6 +3,7 @@
 
 pub mod analyze;
 pub mod cluster;
+pub mod together;
 pub mod explain;
 pub mod forecast;
 pub mod grid;

@@ -279,7 +279,7 @@ fn uniform(state: &mut u64) -> f64 {
 /// k-means on the rows of the p x dim matrix `x`: k-means++ starts, Lloyd iterations, the
 /// lowest within-group sum of squares of `restarts` seeded tries. An emptied group takes the
 /// point farthest from its centre.
-fn kmeans(x: &[f64], p: usize, dim: usize, k: usize, seed: u64, restarts: usize) -> Vec<usize> {
+pub(crate) fn kmeans(x: &[f64], p: usize, dim: usize, k: usize, seed: u64, restarts: usize) -> Vec<usize> {
     let dist = |a: &[f64], b: &[f64]| a.iter().zip(b).map(|(u, v)| (u - v) * (u - v)).sum::<f64>();
     let row = |i: usize| &x[i * dim..(i + 1) * dim];
     let mut best: (f64, Vec<usize>) = (f64::INFINITY, Vec::new());
