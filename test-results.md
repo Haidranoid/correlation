@@ -66,7 +66,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 - a point-in-time $5 price rule (it needs a split history; see "Last checks" under "Code review fixes")
 
 **Your call:**
-- **Fresher data:** buy or validate MarketParquet (adds delisted stocks and the most recent year).
+- **Fresher data:** the 16 months after the census are now in hand from a fresh Stooq download, in a separate folder (see "Out of sample" above). Making them the default means `c2 update`, which reruns the census. Delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
 - **Direction:** continue with the cluster lead-lag family (B), or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
 - **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
 

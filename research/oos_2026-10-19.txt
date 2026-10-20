@@ -8,9 +8,11 @@ Data
   before and after).
 - Census main-2025-06-27 ends 2025-06-27, so everything from 2025-06-30 on is data it never saw: 329 trading days,
   2025-06-30 .. 2026-10-19.
-- Matching check: AAPL's stored relationships read the same r, z and chance counts on the new store, and sizes differ
-  only in the second decimal (the market average changed). 312 of the run's 8,503 stocks are not in the new file
-  (delisted or renamed since); pairs with them are left out.
+- Matching check: the parts recomputed from prices agree. AAPL's relationships give the same plain-terms counts on
+  both stores (e.g. "after AAPL rose 3.6%+, OUT rose 7/23 (30%) vs 48% normally"), and sizes differ only in the
+  second decimal because the market average changed. The in-sample forecast track record uses the identical 13,694
+  directional forecasts on both stores (50.9% old, 50.7% new). 312 of the run's 8,503 stocks are not in the new
+  file (delisted or renamed since); pairs with them are left out.
 
 1. The $10,000 test with census pairs, 2025-06-30 .. 2026-10-19
 command: C2_DATA_DIR=~/.local/share/correlation2-2026-10-19 c2 census holdout --start 2025-06-30
@@ -133,6 +135,10 @@ Reading
 - The census picks did what random picks do: +21.0% before costs against a random median of +20.3%; 47.5% of random
   accounts did as well. Buying SPY made +24.6%. With costs of 5 bps per trade the picks made +0.4%; at 20 bps they
   lost 42.7%.
+- The rank correlation of predictions with outcomes was +0.003, at the edge of significance (t = +2.01), but far
+  too small to use: the long-short version of the same ranking lost 0.43 bps a day (t = -0.26), and the picks ended
+  where buying all 2,147 candidates did (+21.0% against +20.8%). It is the same faint tilt the in-sample track
+  record showed.
 - The forecasts were right 51.7% of the time (473 of 915), with 50.0% expected from the up/down rates alone. Counting
   each forecast day once, the 95% range is 47.9% to 55.5%. Mean correlation per stock -0.021, 26 of 61 positive.
   Predicted moves averaged 0.06% against actual moves of 6.36%. AAPL, the in-sample best at 58.0%, was right 8 of 15
@@ -141,7 +147,8 @@ Reading
   One 16-month window can only rule out large effects: it can tell 50% from about 55%, not from 51%.
 
 Caveats
-- Survivor-only data: stocks that left between 2025-06-27 and 2026-10-19 are missing from this period.
+- Survivor-only data: stocks that left between 2025-06-27 and 2026-10-19 are missing from this period. The $10,000
+  test left out 18,078 stored pairs for that reason against 89,022 used, about a sixth of the total.
 - About 1,800 more symbols change the market average slightly, so "relative to the market" means this store's market.
 - Prices are still split- and dividend-adjusted, so the $5 look-ahead applies as before.
 - No out-of-sample replication: the replication test needs the next correlation period to be one of the run's own,
