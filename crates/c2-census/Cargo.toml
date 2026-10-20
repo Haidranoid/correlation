@@ -13,5 +13,6 @@ cuda = ["c2-engine/cuda"]
 anyhow.workspace = true
 c2-data.workspace = true
 c2-engine.workspace = true
+faer.workspace = true
 rayon.workspace = true
 serde_json.workspace = true

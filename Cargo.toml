@@ -15,6 +15,7 @@ c2-engine = { path = "crates/c2-engine" }
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 cudarc = { version = "0.19", default-features = false, features = ["std", "cublas", "cublaslt", "driver", "nvrtc", "dynamic-loading", "cuda-13020", "f16"] }
+faer = "0.24"
 gemm = "0.19"
 half = "2"
 serde_json = "1"

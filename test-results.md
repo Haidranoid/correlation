@@ -2,8 +2,15 @@
 
 ## Where things stand (read this first)
 
-**Latest (2026-10-20):**
-- **Current census:** `main-2025-06-27`, the default via `census/LATEST`. It has 36 move-length pairs (A and B each over 1, 3, 5, 10, 21 or 63 days) and 358.7 billion real correlations. See "Follow-up: your terms, a wider census…".
+**Latest (2026-10-20, evening):**
+- **Fresh data is now the default:** the price store `stooq-2026-10-19` (prices through 2026-10-19). `c2 update` ran the census on it: `main-2026-10-19`, 9,508 stocks, 309 correlation periods, 11,124 computations in 12 min 50 s on the GPU. It is the default census now (`census/LATEST`). `main-2025-06-27`, made on the old store, is kept.
+- **The forward log has started:** `forward_log.jsonl` holds the first real forward picks, made from data through 2026-10-19: 20 census picks (PDO, WB, ADMA, COHU, CECO, …) and 20 peer-momentum picks (KRUS, M, GDYN, TXRH, TPR, …). `c2 forward-report` scores them once their holding period has passed. The weekday timer is still off.
+- **Family B, cluster lead-lag (Bennett et al. 2022), tested:** groups of stocks that move first and groups that follow.
+  - It replicates before costs in the paper's years (Sharpe 0.37 for 2003–2019 against the paper's 0.62; shuffled groups did as well in 0.5% of draws).
+  - It fades after 2012 as the paper said, and with the paper's settings it is gone since 2020.
+  - The edge is the market's slow followers, not stock-to-stock lead-lag: on market-relative returns it vanishes.
+  - After 5 bps costs it loses money in every period, including the 16 unseen months. See "Signal family B" at the end.
+- **Census before this:** `main-2025-06-27`, made on the old store. It has 36 move-length pairs (A and B each over 1, 3, 5, 10, 21 or 63 days) and 358.7 billion real correlations. See "Follow-up: your terms, a wider census…".
 - **Code review fixes:** all 15 findings of a full code review, plus the verifiers' later findings, are fixed and verified. See "Code review fixes" at the end. The forecast and "% per 1%" are now relative to the market. Each run is read by its own settings, periods and stock list, and a second writer can't share a run.
 - **Outside data:** 1,753 non-stock series were tested with the census's method. The series cover weather, climate, crypto, markets and macro, politics, news sentiment, Google Trends, prediction markets, prosperity, population and immigration, and space weather. None leads US stocks beyond chance. See "Outside data" at the end.
 - **Corrected forecast track record** (market-relative): 61 large caps pooled, direction right 50.9%, mean correlation +0.018. That is a faint tilt with no practical value.
@@ -38,6 +45,8 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census holdout --family peers [--walk-forward]` | The same test with peer momentum (monthly rebalance) |
 | `c2 census holdout --family census --rebalance 5\|21` | Census pairs at weekly or monthly target horizons |
 | `c2 census holdout --family reversal --lookback 5` | Positive control (short-term reversal) |
+| `c2 census clusters [--all-exchanges] [--metric pearson] [--returns relative]` | Family B, cluster lead-lag, as the paper tested it (by year, shuffled-group null) |
+| `c2 census holdout --family clusters [--walk-forward]` | Family B against random guessers |
 | `c2 census replicate` | Do stored pairs keep their sign in the next window? |
 | `c2 census validate` | Engine vs the Python oracle |
 | `c2 ingest`, `c2 data-check`, `c2 bench` | Build a new price store and make it the default, check the data, benchmark the hardware |
@@ -63,14 +72,14 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 **Not done yet** (from SPEC.md):
 - census CPU worker (the GPU finishes in 6 minutes, so it would add ~3%)
 - idle-detection mode
-- signal families B and D (cluster lead-lag, the size control)
+- signal family D (the size control); family B is done (see "Signal family B" at the end)
 - a random guesser matched on volatility (a stricter baseline)
 - survivorship-free data
 - a point-in-time $5 price rule (it needs a split history; see "Last checks" under "Code review fixes")
 
 **Your call:**
-- **Fresher data:** the 16 months after the census are now in hand as the store `stooq-2026-10-19`. `c2 store use stooq-2026-10-19` makes it the default; the next `c2 update` then reruns the census on it (about 12 minutes) and starts the forward log. Delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
-- **Direction:** continue with the cluster lead-lag family (B), or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
+- **Better data:** delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
+- **Direction:** every prediction family is now tested, and none pays after costs. Next is the same-day co-movement tools (portfolio check, best diversifiers, groups map, hedge finder), which are being built.
 - **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
 
 ---
@@ -732,3 +741,68 @@ To rerun:
 - `cargo run --release -p c2-census --example external_test -- --run <name> --noise 220`
 - add `--short-periods --short-from 2022-04-01` for the recent-years test
 - `--browse <run> --series <id> --min-z 4` lists a series' stored relationships
+
+## Signal family B: cluster lead-lag (2026-10-20; `c2 census clusters`, `c2 census holdout --family clusters`)
+
+**The idea** (Bennett, Cucuringu & Reinert 2022, arXiv 2201.08283; the last published method on the list not yet tested): single pairs don't hold up, so look for *groups* of stocks that move first and groups that follow.
+- **Method:** `crates/c2-census/src/cluster.rs` follows the paper's sections 3 and 6:
+  - Every 42 trading days, take the top 500 stocks by dollar volume over the 252 days before.
+  - Measure how much each stock moves first: offsets 1–5 days, distance correlation, the paper's "ccf-auc".
+  - Split the stocks into 10 groups with Hermitian spectral clustering.
+  - Link the strongest 10% of group-to-group flows.
+  - For each link, fit how the following group's next day depends on a weighted sum of the leading group's recent days (alpha 0.4).
+  - Each day, hold the stocks of groups forecast to rise long and those forecast to fall short.
+- **Checks** (unit tests in `cluster.rs`):
+  - The fast distance correlation matches the textbook formula.
+  - Planted leading and following groups are recovered exactly, with both correlations.
+  - Changing any later day's return never changes an earlier forecast.
+- **No $5 price rule:** the universe is ranked by dollar volume only, so the open look-ahead in the census's price rule doesn't reach this test.
+- **Speed:** 0.1 s per fit (142 fits from 2003 to 2026-10-19), and 200 shuffled-group copies for the null. A whole run takes about 20 s.
+
+**Two different nulls:**
+- **Shuffled groups (the paper's own test):** the same pipeline with the group labels shuffled, 200 times. It asks whether the groups matter.
+- **Random guessers:** the harness's usual null, as for every other family.
+
+**Results, the paper's settings** (NYSE only, raw daily returns; `research/cluster_leadlag_paper.txt`). Sharpe ratios are annualized; "net" is after 5 bps per side.
+
+| Period | Sharpe | net | Shuffled groups did as well |
+|---|---|---|---|
+| 2003–2012 | 0.86 | 0.10 | 0.5% (the smallest 200 draws can show) |
+| 2013–2019 | −0.28 | −1.34 | 33% |
+| 2003–2019 (the paper's years) | 0.37 | −0.52 | 0.5% |
+| 2020–2026-10-19 (after the paper) | −0.32 | −1.07 | 60% |
+
+The paper reported a Sharpe of 0.62 for 2000–2019 before costs, fading after 2012. That replicates in shape: real before 2013, gone after. The groups change a lot between fits (adjusted Rand index 0.18 from one fit to the next).
+
+**Variants** (`research/cluster_leadlag_*.txt`, daily returns in the matching `_daily.tsv`):
+
+| Variant | 2003–2019 | 2020 on | Net, all years |
+|---|---|---|---|
+| Paper (NYSE, distance correlation, raw returns) | 0.37 | −0.32 | −0.67 |
+| Pearson instead of distance correlation | 0.32 | 0.12 | −0.55 |
+| All US exchanges | 0.50 | 0.29 (shuffled p 0.025) | −0.34 |
+| Market-relative returns (the census variable), all exchanges, from 2007 | −0.03 | −0.13 | −1.01 |
+
+- **The market explains the edge:**
+  - Over the same days (2007–2026), all exchanges with raw returns give a Sharpe of +0.52, and the census's market-relative returns give −0.07.
+  - So what the groups find is mostly the known effect of slower stocks catching up with yesterday's market (Lo & MacKinlay 1990), not stock-specific lead-lag.
+- **Costs:** the books change about 30% a day, which costs more than the edge earns at 5 bps per side.
+
+**Random-guesser walk-forward** (`research/cluster_leadlag_walkforward*.txt`):
+- **Paper settings:**
+  - The picks beat random guessers in 6 of 19 years (chance gives about 1.9): 4 of them in 2006–2013 and none since mid-2020.
+  - Long-short top/bottom 10%: 2.8 bps/day gross, combined z = 1.62.
+- **All exchanges:**
+  - Long-short 4.7 bps/day gross, positive in 14 of 19 years, combined z = 3.63. That is the strongest gross signal of any family.
+  - It trades 42% of the book a day, which costs 1.69 × c bps/day at c bps per side, so it breaks even only below about 2.8 bps per side.
+  - Rebalancing weekly cuts costs to 0.51 × c but leaves only 2.2 bps/day (z = 1.41), still slightly below costs at 5 bps.
+- **The 16 unseen months** (2025-06-30..2026-10-19; `research/cluster_leadlag_oos_2026-10-19.txt`):
+  - Paper settings: picks −4.4% against +11.0% for the median random account (p = 0.945). IC −0.003.
+  - All exchanges: +49.5% against +30.5% (p = 0.185), not significant.
+
+**Verdict:**
+- **Gross:** the cluster method finds something real before costs, as the paper said, strongest in 2003–2012 and in the wider all-exchange universe.
+- **Market, not stocks:** it is the market's slow followers, not stock-to-stock lead-lag. The census, which removes the market, sees nothing, and neither does this method on market-relative returns.
+- **Net:** after realistic costs it doesn't pay in any period, and the paper's own settings have nothing left since 2020.
+
+Several variants were tried, so a single p of 0.025 among them is weak evidence on its own.

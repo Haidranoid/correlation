@@ -31,6 +31,10 @@ pub enum Family {
     /// same-day correlates over the `window` trading days before the holdout (the census showed
     /// these persist); its score is the peers' mean log return over the last `lookback` days.
     PeerMomentum { peers: usize, lookback: usize, window: usize },
+    /// Family B: cluster lead-lag (Bennett et al. 2022, `cluster`). Groups of stocks that move
+    /// first and groups that follow, refit every `refit` days on the year before; each stock's
+    /// score is its group's forecast for the next day.
+    ClusterLeadLag(crate::cluster::Settings),
 }
 
 pub struct Options {
@@ -143,6 +147,7 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         Family::CensusPairs => census_scores(store, plan, dir, opt, h0, t, &days, rebalance)?,
         Family::PeerMomentum { peers, lookback, window } => (peer_scores(var, h0, t, &days, rebalance, peers, lookback, window), Skipped::default()),
         Family::Reversal { lookback, window } => (reversal_scores(var, h0, t, &days, rebalance, lookback, window), Skipped::default()),
+        Family::ClusterLeadLag(s) => (crate::cluster::scores(store, var, &days, rebalance, &s)?, Skipped::default()),
     };
     // Benchmarks over the same days (close of the day before the holdout to the last close).
     let bench = |ticker: &str| -> Option<f64> {
@@ -332,6 +337,7 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
 
     // Prediction quality on rebalance days, over the holding period: picks beating the market,
     // rank IC of scores vs forward census-variable sums, and a long-short decile diagnostic.
+    // Stocks without a score that day (NaN: outside a cluster fit's universe) are left out.
     let (mut hits, mut tries) = (0usize, 0usize);
     let mut ics = Vec::new();
     let mut ls = Vec::new();
@@ -349,16 +355,19 @@ pub fn holdout(store: &Store, plan: &Plan, dir: &Path, opt: &Options) -> Result<
         let (a, b): (Vec<f64>, Vec<f64>) = (0..nc)
             .filter_map(|c| {
                 let v = fwd_resid(candidates[c], d, rebalance);
-                v.is_finite().then_some((sc[c], v as f64))
+                (v.is_finite() && sc[c].is_finite()).then_some((sc[c], v as f64))
             })
             .unzip();
         if a.len() > 10 {
             ics.push(corr(&rank(&a), &rank(&b)));
         }
-        let mut order: Vec<usize> = (0..nc).collect();
+        let mut order: Vec<usize> = (0..nc).filter(|&c| sc[c].is_finite()).collect();
         order.sort_by(|&x, &y| sc[y].total_cmp(&sc[x]));
-        let q = (nc / 10).max(1);
-        let (long, short) = (order[..q].to_vec(), order[nc - q..].to_vec());
+        let (scored, q) = (order.len(), (order.len() / 10).max(1));
+        if scored < 2 * q {
+            continue;
+        }
+        let (long, short) = (order[..q].to_vec(), order[scored - q..].to_vec());
         let mean = |set: &[usize]| set.iter().map(|&c| fwd_ret(candidates[c], d, rebalance)).sum::<f64>() / set.len() as f64;
         ls.push(mean(&long) - mean(&short));
         if let Some((pl, ps)) = &prev_books {
@@ -624,6 +633,7 @@ pub fn current_picks(store: &Store, plan: &Plan, dir: &Path, family: Family, reb
         Family::CensusPairs => census_scores(store, plan, dir, &opt, t, t, &days, rebalance)?.0,
         Family::PeerMomentum { peers, lookback, window } => peer_scores(var, t, t, &days, rebalance, peers, lookback, window),
         Family::Reversal { lookback, window } => reversal_scores(var, t, t, &days, rebalance, lookback, window),
+        Family::ClusterLeadLag(s) => crate::cluster::scores(store, var, &days, rebalance, &s)?,
     };
     let s = scores.into_iter().next().flatten().unwrap_or_default();
     let mut order: Vec<usize> = (0..s.len()).filter(|&k| s[k] > 0.0).collect();

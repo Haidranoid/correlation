@@ -1,0 +1,24 @@
+Cluster lead-lag settings: top 500 NYSE stocks by dollar volume, 10 groups, offsets 1-5 days, distance correlation of raw daily returns, 252-day look-back refit every 42 days, alpha 0.4, links above the 90% quantile.
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family clusters, rebalanced every 1 trading day(s): 8 fits (every 42 trading days, each on the 252 days before it), 72 links between groups in all; 558 stocks can be picked
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 558 candidates                     11849     18.5%
+Picks, no trading costs                              9563     -4.4%   random guessers: median 11101, 94.5% did at least as well (p = 0.945)
+Picks, 5 bps per trade                               8173    -18.3%   random guessers: median 9535, 95.4% did at least as well (p = 0.954)
+Picks, 20 bps per trade                              5098    -49.0%   random guessers: median 6039, 96.8% did at least as well (p = 0.968)
+
+=== --all-exchanges
+Cluster lead-lag settings: top 500 stocks by dollar volume, 10 groups, offsets 1-5 days, distance correlation of raw daily returns, 252-day look-back refit every 42 days, alpha 0.4, links above the 90% quantile.
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family clusters, rebalanced every 1 trading day(s): 8 fits (every 42 trading days, each on the 252 days before it), 72 links between groups in all; 583 stocks can be picked
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 583 candidates                     13916     39.2%
+Picks, no trading costs                             14946     49.5%   random guessers: median 13048, 18.5% did at least as well (p = 0.185)
+Picks, 5 bps per trade                              12635     26.4%   random guessers: median 11087, 18.9% did at least as well (p = 0.189)
+Picks, 20 bps per trade                              7627    -23.7%   random guessers: median 6789, 22.4% did at least as well (p = 0.224)

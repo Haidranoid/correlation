@@ -154,7 +154,8 @@ enum CensusCmd {
         #[arg(long)]
         walk_forward: bool,
         /// Signal family: `census` (stored lead-lag pairs; B's move length equals --rebalance),
-        /// `peers` (peer momentum) or `reversal` (own-stock short-term reversal, a positive control).
+        /// `peers` (peer momentum), `clusters` (cluster lead-lag, family B; see `c2 census
+        /// clusters`) or `reversal` (own-stock short-term reversal, a positive control).
         #[arg(long, default_value = "census")]
         family: String,
         /// Trading days between rebalances (default: 1 for census pairs, 21 for peers).
@@ -167,6 +168,33 @@ enum CensusCmd {
         lookback: usize,
         #[arg(long, default_value_t = 756)]
         peer_window: usize,
+        #[command(flatten)]
+        cluster: ClusterArgs,
+    },
+    /// Family B as the paper tested it: groups of stocks that move first and groups that follow
+    /// (Bennett, Cucuringu & Reinert 2022), refit every 2 months on the year before. Each day the
+    /// account is long the groups forecast to rise and short those forecast to fall, and the
+    /// same pipeline with the groups shuffled is the null.
+    Clusters {
+        #[arg(long, default_value_t = c2_census::run::latest_run())]
+        name: String,
+        /// First day held (default: the first day with a fit's look-back of data before it).
+        #[arg(long)]
+        start: Option<String>,
+        /// Last day held (default: the last day of data).
+        #[arg(long)]
+        end: Option<String>,
+        /// Shuffled-group pipelines for the null (the paper used 200).
+        #[arg(long, default_value_t = 200)]
+        draws: usize,
+        /// Trading cost per side, basis points, for the net figures.
+        #[arg(long, default_value_t = 5.0)]
+        cost: f64,
+        /// Also write the daily returns to this file (tab-separated).
+        #[arg(long)]
+        daily: Option<std::path::PathBuf>,
+        #[command(flatten)]
+        cluster: ClusterArgs,
     },
     /// Recompute one relationship from prices step by step and compare with what the census stored.
     Explain {
@@ -246,6 +274,61 @@ enum CensusCmd {
     /// store in use still holds. `c2 ingest`, `c2 update` and `c2 store use` do this before they
     /// change the default store.
     SnapshotSymbols,
+}
+
+/// Family B settings; the defaults are the paper's.
+#[derive(clap::Args, Clone)]
+struct ClusterArgs {
+    /// Cluster lead-lag: stocks in each fit, the largest by dollar volume.
+    #[arg(long, default_value_t = 500)]
+    stocks: usize,
+    /// Cluster lead-lag: groups the stocks are split into.
+    #[arg(long, default_value_t = 10)]
+    groups: usize,
+    /// Cluster lead-lag: the longest offset (trading days) in the lead-lag measure.
+    #[arg(long, default_value_t = 5)]
+    max_offset: usize,
+    /// Cluster lead-lag: `distance` correlation (the paper's) or `pearson`.
+    #[arg(long, default_value = "distance")]
+    metric: String,
+    /// Cluster lead-lag: the returns groups are found and forecast on, `raw` (the paper's) or
+    /// `relative` (the census variable: market-relative, in units of the stock's volatility).
+    #[arg(long, default_value = "raw")]
+    returns: String,
+    /// Cluster lead-lag: stocks from every US exchange, not only NYSE as in the paper.
+    #[arg(long)]
+    all_exchanges: bool,
+    /// Cluster lead-lag: trading days each fit looks back over.
+    #[arg(long, default_value_t = 252)]
+    fit_window: usize,
+    /// Cluster lead-lag: trading days between fits.
+    #[arg(long, default_value_t = 42)]
+    refit: usize,
+}
+
+impl ClusterArgs {
+    fn settings(&self) -> Result<c2_census::cluster::Settings> {
+        use c2_census::cluster::{Metric, Returns};
+        Ok(c2_census::cluster::Settings {
+            stocks: self.stocks,
+            groups: self.groups,
+            max_lag: self.max_offset,
+            window: self.fit_window,
+            refit: self.refit,
+            metric: match self.metric.as_str() {
+                "distance" => Metric::Distance,
+                "pearson" => Metric::Pearson,
+                other => anyhow::bail!("unknown --metric {other} (distance or pearson)"),
+            },
+            returns: match self.returns.as_str() {
+                "raw" => Returns::Raw,
+                "relative" => Returns::MarketRelative,
+                other => anyhow::bail!("unknown --returns {other} (raw or relative)"),
+            },
+            nyse_only: !self.all_exchanges,
+            ..c2_census::cluster::Settings::paper()
+        })
+    }
 }
 
 fn main() -> Result<()> {
@@ -587,13 +670,17 @@ fn census(action: CensusCmd) -> Result<()> {
             println!("Stock lists of the census runs in {}:", c2_data::data_dir().join("census").display());
             snapshot_symbols()
         }
-        CensusCmd::Holdout { name, start, picks, costs, random, all_windows, walk_forward, family, rebalance, peers, lookback, peer_window } => {
+        CensusCmd::Holdout { name, start, picks, costs, random, all_windows, walk_forward, family, rebalance, peers, lookback, peer_window, cluster } => {
             let fam = match family.as_str() {
                 "census" => c2_census::holdout::Family::CensusPairs,
                 "peers" => c2_census::holdout::Family::PeerMomentum { peers, lookback, window: peer_window },
                 "reversal" => c2_census::holdout::Family::Reversal { lookback, window: peer_window },
-                other => anyhow::bail!("unknown family {other} (census, peers or reversal)"),
+                "clusters" => c2_census::holdout::Family::ClusterLeadLag(cluster.settings()?),
+                other => anyhow::bail!("unknown family {other} (census, peers, clusters or reversal)"),
             };
+            if let c2_census::holdout::Family::ClusterLeadLag(s) = fam {
+                println!("Cluster lead-lag settings: {}.", s.describe());
+            }
             let rebalance = rebalance.unwrap_or(match family.as_str() { "peers" => 21, "reversal" => lookback, _ => 1 });
             let store = c2_data::Store::open(&store_dir())?;
             let dir = run::run_dir(&name);
@@ -605,11 +692,15 @@ fn census(action: CensusCmd) -> Result<()> {
             if walk_forward {
                 let (y0, mo, d) = c2_data::civil_from_days(c2_data::parse_date(&start)?);
                 let last = *plan.var.days.last().unwrap();
-                println!("Walk-forward: each year treated as the future, predicted only from census correlation periods that ended before it.");
+                if family == "clusters" {
+                    println!("Walk-forward: each year treated as the future; inside it the groups are refit every {} trading days on the {} days before each fit. `links` counts the linked pairs of groups, summed over the year's fits.", cluster.refit, cluster.fit_window);
+                } else {
+                    println!("Walk-forward: each year treated as the future, predicted only from census correlation periods that ended before it.");
+                }
                 for line in gaps.lines("pairs with it are left out", "pairs with them are left out") {
                     println!("{line}.");
                 }
-                println!("{:<24} {:>7} {:>9} {:>9} {:>10} {:>10} {:>10} {:>8} {:>8} {:>9} {:>8}", "holdout", "pairs", "SPY", "QQQ", "picks", "random med", "p (0 bps)", "hit %", "IC t", "LS bps/d", "LS t");
+                println!("{:<24} {:>7} {:>9} {:>9} {:>10} {:>10} {:>10} {:>8} {:>8} {:>9} {:>8}", "holdout", if family == "clusters" { "links" } else { "pairs" }, "SPY", "QQQ", "picks", "random med", "p (0 bps)", "hit %", "IC t", "LS bps/d", "LS t");
                 let mut beat = 0;
                 let mut years = 0;
                 // Years whose holdout failed: (period, error). Each is shown in the table.
@@ -700,6 +791,9 @@ fn census(action: CensusCmd) -> Result<()> {
                 // Census pairs only: nothing was predicted, so there is nothing to score.
                 println!("Family {family}, rebalanced every {rebalance} trading day(s): no census pairs. No stored relationship with B moving over {} comes from a correlation period that ended before the holdout, so nothing was predicted.",
                     days_text(rebalance));
+            } else if family == "clusters" {
+                println!("Family clusters, rebalanced every {rebalance} trading day(s): {} fits (every {} trading days, each on the {} days before it), {} links between groups in all; {} stocks can be picked",
+                    r.windows_used, cluster.refit, cluster.fit_window, r.pairs, r.candidates);
             } else {
                 println!("Family {family}, rebalanced every {rebalance} trading day(s): {} pairs from {} correlation period(s) that ended before the holdout; {} stocks can be picked",
                     r.pairs, r.windows_used, r.candidates);
@@ -719,6 +813,7 @@ fn census(action: CensusCmd) -> Result<()> {
             }
             Ok(())
         }
+        CensusCmd::Clusters { name, start, end, draws, cost, daily, cluster } => clusters(&name, start, end, draws, cost, daily, &cluster.settings()?),
         CensusCmd::Explain { leader, follower, name, h1, h2, offset, period, end } => {
             use c2_census::explain::{self, Check};
             let days = |d: usize| if d == 1 { "1 day".to_string() } else { format!("{d} days") };
@@ -1077,6 +1172,128 @@ fn census(action: CensusCmd) -> Result<()> {
 /// The census a control command (status, stop, pause, resume) acts on: `--name`, else the
 /// census running now if there is exactly one (a census `c2 update` started is not the default
 /// until it finishes), else the default census (census/LATEST).
+/// `c2 census clusters`: the paper's own test of family B, by year and by period.
+fn clusters(name: &str, start: Option<String>, end: Option<String>, draws: usize, cost: f64, daily: Option<std::path::PathBuf>, s: &c2_census::cluster::Settings) -> Result<()> {
+    use c2_census::cluster;
+    let store = c2_data::Store::open(&store_dir())?;
+    let t0 = Instant::now();
+    let meta = c2_census::meta::RunMeta::load(&c2_census::run::run_dir(name))?;
+    let plan = c2_census::run::Plan::for_run(&store, &meta)?;
+    let var = &plan.var;
+    // Decision rows: the first needs a fit's look-back and warm-up before it; the last holds the
+    // final day of data.
+    // Market-relative returns (the census variable) start after its own warm-up: from the first
+    // row on which enough stocks have a value.
+    let warm = match s.returns {
+        c2_census::cluster::Returns::Raw => 0,
+        c2_census::cluster::Returns::MarketRelative => (0..var.t).find(|&d| (0..var.n).filter(|&j| var.v[j * var.t + d].is_finite()).count() >= 2 * s.stocks).unwrap_or(var.t),
+    };
+    let earliest = warm + s.window + 30;
+    let first = match start {
+        Some(d) => var.days.partition_point(|&x| x < c2_data::parse_date(&d).unwrap_or(i32::MAX)).saturating_sub(1).max(earliest),
+        None => earliest,
+    };
+    let last = match end {
+        Some(d) => var.days.partition_point(|&x| x <= c2_data::parse_date(&d).unwrap_or(i32::MAX)).saturating_sub(2),
+        None => var.t - 2,
+    };
+    println!("Cluster lead-lag (family B: Bennett, Cucuringu & Reinert 2022), the paper's own test, on census {name}'s stocks and price store {}.", c2_data::stores::name(&store_dir()));
+    println!("Settings: {}.", s.describe());
+    println!("Each day: long the stocks of groups forecast to rise, short those forecast to fall, equal weight; scaled to 10% a year volatility as in the paper. Null: the same pipeline with the groups shuffled, {draws} draws.");
+    let fits = std::sync::atomic::AtomicUsize::new(0);
+    let bt = cluster::backtest(&store, var, first, last, s, draws, &|msg| {
+        let k = fits.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+        if k % 20 == 0 {
+            eprintln!("  {k} fits so far, last {msg}");
+        }
+    })?;
+    let n = bt.ret.len();
+    // Scaled series aligned to days (NaN before the first 21 days).
+    let scaled_of = |r: &[f64]| -> Vec<f64> {
+        let (v, _) = cluster::vol_target(r);
+        std::iter::repeat_n(f64::NAN, r.len() - v.len()).chain(v).collect()
+    };
+    let (gross_scaled, scale) = cluster::vol_target(&bt.ret);
+    let pad = n - gross_scaled.len();
+    let gross: Vec<f64> = std::iter::repeat_n(f64::NAN, pad).chain(gross_scaled).collect();
+    let net: Vec<f64> = (0..n).map(|d| if d < pad { f64::NAN } else { scale[d - pad] * (bt.ret[d] - bt.turnover[d] * cost / 1e4) }).collect();
+    let null: Vec<Vec<f64>> = bt.null.iter().map(|r| scaled_of(r)).collect();
+    let finite = |v: &[f64], idx: &[usize]| -> Vec<f64> { idx.iter().map(|&d| v[d]).filter(|x| x.is_finite()).collect() };
+    let corr = |a: &[f64], b: &[f64]| -> f64 {
+        let m = a.len() as f64;
+        let (ma, mb) = (a.iter().sum::<f64>() / m, b.iter().sum::<f64>() / m);
+        let cov: f64 = a.iter().zip(b).map(|(x, y)| (x - ma) * (y - mb)).sum();
+        let (va, vb): (f64, f64) = (a.iter().map(|x| (x - ma) * (x - ma)).sum(), b.iter().map(|y| (y - mb) * (y - mb)).sum());
+        cov / (va * vb).sqrt()
+    };
+    // One row of results over the days `idx`.
+    struct Row { sharpe: f64, bps: f64, net: f64, null_median: f64, p: f64, market: f64, turnover: f64, exposure: f64 }
+    let row = |idx: &[usize]| -> Row {
+        let g = finite(&gross, idx);
+        let sharpe = cluster::sharpe(&g);
+        let mut nulls: Vec<f64> = null.iter().map(|r| cluster::sharpe(&finite(r, idx))).collect();
+        nulls.sort_by(|a, b| a.total_cmp(b));
+        let both: Vec<usize> = idx.iter().copied().filter(|&d| gross[d].is_finite() && bt.market[d].is_finite()).collect();
+        Row {
+            sharpe,
+            bps: 1e4 * g.iter().sum::<f64>() / g.len().max(1) as f64,
+            net: cluster::sharpe(&finite(&net, idx)),
+            null_median: nulls.get(nulls.len() / 2).copied().unwrap_or(f64::NAN),
+            p: (1 + nulls.iter().filter(|&&x| x >= sharpe).count()) as f64 / (1 + nulls.len()) as f64,
+            market: corr(&both.iter().map(|&d| gross[d]).collect::<Vec<_>>(), &both.iter().map(|&d| bt.market[d]).collect::<Vec<_>>()),
+            turnover: idx.iter().map(|&d| bt.turnover[d]).sum::<f64>() / idx.len().max(1) as f64,
+            exposure: idx.iter().map(|&d| bt.exposure[d]).sum::<f64>() / idx.len().max(1) as f64,
+        }
+    };
+    let secs: f64 = bt.fits.iter().map(|f| f.seconds).sum();
+    let aris: Vec<f64> = bt.fits.iter().map(|f| f.ari_prev).filter(|x| x.is_finite()).collect();
+    let links: f64 = bt.fits.iter().map(|f| f.links.len() as f64).sum::<f64>() / bt.fits.len().max(1) as f64;
+    let stocks: f64 = bt.fits.iter().map(|f| f.stocks as f64).sum::<f64>() / bt.fits.len().max(1) as f64;
+    println!(
+        "Held {} .. {} ({n} trading days): {} fits of {stocks:.0} stocks on average, {:.1}s each; {links:.1} links between groups per fit. The first 21 days have no volatility estimate yet and are left out of the figures.",
+        c2_data::date_string(bt.day[0]), c2_data::date_string(bt.day[n - 1]), bt.fits.len(), secs / bt.fits.len().max(1) as f64
+    );
+    println!(
+        "Groups from one fit to the next (2 months apart): adjusted Rand index mean {:.3} (1 = the same groups, 0 = no more alike than chance).",
+        aris.iter().sum::<f64>() / aris.len().max(1) as f64
+    );
+    println!("\nSharpe ratios are annualized; bps/day is the mean daily return at 10% a year volatility; net is after {cost} bps per side on the trading the signal changes need.");
+    println!("{:<8} {:>5} {:>8} {:>8} {:>9} {:>11} {:>10} {:>9} {:>9} {:>9}", "year", "days", "Sharpe", "bps/day", "net Sharpe", "shuffled med", "p shuffled", "traded", "turnover", "corr mkt");
+    let years: Vec<i32> = { let mut y: Vec<i32> = bt.day.iter().map(|&d| c2_data::civil_from_days(d).0).collect(); y.dedup(); y };
+    for y in years {
+        let idx: Vec<usize> = (0..n).filter(|&d| c2_data::civil_from_days(bt.day[d]).0 == y).collect();
+        let r = row(&idx);
+        println!("{:<8} {:>5} {:>8.2} {:>8.2} {:>10.2} {:>12.2} {:>10.3} {:>8.0}% {:>8.0}% {:>9.2}", y, idx.len(), r.sharpe, r.bps, r.net, r.null_median, r.p, 100.0 * r.exposure, 100.0 * r.turnover, r.market);
+    }
+    let (y2012, paper_end) = (c2_data::days_from_civil(2012, 12, 31), c2_data::days_from_civil(2019, 12, 31));
+    println!("\n{:<30} {:>5} {:>8} {:>8} {:>10} {:>12} {:>10} {:>9}", "period", "days", "Sharpe", "bps/day", "net Sharpe", "shuffled med", "p shuffled", "corr mkt");
+    for (label, idx) in [
+        ("up to 2012", (0..n).filter(|&d| bt.day[d] <= y2012).collect::<Vec<_>>()),
+        ("2013-2019", (0..n).filter(|&d| bt.day[d] > y2012 && bt.day[d] <= paper_end).collect()),
+        ("up to 2019 (the paper's years)", (0..n).filter(|&d| bt.day[d] <= paper_end).collect()),
+        ("2020 on (after the paper)", (0..n).filter(|&d| bt.day[d] > paper_end).collect()),
+        ("all", (0..n).collect()),
+    ] {
+        if idx.len() < 30 {
+            continue;
+        }
+        let r = row(&idx);
+        println!("{:<30} {:>5} {:>8.2} {:>8.2} {:>10.2} {:>12.2} {:>10.3} {:>9.2}", label, idx.len(), r.sharpe, r.bps, r.net, r.null_median, r.p, r.market);
+    }
+    println!("The paper (NYSE, 2000-2019, before costs): Sharpe 0.62, 2.4 bps/day, correlation 0.04 with the market, shuffled-group p < 0.005; weaker after 2012.");
+    if let Some(path) = daily {
+        use std::io::Write;
+        let mut f = std::io::BufWriter::new(std::fs::File::create(&path)?);
+        writeln!(f, "day\treturn\tturnover\ttraded\tmarket\tscaled")?;
+        for d in 0..n {
+            writeln!(f, "{}\t{:.8}\t{:.6}\t{:.4}\t{:.8}\t{:.8}", c2_data::date_string(bt.day[d]), bt.ret[d], bt.turnover[d], bt.exposure[d], bt.market[d], gross[d])?;
+        }
+        println!("Daily returns written to {}.", path.display());
+    }
+    println!("[{:.0}s]", t0.elapsed().as_secs_f64());
+    Ok(())
+}
+
 fn control_target(name: Option<String>) -> String {
     if let Some(name) = name {
         return name;

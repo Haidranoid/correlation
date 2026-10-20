@@ -2,6 +2,7 @@
 //! horizon and lag, screened in INT8 on the GPU and stored with exact recomputation.
 
 pub mod analyze;
+pub mod cluster;
 pub mod explain;
 pub mod forecast;
 pub mod grid;
