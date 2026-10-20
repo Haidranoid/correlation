@@ -1,0 +1,148 @@
+Out of sample: the census's picks and forecasts on the 16 months after it (2026-10-19)
+
+Data
+- A new Stooq bulk file, d_us_txt.zip, downloaded 2026-10-19: 13,383 files (34 empty), 28,067,896 rows, prices through 2026-10-19.
+  The old file had 11,550 files; the new store has about 1,800 more symbols.
+- Built into a separate data folder, ~/.local/share/correlation2-2026-10-19: its own store plus an unchanged copy of
+  census/main-2025-06-27. The real data folder ~/.local/share/correlation2 was not touched (same sizes, times and paths
+  before and after).
+- Census main-2025-06-27 ends 2025-06-27, so everything from 2025-06-30 on is data it never saw: 329 trading days,
+  2025-06-30 .. 2026-10-19.
+- Matching check: AAPL's stored relationships read the same r, z and chance counts on the new store, and sizes differ
+  only in the second decimal (the market average changed). 312 of the run's 8,503 stocks are not in the new file
+  (delisted or renamed since); pairs with them are left out.
+
+1. The $10,000 test with census pairs, 2025-06-30 .. 2026-10-19
+command: C2_DATA_DIR=~/.local/share/correlation2-2026-10-19 c2 census holdout --start 2025-06-30
+
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+312 of the run's stocks are no longer in today's data, so pairs with them are left out.
+Left out: 18078 stored pair(s) with a stock that is no longer in today's data.
+Family census, rebalanced every 1 trading day(s): 89022 pairs from 4 correlation period(s) that ended before the holdout; 2147 stocks can be picked
+Picks beat the market over their holding period: 51.0% of 6563 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0030, t = +2.01
+Long-short top/bottom 10%: -0.43 bps/day gross, Sharpe -0.23, t = -0.26, book turnover 43% per rebalance
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2147 candidates                    12077     20.8%
+Picks, no trading costs                             12105     21.0%   random guessers: median 12025, 47.5% did at least as well (p = 0.475)
+Picks, 5 bps per trade                              10042      0.4%   random guessers: median 9985, 48.2% did at least as well (p = 0.482)
+Picks, 20 bps per trade                              5729    -42.7%   random guessers: median 5715, 48.9% did at least as well (p = 0.489)
+0.80 s, 1450748 KB
+
+2. Positive control on the same days: 5-day short-term reversal
+command: C2_DATA_DIR=~/.local/share/correlation2-2026-10-19 c2 census holdout --start 2025-06-30 --family reversal --lookback 5
+
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+312 of the run's stocks are no longer in today's data, so pairs with them are left out.
+Family reversal, rebalanced every 5 trading day(s): 2155 pairs from 0 correlation period(s) that ended before the holdout; 2155 stocks can be picked
+Picks beat the market over their holding period: 48.7% of 1320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0178, t = +1.20
+Long-short top/bottom 10%: 10.15 bps/day gross, Sharpe 0.83, t = 0.95, book turnover 85% per rebalance
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             12303     23.0%   random guessers: median 11928, 40.7% did at least as well (p = 0.407)
+Picks, 5 bps per trade                              11557     15.6%   random guessers: median 11213, 41.0% did at least as well (p = 0.410)
+Picks, 20 bps per trade                              9578     -4.2%   random guessers: median 9313, 41.9% did at least as well (p = 0.419)
+
+3. Forecast track record, the same 61 large caps as before (21-day forecasts relative to the market, remade every
+   21 trading days; the first as of 2025-06-27, the census's last day)
+command: C2_DATA_DIR=~/.local/share/correlation2-2026-10-19 oos_track main-2025-06-27 2025-06-27 <out> <61 tickers>
+program: research/oos_track.rs (copy it to crates/c2-census/examples/ to build); every forecast is in
+         research/oos_2026-10-19_forecasts.txt
+check: on the old store the same program gives the published in-sample figure exactly: 50.9% of 13,694, mean
+       correlation +0.015. On the new store the in-sample figure is 50.7% / +0.015.
+
+run main-2025-06-27; data 2001-12-31 .. 2026-10-19; split 2025-06-27; 61 tickers; out-of-sample forecasts as of 2025-06-27 .. (every 21 trading days)
+
+In sample (track record as of 2025-06-27): 61 stocks, direction right 50.7% of 13694, mean correlation +0.015 (39 of 61 positive)
+Out of sample: 915 forecasts (915 with a direction) on 15 forecast days; direction right 51.7% (473 of 915), 50.0% expected from the up/down rates alone
+  per forecast day: mean 51.7%, standard error 1.9 points (so about 47.9% to 55.5% at 95%)
+  correlation of predicted with actual, pooled: +0.014; mean per stock -0.021 (26 of 61 positive)
+  mean |predicted| 0.06%, mean |actual| 6.36%
+
+Per stock, out of sample (direction right / with a direction, correlation):
+  AAPL    8/15 -0.20
+  MSFT   10/15 +0.17
+  AMZN   10/15 +0.25
+  GOOGL   9/15 +0.22
+  META    7/15 +0.17
+  NVDA    5/15 -0.14
+  JPM     6/15 +0.21
+  BAC     9/15 +0.34
+  WFC    10/15 +0.09
+  C       7/15 +0.06
+  GS      6/15 -0.27
+  MS      9/15 +0.37
+  XOM     5/15 -0.23
+  CVX     5/15 -0.44
+  COP     5/15 -0.39
+  JNJ     3/15 -0.66
+  PFE     9/15 +0.06
+  MRK     9/15 -0.01
+  ABT     8/15 -0.24
+  LLY    10/15 +0.26
+  UNH     8/15 -0.10
+  KO      7/15 +0.16
+  PEP     5/15 -0.25
+  PG      5/15 -0.17
+  WMT     9/15 +0.22
+  HD      9/15 +0.09
+  LOW     5/15 -0.27
+  MCD     9/15 -0.02
+  NKE     7/15 -0.13
+  SBUX    8/15 -0.40
+  DIS     8/15 -0.20
+  CMCSA   8/15 -0.36
+  T       8/15 -0.02
+  VZ      9/15 -0.11
+  INTC   10/15 +0.29
+  CSCO    8/15 -0.12
+  ORCL   10/15 +0.43
+  IBM    10/15 +0.33
+  QCOM   10/15 +0.36
+  TXN     9/15 -0.04
+  GE      9/15 +0.18
+  MMM    11/15 +0.40
+  CAT     9/15 -0.04
+  DE      7/15 -0.41
+  BA      7/15 -0.13
+  HON     7/15 -0.04
+  UPS     6/15 -0.04
+  FDX     6/15 -0.41
+  LMT     8/15 -0.38
+  RTX     8/15 +0.23
+  F       6/15 -0.12
+  GM      5/15 -0.07
+  MO      7/15 -0.28
+  PM      9/15 +0.05
+  CL     10/15 +0.29
+  KMB     9/15 +0.22
+  GIS     8/15 -0.17
+  SO      6/15 +0.17
+  DUK     8/15 +0.24
+  NEE     9/15 -0.20
+  D       6/15 -0.10
+
+Reading
+- The census picks did what random picks do: +21.0% before costs against a random median of +20.3%; 47.5% of random
+  accounts did as well. Buying SPY made +24.6%. With costs of 5 bps per trade the picks made +0.4%; at 20 bps they
+  lost 42.7%.
+- The forecasts were right 51.7% of the time (473 of 915), with 50.0% expected from the up/down rates alone. Counting
+  each forecast day once, the 95% range is 47.9% to 55.5%. Mean correlation per stock -0.021, 26 of 61 positive.
+  Predicted moves averaged 0.06% against actual moves of 6.36%. AAPL, the in-sample best at 58.0%, was right 8 of 15
+  times, correlation -0.20.
+- The reversal control was positive but not significant here (+23.0% against a random median of +19.3%, p = 0.41).
+  One 16-month window can only rule out large effects: it can tell 50% from about 55%, not from 51%.
+
+Caveats
+- Survivor-only data: stocks that left between 2025-06-27 and 2026-10-19 are missing from this period.
+- About 1,800 more symbols change the market average slightly, so "relative to the market" means this store's market.
+- Prices are still split- and dividend-adjusted, so the $5 look-ahead applies as before.
+- No out-of-sample replication: the replication test needs the next correlation period to be one of the run's own,
+  which takes a census rerun on the new data.

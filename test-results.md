@@ -7,6 +7,7 @@
 - **Code review fixes:** all 15 findings of a full code review, plus the verifiers' later findings, are fixed and verified. See "Code review fixes" at the end. The forecast and "% per 1%" are now relative to the market. Each run is read by its own settings, periods and stock list, and a second writer can't share a run.
 - **Outside data:** 1,753 non-stock series were tested with the census's method. The series cover weather, climate, crypto, markets and macro, politics, news sentiment, Google Trends, prediction markets, prosperity, population and immigration, and space weather. None leads US stocks beyond chance. See "Outside data" at the end.
 - **Corrected forecast track record** (market-relative): 61 large caps pooled, direction right 50.9%, mean correlation +0.018. That is a faint tilt with no practical value.
+- **Out of sample:** fresh Stooq data through 2026-10-19, kept in a separate folder (`~/.local/share/correlation2-2026-10-19`), covers the 16 months the census never saw. The census's picks made +21.0% before costs against +20.3% for the median random account (47.5% did as well; SPY made +24.6%). The 61 large-cap forecasts were right 51.7% of the time against 50.0% by chance (95% range 47.9–55.5%). No edge. See `research/oos_2026-10-19.txt`.
 
 The summary below describes the first census (`main`, 15 move-length pairs). Its conclusions still hold.
 
