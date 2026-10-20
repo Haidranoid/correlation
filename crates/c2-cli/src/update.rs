@@ -1,8 +1,9 @@
 //! Scheduled data refresh and the forward prediction log (SPEC.md section 5).
 //!
 //! `c2 update` ingests any Stooq zip dropped into `<data dir>/inbox/` (Stooq downloads now need
-//! a CAPTCHA, so fetching is manual for the time being) and archives it under
-//! `raw/stooq/<date>/`. Then, whenever the default census (`census/LATEST`) is not a finished
+//! a CAPTCHA, so fetching is manual for the time being) into a new price store, which becomes the
+//! default store (the one before it is kept), and archives the zip under `raw/stooq/<date>/`.
+//! Then, whenever the default census (`census/LATEST`) is not a finished
 //! full census of the price data as it now is, it runs one under a dated run name and makes it
 //! the default (a full census takes ~12 minutes, so "refine as new data arrives" currently means
 //! rerun; per-pair running sums are stored for a future live tracker). That check looks at the
@@ -52,6 +53,12 @@ fn fingerprint(dir: &Path) -> Option<(usize, i32)> {
 }
 
 pub fn update(opt: UpdateOptions) -> Result<()> {
+    // The census check and the forward log below go by the default store, and a new store
+    // becomes the default; C2_STORE would point the steps at different stores.
+    anyhow::ensure!(
+        std::env::var_os("C2_STORE").is_none(),
+        "`c2 update` works on the default store, but C2_STORE is set; unset it (`c2 store use NAME` changes the default)"
+    );
     let data = c2_data::data_dir();
     let inbox = data.join("inbox");
     std::fs::create_dir_all(&inbox)?;
@@ -63,29 +70,34 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
             }
         }
     }
-    let store_dir = super::store_dir();
     if zips.is_empty() {
         log(&format!("no new zips in {}", inbox.display()));
     } else {
         // `--smoke` ingests and archives the inbox too: the store it builds is the one a plain
         // update would build, and the census step below goes by whether the default census is
         // out of date with the store, so the next plain `c2 update` still runs the full census.
-        let before = fingerprint(&store_dir);
-        // Census records hold store ids, which a rebuilt store renumbers: first give every run
-        // without one a copy of the symbol table its ids refer to.
-        let saved = meta::snapshot_symbols_for_all_runs().context("could not save the stock lists of the existing census runs, so the store was not rebuilt")?;
+        let old = super::store_dir();
+        let before = fingerprint(&old);
+        // Census records hold store ids, which another store numbers differently: first give
+        // every run without one a copy of the symbol table its ids refer to.
+        let saved = meta::snapshot_symbols_for_all_runs().context("could not save the stock lists of the existing census runs, so no store was built")?;
         let names = |want: meta::Snapshot| saved.iter().filter(|(_, s)| *s == want).map(|(n, _)| n.as_str()).collect::<Vec<_>>().join(", ");
         let (written, lost) = (names(meta::Snapshot::Written), names(meta::Snapshot::Unrecoverable));
         if !written.is_empty() {
             log(&format!("saved the stock list of census runs {written}"));
         }
         if !lost.is_empty() {
-            log(&format!("census runs {lost} have no copy of their stock list and the store already changed since they ran; their results can't be matched to stocks"));
+            log(&format!("census runs {lost} have no copy of their stock list, and the default store is not the one they ran on; their results can't be matched to stocks"));
         }
         let paths: Vec<&Path> = zips.iter().map(|p| p.as_path()).collect();
-        let r = c2_data::ingest::ingest_stooq(&paths, &["us"], &store_dir)?;
-        log(&format!("ingested {} files, {} rows from {} zip(s)", r.files, r.rows, zips.len()));
-        let after = fingerprint(&store_dir);
+        let b = c2_data::stores::build_stooq(&paths, &["us"], None, None)?;
+        log(&format!(
+            "ingested {} files, {} rows from {} zip(s) into store {}{}, now the default store{}",
+            b.report.files, b.report.rows, zips.len(), b.name,
+            if b.replaced { " (it replaced the store of that name)" } else { "" },
+            if old != b.dir { format!(" in place of {} (kept)", c2_data::stores::name(&old)) } else { String::new() }
+        ));
+        let after = fingerprint(&b.dir);
         let changed = after != before;
         let stamp = after.map(|(_, d)| c2_data::date_string(d)).unwrap_or_else(|| "unknown".into());
         let raw = data.join("raw/stooq").join(&stamp);
@@ -108,7 +120,7 @@ pub fn update(opt: UpdateOptions) -> Result<()> {
         ));
     }
 
-    let store = Store::open(&store_dir)?;
+    let store = Store::open(&super::store_dir())?;
     // Whether to run a census depends on the default census and today's store, not on whether
     // this update ingested anything.
     let today = Today::of(&store)?;
@@ -139,7 +151,7 @@ struct Today {
 
 impl Today {
     fn of(store: &Store) -> Result<Today> {
-        let symbols = std::fs::read(super::store_dir().join("symbols.tsv")).context("read the store's symbols.tsv")?;
+        let symbols = std::fs::read(store.dir().join("symbols.tsv")).context("read the store's symbols.tsv")?;
         let last = *Calendar::trading_days(store)?.days.last().context("the price store has no trading days")?;
         Ok(Today { rows: store.rows() as u64, symbols_fnv64: format!("{:016x}", meta::fnv64(&symbols)), last_day: c2_data::date_string(last) })
     }

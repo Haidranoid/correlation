@@ -7,13 +7,16 @@ pub mod ingest;
 pub mod panel;
 pub mod quality;
 pub mod store;
+pub mod stores;
 
 use std::path::PathBuf;
 
 pub use panel::{Calendar, Panel};
 pub use store::{Kind, Store, SymbolInfo};
+pub use stores::store_dir;
 
-/// Where correlation2 keeps its data: `C2_DATA_DIR`, else `~/.local/share/correlation2`.
+/// Where correlation2 keeps its data: `C2_DATA_DIR`, else `~/.local/share/correlation2`. The
+/// price stores are in its `stores/` (see `stores`), census runs in `census/`.
 pub fn data_dir() -> PathBuf {
     if let Some(dir) = std::env::var_os("C2_DATA_DIR") {
         return dir.into();

@@ -487,7 +487,7 @@ Built with eframe/egui 0.36 (wgpu renderer) and `egui_plot`. One native window w
   - update runs
 - **Parquet:** prices, panels' source data, and large result arrays (score matrices, equity curves).
 - **TOML:** experiment configs. A config plus a data snapshot id fully determines a run.
-- **Data directory:** `~/.local/share/correlation2/` by default (raw, quarantine, canonical, cache, logs), configurable.
+- **Data directory:** `~/.local/share/correlation2/` by default (raw, quarantine, canonical, cache, logs), configurable. Price stores live in its `stores/<name>/`, one per ingest (`stooq-<last trading day>`), with `stores/CURRENT` naming the default and `--store`/`C2_STORE` choosing another; census results and outside data stay in the data directory and can be read against any store (since 2026-10-20).
 
 ## 12. Milestones
 

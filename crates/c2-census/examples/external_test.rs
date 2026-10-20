@@ -1997,7 +1997,7 @@ fn browse(args: &[String]) -> Result<()> {
     }
     let ext = parse_csv(&std::fs::read_to_string(dir.join("externals.csv"))?);
     let names: Vec<String> = ext.iter().skip(1).map(|r| r[1].clone()).collect();
-    let store = Store::open(&c2_data::data_dir().join("store"))?;
+    let store = Store::open(&c2_data::store_dir())?;
     let name = |g: u32| if g >= EXT_BASE { names.get((g - EXT_BASE) as usize).cloned().unwrap_or_default() } else { store.symbols.get(g as usize).map(|s| s.ticker.clone()).unwrap_or_default() };
     let bytes = std::fs::read(dir.join("entries.bin"))?;
     let mut sel: Vec<Entry> = bytes
@@ -2033,7 +2033,7 @@ fn main() -> Result<()> {
         *lap = Instant::now();
     };
     say(&t0, "loading the price store, the census run and building the census variable");
-    let store = Store::open(&data.join("store"))?;
+    let store = Store::open(&c2_data::store_dir())?;
     let cal = Calendar::trading_days(&store)?;
     let meta = RunMeta::load(&data.join("census").join(&args.census))?;
     let cfg = meta.cfg.clone();

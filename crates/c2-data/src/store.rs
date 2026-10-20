@@ -10,7 +10,7 @@
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use memmap2::Mmap;
@@ -164,6 +164,7 @@ fn bytes_of<T: Copy>(v: &[T]) -> &[u8] {
 /// Read-only view of a written store.
 pub struct Store {
     mmap: Mmap,
+    dir: PathBuf,
     pub symbols: Vec<SymbolInfo>,
     offsets: Vec<u64>,
     col_start: [usize; COLUMNS],
@@ -198,7 +199,12 @@ impl Store {
         if symbols.len() != n {
             bail!("symbols.tsv has {} symbols, prices.bin {n}", symbols.len());
         }
-        Ok(Store { mmap, symbols, offsets, col_start })
+        Ok(Store { mmap, dir: dir.to_path_buf(), symbols, offsets, col_start })
+    }
+
+    /// The folder the store was opened from.
+    pub fn dir(&self) -> &Path {
+        &self.dir
     }
 
     pub fn rows(&self) -> usize {

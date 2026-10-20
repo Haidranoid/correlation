@@ -6,6 +6,9 @@ Data
 - Built into a separate data folder, ~/.local/share/correlation2-2026-10-19: its own store plus an unchanged copy of
   census/main-2025-06-27. The real data folder ~/.local/share/correlation2 was not touched (same sizes, times and paths
   before and after).
+- Since 2026-10-20 this store is stores/stooq-2026-10-19 in the main data folder, and the census is read from there
+  too, so the commands below become `c2 --store stooq-2026-10-19 census holdout ...` (C2_STORE=stooq-2026-10-19 for
+  oos_track). Run that way, sections 1 and 2 come out identical, with no copy of the census.
 - Census main-2025-06-27 ends 2025-06-27, so everything from 2025-06-30 on is data it never saw: 329 trading days,
   2025-06-30 .. 2026-10-19.
 - Matching check: the parts recomputed from prices agree. AAPL's relationships give the same plain-terms counts on

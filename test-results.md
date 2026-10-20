@@ -2,12 +2,13 @@
 
 ## Where things stand (read this first)
 
-**Latest (2026-10-19):**
+**Latest (2026-10-20):**
 - **Current census:** `main-2025-06-27`, the default via `census/LATEST`. It has 36 move-length pairs (A and B each over 1, 3, 5, 10, 21 or 63 days) and 358.7 billion real correlations. See "Follow-up: your terms, a wider census…".
 - **Code review fixes:** all 15 findings of a full code review, plus the verifiers' later findings, are fixed and verified. See "Code review fixes" at the end. The forecast and "% per 1%" are now relative to the market. Each run is read by its own settings, periods and stock list, and a second writer can't share a run.
 - **Outside data:** 1,753 non-stock series were tested with the census's method. The series cover weather, climate, crypto, markets and macro, politics, news sentiment, Google Trends, prediction markets, prosperity, population and immigration, and space weather. None leads US stocks beyond chance. See "Outside data" at the end.
 - **Corrected forecast track record** (market-relative): 61 large caps pooled, direction right 50.9%, mean correlation +0.018. That is a faint tilt with no practical value.
-- **Out of sample:** fresh Stooq data through 2026-10-19, kept in a separate folder (`~/.local/share/correlation2-2026-10-19`), covers the 16 months the census never saw. The census's picks made +21.0% before costs against +20.3% for the median random account (47.5% did as well; SPY made +24.6%). The 61 large-cap forecasts were right 51.7% of the time against 50.0% by chance (95% range 47.9–55.5%). No edge. See `research/oos_2026-10-19.txt`.
+- **Out of sample:** fresh Stooq data through 2026-10-19, now the price store `stooq-2026-10-19`, covers the 16 months the census never saw. The census's picks made +21.0% before costs against +20.3% for the median random account (47.5% did as well; SPY made +24.6%). The 61 large-cap forecasts were right 51.7% of the time against 50.0% by chance (95% range 47.9–55.5%). No edge. See `research/oos_2026-10-19.txt`.
+- **Price stores, split from the other data (2026-10-20):** stock prices now live apart from the census results and the outside data, one store per download, in `~/.local/share/correlation2/stores/`. There are two: `stooq-2025-06-27`, the data the census was made on and still the default, and `stooq-2026-10-19`, the fresh download. `stores/CURRENT` names the default. `c2 store list` shows the stores and `c2 store use NAME` changes the default; the GUI switches within seconds. `c2 --store NAME …` or `C2_STORE=NAME` uses another store for one command. `c2 ingest` and `c2 update` now build a new store and make it the default, and keep the old one. The census reads any store: `c2 --store stooq-2026-10-19 census holdout --start 2025-06-30` reproduces the out-of-sample result exactly, without a copy of the census.
 
 The summary below describes the first census (`main`, 15 move-length pairs). Its conclusions still hold.
 
@@ -39,7 +40,9 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 | `c2 census holdout --family reversal --lookback 5` | Positive control (short-term reversal) |
 | `c2 census replicate` | Do stored pairs keep their sign in the next window? |
 | `c2 census validate` | Engine vs the Python oracle |
-| `c2 ingest`, `c2 data-check`, `c2 bench` | Build the price store, check the data, benchmark the hardware |
+| `c2 ingest`, `c2 data-check`, `c2 bench` | Build a new price store and make it the default, check the data, benchmark the hardware |
+| `c2 store list` / `c2 store use NAME` | List the price stores; make one the default |
+| `c2 --store NAME …` | Run one command on another price store (`C2_STORE=NAME` does the same) |
 | `c2 update` / `c2 forward-report` / `c2 install-timer [--enable]` | Data refresh, forward-log scoring, the weekday timer |
 | `c2-gui` | The native GUI |
 
@@ -51,7 +54,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 **Native GUI:** `c2-gui` (or **correlation2** in the app grid) has Status, Census, Holdout and Data tabs. Every tab was checked with screenshots, but you haven't tried it yet.
 
 **Data updates and the forward log (first version):**
-- `c2 update` ingests a Stooq zip dropped in `~/.local/share/correlation2/inbox/`, reruns the census if the data changed, and appends the next period's picks to an append-only forward log.
+- `c2 update` ingests a Stooq zip dropped in `~/.local/share/correlation2/inbox/` into a new price store, which becomes the default (the old store is kept). It reruns the census if the data changed, and appends the next period's picks to an append-only forward log.
 - `c2 forward-report` scores those picks against SPY once their holding period has passed.
 - Tested end to end in a scratch data directory.
 - The timer is **not enabled**; run `c2 install-timer --enable` if you want it.
@@ -66,7 +69,7 @@ So on this data the hypothesis does not hold. Details and every table follow bel
 - a point-in-time $5 price rule (it needs a split history; see "Last checks" under "Code review fixes")
 
 **Your call:**
-- **Fresher data:** the 16 months after the census are now in hand from a fresh Stooq download, in a separate folder (see "Out of sample" above). Making them the default means `c2 update`, which reruns the census. Delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
+- **Fresher data:** the 16 months after the census are now in hand as the store `stooq-2026-10-19`. `c2 store use stooq-2026-10-19` makes it the default; the next `c2 update` then reruns the census on it (about 12 minutes) and starts the forward log. Delisted stocks and prices as they were at the time still need a paid source: Sharadar ($39 for a month of full history) or MarketParquet.
 - **Direction:** continue with the cluster lead-lag family (B), or pivot the tool toward same-day co-movement, which is real and persistent and suits risk and diversification work.
 - **The weekday update timer:** enable it with `~/.local/bin/c2 install-timer --enable` (run it from `~/.local/bin` so the unit points at the installed binary), or leave it off.
 
@@ -178,7 +181,7 @@ The spec planned block-additive window sums to save arithmetic. Measurements sho
 
 **What was built:**
 - **Parallel ingest straight from the Stooq zip.** The zip is memory-mapped and each rayon task opens its own reader; decompression uses zlib-rs.
-- **One memory-mapped columnar store** (`~/.local/share/correlation2/store/prices.bin`, 640 MB): per-symbol contiguous date/open/high/low/close/volume columns, each 64-byte aligned, plus `symbols.tsv`. Written via temp file + rename.
+- **One memory-mapped columnar store** (`~/.local/share/correlation2/store/prices.bin`, 640 MB; since 2026-10-20 one per download, in `stores/<name>/`): per-symbol contiguous date/open/high/low/close/volume columns, each 64-byte aligned, plus `symbols.tsv`. Written via temp file + rename.
 - **SPY trading calendar**, dense panel builder, bad-print repair and the decade quality table.
 
 | Check | Result | Target / reference |
@@ -482,7 +485,7 @@ By year, the 5-day reversal was strong from 2008 to 2021: long-only picks beat r
 ## M3 (first version): data updates and the forward log (`c2 update`, `c2 forward-report`, `c2 install-timer`)
 
 **What `c2 update` does:**
-1. Ingests any Stooq zip in `~/.local/share/correlation2/inbox/`. Downloading is manual for now, because Stooq requires a CAPTCHA since early 2026; MarketParquet would allow automatic fetching once it's validated (ANALYSIS.md).
+1. Ingests any Stooq zip in `~/.local/share/correlation2/inbox/` (since 2026-10-20 into a new price store in `stores/`, which becomes the default; the old store is kept). Downloading is manual for now, because Stooq requires a CAPTCHA since early 2026; MarketParquet would allow automatic fetching once it's validated (ANALYSIS.md).
 2. Archives the zip under `raw/stooq/<last data day>/`.
 3. If the store changed, reruns the full census as `main-<last data day>` (~6 min) and points `census/LATEST` at it.
 4. Appends the next period's picks for both families (census pairs daily, peer momentum monthly) to `forward_log.jsonl`: one line per data day and family, never rewritten, written before the outcomes exist.

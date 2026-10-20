@@ -38,8 +38,9 @@ fn fingerprint(bytes: &[u8]) -> String {
     format!("{:016x}", fnv64(bytes))
 }
 
+/// The symbol table of the price store in use (`c2_data::store_dir`).
 fn current_symbols_path() -> PathBuf {
-    c2_data::data_dir().join("store/symbols.tsv")
+    c2_data::store_dir().join("symbols.tsv")
 }
 
 /// One correlation period as the run recorded it (a line of `windows.csv`).
@@ -552,7 +553,8 @@ fn read_stocks(dir: &Path, manifest: &serde_json::Value) -> std::result::Result<
     let now = fingerprint(&bytes);
     if want.is_empty() || now != want {
         return Err(format!(
-            "its stock list can't be recovered: the run has no copy of the store's symbols.tsv, and the store has been rebuilt since it ran (symbol table fingerprint {} then, {now} now), so its stock numbers can't be matched to tickers",
+            "its stock list can't be recovered: the run has no copy of the store's symbols.tsv, and the price store in use ({}) has another symbol table than the one it ran on (fingerprint {} then, {now} in this store), so its stock numbers can't be matched to tickers",
+            c2_data::stores::name(path.parent().unwrap_or(&path)),
             if want.is_empty() { "unrecorded" } else { want }
         ));
     }

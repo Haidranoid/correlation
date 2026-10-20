@@ -11,6 +11,10 @@ use clap::{Parser, Subcommand};
 #[derive(Parser)]
 #[command(name = "c2", about = "correlation2: stock lead-lag census and holdout testing")]
 struct Cli {
+    /// Price store to use: a name in <data dir>/stores, or a path (default: the store named in
+    /// stores/CURRENT; the C2_STORE environment variable does the same).
+    #[arg(long, global = true)]
+    store: Option<String>,
     #[command(subcommand)]
     cmd: Cmd,
 }
@@ -30,7 +34,8 @@ enum Cmd {
         #[arg(long)]
         no_cpu: bool,
     },
-    /// Build the price store from Stooq bulk zips (default: v1's d_us_txt.zip).
+    /// Build a price store from Stooq bulk zips (default: v1's d_us_txt.zip) in <data dir>/stores
+    /// and make it the default store. The stores already there are kept.
     Ingest {
         /// Stooq zip files.
         #[arg(long = "zip")]
@@ -41,9 +46,13 @@ enum Cmd {
         /// Drop rows after this date (YYYY-MM-DD): reproduce what was known then, or test updates.
         #[arg(long)]
         until: Option<String>,
+        /// The new store's name (default: stooq-<its last trading day>). A store of that name is
+        /// replaced.
+        #[arg(long)]
+        name: Option<String>,
     },
-    /// Ingest new zips from <data dir>/inbox, rerun the census if the data changed, and append
-    /// today's picks to the forward log. Run on a schedule by `c2 install-timer`.
+    /// Ingest new zips from <data dir>/inbox into a new default store, rerun the census if the data
+    /// changed, and append today's picks to the forward log. Run on a schedule by `c2 install-timer`.
     Update {
         /// Zip files to ingest instead of the inbox.
         #[arg(long = "zip")]
@@ -65,11 +74,25 @@ enum Cmd {
     },
     /// Print the store's acceptance numbers: symbol kinds, bad prints, decade quality table.
     DataCheck,
+    /// The price stores: list them, or choose the default one.
+    Store {
+        #[command(subcommand)]
+        action: StoreCmd,
+    },
     /// The correlation census: run, check on, pause or resume it, or validate the engine.
     Census {
         #[command(subcommand)]
         action: CensusCmd,
     },
+}
+
+#[derive(Subcommand)]
+enum StoreCmd {
+    /// List the price stores in <data dir>/stores: last trading day, symbols, rows, size.
+    List,
+    /// Make a store (a name in <data dir>/stores, or a path) the default one, which every command
+    /// and the GUI then use.
+    Use { name: String },
 }
 
 #[derive(Subcommand)]
@@ -220,20 +243,31 @@ enum CensusCmd {
     },
     /// Save each census run's stock list: a copy of the store's symbols.tsv, which the stock
     /// numbers in its results refer to, for every run that has none yet and whose list the
-    /// store still holds. `c2 ingest` and `c2 update` do this before they rebuild the store.
+    /// store in use still holds. `c2 ingest`, `c2 update` and `c2 store use` do this before they
+    /// change the default store.
     SnapshotSymbols,
 }
 
 fn main() -> Result<()> {
     #[cfg(feature = "cuda")]
     c2_engine::gpu::reexec_with_cuda_libraries();
-    match Cli::parse().cmd {
+    let cli = Cli::parse();
+    if let Some(store) = &cli.store {
+        // These two make a new store the default and work on that; a chosen one would be ignored.
+        match cli.cmd {
+            Cmd::Ingest { .. } => anyhow::bail!("`c2 ingest` builds a new store, so --store doesn't apply (--name names the new store)"),
+            Cmd::Update { .. } => anyhow::bail!("`c2 update` works on the default store, so --store doesn't apply (`c2 store use NAME` changes the default)"),
+            _ => c2_data::stores::choose(store)?,
+        }
+    }
+    match cli.cmd {
         Cmd::Bench { n, rows, no_cpu } => bench(n, &rows, !no_cpu),
-        Cmd::Ingest { zips, markets, until } => ingest(zips, &markets, until),
+        Cmd::Ingest { zips, markets, until, name } => ingest(zips, &markets, until, name),
         Cmd::Update { zips, smoke, no_census } => update::update(update::UpdateOptions { zips, smoke, no_census }),
         Cmd::ForwardReport => update::forward_report(),
         Cmd::InstallTimer { enable } => update::install_timer(enable),
         Cmd::DataCheck => data_check(),
+        Cmd::Store { action } => store(action),
         Cmd::Census { action } => census(action),
     }
 }
@@ -411,10 +445,10 @@ fn bench_gpu(n: usize, rows: &[usize], pairs: &[(usize, usize)]) -> Result<()> {
 }
 
 fn store_dir() -> std::path::PathBuf {
-    c2_data::data_dir().join("store")
+    c2_data::store_dir()
 }
 
-fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<String>) -> Result<()> {
+fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<String>, name: Option<String>) -> Result<()> {
     use anyhow::Context;
     if zips.is_empty() {
         let home = std::env::var_os("HOME").map(std::path::PathBuf::from).unwrap_or_default();
@@ -422,23 +456,76 @@ fn ingest(mut zips: Vec<std::path::PathBuf>, markets: &[String], until: Option<S
     }
     let paths: Vec<&std::path::Path> = zips.iter().map(|p| p.as_path()).collect();
     let markets: Vec<&str> = markets.iter().map(|s| s.as_str()).collect();
-    let dir = store_dir();
     let until = until.map(|u| c2_data::parse_date(&u)).transpose()?;
-    // Census results hold store ids, which a rebuilt store renumbers: first give every run
-    // without one a copy of the symbol table its ids refer to (as `c2 update` does).
-    println!("Stock lists of the census runs, saved before the store is rebuilt:");
-    snapshot_symbols().context("could not save the stock lists of the existing census runs, so the store was not rebuilt")?;
-    let r = c2_data::ingest::ingest_stooq_until(&paths, &markets, &dir, until)?;
-    println!("Ingested {} files ({} empty) into {}: {} rows in {:.1}s", r.files, r.empty, dir.display(), r.rows, r.seconds);
+    // Census results hold store ids, which another store numbers differently: first give every
+    // run without one a copy of the symbol table its ids refer to (as `c2 update` does).
+    println!("Stock lists of the census runs, saved before the default store changes:");
+    snapshot_symbols().context("could not save the stock lists of the existing census runs, so no store was built")?;
+    let before = c2_data::stores::default_name();
+    let b = c2_data::stores::build_stooq(&paths, &markets, until, name.as_deref())?;
+    let r = &b.report;
+    println!("Ingested {} files ({} empty) into {}: {} rows in {:.1}s", r.files, r.empty, b.dir.display(), r.rows, r.seconds);
     for (folder, n) in &r.by_folder {
         println!("  {folder:<22} {n:>6} files");
+    }
+    println!(
+        "Store {} (last trading day {}{}) is now the default store{}.",
+        b.name,
+        c2_data::date_string(b.last_day),
+        if b.replaced { "; it replaced the store of that name" } else { "" },
+        match before {
+            Some(old) if old != b.name => format!(", in place of {old}, which is kept"),
+            _ => String::new(),
+        }
+    );
+    if std::env::var_os("C2_STORE").is_some() {
+        println!("Note: C2_STORE is set, so commands run with it still use the store it names.");
     }
     Ok(())
 }
 
+fn store(action: StoreCmd) -> Result<()> {
+    match action {
+        StoreCmd::List => {
+            let (in_use, how) = c2_data::stores::selected();
+            let default = c2_data::stores::default_name();
+            let stores = c2_data::stores::list();
+            println!("Price stores in {}:", c2_data::stores::stores_dir().display());
+            if stores.is_empty() {
+                println!("  (none; `c2 ingest` builds one)");
+            } else {
+                println!("  {:<24} {:>10} {:>8} {:>12} {:>8}", "name", "last day", "symbols", "rows", "size");
+            }
+            for s in &stores {
+                let mark = if default.as_deref() == Some(s.name.as_str()) { "  (default)" } else { "" };
+                match c2_data::Store::open(&s.dir) {
+                    Ok(st) => {
+                        let bytes: u64 = ["prices.bin", "symbols.tsv"].iter().filter_map(|f| std::fs::metadata(s.dir.join(f)).ok()).map(|m| m.len()).sum();
+                        println!("  {:<24} {:>10} {:>8} {:>12} {:>5} MB{mark}", s.name, c2_data::date_string(c2_data::stores::last_day(&st)), st.symbols.len(), st.rows(), bytes / 1_000_000);
+                    }
+                    Err(e) => println!("  {:<24} can't be opened: {e:#}{mark}", s.name),
+                }
+            }
+            println!("In use: {} ({}).", in_use.display(), how.describe());
+            Ok(())
+        }
+        StoreCmd::Use { name } => {
+            use anyhow::Context;
+            c2_data::stores::find(&name)?;
+            println!("Stock lists of the census runs, saved before the default store changes:");
+            snapshot_symbols().context("could not save the stock lists of the existing census runs, so the default store was not changed")?;
+            let dir = c2_data::stores::set_default(&name)?;
+            println!("The default store is now {} ({}).", c2_data::stores::name(&dir), dir.display());
+            Ok(())
+        }
+    }
+}
+
 fn data_check() -> Result<()> {
     use c2_data::{Calendar, Kind, Panel, Store};
-    let store = Store::open(&store_dir())?;
+    let (dir, how) = c2_data::stores::selected();
+    let store = Store::open(&dir)?;
+    println!("Store {} ({}, {})", c2_data::stores::name(&dir), how.describe(), dir.display());
     println!("{} symbols, {} rows", store.symbols.len(), store.rows());
     let mut kinds = std::collections::BTreeMap::new();
     for s in &store.symbols {
@@ -1142,7 +1229,7 @@ fn snapshot_symbols() -> Result<()> {
         let what = match outcome {
             Snapshot::Written => "written: saved a copy of the store's symbols.tsv, which is still the one it was made with",
             Snapshot::AlreadyThere => "already there: it has its own copy",
-            Snapshot::Unrecoverable => "unrecoverable: it has no copy, and the store has been rebuilt since it ran, so its results can't be matched to stocks",
+            Snapshot::Unrecoverable => "unrecoverable: it has no copy, and the store in use is not the one it ran on, so its results can't be matched to stocks",
         };
         println!("  {name:<32} {what}");
     }

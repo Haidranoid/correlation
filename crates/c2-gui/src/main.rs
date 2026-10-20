@@ -231,8 +231,10 @@ type StoreStamp = Vec<(u64, Option<std::time::SystemTime>, u64)>;
 /// files' stamp it was opened from.
 type OpenedStore = (Arc<Store>, String, Vec<c2_data::quality::DecadeRow>, Option<StoreStamp>);
 
+/// The price store in use: `C2_STORE`, else the default store (`stores/CURRENT`), which `c2 store
+/// use` and `c2 ingest`/`c2 update` change; the window then switches to it (`watch_store`).
 fn store_dir() -> PathBuf {
-    c2_data::data_dir().join("store")
+    c2_data::store_dir()
 }
 
 /// The store's files as they are now; None while one is missing or a rebuild is writing them
@@ -251,7 +253,13 @@ fn open_store(dir: &Path) -> Result<OpenedStore, String> {
     let stamp = store_stamp(dir);
     let store = Store::open(dir).map_err(|e| format!("{e:#}"))?;
     let decades = c2_data::quality::decade_table(&store);
-    let note = format!("{} symbols, {} daily rows, in {}", commas(store.symbols.len() as f64), commas(store.rows() as f64), dir.display());
+    let note = format!(
+        "Store {}: {} symbols, {} daily rows, in {}",
+        c2_data::stores::name(dir),
+        commas(store.symbols.len() as f64),
+        commas(store.rows() as f64),
+        dir.display()
+    );
     Ok((Arc::new(store), note, decades, stamp))
 }
 
@@ -2806,8 +2814,8 @@ impl App {
                 None => "No full census has finished yet.".into(),
             });
             ui.label(
-                "Incremental updates from new data: not built yet. When `c2 update` finds new prices it reruns the whole census under a dated name \
-                 (marked \"new data\" above) and the app switches to the newest run. The census keeps each stored pair's running sums so a later \
+                "Incremental updates from new data: not built yet. When `c2 update` finds new prices it builds a new price store (the old one is kept), \
+                 reruns the whole census under a dated name (marked \"new data\" above), and the app switches to the newest run. The census keeps each stored pair's running sums so a later \
                  version can extend them with just the new days.",
             );
             let log = std::fs::read_to_string(c2_data::data_dir().join("update.log")).unwrap_or_default();
@@ -3437,6 +3445,14 @@ impl App {
     fn data_tab(&mut self, ui: &mut egui::Ui) {
         ui.heading("Price store");
         ui.label(&self.store_note);
+        let (_, how) = c2_data::stores::selected();
+        let names: Vec<String> = c2_data::stores::list().into_iter().map(|s| s.name).collect();
+        ui.label(format!(
+            "This is {}. Stores in {}: {}. `c2 store use NAME` makes another one the default, and this window switches to it.",
+            how.describe(),
+            c2_data::stores::stores_dir().display(),
+            if names.is_empty() { "none".to_string() } else { names.join(", ") }
+        ));
         ui.label("Stooq prices are split- and dividend-adjusted; test tickers are excluded and one-day bad prints repaired when panels are built.");
         ui.separator();
         egui::Grid::new("decades").striped(true).show(ui, |ui| {

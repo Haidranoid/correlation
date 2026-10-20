@@ -29,7 +29,7 @@ fn main() -> Result<()> {
     anyhow::ensure!(args.len() >= 4, "usage: RUN SPLIT PAIRS_OUT TICKER...");
     let (name, split, out) = (&args[0], c2_data::parse_date(&args[1])?, &args[2]);
     let tickers: Vec<String> = args[3..].iter().map(|t| t.trim().to_uppercase()).collect();
-    let store = c2_data::Store::open(&c2_data::data_dir().join("store"))?;
+    let store = c2_data::Store::open(&c2_data::store_dir())?;
     let dir = run::run_dir(name);
     let meta = RunMeta::load(&dir)?;
     let plan = run::Plan::for_run(&store, &meta)?;

@@ -487,7 +487,7 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
         return check_resume(dir, plan, store, &windows_csv, &universes_bin);
     }
     // The symbol table the run's store ids refer to: saved with the run, and fingerprinted.
-    let symbols = std::fs::read(c2_data::data_dir().join("store/symbols.tsv")).context("read the store's symbols.tsv")?;
+    let symbols = std::fs::read(store.dir().join("symbols.tsv")).context("read the store's symbols.tsv")?;
     let same = std::str::from_utf8(&symbols).ok().and_then(|t| c2_data::store::parse_symbols(t).ok()).is_some_and(|s| {
         s.len() == store.symbols.len() && s.iter().zip(&store.symbols).all(|(a, b)| a.ticker == b.ticker && a.exchange == b.exchange)
     });
@@ -506,6 +506,7 @@ fn prepare_dir(dir: &Path, plan: &Plan, store: &Store) -> Result<()> {
     let m = serde_json::json!({
         "config": cfg,
         "git_dirty": dirty,
+        "store": c2_data::stores::name(store.dir()),
         "store_symbols": store.symbols.len(),
         "store_rows": store.rows(),
         "symbols_tsv_fnv64": format!("{:016x}", meta::fnv64(&symbols)),
