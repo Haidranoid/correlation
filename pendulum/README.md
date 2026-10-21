@@ -5,11 +5,7 @@
 </p>
 <p align="center"><sub>Three identical triple pendulums, started a billionth of a radian apart. The animation is <a href="pendulum.svg">pendulum.svg</a>; for the interactive version, download <a href="pendulum.html">pendulum.html</a> with <a href="pendulum.js">pendulum.js</a> and open it in a browser (GitHub doesn't run JavaScript).</sub></p>
 
-**TL;DR:** A triple pendulum is three rods joined by hinges, and nothing about it is random: Newton's laws decide every move. Yet two copies started a billionth of a radian apart are in completely different places ten seconds later. That is a good picture of why twenty years of stock correlations, tested 65 ways in this project, gave no trading edge.
-
-Correlation measures the rods: which stocks move together, at the same moment. That structure is real and stable. A trade needs the swing: where the tip goes next. In the pendulum and in the market, knowing the structure exactly tells you almost nothing about the swing beyond a short horizon. In the market that horizon is minutes, it belongs to faster traders, and it is worth less than the cost of acting on it.
-
-What the structure does tell you is the reach: how big the swings are and what moves with what. That is why the one part of this project that works is risk, not prediction.
+**TL;DR:** A triple pendulum follows Newton's laws exactly, yet copies started a billionth of a radian apart end up in completely different places within ten seconds. Stocks share that with it, for different reasons (see "Where the metaphor breaks"). Correlation measures the rods: how stocks move together right now, which is real and useful for risk. A trade needs the swing, where things go next, and that can't be predicted beyond a short horizon that faster traders already own.
 
 ## The intuition
 
@@ -103,10 +99,29 @@ That is a real edge, but in risk, not return. You can't say where the tip will b
 
 ## Where the metaphor breaks
 
-- **The market isn't deterministic.** News arrives from outside, so on top of chaos there is genuine randomness. That makes prediction harder, not easier.
-- **The market reacts to being predicted.** A pendulum doesn't learn; traders do. In that sense the market is worse than chaos: it moves away from any forecast that becomes popular.
-- **The market's laws change.** A pendulum's equations never do. A relationship found in 2003–2012 can vanish in 2013, as the group lead-lag did.
-- **One part transfers exactly:** knowing a system's structure perfectly does not give you its future.
+The pendulum gets the lesson right: knowing a system's structure exactly does not give you its future. It gets the reason partly wrong, in four ways.
+
+- **Markets aren't chaotic in the pendulum's sense.**
+  - A pendulum is deterministic. Measure its start perfectly and you could predict it forever; it becomes unpredictable only because tiny measurement errors grow exponentially.
+  - Researchers looked for that kind of low-dimensional chaos in stock prices in the 1990s (Hsieh 1991, *Journal of Finance*, is the classic). Mostly they found that the non-randomness in returns is volatility clustering, not chaos.
+  - Prices are unpredictable mainly because news arrives at random. More precise measurement wouldn't help.
+- **The market fights back.**
+  - A pendulum doesn't care whether you predict it. Traders do, and any pattern that can be seen gets traded until it's gone.
+  - This project watched it happen. The turn-of-the-month effect held from 1926 to 2005 (t 8.2) and has been flat since. Trend following's Sharpe ratio fell from 1.4 to 0.4 after it was published.
+  - This, not chaos, is the main reason no edge survived.
+- **It's too generous about the short term.** A pendulum is very predictable for a few seconds. The market isn't: the one-minute lead-lag found here was mostly a timing artifact, the busiest stocks' prices updating first, and nobody can collect it after costs.
+- **The rods aren't rigid.**
+  - Correlations jump in crises, and only about half of each co-movement group stays together from one year to the next.
+  - Same-day co-movement is far more stable than any lagged relationship, but it isn't fixed the way a rod is.
+
+**A more exact description** is a coin flip where the size of the bet is predictable but the side isn't:
+- volatility and co-movement can be forecast;
+- the direction is close to 50/50;
+- whenever someone finds a slightly weighted coin, the crowd flattens it.
+
+Weather and climate make another fair comparison: no one can forecast next month's weather, but you can know the climate, which is the risk.
+
+The pendulum stays because it makes the one part that transfers exactly obvious at a glance: perfect knowledge of how the pieces are connected tells you almost nothing about where they go next.
 
 ## Files
 

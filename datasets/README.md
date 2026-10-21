@@ -1,6 +1,6 @@
 # Datasets
 
-**TL;DR:** The data every experiment in this repo started from: two snapshots of daily prices for every US stock and fund on Stooq, and 1,753 outside data series (weather, news counts, prediction markets, politics, prosperity, migration and more). Correlations, census runs and experiment outputs are not stored here, because they are all rebuilt from this data by the code in the repo. After cloning, run `datasets/unpack.sh` once: it rebuilds the price stores from their compressed parts, checks them against SHA-256 checksums, and links everything where correlation2 looks for it.
+**TL;DR:** The raw data every experiment here starts from. It holds daily prices for every US stock and fund on Stooq, in two snapshots (2025-06-27 and 2026-10-19), and 1,753 outside series such as weather, news counts and prediction markets. Nothing derived is stored. After cloning, run `datasets/unpack.sh` once to rebuild and check the price stores and link everything where the tools look.
 
 ## What's here
 
