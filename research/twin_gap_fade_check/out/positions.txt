@@ -1,0 +1,6 @@
+rows from 2026-07-01: 182346, days 77, 2026-07-01..2026-10-19
+all: 77 days, 36474 positions; max |gross - books.books()| 0.00e+00, max |twin cost - books.books()| 0.00e+00; max |gross - daily_new.tsv| 4.98e-07, max |headline - daily_new.tsv| 4.87e-07 (tsv has 6 decimals)
+500: 77 days, 7700 positions; max |gross - books.books()| 0.00e+00, max |twin cost - books.books()| 0.00e+00; max |gross - daily_new.tsv| 4.92e-07, max |headline - daily_new.tsv| 4.94e-07 (tsv has 6 decimals)
+ranked rows 182345; recomputed z vs rows z: max abs diff 5.22e-05, 99.9th pct 1.73e-05, non-finite 0
+store open-to-close vs rows: stock max 7.33e-08, twin max 6.32e-08
+distinct stocks: ranked 2453, in positions (all or 500 book) 2421; distinct twins 438

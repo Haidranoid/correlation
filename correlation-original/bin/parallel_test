@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+# Parallel testing script for correlation analysis
+# Usage: bin/parallel_test [number_of_processes]
+
+processes = ARGV[0]&.to_i || 6
+
+puts "🚀 Running RSpec tests in parallel with #{processes} processes..."
+puts "📊 CPU cores available: #{`nproc`.strip}"
+puts
+
+start_time = Time.now
+
+system("bundle exec parallel_rspec spec/ -n #{processes}")
+
+end_time = Time.now
+duration = end_time - start_time
+
+puts
+puts "⏱️  Parallel execution completed in #{duration.round(2)} seconds"
+puts "🖥️  Used #{processes} parallel processes"
+
+# Also provide comparison with sequential
+puts
+puts "💡 To compare with sequential execution, run:"
+puts "   time bundle exec rspec --format progress"

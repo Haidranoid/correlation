@@ -1,0 +1,5 @@
+[    1.3s] 12 formations x 20 pairs: max |month P&L diff| 0.00e+00, max |month cost diff| 0.00e+00, max |daily-sum vs trade-from-prices| 3.55e-15, pairs with a different trade count 0
+[    1.3s] k 24 2004-12-31: brute force vs Gram top 20: same max SSD diff 6.2e-13
+[    1.3s] k 90 2010-07-06: brute force vs Gram top 20: same max SSD diff 6.1e-13
+[    1.4s] k 157 2016-02-05: brute force vs Gram top 20: same max SSD diff 4.2e-13
+[    1.4s] k 224 2021-09-08: brute force vs Gram top 20: same max SSD diff 6.4e-13

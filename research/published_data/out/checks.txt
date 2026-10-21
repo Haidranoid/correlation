@@ -1,0 +1,60 @@
+ff3_daily: 1926-07-01 .. 2026-08-31  n 26317  cols ['Mkt-RF', 'SMB', 'HML', 'RF']  Mkt-RF mean +0.0784/yr  SMB mean +0.0097/yr  HML mean +0.0379/yr  RF mean +0.0301/yr
+ff5_daily: 1963-07-01 .. 2026-08-31  n 15897  cols ['Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'RF']  Mkt-RF mean +0.0733/yr  SMB mean +0.0157/yr  HML mean +0.0371/yr  RMW mean +0.0309/yr  CMA mean +0.0298/yr  RF mean +0.0432/yr
+umd_daily: 1926-11-03 .. 2026-08-31  n 26216  cols ['UMD']  UMD mean +0.0633/yr
+ff3_monthly: 1926-07-31 .. 2026-08-31  n 1202  cols ['Mkt-RF', 'SMB', 'HML', 'RF']  Mkt-RF mean +0.0835/yr  SMB mean +0.0199/yr  HML mean +0.0422/yr  RF mean +0.0324/yr
+ff5_monthly: 1963-07-31 .. 2026-08-31  n 758  cols ['Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'RF']  Mkt-RF mean +0.0722/yr  SMB mean +0.0224/yr  HML mean +0.0353/yr  RMW mean +0.0302/yr  CMA mean +0.0292/yr  RF mean +0.0435/yr
+umd_monthly: 1927-01-31 .. 2026-08-31  n 1196  cols ['UMD']  UMD mean +0.0735/yr
+aqr_bab_us_monthly: 1930-12-31 .. 2026-08-31  n 1149  cols ['BAB_US']  BAB_US mean +0.0780/yr
+aqr_tsmom_monthly: 1985-01-31 .. 2026-05-31  n 497  cols ['TSMOM']  TSMOM mean +0.1225/yr
+FF5 daily vs new export days over 2001-12-31..2026-08-31: French 6206, export 6206, French only 0, export only 0 []
+FF3 vs FF5 daily Mkt-RF max |diff| on common days: 0.000000
+rf_daily on new export days: first finite 2001-12-31, last day 2026-10-19 = 0.0428/yr; 2024 mean 0.0518/yr
+etf: union dates 1993-01-29 .. 2026-10-20  n 8489
+  SPY: 1993-01-29 .. 2026-10-20  bars 8489  dividends 136
+  IWM: 2000-05-26 .. 2026-10-20  bars 6639  dividends 107
+  EFA: 2001-08-27 .. 2026-10-20  bars 6324  dividends 47
+  EEM: 2003-04-14 .. 2026-10-20  bars 5918  dividends 47
+  EWJ: 1996-03-18 .. 2026-10-20  bars 7698  dividends 50
+  VGK: 2005-03-10 .. 2026-10-20  bars 5438  dividends 65
+  FXI: 2004-10-08 .. 2026-10-20  bars 5543  dividends 40
+  TLT: 2002-07-30 .. 2026-10-20  bars 6096  dividends 289
+  IEF: 2002-07-30 .. 2026-10-20  bars 6096  dividends 291
+  LQD: 2002-07-30 .. 2026-10-20  bars 6096  dividends 290
+  HYG: 2007-04-11 .. 2026-10-20  bars 4914  dividends 233
+  TIP: 2003-12-05 .. 2026-10-20  bars 5754  dividends 202
+  EMB: 2007-12-19 .. 2026-10-20  bars 4738  dividends 226
+  GLD: 2004-11-18 .. 2026-10-20  bars 5514  dividends 0
+  SLV: 2006-04-28 .. 2026-10-20  bars 5152  dividends 0
+  USO: 2006-04-10 .. 2026-10-20  bars 5165  dividends 0
+  UNG: 2007-04-18 .. 2026-10-20  bars 4909  dividends 0
+  DBC: 2006-02-06 .. 2026-10-20  bars 5209  dividends 9
+  DBA: 2007-01-05 .. 2026-10-20  bars 4979  dividends 8
+  UUP: 2007-03-01 .. 2026-10-20  bars 4942  dividends 9
+  FXE: 2005-12-12 .. 2026-10-20  bars 5246  dividends 100
+  FXY: 2007-02-13 .. 2026-10-20  bars 4953  dividends 0
+  VNQ: 2004-09-29 .. 2026-10-20  bars 5550  dividends 88
+SPY 2009-12-31..2019-12-31 a year: adjusted 0.1344, raw close 0.1119
+
+div_fix old: shape (8503, 5911), nonzero 13608, first nonzero day 2022-07-01; check 2022-12-30..2025-06-27 (2.49 yr), bps a year (export + fix minus Yahoo adjusted; export alone minus Yahoo adjusted):
+  XOM  events 10  with fix    +1.4   without  -341.9
+  T    events 10  with fix    +2.1   without  -595.1
+  VZ   events 10  with fix    +3.0   without  -677.9
+  KO   events 10  with fix    -1.2   without  -303.4
+  CVX  events 10  with fix    -1.2   without  -416.8
+  PFE  events 10  with fix    +2.6   without  -557.9
+  MO   events 10  with fix    +8.0   without  -821.8
+  JNJ  events 10  with fix    -0.9   without  -311.4
+  IBM  events 10  with fix    +1.5   without  -390.4
+  PG   events 10  with fix    +1.0   without  -248.7
+
+div_fix new: shape (9508, 6240), nonzero 20402, first nonzero day 2022-07-01; check 2022-12-30..2025-12-31 (3.00 yr), bps a year (export + fix minus Yahoo adjusted; export alone minus Yahoo adjusted):
+  XOM  events 12  with fix    +0.8   without  -343.5
+  T    events 12  with fix    +1.9   without  -562.4
+  VZ   events 12  with fix    +2.8   without  -672.5
+  KO   events 12  with fix    -0.7   without  -300.4
+  CVX  events 12  with fix    -0.7   without  -419.6
+  PFE  events 12  with fix    +2.4   without  -577.9
+  MO   events 12  with fix    +7.5   without  -795.5
+  JNJ  events 12  with fix    -0.9   without  -303.7
+  IBM  events 12  with fix    +1.6   without  -364.6
+  PG   events 12  with fix    +0.5   without  -252.2

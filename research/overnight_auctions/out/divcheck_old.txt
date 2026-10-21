@@ -1,0 +1,34 @@
+# Dividend adjustment in the old store (cent-grid check)
+
+SPY (fund): raw from 2025-03-21
+KO (stock row): raw from 2022-11-30
+XOM (stock row): raw from 2022-11-14
+T (stock row): raw from 2022-10-06
+AAPL (stock row): raw from 2025-02-10
+MSFT (stock row): raw from 2024-11-21
+JPM (stock row): raw from 2022-10-05
+O (stock row): raw from 2022-11-30
+
+Share of universe stock-days (on days d >= 2008) whose overnight d is in the raw region (day d-1 >= B): an
+ex-date there is not adjusted. Also the share of universe stocks whose raw region starts by the year's end.
+
+| Year | Universe stock-days | Raw-region share | 500 largest raw share | Twin overnights raw share | Payers (adjusted region exists) | Payers in raw region |
+|---|---|---|---|---|---|---|
+| 2008 | 252210 | 0.144 | 0.090 | 0.011 | 0.856 | 0.000 |
+| 2009 | 226879 | 0.121 | 0.081 | 0.016 | 0.879 | 0.000 |
+| 2010 | 233514 | 0.135 | 0.086 | 0.008 | 0.866 | 0.001 |
+| 2011 | 252754 | 0.149 | 0.085 | 0.006 | 0.856 | 0.005 |
+| 2012 | 259293 | 0.151 | 0.088 | 0.011 | 0.857 | 0.008 |
+| 2013 | 268770 | 0.154 | 0.108 | 0.016 | 0.863 | 0.018 |
+| 2014 | 305082 | 0.192 | 0.127 | 0.026 | 0.837 | 0.029 |
+| 2015 | 327672 | 0.209 | 0.126 | 0.028 | 0.828 | 0.037 |
+| 2016 | 337359 | 0.220 | 0.127 | 0.021 | 0.827 | 0.046 |
+| 2017 | 361158 | 0.238 | 0.147 | 0.024 | 0.814 | 0.052 |
+| 2018 | 395630 | 0.268 | 0.176 | 0.032 | 0.789 | 0.057 |
+| 2019 | 413381 | 0.289 | 0.189 | 0.023 | 0.772 | 0.062 |
+| 2020 | 431909 | 0.324 | 0.236 | 0.039 | 0.756 | 0.081 |
+| 2021 | 475821 | 0.378 | 0.284 | 0.094 | 0.708 | 0.085 |
+| 2022 | 508247 | 0.477 | 0.355 | 0.358 | 0.700 | 0.177 |
+| 2023 | 507851 | 0.943 | 0.920 | 0.893 | 0.703 | 0.646 |
+| 2024 | 544425 | 0.964 | 0.945 | 0.954 | 0.674 | 0.638 |
+| 2025 | 273935 | 0.993 | 0.992 | 0.989 | 0.665 | 0.658 |

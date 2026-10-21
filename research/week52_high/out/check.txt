@@ -1,0 +1,25 @@
+PTH by hand, 2000 random stock-days: 0 mismatches
+cohort formed 2012-06-04: eligible 1045, legs 314 / 314 (30% = 313.5); long PTH min 0.889, short PTH max 0.742
+period 2012-08-02..2012-08-31: long by hand +0.024807, code +0.024807; short by hand +0.074136, code +0.074136
+  that period in the book: 6 cohorts active
+grid identical on the shared days: True
+  new period 2025-04-14 -> 2025-05-14 (21 days)
+  new period 2025-05-14 -> 2025-06-13 (21 days)
+  new period 2025-06-13 -> 2025-06-27 (9 days)
+  new period 2025-06-27 -> 2025-07-16 (12 days)
+  new period 2025-07-16 -> 2025-08-14 (21 days)
+  new period 2025-08-14 -> 2025-09-15 (21 days)
+  new period 2025-09-15 -> 2025-10-14 (21 days)
+  new period 2025-10-14 -> 2025-11-12 (21 days)
+  new period 2025-11-12 -> 2025-12-12 (21 days)
+  new period 2025-12-12 -> 2026-01-14 (21 days)
+  new period 2026-01-14 -> 2026-02-13 (21 days)
+  new period 2026-02-13 -> 2026-03-17 (21 days)
+  new period 2026-03-17 -> 2026-04-16 (21 days)
+  new period 2026-04-16 -> 2026-05-15 (21 days)
+  new period 2026-05-15 -> 2026-06-16 (21 days)
+  new period 2026-06-16 -> 2026-07-17 (21 days)
+  new period 2026-07-17 -> 2026-08-17 (21 days)
+  new period 2026-08-17 -> 2026-09-16 (21 days)
+  new period 2026-09-16 -> 2026-10-15 (21 days)
+  new period 2026-10-15 -> 2026-10-19 (2 days)

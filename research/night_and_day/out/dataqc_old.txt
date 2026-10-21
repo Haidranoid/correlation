@@ -1,0 +1,28 @@
+SPY entries [{'id': 9673, 'ticker': 'SPY', 'exchange': 'nyse', 'kind': 'etf', 'rows': 5116}]
+stock-days with store close (2008+): 17233905
+  open missing or <= 0: 5.8025154484720673e-08
+  open == close: 0.041559472446900454  liquid (dv>=5M): 0.011222939243340547
+  open == close == high == low: 0.013776274152607897  liquid: 6.667092619806266e-05
+  open outside [low, high] by > 0.1%: 1.6827294800568994e-06  liquid: 3.30708959315787e-06
+  store close vs export close differ > 1%: 0.0  liquid: 0.0
+  export close finite but store close missing: 0.0
+  overnight: n 17041690, |x|>0.2 2.51e-03, |x|>0.5 3.56e-04, p99 0.0937
+  intraday: n 17231615, |x|>0.2 4.14e-03, |x|>0.5 3.95e-04, p99 0.1378
+2008 liquid stock-days 276567 open==close 0.0058 outside range 0.0 open missing 0.0
+2009 liquid stock-days 250766 open==close 0.0071 outside range 0.0 open missing 0.0
+2010 liquid stock-days 268259 open==close 0.009 outside range 0.0 open missing 0.0
+2011 liquid stock-days 289397 open==close 0.0083 outside range 0.0 open missing 0.0
+2012 liquid stock-days 288134 open==close 0.0126 outside range 0.0 open missing 0.0
+2013 liquid stock-days 323893 open==close 0.0129 outside range 0.0 open missing 0.0
+2014 liquid stock-days 363029 open==close 0.0119 outside range 0.0 open missing 0.0
+2015 liquid stock-days 384518 open==close 0.0106 outside range 0.0 open missing 0.0
+2016 liquid stock-days 387281 open==close 0.0124 outside range 0.0 open missing 0.0
+2017 liquid stock-days 424359 open==close 0.018 outside range 0.0 open missing 0.0
+2018 liquid stock-days 461711 open==close 0.0176 outside range 0.0 open missing 0.0
+2019 liquid stock-days 474409 open==close 0.017 outside range 0.0 open missing 0.0
+2020 liquid stock-days 530332 open==close 0.008 outside range 0.0 open missing 0.0
+2021 liquid stock-days 634147 open==close 0.0088 outside range 0.0 open missing 0.0
+2022 liquid stock-days 611764 open==close 0.0083 outside range 0.0 open missing 0.0
+2023 liquid stock-days 598177 open==close 0.0104 outside range 0.0 open missing 0.0
+2024 liquid stock-days 651170 open==close 0.0111 outside range 0.0 open missing 0.0
+2025 liquid stock-days 341604 open==close 0.01 outside range 0.0 open missing 0.0

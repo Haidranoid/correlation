@@ -1,0 +1,160 @@
+All returns are per 21-day period ("month"), in percent; t plain (NW 6 lags). Alphas: FF5 + UMD intercept.
+
+TEST 1 window: periods ending 2006-02-01..2019-12-06, n = 167, cohorts active min 6
+  PTH book (the plan)                    net   mean -0.375 (-0.97; NW -0.86)  %/yr -4.50  vol 17.4  Sharpe -0.26  alpha -0.384 (-2.66; NW -2.07), n=167  mkt -0.13 umd +0.74
+  PTH book (the plan)                    gross mean -0.341 (-0.88; NW -0.78)  %/yr -4.10  vol 17.4  Sharpe -0.24  alpha -0.350 (-2.43; NW -1.89), n=167  mkt -0.13 umd +0.74
+                                         long - market -0.184 (-1.06; NW -0.97); market - short -0.158 (-0.73; NW -0.63)
+  PTH, one-week skip                     net   mean -0.369 (-0.96; NW -0.86)  %/yr -4.43  vol 17.2  Sharpe -0.26  alpha -0.399 (-2.76; NW -2.20), n=167  mkt -0.12 umd +0.73
+  PTH, one-week skip                     gross mean -0.336 (-0.87; NW -0.79)  %/yr -4.03  vol 17.2  Sharpe -0.23  alpha -0.365 (-2.53; NW -2.01), n=167  mkt -0.12 umd +0.73
+                                         long - market -0.183 (-1.07; NW -1.00); market - short -0.152 (-0.71; NW -0.62)
+  12-1 momentum (baseline)               net   mean -0.373 (-1.07; NW -0.97)  %/yr -4.47  vol 15.6  Sharpe -0.29  alpha -0.574 (-3.99; NW -4.21), n=167  mkt +0.14 umd +0.78
+  12-1 momentum (baseline)               gross mean -0.339 (-0.98; NW -0.88)  %/yr -4.07  vol 15.6  Sharpe -0.26  alpha -0.540 (-3.76; NW -3.97), n=167  mkt +0.14 umd +0.78
+                                         long - market -0.202 (-1.28; NW -1.21); market - short -0.137 (-0.69; NW -0.61)
+  GH's JT: 6-month return, no skip       net   mean -0.349 (-1.07; NW -0.91)  %/yr -4.19  vol 14.6  Sharpe -0.29  alpha -0.513 (-4.16; NW -3.28), n=167  mkt +0.08 umd +0.80
+  GH's JT: 6-month return, no skip       gross mean -0.316 (-0.97; NW -0.83)  %/yr -3.79  vol 14.6  Sharpe -0.26  alpha -0.480 (-3.89; NW -3.07), n=167  mkt +0.08 umd +0.80
+                                         long - market -0.150 (-1.02; NW -0.89); market - short -0.166 (-0.90; NW -0.76)
+  PTH, 500 largest                       net   mean -0.321 (-0.86; NW -0.84)  %/yr -3.85  vol 16.7  Sharpe -0.23  alpha -0.325 (-2.20; NW -2.09), n=167  mkt -0.15 umd +0.68
+  PTH, 500 largest                       gross mean -0.287 (-0.77; NW -0.75)  %/yr -3.45  vol 16.7  Sharpe -0.21  alpha -0.292 (-1.97; NW -1.88), n=167  mkt -0.15 umd +0.68
+                                         long - market -0.155 (-0.93; NW -0.93); market - short -0.132 (-0.64; NW -0.61)
+  PTH skip, 500 largest                  net   mean -0.295 (-0.80; NW -0.80)  %/yr -3.54  vol 16.5  Sharpe -0.21  alpha -0.330 (-2.26; NW -2.21), n=167  mkt -0.13 umd +0.66
+  PTH skip, 500 largest                  gross mean -0.262 (-0.71; NW -0.71)  %/yr -3.14  vol 16.5  Sharpe -0.19  alpha -0.296 (-2.03; NW -1.99), n=167  mkt -0.13 umd +0.66
+                                         long - market -0.150 (-0.91; NW -0.94); market - short -0.111 (-0.54; NW -0.53)
+  12-1 momentum, 500 largest             net   mean -0.357 (-1.03; NW -1.06)  %/yr -4.29  vol 15.6  Sharpe -0.27  alpha -0.559 (-3.65; NW -4.09), n=167  mkt +0.14 umd +0.74
+  12-1 momentum, 500 largest             gross mean -0.324 (-0.93; NW -0.96)  %/yr -3.89  vol 15.6  Sharpe -0.25  alpha -0.526 (-3.43; NW -3.85), n=167  mkt +0.14 umd +0.74
+                                         long - market -0.201 (-1.24; NW -1.33); market - short -0.123 (-0.63; NW -0.64)
+
+TEST 1 RESULT: mean -0.375% per period, t -0.97 (NW -0.86) -> FAIL (needs t >= 2)
+
+TEST 2: book net on baseline net, OLS, test 1 window
+  PTH on 12-1 (the test)               2006-2019     intercept -0.016% (t -0.08; NW -0.10) slope +0.963 (t +22.0) R2 0.746 n 167  corr +0.864
+  PTH on 12-1 (the test)               2020-2025-06  intercept -0.242% (t -0.60; NW -0.68) slope +0.872 (t +11.5) R2 0.673 n 66  corr +0.821
+  PTH on 12-1 (the test)               2006-2025-06  intercept -0.093% (t -0.52; NW -0.62) slope +0.929 (t +24.4) R2 0.720 n 233  corr +0.849
+  PTH on GH's JT 6-month (reported)    2006-2019     intercept +0.005% (t +0.03; NW +0.03) slope +1.087 (t +28.6) R2 0.832 n 167  corr +0.912
+  PTH on GH's JT 6-month (reported)    2020-2025-06  intercept -0.356% (t -0.97; NW -1.06) slope +1.098 (t +13.2) R2 0.732 n 66  corr +0.855
+  PTH on GH's JT 6-month (reported)    2006-2025-06  intercept -0.096% (t -0.63; NW -0.65) slope +1.088 (t +30.2) R2 0.798 n 233  corr +0.893
+  PTH skip on 12-1                     2006-2019     intercept -0.012% (t -0.06; NW -0.08) slope +0.960 (t +22.4) R2 0.753 n 167  corr +0.868
+  PTH skip on 12-1                     2020-2025-06  intercept -0.265% (t -0.67; NW -0.74) slope +0.891 (t +12.0) R2 0.691 n 66  corr +0.831
+  PTH skip on 12-1                     2006-2025-06  intercept -0.093% (t -0.53; NW -0.63) slope +0.934 (t +25.0) R2 0.730 n 233  corr +0.855
+  500 largest: PTH on 12-1             2006-2019     intercept -0.006% (t -0.03; NW -0.03) slope +0.881 (t +18.7) R2 0.680 n 167  corr +0.824
+  500 largest: PTH on 12-1             2020-2025-06  intercept -0.433% (t -0.86; NW -1.17) slope +0.606 (t +7.3) R2 0.454 n 66  corr +0.673
+  500 largest: PTH on 12-1             2006-2025-06  intercept -0.177% (t -0.84; NW -1.02) slope +0.763 (t +18.0) R2 0.584 n 233  corr +0.764
+  reverse: 12-1 on PTH                 2006-2019     intercept -0.082% (t -0.47; NW -0.62) slope +0.775 (t +22.0) R2 0.746 n 167  corr +0.864
+  reverse: 12-1 on PTH                 2020-2025-06  intercept +0.270% (t +0.71; NW +0.85) slope +0.772 (t +11.5) R2 0.673 n 66  corr +0.821
+  reverse: 12-1 on PTH                 2006-2025-06  intercept +0.018% (t +0.11; NW +0.13) slope +0.775 (t +24.4) R2 0.720 n 233  corr +0.849
+TEST 2 RESULT: intercept -0.016%, t -0.08 -> FAIL
+
+TEST 3 window: periods ending 2020-01-08..2025-06-13, n = 66: mean -0.021 (-0.03; NW -0.03) -> same sign as test 1: True
+  with the dividend correction: -0.004 (-0.01; NW -0.01)
+
+BY PERIOD (net). raw / dividend-corrected where the window reaches 2022-07
+  PTH book (the plan)
+    2006-2007         raw    n  23 mean +0.130 (+0.33; NW +0.24) Sharpe +0.24 total +2.6% alpha -0.044 (-0.14; NW -0.20), n=23 mkt -0.18 umd +0.59
+    2008-2009         raw    n  24 mean -3.054 (-1.39; NW -1.36) Sharpe -0.99 total -59.4% alpha -1.423 (-1.97; NW -2.36), n=24 mkt -0.13 umd +0.82
+    2010-2014         raw    n  60 mean -0.029 (-0.07; NW -0.09) Sharpe -0.03 total -4.6% alpha -0.092 (-0.44; NW -0.70), n=60 mkt -0.18 umd +0.67
+    2015-2019         raw    n  60 mean +0.157 (+0.37; NW +0.43) Sharpe +0.16 total +6.4% alpha -0.038 (-0.23; NW -0.27), n=60 mkt -0.13 umd +0.75
+    2006-2019         raw    n 167 mean -0.375 (-0.97; NW -0.86) Sharpe -0.26 total -57.7% alpha -0.384 (-2.66; NW -2.07), n=167 mkt -0.13 umd +0.74
+    2020-2025-06      raw    n  66 mean -0.021 (-0.03; NW -0.03) Sharpe -0.01 total -11.6% alpha -0.340 (-1.15; NW -1.59), n=66 mkt -0.12 umd +0.66
+    2020-2025-06      divfix n  66 mean -0.004 (-0.01; NW -0.01) Sharpe -0.00 total -10.7% alpha -0.323 (-1.09; NW -1.49), n=66 mkt -0.12 umd +0.66
+    2022-07..2025-06  raw    n  36 mean +0.450 (+0.67; NW +1.12) Sharpe +0.39 total +14.3% alpha -0.097 (-0.28; NW -0.34), n=36 mkt -0.14 umd +0.58
+    2022-07..2025-06  divfix n  36 mean +0.480 (+0.72; NW +1.20) Sharpe +0.42 total +15.5% alpha -0.058 (-0.17; NW -0.20), n=36 mkt -0.15 umd +0.58
+    2006-2025-06      raw    n 233 mean -0.275 (-0.81; NW -0.76) Sharpe -0.18 total -62.7% alpha -0.357 (-2.61; NW -2.30), n=233 mkt -0.15 umd +0.70
+    2006-2025-06      divfix n 233 mean -0.270 (-0.79; NW -0.75) Sharpe -0.18 total -62.3% alpha -0.352 (-2.57; NW -2.26), n=233 mkt -0.15 umd +0.70
+  PTH, one-week skip
+    2006-2007         raw    n  23 mean +0.101 (+0.26; NW +0.20) Sharpe +0.19 total +2.0% alpha -0.103 (-0.30; NW -0.46), n=23 mkt -0.14 umd +0.56
+    2008-2009         raw    n  24 mean -3.051 (-1.40; NW -1.41) Sharpe -0.99 total -59.4% alpha -1.383 (-1.91; NW -2.39), n=24 mkt -0.11 umd +0.80
+    2010-2014         raw    n  60 mean -0.004 (-0.01; NW -0.01) Sharpe -0.00 total -3.0% alpha -0.097 (-0.48; NW -0.80), n=60 mkt -0.17 umd +0.66
+    2015-2019         raw    n  60 mean +0.158 (+0.38; NW +0.43) Sharpe +0.17 total +6.5% alpha -0.042 (-0.26; NW -0.32), n=60 mkt -0.14 umd +0.72
+    2006-2019         raw    n 167 mean -0.369 (-0.96; NW -0.86) Sharpe -0.26 total -57.2% alpha -0.399 (-2.76; NW -2.20), n=167 mkt -0.12 umd +0.73
+    2020-2025-06      raw    n  66 mean -0.039 (-0.05; NW -0.06) Sharpe -0.02 total -12.9% alpha -0.369 (-1.21; NW -1.60), n=66 mkt -0.11 umd +0.66
+    2020-2025-06      divfix n  66 mean -0.020 (-0.03; NW -0.03) Sharpe -0.01 total -11.9% alpha -0.350 (-1.14; NW -1.50), n=66 mkt -0.11 umd +0.66
+    2022-07..2025-06  raw    n  36 mean +0.479 (+0.72; NW +1.16) Sharpe +0.41 total +15.5% alpha -0.074 (-0.21; NW -0.25), n=36 mkt -0.15 umd +0.57
+    2022-07..2025-06  divfix n  36 mean +0.513 (+0.77; NW +1.26) Sharpe +0.44 total +16.9% alpha -0.033 (-0.09; NW -0.11), n=36 mkt -0.16 umd +0.57
+    2006-2025-06      raw    n 233 mean -0.276 (-0.81; NW -0.77) Sharpe -0.18 total -62.7% alpha -0.374 (-2.70; NW -2.41), n=233 mkt -0.14 umd +0.69
+    2006-2025-06      divfix n 233 mean -0.270 (-0.80; NW -0.76) Sharpe -0.18 total -62.3% alpha -0.368 (-2.66; NW -2.37), n=233 mkt -0.14 umd +0.69
+  12-1 momentum (baseline)
+    2006-2007         raw    n  23 mean -0.145 (-0.38; NW -0.27) Sharpe -0.27 total -3.6% alpha -0.355 (-1.67; NW -2.34), n=23 mkt -0.00 umd +0.53
+    2008-2009         raw    n  24 mean -2.974 (-1.50; NW -1.60) Sharpe -1.06 total -57.3% alpha -1.223 (-2.12; NW -2.40), n=24 mkt +0.07 umd +0.79
+    2010-2014         raw    n  60 mean +0.282 (+0.91; NW +1.51) Sharpe +0.41 total +16.5% alpha -0.397 (-1.61; NW -2.25), n=60 mkt +0.27 umd +0.55
+    2015-2019         raw    n  60 mean -0.075 (-0.19; NW -0.21) Sharpe -0.08 total -7.1% alpha -0.354 (-1.69; NW -2.28), n=60 mkt -0.01 umd +0.71
+    2006-2019         raw    n 167 mean -0.373 (-1.07; NW -0.97) Sharpe -0.29 total -55.5% alpha -0.574 (-3.99; NW -4.21), n=167 mkt +0.14 umd +0.78
+    2020-2025-06      raw    n  66 mean +0.254 (+0.39; NW +0.44) Sharpe +0.16 total +7.1% alpha +0.061 (+0.18; NW +0.20), n=66 mkt +0.03 umd +0.71
+    2020-2025-06      divfix n  66 mean +0.239 (+0.36; NW +0.42) Sharpe +0.15 total +6.1% alpha +0.047 (+0.14; NW +0.15), n=66 mkt +0.02 umd +0.71
+    2022-07..2025-06  raw    n  36 mean +0.729 (+1.26; NW +1.64) Sharpe +0.73 total +27.2% alpha +0.175 (+0.50; NW +0.60), n=36 mkt +0.08 umd +0.69
+    2022-07..2025-06  divfix n  36 mean +0.701 (+1.21; NW +1.64) Sharpe +0.70 total +25.9% alpha +0.158 (+0.45; NW +0.54), n=36 mkt +0.08 umd +0.69
+    2006-2025-06      raw    n 233 mean -0.195 (-0.63; NW -0.61) Sharpe -0.14 total -52.3% alpha -0.386 (-2.71; NW -2.73), n=233 mkt +0.08 umd +0.76
+    2006-2025-06      divfix n 233 mean -0.199 (-0.64; NW -0.62) Sharpe -0.15 total -52.8% alpha -0.390 (-2.75; NW -2.78), n=233 mkt +0.08 umd +0.76
+  GH's JT: 6-month return, no skip
+    2006-2007         raw    n  23 mean +0.276 (+0.58; NW +0.44) Sharpe +0.42 total +5.9% alpha -0.067 (-0.22; NW -0.26), n=23 mkt -0.05 umd +0.78
+    2008-2009         raw    n  24 mean -2.725 (-1.43; NW -1.38) Sharpe -1.01 total -54.2% alpha -0.927 (-1.33; NW -1.42), n=24 mkt +0.18 umd +0.88
+    2010-2014         raw    n  60 mean -0.115 (-0.45; NW -0.59) Sharpe -0.20 total -7.8% alpha -0.478 (-2.95; NW -3.42), n=60 mkt +0.09 umd +0.67
+    2015-2019         raw    n  60 mean +0.128 (+0.37; NW +0.46) Sharpe +0.17 total +5.7% alpha -0.120 (-0.84; NW -1.02), n=60 mkt +0.04 umd +0.75
+    2006-2019         raw    n 167 mean -0.349 (-1.07; NW -0.91) Sharpe -0.29 total -52.7% alpha -0.513 (-4.16; NW -3.28), n=167 mkt +0.08 umd +0.80
+    2020-2025-06      raw    n  66 mean +0.305 (+0.56; NW +0.89) Sharpe +0.24 total +14.6% alpha +0.174 (+0.75; NW +1.03), n=66 mkt -0.02 umd +0.67
+    2020-2025-06      divfix n  66 mean +0.289 (+0.53; NW +0.84) Sharpe +0.23 total +13.4% alpha +0.158 (+0.68; NW +0.93), n=66 mkt -0.02 umd +0.67
+    2022-07..2025-06  raw    n  36 mean +0.465 (+0.93; NW +1.38) Sharpe +0.54 total +16.3% alpha +0.041 (+0.15; NW +0.20), n=36 mkt +0.05 umd +0.60
+    2022-07..2025-06  divfix n  36 mean +0.435 (+0.87; NW +1.30) Sharpe +0.50 total +15.1% alpha +0.020 (+0.07; NW +0.09), n=36 mkt +0.05 umd +0.60
+    2006-2025-06      raw    n 233 mean -0.164 (-0.59; NW -0.56) Sharpe -0.13 total -45.8% alpha -0.307 (-2.66; NW -2.12), n=233 mkt +0.02 umd +0.75
+    2006-2025-06      divfix n 233 mean -0.168 (-0.60; NW -0.58) Sharpe -0.14 total -46.4% alpha -0.312 (-2.70; NW -2.16), n=233 mkt +0.02 umd +0.75
+  PTH, 500 largest
+    2006-2007         raw    n  23 mean +0.130 (+0.33; NW +0.24) Sharpe +0.24 total +2.6% alpha -0.044 (-0.14; NW -0.20), n=23 mkt -0.18 umd +0.59
+    2008-2009         raw    n  24 mean -2.346 (-1.15; NW -1.23) Sharpe -0.81 total -50.4% alpha -1.039 (-1.54; NW -1.63), n=24 mkt -0.16 umd +0.69
+    2010-2014         raw    n  60 mean -0.037 (-0.09; NW -0.11) Sharpe -0.04 total -5.3% alpha -0.147 (-0.61; NW -0.95), n=60 mkt -0.19 umd +0.74
+    2015-2019         raw    n  60 mean +0.033 (+0.07; NW +0.08) Sharpe +0.03 total -1.5% alpha -0.141 (-0.69; NW -0.75), n=60 mkt -0.17 umd +0.77
+    2006-2019         raw    n 167 mean -0.321 (-0.86; NW -0.84) Sharpe -0.23 total -52.5% alpha -0.325 (-2.20; NW -2.09), n=167 mkt -0.15 umd +0.68
+    2020-2025-06      raw    n  66 mean -0.156 (-0.23; NW -0.30) Sharpe -0.10 total -18.5% alpha -0.398 (-1.33; NW -1.61), n=66 mkt -0.12 umd +0.66
+    2020-2025-06      divfix n  66 mean -0.158 (-0.23; NW -0.30) Sharpe -0.10 total -18.6% alpha -0.399 (-1.33; NW -1.62), n=66 mkt -0.13 umd +0.65
+    2022-07..2025-06  raw    n  36 mean -0.117 (-0.15; NW -0.24) Sharpe -0.09 total -7.7% alpha -0.422 (-1.15; NW -1.74), n=36 mkt -0.21 umd +0.78
+    2022-07..2025-06  divfix n  36 mean -0.120 (-0.16; NW -0.25) Sharpe -0.09 total -7.8% alpha -0.413 (-1.13; NW -1.76), n=36 mkt -0.21 umd +0.78
+    2006-2025-06      raw    n 233 mean -0.274 (-0.84; NW -0.89) Sharpe -0.19 total -61.3% alpha -0.341 (-2.51; NW -2.67), n=233 mkt -0.16 umd +0.67
+    2006-2025-06      divfix n 233 mean -0.274 (-0.84; NW -0.89) Sharpe -0.19 total -61.3% alpha -0.341 (-2.52; NW -2.68), n=233 mkt -0.16 umd +0.67
+  PTH skip, 500 largest
+    2006-2007         raw    n  23 mean +0.101 (+0.26; NW +0.20) Sharpe +0.19 total +2.0% alpha -0.103 (-0.30; NW -0.46), n=23 mkt -0.14 umd +0.56
+    2008-2009         raw    n  24 mean -2.345 (-1.15; NW -1.31) Sharpe -0.82 total -50.3% alpha -1.008 (-1.53; NW -1.65), n=24 mkt -0.12 umd +0.66
+    2010-2014         raw    n  60 mean +0.022 (+0.05; NW +0.07) Sharpe +0.02 total -1.7% alpha -0.118 (-0.52; NW -0.86), n=60 mkt -0.17 umd +0.72
+    2015-2019         raw    n  60 mean +0.055 (+0.13; NW +0.14) Sharpe +0.06 total -0.1% alpha -0.137 (-0.67; NW -0.79), n=60 mkt -0.16 umd +0.75
+    2006-2019         raw    n 167 mean -0.295 (-0.80; NW -0.80) Sharpe -0.21 total -50.2% alpha -0.330 (-2.26; NW -2.21), n=167 mkt -0.13 umd +0.66
+    2020-2025-06      raw    n  66 mean -0.242 (-0.36; NW -0.45) Sharpe -0.15 total -23.1% alpha -0.471 (-1.54; NW -1.99), n=66 mkt -0.13 umd +0.65
+    2020-2025-06      divfix n  66 mean -0.240 (-0.35; NW -0.45) Sharpe -0.15 total -23.0% alpha -0.468 (-1.53; NW -2.00), n=66 mkt -0.13 umd +0.65
+    2022-07..2025-06  raw    n  36 mean -0.080 (-0.10; NW -0.16) Sharpe -0.06 total -6.5% alpha -0.368 (-0.97; NW -1.31), n=36 mkt -0.24 umd +0.74
+    2022-07..2025-06  divfix n  36 mean -0.076 (-0.10; NW -0.15) Sharpe -0.06 total -6.4% alpha -0.354 (-0.93; NW -1.30), n=36 mkt -0.25 umd +0.74
+    2006-2025-06      raw    n 233 mean -0.280 (-0.86; NW -0.93) Sharpe -0.20 total -61.8% alpha -0.361 (-2.66; NW -2.86), n=233 mkt -0.15 umd +0.66
+    2006-2025-06      divfix n 233 mean -0.280 (-0.86; NW -0.93) Sharpe -0.19 total -61.7% alpha -0.360 (-2.66; NW -2.86), n=233 mkt -0.15 umd +0.66
+  12-1 momentum, 500 largest
+    2006-2007         raw    n  23 mean -0.145 (-0.38; NW -0.27) Sharpe -0.27 total -3.6% alpha -0.355 (-1.67; NW -2.34), n=23 mkt -0.00 umd +0.53
+    2008-2009         raw    n  24 mean -2.302 (-1.19; NW -1.51) Sharpe -0.84 total -49.1% alpha -0.628 (-1.13; NW -1.19), n=24 mkt +0.10 umd +0.67
+    2010-2014         raw    n  60 mean +0.190 (+0.54; NW +0.82) Sharpe +0.24 total +9.7% alpha -0.556 (-2.02; NW -2.71), n=60 mkt +0.30 umd +0.64
+    2015-2019         raw    n  60 mean -0.208 (-0.47; NW -0.49) Sharpe -0.21 total -14.8% alpha -0.451 (-1.78; NW -1.79), n=60 mkt -0.04 umd +0.73
+    2006-2019         raw    n 167 mean -0.357 (-1.03; NW -1.06) Sharpe -0.27 total -54.1% alpha -0.559 (-3.65; NW -4.09), n=167 mkt +0.14 umd +0.74
+    2020-2025-06      raw    n  66 mean +0.456 (+0.61; NW +0.72) Sharpe +0.26 total +19.1% alpha +0.170 (+0.41; NW +0.37), n=66 mkt +0.21 umd +0.76
+    2020-2025-06      divfix n  66 mean +0.429 (+0.57; NW +0.69) Sharpe +0.24 total +16.9% alpha +0.143 (+0.34; NW +0.32), n=66 mkt +0.21 umd +0.76
+    2022-07..2025-06  raw    n  36 mean +0.691 (+0.86; NW +1.03) Sharpe +0.50 total +23.0% alpha +0.092 (+0.17; NW +0.15), n=36 mkt +0.29 umd +1.00
+    2022-07..2025-06  divfix n  36 mean +0.640 (+0.80; NW +0.98) Sharpe +0.46 total +20.8% alpha +0.052 (+0.10; NW +0.09), n=36 mkt +0.29 umd +1.00
+    2006-2025-06      raw    n 233 mean -0.127 (-0.39; NW -0.42) Sharpe -0.09 total -45.4% alpha -0.346 (-2.15; NW -2.29), n=233 mkt +0.15 umd +0.75
+    2006-2025-06      divfix n 233 mean -0.135 (-0.41; NW -0.45) Sharpe -0.09 total -46.4% alpha -0.354 (-2.20; NW -2.37), n=233 mkt +0.15 umd +0.75
+
+JANUARY SPLIT (net, test 1 window and 2006-2025-06)
+  PTH book (the plan)                    2006-2019     January periods n 14 -1.252 (-1.22; NW -1.69); others n 153 -0.295 (-0.71; NW -0.58)
+  PTH book (the plan)                    2006-2025-06  January periods n 20 -0.822 (-0.78; NW -1.19); others n 213 -0.223 (-0.62; NW -0.55)
+  12-1 momentum (baseline)               2006-2019     January periods n 14 -0.569 (-0.58; NW -1.10); others n 153 -0.355 (-0.96; NW -0.78)
+  12-1 momentum (baseline)               2006-2025-06  January periods n 20 +0.032 (+0.03; NW +0.05); others n 213 -0.216 (-0.66; NW -0.58)
+  GH's JT: 6-month return, no skip       2006-2019     January periods n 14 -1.068 (-0.95; NW -1.31); others n 153 -0.283 (-0.83; NW -0.63)
+  GH's JT: 6-month return, no skip       2006-2025-06  January periods n 20 -0.271 (-0.28; NW -0.30); others n 213 -0.154 (-0.52; NW -0.45)
+
+WORST AND BEST PERIODS, PTH net, 2006-2025-06
+  2009-03-05..2009-04-03 PTH -30.85% mom -27.38% long-mkt -13.44 mkt-short -17.37
+  2009-04-03..2009-05-05 PTH -28.59% mom -25.96% long-mkt -12.36 mkt-short -16.19
+  2020-11-05..2020-12-07 PTH -22.95% mom -21.83% long-mkt -9.10 mkt-short -13.82
+  2009-07-06..2009-08-04 PTH -17.18% mom -15.53% long-mkt -8.20 mkt-short -8.94
+  2008-12-02..2009-01-02 PTH -13.91% mom -9.74% long-mkt -5.91 mkt-short -7.97
+  2020-05-08..2020-06-09 PTH -13.91% mom -11.15% long-mkt -6.14 mkt-short -7.74
+  2009-06-04..2009-07-06 PTH +8.32% mom +7.04% long-mkt +4.35 mkt-short +4.01
+  2008-06-04..2008-07-03 PTH +9.62% mom +8.59% long-mkt +4.22 mkt-short +5.43
+  2020-06-09..2020-07-09 PTH +11.72% mom +13.24% long-mkt +6.41 mkt-short +5.35
+  2022-04-07..2022-05-09 PTH +12.38% mom +6.66% long-mkt +4.15 mkt-short +8.26
+
+CHECK: correlation of the 12-1 baseline (gross) with French UMD over the same periods
+  2006-2019: mom +0.909, PTH +0.892; UMD mean +0.117% (t +0.30)
+  2020-2025-06: mom +0.882, PTH +0.782; UMD mean +0.202% (t +0.25)
+
+COSTS: mean net - gross, % per period, test 1: pth -0.033, mom -0.033
+LEGS: median stocks per leg: pth 385, pth_skip 385, mom 385, jt6 385, pth_big 150, pth_skip_big 150, mom_big 150

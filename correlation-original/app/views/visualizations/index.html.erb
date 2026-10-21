@@ -1,0 +1,329 @@
+<% content_for :title, "Visualizations - Stock Correlation Analysis Platform" %>
+
+<div class="visualizations-content">
+  <header class="visualizations-header">
+    <div class="container">
+      <h1>📊 Interactive Visualizations</h1>
+      <p>Explore complex statistical concepts through interactive demonstrations and generate publication-ready graphics</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="visualizations-grid">
+      <% @visualizations.each do |viz| %>
+        <div class="visualization-card">
+          <div class="viz-header">
+            <div class="viz-icon">
+              <%= viz[:icon] %>
+            </div>
+            <h3><%= viz[:title] %></h3>
+          </div>
+          
+          <p class="viz-description"><%= viz[:description] %></p>
+          
+          <div class="features-list">
+            <h4>Features:</h4>
+            <ul>
+              <% viz[:features].each do |feature| %>
+                <li><%= feature %></li>
+              <% end %>
+            </ul>
+          </div>
+          
+          <div class="viz-actions">
+            <%= link_to visualization_path(viz[:type]), class: "btn btn-primary" do %>
+              Launch <%= viz[:title] %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="download-instructions">
+      <div class="instruction-card">
+        <h2>📋 How to Use These Visualizations</h2>
+        <p>These interactive tools run directly in your browser with full functionality. Click the launch buttons above to start exploring!</p>
+        
+        <div class="instruction-steps">
+          <div class="step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Launch Visualization</h4>
+              <p>Click the launch button to open the interactive demo in a new page</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Explore Interactively</h4>
+              <p>Drag data points, adjust sliders, and see real-time changes</p>
+            </div>
+          </div>
+          
+          <div class="step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Export Graphics</h4>
+              <p>Generate and download PNG images for presentations</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="download-note">
+          <p><strong>💡 Alternative:</strong> You can also <a href="<%= Rails.root.join('HOW_TO_VIEW_VISUALIZATIONS.md').exist? ? '/HOW_TO_VIEW_VISUALIZATIONS.md' : '#' %>">download these files</a> to run them offline on your computer.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<style>
+.visualizations-content {
+  padding: 0;
+}
+
+.visualizations-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.visualizations-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.visualizations-header p {
+  font-size: 1.125rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.visualizations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.visualization-card {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+  transition: all 0.3s ease;
+}
+
+.visualization-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: #667eea;
+}
+
+.viz-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.viz-icon {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viz-header h3 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.viz-description {
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.features-list h4 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+}
+
+.features-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.features-list li {
+  color: var(--text-secondary, #94a3b8);
+  padding: 0.375rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.features-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.viz-actions {
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.download-instructions {
+  margin-top: 3rem;
+}
+
+.instruction-card {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+}
+
+.instruction-card h2 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.instruction-card p {
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.instruction-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.step-number {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.step-content p {
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.download-note {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.download-note p {
+  margin: 0;
+  color: var(--text-primary, #ffffff);
+}
+
+.download-note a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+.download-note a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .visualizations-header {
+    padding: 2rem 0;
+  }
+  
+  .visualizations-header h1 {
+    font-size: 2rem;
+  }
+  
+  .visualizations-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .visualization-card {
+    padding: 1.5rem;
+  }
+  
+  .instruction-steps {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .instruction-card {
+    padding: 1.5rem;
+  }
+}
+</style>

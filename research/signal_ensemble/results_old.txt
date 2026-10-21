@@ -1,0 +1,121 @@
+==== old: weeks 2008-01-03..2025-06-16 (879) ====
+
+## Rank IC, 2008–2019 (tests 1–2): mean weekly IC (t), weeks; composite paired on the component's weeks and stocks
+composite: +0.0168 (t +3.01, 604 weeks)
+composite without LightGBM: +0.0146 (t +2.81, 604 weeks)
+5-day reversal               +0.0156 (t +2.68, 604 weeks from 2008-01-03); composite on the same: +0.0168 (t +3.01)
+12-1 momentum                +0.0080 (t +1.01, 604 weeks from 2008-01-03); composite on the same: +0.0168 (t +3.01)
+Twin residual reversal       +0.0088 (t +2.99, 603 weeks from 2008-01-03); composite on the same: +0.0169 (t +3.01)
+Low correlation              +0.0022 (t +0.35, 604 weeks from 2008-01-03); composite on the same: +0.0168 (t +3.01)
+LightGBM (actual returns)    +0.0134 (t +2.13, 479 weeks from 2010-06-28); composite on the same: +0.0174 (t +2.90)
+TEST 1: composite t >= 3: True; beats every component: True -> PASS
+
+## Component correlations, 2008–2019 (tests 1–2): mean weekly cross-sectional correlation of ranks (upper), correlation of weekly IC series (lower)
+                                   rev5    mom12_1      twin5    lowcorr       lgbm  composite
+5-day reversal                               -0.01      +0.81      -0.00      +0.15      +0.71
+12-1 momentum                     -0.02                 -0.01      +0.04      +0.28      +0.46
+Twin residual reversal            +0.75      -0.12                 -0.01      +0.12      +0.70
+Low correlation                   -0.16      +0.38      -0.23                 -0.02      +0.38
+LightGBM (actual returns)         +0.06      +0.52      -0.07      +0.37                 +0.55
+composite                         +0.43      +0.74      +0.28      +0.57      +0.75           
+Expected IC of the equal-weight mean from the components' ICs and correlations (weeks with LightGBM): +0.0177; actual +0.0174; components [0.0132, 0.0145, 0.0075, 0.0004, 0.0134]
+
+## Weekly books, 2008–2019 (tests 1–2): mean weekly return in bps (t); turnover = share of the book traded a week
+composite                        gross +12.05 (+1.34)  net +2.44 (+0.27)  = +1.23% a year net; turnover 48.1%; names/leg 157/156; long leg +28.3, short leg +16.2 bps/wk
+composite, no buffer             gross +13.91 (+1.40)  net -1.16 (-0.12)  = -0.58% a year net; turnover 75.3%; names/leg 112/112; long leg +29.4, short leg +15.5 bps/wk
+composite (no LightGBM)          gross +12.30 (+1.40)  net +2.60 (+0.30)  = +1.31% a year net; turnover 48.5%; names/leg 153/154; long leg +28.6, short leg +16.3 bps/wk
+5-day reversal                   gross +27.18 (+2.55)  net +13.47 (+1.26)  = +6.79% a year net; turnover 68.6%; names/leg 138/138; long leg +38.6, short leg +11.5 bps/wk
+12-1 momentum                    gross -14.33 (-1.08)  net -15.53 (-1.17)  = -7.83% a year net; turnover 6.0%; names/leg 185/177; long leg +18.0, short leg +32.3 bps/wk
+Twin residual reversal           gross +19.40 (+3.38)  net +5.30 (+0.92)  = +2.67% a year net; turnover 70.5%; names/leg 140/140; long leg +33.4, short leg +14.0 bps/wk
+Low correlation                  gross +4.18 (+0.51)  net +3.73 (+0.46)  = +1.88% a year net; turnover 2.2%; names/leg 189/196; long leg +24.5, short leg +20.3 bps/wk
+LightGBM (actual returns)        gross +9.41 (+1.09)  net -0.81 (-0.09)  = -0.41% a year net; turnover 51.1%; names/leg 172/174; long leg +32.6, short leg +23.2 bps/wk
+TEST 2: buffered long-short net t +0.27 >= 2 -> FAIL
+
+## By period: composite IC mean (t); buffered long-short gross and net bps/week (t); turnover; no-buffer net; long-only net minus equal-weight universe, % a year (t)
+2008–2019 (tests 1–2)    IC +0.0168 (+3.01) [604 wk]  gross +12.05 (+1.34)  net +2.44 (+0.27)  turnover 48.1%  no-buffer net -1.16 (-0.12)  long-only vs EW +1.25 (+0.35)  | no LightGBM: IC +0.0146 (+2.81), net +2.60 (+0.30)
+2008–09                  IC +0.0047 (+0.28) [101 wk]  gross -8.08 (-0.21)  net -17.53 (-0.46)  turnover 47.2%  no-buffer net -31.55 (-0.72)  long-only vs EW -9.63 (-0.80)  | no LightGBM: IC +0.0047 (+0.28), net -17.53 (-0.46)
+2010–14                  IC +0.0292 (+4.16) [252 wk]  gross +26.48 (+3.05)  net +16.56 (+1.91)  turnover 49.6%  no-buffer net +17.75 (+1.90)  long-only vs EW +5.86 (+1.28)  | no LightGBM: IC +0.0256 (+3.90), net +16.89 (+2.04)
+2015–19                  IC +0.0093 (+1.00) [251 wk]  gross +5.66 (+0.45)  net -3.71 (-0.29)  turnover 46.9%  no-buffer net -7.91 (-0.60)  long-only vs EW +1.00 (+0.18)  | no LightGBM: IC +0.0077 (+0.93), net -3.64 (-0.31)
+2020–2025-06 (test 3)    IC +0.0073 (+0.90) [275 wk]  gross +13.29 (+0.85)  net +3.41 (+0.22)  turnover 49.4%  no-buffer net -2.36 (-0.14)  long-only vs EW +1.81 (+0.21)  | no LightGBM: IC +0.0069 (+0.85), net +1.84 (+0.11)
+TEST 3 (2020-2025-06): IC +0.0073, net +3.41 bps/wk -> same sign: PASS
+
+## Each component's IC by period: mean (t)
+2008–2019 (tests 1–2)    composite +0.0168 (+3.01); composite (no LightGBM) +0.0146 (+2.81); 5-day reversal +0.0156 (+2.68); 12-1 momentum +0.0080 (+1.01); Twin residual reversal +0.0088 (+2.99); Low correlation +0.0022 (+0.35); LightGBM (actual returns) +0.0134 (+2.13)
+2008–09                  composite +0.0047 (+0.28); composite (no LightGBM) +0.0047 (+0.28); 5-day reversal +0.0105 (+0.55); 12-1 momentum -0.0219 (-0.87); Twin residual reversal +0.0084 (+0.90); Low correlation +0.0108 (+0.65); LightGBM (actual returns) n/a
+2010–14                  composite +0.0292 (+4.16); composite (no LightGBM) +0.0256 (+3.90); 5-day reversal +0.0305 (+3.63); 12-1 momentum +0.0175 (+1.68); Twin residual reversal +0.0144 (+3.40); Low correlation -0.0019 (-0.24); LightGBM (actual returns) +0.0192 (+2.22)
+2015–19                  composite +0.0093 (+1.00); composite (no LightGBM) +0.0077 (+0.93); 5-day reversal +0.0026 (+0.32); 12-1 momentum +0.0105 (+0.84); Twin residual reversal +0.0034 (+0.79); Low correlation +0.0029 (+0.27); LightGBM (actual returns) +0.0081 (+0.89)
+2020–2025-06 (test 3)    composite +0.0073 (+0.90); composite (no LightGBM) +0.0069 (+0.85); 5-day reversal +0.0088 (+1.04); 12-1 momentum +0.0189 (+1.68); Twin residual reversal +0.0059 (+1.37); Low correlation -0.0171 (-1.69); LightGBM (actual returns) +0.0026 (+0.28)
+
+## Buffered long-only account (enter top 20, hold while top 60), net of 5 bps unless gross
+2008–2019 (tests 1–2)    account +11.5%/yr compounded (gross +15.9%, vol 22.2%); SPY +8.6%; EW universe +10.3%; excess vs SPY +3.6% (t +1.02), alpha +2.9% (t +0.84, beta 1.07); excess vs EW +1.2% (t +0.35), alpha +2.9% (t +0.82, beta 0.87); turnover 76.3%/wk; 23 names
+2008–09                  account -7.8%/yr compounded (gross -4.9%, vol 32.2%); SPY -11.4%; EW universe -0.1%; excess vs SPY +4.6% (t +0.49), alpha +4.4% (t +0.46, beta 0.97); excess vs EW -9.6% (t -0.80), alpha -8.1% (t -0.77, beta 0.77); turnover 62.7%/wk; 25 names
+2010–14                  account +20.6%/yr compounded (gross +25.4%, vol 22.7%); SPY +14.1%; EW universe +14.7%; excess vs SPY +7.0% (t +1.28), alpha +2.6% (t +0.51, beta 1.31); excess vs EW +5.9% (t +1.28), alpha +4.6% (t +1.01, beta 1.08); turnover 77.9%/wk; 23 names
+2015–19                  account +11.3%/yr compounded (gross +15.8%, vol 16.0%); SPY +12.2%; EW universe +10.4%; excess vs SPY -0.3% (t -0.05), alpha +0.6% (t +0.11, beta 0.93); excess vs EW +1.0% (t +0.18), alpha +3.7% (t +0.71, beta 0.75); turnover 80.1%/wk; 22 names
+2020–2025-06 (test 3)    account +6.8%/yr compounded (gross +11.3%, vol 33.3%); SPY +13.8%; EW universe +7.8%; excess vs SPY -2.5% (t -0.25), alpha -6.4% (t -0.66, beta 1.27); excess vs EW +1.8% (t +0.21), alpha +1.1% (t +0.12, beta 1.07); turnover 80.9%/wk; 22 names
+
+## The 500 largest: IC mean (t); buffered long-short gross and net bps/week (t), turnover
+2008–2019 (tests 1–2):
+   composite                        IC +0.0193 (+2.98)  gross +10.99 (+1.12)  net +1.21 (+0.12)  turnover 48.9%
+   composite (no LightGBM)          IC +0.0162 (+2.68)  
+   5-day reversal                   IC +0.0153 (+2.26)  gross +25.00 (+2.13)  net +11.18 (+0.95)  turnover 69.1%
+   12-1 momentum                    IC +0.0088 (+0.94)  gross -13.59 (-0.95)  net -14.79 (-1.04)  turnover 6.0%
+   Twin residual reversal           IC +0.0100 (+2.92)  gross +18.85 (+3.02)  net +4.66 (+0.75)  turnover 70.9%
+   Low correlation                  IC +0.0038 (+0.54)  gross +5.96 (+0.72)  net +5.50 (+0.67)  turnover 2.3%
+   LightGBM (actual returns)        IC +0.0162 (+2.22)  gross +9.87 (+1.10)  net -0.59 (-0.07)  turnover 52.3%
+   composite, no buffer             gross +15.61 (+1.44)  net +0.43 (+0.04)  turnover 75.9%
+2008–09:
+   composite                        IC +0.0083 (+0.46)  gross -7.05 (-0.17)  net -16.52 (-0.40)  turnover 47.4%
+   composite (no LightGBM)          IC +0.0083 (+0.46)  
+   5-day reversal                   IC +0.0144 (+0.69)  gross +54.20 (+0.97)  net +40.28 (+0.72)  turnover 69.6%
+   12-1 momentum                    IC -0.0197 (-0.72)  gross -109.56 (-1.72)  net -111.12 (-1.75)  turnover 7.8%
+   Twin residual reversal           IC +0.0122 (+1.22)  gross +55.30 (+1.91)  net +40.98 (+1.41)  turnover 71.6%
+   Low correlation                  IC +0.0100 (+0.59)  gross +13.26 (+0.42)  net +12.43 (+0.39)  turnover 4.2%
+   LightGBM (actual returns)        IC n/a  gross n/a  net n/a  turnover nan%
+   composite, no buffer             gross -10.53 (-0.22)  net -25.10 (-0.53)  turnover 72.9%
+2010–14:
+   composite                        IC +0.0319 (+3.88)  gross +23.81 (+2.48)  net +13.76 (+1.44)  turnover 50.3%
+   composite (no LightGBM)          IC +0.0272 (+3.52)  
+   5-day reversal                   IC +0.0261 (+2.64)  gross +24.75 (+2.09)  net +10.88 (+0.92)  turnover 69.3%
+   12-1 momentum                    IC +0.0241 (+1.96)  gross +16.68 (+1.26)  net +15.53 (+1.18)  turnover 5.8%
+   Twin residual reversal           IC +0.0129 (+2.62)  gross +14.41 (+2.42)  net +0.18 (+0.03)  turnover 71.2%
+   Low correlation                  IC +0.0006 (+0.06)  gross +8.20 (+0.95)  net +7.81 (+0.90)  turnover 1.9%
+   LightGBM (actual returns)        IC +0.0237 (+2.46)  gross +12.99 (+1.12)  net +2.35 (+0.20)  turnover 53.2%
+   composite, no buffer             gross +30.46 (+2.87)  net +15.03 (+1.42)  turnover 77.2%
+2015–19:
+   composite                        IC +0.0111 (+1.00)  gross +5.37 (+0.39)  net -4.24 (-0.31)  turnover 48.1%
+   composite (no LightGBM)          IC +0.0085 (+0.85)  
+   5-day reversal                   IC +0.0048 (+0.49)  gross +13.50 (+1.07)  net -0.21 (-0.02)  turnover 68.5%
+   12-1 momentum                    IC +0.0049 (+0.32)  gross -5.36 (-0.29)  net -6.46 (-0.35)  turnover 5.5%
+   Twin residual reversal           IC +0.0063 (+1.19)  gross +8.63 (+1.19)  net -5.47 (-0.75)  turnover 70.5%
+   Low correlation                  IC +0.0045 (+0.35)  gross +0.77 (+0.06)  net +0.39 (+0.03)  turnover 1.9%
+   LightGBM (actual returns)        IC +0.0094 (+0.86)  gross +7.03 (+0.52)  net -3.26 (-0.24)  turnover 51.5%
+   composite, no buffer             gross +11.23 (+0.78)  net -3.96 (-0.28)  turnover 75.9%
+2020–2025-06 (test 3):
+   composite                        IC +0.0034 (+0.33)  gross +9.39 (+0.56)  net -0.70 (-0.04)  turnover 50.5%
+   composite (no LightGBM)          IC +0.0078 (+0.78)  
+   5-day reversal                   IC +0.0098 (+0.89)  gross +13.27 (+0.67)  net -0.45 (-0.02)  turnover 68.6%
+   12-1 momentum                    IC +0.0177 (+1.26)  gross +15.57 (+0.69)  net +14.41 (+0.64)  turnover 5.8%
+   Twin residual reversal           IC +0.0061 (+1.15)  gross +7.27 (+0.77)  net -6.87 (-0.73)  turnover 70.7%
+   Low correlation                  IC -0.0158 (-1.43)  gross -16.65 (-1.12)  net -17.13 (-1.16)  turnover 2.4%
+   LightGBM (actual returns)        IC -0.0088 (-0.79)  gross -17.41 (-0.88)  net -28.21 (-1.43)  turnover 54.0%
+   composite, no buffer             gross +6.43 (+0.36)  net -8.92 (-0.50)  turnover 76.7%
+
+## By calendar year: composite IC, buffered long-short net bps/week, long-only net minus EW (% a year)
+2008: IC +0.0132  net    +1.0  long-only vs EW -19.2%
+2009: IC -0.0038  net   -36.4  long-only vs EW +0.1%
+2010: IC +0.0215  net   +13.4  long-only vs EW -6.5%
+2011: IC +0.0555  net   +47.8  long-only vs EW +13.2%
+2012: IC +0.0124  net    -6.7  long-only vs EW +5.9%
+2013: IC +0.0321  net   +22.1  long-only vs EW +9.5%
+2014: IC +0.0247  net    +6.5  long-only vs EW +7.4%
+2015: IC +0.0357  net   +27.7  long-only vs EW +13.0%
+2016: IC -0.0318  net   -53.7  long-only vs EW -24.4%
+2017: IC +0.0162  net    +1.0  long-only vs EW +11.6%
+2018: IC +0.0244  net   +20.7  long-only vs EW +9.3%
+2019: IC +0.0026  net   -13.3  long-only vs EW -4.0%
+2020: IC +0.0158  net   +21.3  long-only vs EW +22.9%
+2021: IC -0.0096  net   -23.7  long-only vs EW -24.1%
+2022: IC +0.0093  net    +4.1  long-only vs EW -3.8%
+2023: IC -0.0154  net   -26.7  long-only vs EW -8.4%
+2024: IC +0.0277  net   +29.3  long-only vs EW +20.2%
+2025: IC +0.0255  net   +30.5  long-only vs EW +5.8%

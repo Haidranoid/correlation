@@ -1,0 +1,60 @@
+{
+ "uniform": {
+  "0": {
+   "change": -22.01384356165157,
+   "per_year": [
+    -22.01
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  "5": {
+   "change": -18.456971470714535,
+   "per_year": [
+    -18.46
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  "20": {
+   "change": -10.957238484840033,
+   "per_year": [
+    -10.96
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  }
+ },
+ "volatility": {
+  "0": {
+   "change": -16.799255359869683,
+   "per_year": [
+    -16.8
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  "5": {
+   "change": -14.021042570402665,
+   "per_year": [
+    -14.02
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  "20": {
+   "change": -8.14669466783144,
+   "per_year": [
+    -8.15
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  }
+ }
+}

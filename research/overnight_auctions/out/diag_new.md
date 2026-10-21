@@ -1,0 +1,54 @@
+# Overnight auctions: post hoc diagnostics of the money test (new)
+
+## vol_matched, 0bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +40.0 | +47.6 | -7.6 | 0.723 | +27.6..+72.4 |
+
+## vol_matched, 2bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +22.7 | +29.4 | -6.7 | 0.723 | +11.9..+51.2 |
+
+## 500_largest, 0bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +54.4 | +25.2 | +29.3 | 0.002 | +12.4..+39.9 |
+
+## 500_largest, 2bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +35.4 | +9.7 | +25.7 | 0.002 | -1.5..+22.6 |
+
+## close_ge_5, 0bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +39.8 | +24.4 | +15.4 | 0.040 | +11.6..+39.0 |
+
+## close_ge_5, 2bps
+
+
+| Period | Days | Account % | Median random % | Difference | p | Random 5-95% |
+|---|---|---|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | 329 | +22.6 | +9.1 | +13.5 | 0.040 | -2.1..+21.9 |
+
+
+## The account's legs on the same positions (bps a day; account, ranked-set mean, excess with t)
+
+| Period | Overnight | Intraday | Close to close |
+|---|---|---|---|
+| unseen 2025-06-30..2026-10-19 | +10.9, +7.1, +3.8 (+0.87) | -8.8, -0.5, -8.3 (-1.16) | +1.6, +6.4, -4.8 (-0.57) |
+
+## Share of picks with close_{t-1} < $5, by year
+
+2025: 0.06 2026: 0.03

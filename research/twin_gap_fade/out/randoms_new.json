@@ -1,0 +1,84 @@
+{
+ "all": {
+  "head_pts": 82.20428560826625,
+  "random_median_pts": -62.0571251529085,
+  "change": 144.26141076117474,
+  "p": 0.0,
+  "random_p5": -66.62671563232624,
+  "random_p95": -57.466319261239505,
+  "random_gross_median_bps": -0.040520288168630195,
+  "random_tc_median_bps": 4.576490796923264,
+  "head_tc_bps": 5.922636044961169,
+  "bound_pts": 132.60428560826628,
+  "days": 329,
+  "per_year": [
+   {
+    "year": 2025,
+    "days": 129,
+    "head": 77.07115418233145,
+    "random_median": -61.23400519001482,
+    "diff": 138.30515937234628,
+    "head_compounded": 48.116337327939874,
+    "random_compounded_median": -26.95162586333356,
+    "diff_compounded": 75.06796319127344
+   },
+   {
+    "year": 2026,
+    "days": 200,
+    "head": 85.5151553779942,
+    "random_median": -62.48596317246064,
+    "diff": 148.00111855045486,
+    "head_compounded": 96.35976612640044,
+    "random_compounded_median": -39.160691834705204,
+    "diff_compounded": 135.52045796110565
+   }
+  ],
+  "years": 2,
+  "ahead": 2,
+  "mean_of_years": 143.15313896140057,
+  "se_years": 4.84797958905429,
+  "compounded_mean_of_years": 105.29421057618954,
+  "compounded_se": 30.226247384916107
+ },
+ "500": {
+  "head_pts": 34.35610659492861,
+  "random_median_pts": -67.29636262934198,
+  "change": 101.65246922427059,
+  "p": 0.0,
+  "random_p5": -75.52921854852916,
+  "random_p95": -59.0985115839946,
+  "random_gross_median_bps": -0.0328003507703413,
+  "random_tc_median_bps": 6.666318967248174,
+  "head_tc_bps": 7.470567260947995,
+  "bound_pts": 84.75610659492861,
+  "days": 329,
+  "per_year": [
+   {
+    "year": 2025,
+    "days": 129,
+    "head": 20.73696587287482,
+    "random_median": -66.44589037555536,
+    "diff": 87.18285624843018,
+    "head_compounded": 11.013826077451938,
+    "random_compounded_median": -28.909896680273405,
+    "diff_compounded": 39.92372275772534
+   },
+   {
+    "year": 2026,
+    "days": 200,
+    "head": 43.140452360653306,
+    "random_median": -67.73882122471872,
+    "diff": 110.87927358537203,
+    "head_compounded": 40.06085599509439,
+    "random_compounded_median": -41.70499476874035,
+    "diff_compounded": 81.76585076383473
+   }
+  ],
+  "years": 2,
+  "ahead": 2,
+  "mean_of_years": 99.0310649169011,
+  "se_years": 11.848208668470924,
+  "compounded_mean_of_years": 60.84478676078004,
+  "compounded_se": 20.921064003054692
+ }
+}

@@ -1,0 +1,9 @@
+settings: top 500 stocks by dollar volume, 10 groups, offsets 1-5 days, distance correlation of raw daily returns, 252-day look-back refit every 42 days, alpha 0.4, links above the 90% quantile
+  20 fits, at 2006-04-17 (3s)
+  40 fits, at 2009-08-17 (9s)
+  60 fits, at 2012-12-17 (15s)
+  80 fits, at 2016-04-20 (21s)
+  100 fits, at 2019-08-21 (28s)
+  120 fits, at 2022-12-20 (34s)
+  140 fits, at 2026-04-29 (41s)
+142 fits; decision rows 282..6238 (2003-02-13..2026-10-16); wrote /home/bhoult/.local/share/correlation2/experiments/night_and_day

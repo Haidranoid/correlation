@@ -1,0 +1,31 @@
+{
+ "change": [
+  {
+   "change": -5.629518812397594,
+   "per_year": [
+    -5.63
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  {
+   "change": -4.373088005613791,
+   "per_year": [
+    -4.37
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  },
+  {
+   "change": -2.024613708036469,
+   "per_year": [
+    -2.02
+   ],
+   "ahead": 0,
+   "years": 1,
+   "se": NaN
+  }
+ ]
+}

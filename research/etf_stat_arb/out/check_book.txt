@@ -1,0 +1,3 @@
+1. stock legs: daily P&L summed 489.936370; trades (238325) summed 489.936370; diff 7.05e-12
+2. hedge legs: daily P&L summed -76.086257; per-position recomputation -76.086257; diff -9.95e-14
+3. placebo (iid noise s), 2006-2019: gross -0.19 bps/day (t -0.93), positions/day 269

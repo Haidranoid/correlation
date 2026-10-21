@@ -1,0 +1,22 @@
+[    0.1s] 2026-05-15 {'on': 0.58, 'on_raw': 2.36, 'intra': -1.21, 'intra_raw': -0.28, 'whole': -1.09, 'whole_raw': -0.21}
+## unseen: 15 months, books formed 2025-07-16 .. last held 2026-10-15
+| Book | Names with a signal | Per side | Gross % a month (t) | Turnover | Net % a month (t) | Long vs universe (t) | Short vs universe (t) | Rank IC (t) |
+|---|---|---|---|---|---|---|---|---|
+| on | 2305 | 230 | +0.986 (0.75) | 3.43 | +0.815 (0.62) | +1.556 (1.37) | +0.569 (0.95) | -0.0065 (-0.28) |
+| on_raw | 2305 | 230 | +1.070 (0.73) | 3.38 | +0.901 (0.61) | +1.568 (1.25) | +0.498 (0.55) | -0.0044 (-0.17) |
+| intra | 2305 | 230 | +1.860 (1.54) | 3.44 | +1.688 (1.40) | +1.806 (2.03) | -0.054 (-0.06) | +0.0169 (0.82) |
+| intra_raw | 2305 | 230 | +2.619 (1.55) | 3.39 | +2.449 (1.45) | +2.381 (2.04) | -0.238 (-0.19) | +0.0205 (0.71) |
+| whole | 2305 | 230 | +1.435 (1.18) | 3.45 | +1.263 (1.03) | +1.522 (1.53) | +0.087 (0.10) | +0.0085 (0.41) |
+| whole_raw | 2305 | 230 | +1.931 (1.20) | 3.40 | +1.761 (1.09) | +2.102 (1.79) | +0.171 (0.16) | +0.0134 (0.47) |
+- on-whole: net -0.448% a month (t -0.53, 15 months)
+- on-intra: net -0.873% a month (t -0.76, 15 months)
+- intra-whole: net +0.425% a month (t 1.05, 15 months)
+- on_raw-whole_raw: net -0.861% a month (t -1.17, 15 months)
+
+## By year (net % a month, t)
+| Year | Months | Overnight | Intraday | Whole day | Overnight - whole |
+|---|---|---|---|---|---|
+| 2025 | 7 | +0.53 (0.28) | +1.31 (0.97) | +1.18 (0.82) | -0.64 (-1.01) |
+| 2026 | 9 | +0.34 (0.19) | +1.47 (0.79) | +0.74 (0.40) | -0.40 (-0.29) |
+
+Overnight book members exited before t+21 (last close earlier): 1

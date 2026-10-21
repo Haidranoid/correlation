@@ -1,0 +1,173 @@
+formations 2004-12-31 .. 2025-06-13 (246); complete holds 245 (last formed 2025-05-14, ends 2025-06-13); 500-stock universe from 2007-12-03
+
+== Book and baselines: mean % per 21-day hold (t). Book = $2 gross; baselines $1 long + $1 short ==
+
+-- Test 1: 2006..2019 (167 holds)
+                                      gross      t      net      t     sd   SR g   SR n      b_SPY (t)   skew  turn  cost    n
+book (12-1 sign)                     +0.173  +1.16   +0.074  +0.49   1.93  +0.31  +0.13  -0.16 ( -5.3)  -1.09  1.99  10.0  167
+diag: book on 1-month sign           +0.067  +0.47   -0.075  -0.53   1.84  +0.13  -0.14  -0.11 ( -3.7)  -0.67  2.86  14.3  167
+(a) plain 12-1 momentum              -0.473  -0.69   -0.539  -0.79   8.83  -0.19  -0.21  -0.80 ( -5.9)  -2.93  1.32   6.6  167
+(b) twin-group momentum              -0.125  -0.23   -0.202  -0.37   7.06  -0.06  -0.10  -0.32 ( -2.7)  -1.14  1.53   7.7  167
+
+--   2006-02..2007-11 (~300 stocks) (22 holds)
+                                      gross      t      net      t     sd   SR g   SR n      b_SPY (t)   skew  turn  cost    n
+book (12-1 sign)                     +0.253  +0.70   +0.159  +0.44   1.70  +0.51  +0.32  -0.07 ( -0.5)  +0.98  1.88   9.5   22
+diag: book on 1-month sign           +0.634  +2.00   +0.494  +1.56   1.48  +1.48  +1.15  -0.10 ( -0.8)  +0.63  2.80  14.0   22
+(a) plain 12-1 momentum              -0.373  -0.41   -0.433  -0.48   4.25  -0.30  -0.35  -0.14 ( -0.4)  -0.03  1.19   6.0   22
+(b) twin-group momentum              -0.444  -0.50   -0.524  -0.58   4.20  -0.37  -0.43  -0.05 ( -0.1)  -0.07  1.59   8.0   22
+
+--   2007-12..2019 (500 stocks) (145 holds)
+                                      gross      t      net      t     sd   SR g   SR n      b_SPY (t)   skew  turn  cost    n
+book (12-1 sign)                     +0.161  +0.99   +0.061  +0.37   1.97  +0.28  +0.11  -0.16 ( -5.2)  -1.27  2.00  10.0  145
+diag: book on 1-month sign           -0.019  -0.12   -0.162  -1.04   1.88  -0.03  -0.30  -0.11 ( -3.5)  -0.72  2.87  14.3  145
+(a) plain 12-1 momentum              -0.488  -0.63   -0.555  -0.72   9.34  -0.18  -0.21  -0.82 ( -5.7)  -2.85  1.33   6.7  145
+(b) twin-group momentum              -0.077  -0.13   -0.153  -0.25   7.41  -0.04  -0.07  -0.33 ( -2.6)  -1.15  1.52   7.6  145
+
+-- Test 3: 2020..2025-05 (65 holds)
+                                      gross      t      net      t     sd   SR g   SR n      b_SPY (t)   skew  turn  cost    n
+book (12-1 sign)                     +0.249  +0.77   +0.146  +0.45   2.61  +0.33  +0.19  -0.06 ( -0.8)  +0.51  2.07  10.3   65
+diag: book on 1-month sign           -0.174  -0.59   -0.319  -1.08   2.37  -0.25  -0.47  -0.06 ( -1.0)  -0.62  2.89  14.5   65
+(a) plain 12-1 momentum              +1.123  +0.72   +1.056  +0.68  12.52  +0.31  +0.29  -0.65 ( -2.0)  -0.76  1.34   6.7   65
+(b) twin-group momentum              +1.203  +0.88   +1.129  +0.82  11.03  +0.38  +0.35  -0.67 ( -2.4)  -0.46  1.48   7.4   65
+
+-- all 2006..2025-05 (232 holds)
+                                      gross      t      net      t     sd   SR g   SR n      b_SPY (t)   skew  turn  cost    n
+book (12-1 sign)                     +0.195  +1.39   +0.094  +0.67   2.14  +0.32  +0.15  -0.13 ( -4.5)  -0.30  2.01  10.1  232
+diag: book on 1-month sign           -0.000  -0.00   -0.144  -1.09   2.00  -0.00  -0.25  -0.10 ( -3.5)  -0.70  2.87  14.3  232
+(a) plain 12-1 momentum              -0.026  -0.04   -0.092  -0.14  10.00  -0.01  -0.03  -0.75 ( -5.6)  -1.78  1.32   6.6  232
+(b) twin-group momentum              +0.247  +0.45   +0.171  +0.31   8.36  +0.10  +0.07  -0.41 ( -3.6)  -0.69  1.52   7.6  232
+
+== Book exposures at formation (mean over Test 1 / Test 3 formations) ==
+Test 1: 2006..2019: long $1.015, short $0.985, net +0.031 (range -0.255..+0.342); ex-ante beta +0.001 (range -0.033..+0.070); long names 237 of 474
+Test 3: 2020..2025-05: long $1.035, short $0.965, net +0.069 (range -0.147..+0.331); ex-ante beta +0.019 (range -0.029..+0.124); long names 251 of 500
+
+== Test 2: book hold returns on both baselines (OLS; Newey-West 3 lags as a check) ==
+Test 1: 2006..2019             net  : alpha +0.163% a hold (t +1.60, NW +1.72); on (a) +0.174 (t +8.46); on (b) -0.022 (t -0.85); R2 0.539; n 167
+Test 1: 2006..2019             gross: alpha +0.253% a hold (t +2.48, NW +2.65); on (a) +0.175 (t +8.46); on (b) -0.022 (t -0.87); R2 0.538; n 167
+                               correlations of gross hold returns: book-(a) +0.73, book-(b) +0.58, (a)-(b) +0.83
+2007-12..2019 (500 stocks)     net  : alpha +0.154% a hold (t +1.41, NW +1.51); on (a) +0.176 (t +8.40); on (b) -0.030 (t -1.15); R2 0.557; n 145
+2007-12..2019 (500 stocks)     gross: alpha +0.245% a hold (t +2.23, NW +2.39); on (a) +0.177 (t +8.41); on (b) -0.031 (t -1.16); R2 0.557; n 145
+                               correlations of gross hold returns: book-(a) +0.74, book-(b) +0.58, (a)-(b) +0.83
+Test 3: 2020..2025-05          net  : alpha +0.012% a hold (t +0.06, NW +0.06); on (a) +0.245 (t +6.11); on (b) -0.111 (t -2.43); R2 0.602; n 65
+Test 3: 2020..2025-05          gross: alpha +0.107% a hold (t +0.51, NW +0.56); on (a) +0.245 (t +6.10); on (b) -0.111 (t -2.42); R2 0.601; n 65
+                               correlations of gross hold returns: book-(a) +0.75, book-(b) +0.60, (a)-(b) +0.91
+all 2006..2025-05              net  : alpha +0.121% a hold (t +1.29, NW +1.40); on (a) +0.195 (t +10.44); on (b) -0.052 (t -2.31); R2 0.557; n 232
+all 2006..2025-05              gross: alpha +0.212% a hold (t +2.26, NW +2.47); on (a) +0.195 (t +10.43); on (b) -0.052 (t -2.32); R2 0.556; n 232
+                               correlations of gross hold returns: book-(a) +0.74, book-(b) +0.59, (a)-(b) +0.86
+
+== Per component, Test 1 holds (2006..2019): contribution to the book (% a hold, t), the signed gross-1 eigenportfolio alone (% a hold, t, share of holds > 0), mean |B| gross in the book, eigenvalue share ==
+comp  contrib      t    alone      t   hit    |B|  share
+   2   +0.013  +0.36   +0.002  +0.01  0.53  0.201  0.049
+   3   -0.019  -0.61   -0.077  -0.59  0.55  0.248  0.032
+   4   +0.059  +1.72   +0.191  +1.63  0.60  0.303  0.021
+   5   -0.036  -1.28   -0.118  -1.37  0.50  0.338  0.016
+   6   +0.004  +0.14   +0.006  +0.08  0.51  0.372  0.014
+   7   -0.001  -0.02   -0.007  -0.10  0.52  0.398  0.012
+   8   -0.027  -0.99   -0.070  -1.03  0.49  0.412  0.011
+   9   -0.001  -0.06   -0.002  -0.03  0.51  0.431  0.010
+  10   +0.024  +0.92   +0.054  +0.91  0.58  0.450  0.009
+  11   +0.003  +0.12   +0.002  +0.04  0.51  0.461  0.009
+  12   +0.033  +1.31   +0.069  +1.29  0.51  0.469  0.008
+  13   +0.011  +0.46   +0.024  +0.51  0.54  0.481  0.008
+  14   +0.057  +2.46   +0.118  +2.50  0.59  0.486  0.008
+  15   +0.004  +0.18   +0.008  +0.18  0.49  0.496  0.007
+  16   -0.014  -0.61   -0.027  -0.62  0.47  0.506  0.007
+  17   -0.018  -0.82   -0.036  -0.83  0.53  0.511  0.007
+  18   +0.027  +1.13   +0.050  +1.11  0.50  0.523  0.007
+  19   +0.027  +1.39   +0.050  +1.36  0.54  0.527  0.007
+  20   +0.025  +1.12   +0.046  +1.10  0.53  0.535  0.006
+  21   +0.004  +0.18   +0.006  +0.14  0.47  0.542  0.006
+Test 1: 2006..2019: contribution by group 2-5 +0.016 (t +0.26); 6-11 +0.001 (t +0.02); 12-21 +0.156 (t +1.96); signed eigenportfolios > 0 in 52.3% of component-holds; equal-weight average of the 20 signed eigenportfolios +0.014 (t +0.71)
+Test 3: 2020..2025-05: contribution by group 2-5 +0.005 (t +0.04); 6-11 +0.152 (t +1.20); 12-21 +0.092 (t +0.51); signed eigenportfolios > 0 in 50.1% of component-holds; equal-weight average of the 20 signed eigenportfolios +0.027 (t +0.58)
+all 2006..2025-05: contribution by group 2-5 +0.013 (t +0.23); 6-11 +0.044 (t +0.71); 12-21 +0.138 (t +1.81); signed eigenportfolios > 0 in 51.7% of component-holds; equal-weight average of the 20 signed eigenportfolios +0.018 (t +0.92)
+
+== Eigenvalue shares (share of variance = lambda / n), mean by year of formation ==
+year  n    comp1   comp2   comp3   comp4   comp5   2-21 total
+2004   300  0.259  0.045  0.033  0.021  0.020   0.289
+2005   300  0.262  0.047  0.030  0.021  0.018   0.280
+2006   299  0.242  0.047  0.033  0.019  0.017   0.282
+2007   318  0.288  0.046  0.034  0.019  0.016   0.271
+2008   500  0.385  0.066  0.027  0.019  0.015   0.253
+2009   500  0.525  0.046  0.031  0.017  0.016   0.216
+2010   500  0.445  0.029  0.026  0.019  0.014   0.208
+2011   500  0.457  0.028  0.023  0.016  0.014   0.193
+2012   500  0.516  0.031  0.021  0.017  0.012   0.182
+2013   500  0.328  0.037  0.025  0.018  0.015   0.231
+2014   500  0.295  0.043  0.025  0.018  0.015   0.244
+2015   500  0.324  0.056  0.042  0.022  0.016   0.278
+2016   500  0.366  0.061  0.042  0.023  0.018   0.281
+2017   500  0.217  0.079  0.041  0.030  0.021   0.340
+2018   500  0.242  0.054  0.040  0.030  0.021   0.305
+2019   500  0.319  0.069  0.036  0.021  0.018   0.292
+2020   500  0.469  0.069  0.035  0.023  0.016   0.273
+2021   500  0.314  0.107  0.055  0.025  0.019   0.353
+2022   500  0.321  0.085  0.065  0.031  0.020   0.351
+2023   500  0.367  0.061  0.048  0.024  0.019   0.300
+2024   500  0.217  0.065  0.042  0.031  0.021   0.328
+2025   499  0.245  0.079  0.036  0.030  0.023   0.333
+component 1: mean 0.343, max 0.568 (2012-07-03), min 0.143 (2018-01-05); components 2-21 together: mean 0.275
+
+== Stability between consecutive formations (eigenvectors of the correlation matrix, aligned on the union of stocks): mean best |cos| among the previous top 50, share matched to the same index, mean |cos| with the same index, mean retention in the previous 2-21 subspace ==
+component 1: mean |cos| with the previous component 1 0.974
+comp   best    p10 same idx |cos| same retention |cos|>0.7
+   2  0.954  0.925     0.99      0.947     0.973      0.98
+   3  0.938  0.888     0.97      0.924     0.968      0.97
+   4  0.914  0.825     0.95      0.893     0.961      0.94
+   5  0.880  0.727     0.91      0.842     0.957      0.93
+   6  0.847  0.690     0.85      0.782     0.954      0.88
+   7  0.817  0.649     0.74      0.712     0.950      0.82
+   8  0.792  0.602     0.71      0.670     0.945      0.73
+   9  0.777  0.573     0.70      0.660     0.939      0.72
+  10  0.735  0.524     0.63      0.614     0.932      0.60
+  11  0.720  0.547     0.61      0.584     0.931      0.58
+  12  0.693  0.486     0.57      0.547     0.922      0.50
+  13  0.681  0.501     0.54      0.518     0.917      0.48
+  14  0.665  0.465     0.42      0.451     0.906      0.45
+  15  0.648  0.462     0.40      0.441     0.901      0.38
+  16  0.628  0.435     0.36      0.412     0.884      0.36
+  17  0.605  0.435     0.33      0.387     0.864      0.27
+  18  0.594  0.412     0.34      0.376     0.842      0.24
+  19  0.585  0.414     0.35      0.354     0.811      0.21
+  20  0.570  0.404     0.26      0.322     0.749      0.19
+  21  0.558  0.398     0.27      0.329     0.677      0.15
+all 20: mean best |cos| 0.730, retention 0.899; matched to the same index 59.5%
+
+== By period, % per hold (t): book net, book gross, (a) gross, (b) gross ==
+2006..2009     net -0.252 (-0.64)  gross -0.155 (-0.39)  a -2.514 (-1.19)  b -1.535 (-1.03)  SR net -0.32  n 47
+2010..2014     net +0.246 (+1.29)  gross +0.348 (+1.82)  a +0.656 (+1.17)  b +0.902 (+1.46)  SR net +0.58  n 60
+2015..2019     net +0.156 (+0.76)  gross +0.256 (+1.25)  a -0.004 (-0.01)  b -0.049 (-0.07)  SR net +0.34  n 60
+2020..2022     net +0.005 (+0.01)  gross +0.111 (+0.21)  a +1.073 (+0.43)  b +2.633 (+1.23)  SR net +0.01  n 36
+2023..2025-05  net +0.321 (+0.94)  gross +0.420 (+1.23)  a +1.185 (+0.73)  b -0.573 (-0.38)  SR net +0.60  n 29
+
+== By calendar year of formation: mean % per hold (book net, gross; (a) gross; (b) gross; SPY) ==
+2005  net  +0.24  gross  +0.34  (a)  +1.68  (b)   +nan  SPY  +0.55  holds 12
+2006  net  -0.75  gross  -0.65  (a)  -2.52  (b)  -1.74  SPY  +0.89  holds 11
+2007  net  +1.05  gross  +1.15  (a)  +2.62  (b)  +1.88  SPY  +0.26  holds 12
+2008  net  -0.21  gross  -0.11  (a)  -2.39  (b)  -4.00  SPY  -3.39  holds 12
+2009  net  -1.14  gross  -1.04  (a)  -7.77  (b)  -2.30  SPY  +2.15  holds 12
+2010  net  -0.15  gross  -0.05  (a)  +0.58  (b)  +0.20  SPY  +1.08  holds 12
+2011  net  +0.69  gross  +0.79  (a)  -0.08  (b)  +0.24  SPY  +0.32  holds 12
+2012  net  +0.29  gross  +0.40  (a)  +0.47  (b)  +0.23  SPY  +1.42  holds 12
+2013  net  +0.29  gross  +0.39  (a)  +2.00  (b)  +2.17  SPY  +2.04  holds 12
+2014  net  +0.11  gross  +0.21  (a)  +0.32  (b)  +1.67  SPY  +0.99  holds 12
+2015  net  +0.56  gross  +0.66  (a)  +2.72  (b)  +2.24  SPY  +0.19  holds 12
+2016  net  -0.00  gross  +0.09  (a)  -3.15  (b)  -3.19  SPY  +1.32  holds 12
+2017  net  +0.04  gross  +0.15  (a)  +0.43  (b)  -0.38  SPY  +1.76  holds 12
+2018  net  +0.12  gross  +0.22  (a)  -0.21  (b)  -0.18  SPY  -0.33  holds 12
+2019  net  +0.06  gross  +0.16  (a)  +0.19  (b)  +1.27  SPY  +2.16  holds 12
+2020  net  +0.84  gross  +0.93  (a)  +1.15  (b)  +3.55  SPY  +1.64  holds 12
+2021  net  -0.85  gross  -0.74  (a)  -1.84  (b)  -0.67  SPY  +1.91  holds 12
+2022  net  +0.03  gross  +0.14  (a)  +3.91  (b)  +5.03  SPY  -1.25  holds 12
+2023  net  +0.11  gross  +0.21  (a)  -1.75  (b)  -1.72  SPY  +1.92  holds 12
+2024  net  +0.66  gross  +0.76  (a)  +3.42  (b)  +1.00  SPY  +1.82  holds 12
+2025  net  +0.01  gross  +0.10  (a)  +2.86  (b)  -1.59  SPY  +0.75  holds 5
+
+== Worst and best holds of the book, 2006..2025-05 (net %) ==
+worst: 2009-03-05 -9.46 (SPY +22.5, (a) -60.4); 2009-04-03 -6.95 (SPY +7.5, (a) -46.1); 2021-02-08 -5.94 (SPY -0.2, (a) -33.2); 2009-07-06 -5.05 (SPY +12.1, (a) -19.8); 2008-01-03 -4.60 (SPY -4.9, (a) -16.3)
+best:  2020-06-09 +8.14 (SPY -1.6, (a) +38.1); 2021-01-07 +6.79 (SPY +3.0, (a) +14.9); 2007-10-03 +5.14 (SPY -1.8, (a) +7.8); 2023-10-10 +4.93 (SPY +0.6, (a) +5.1); 2009-02-03 +4.58 (SPY -17.8, (a) +15.3)
+largest drawdown (cumulative sum of net holds): 24.3 points, from 2009-03-05 to the hold formed 2011-01-03
+
+== Tests ==
+Test 1 (2006..2019, book net): +0.074% a hold, t +0.49 (n 167); gross +0.173 t +1.16 -> FAIL
+Test 2 (alpha on (a) and (b), net): +0.163% a hold, t +1.60 (NW +1.72) -> FAIL
+Test 3, old part (2020..2025-05, net mean positive): +0.146 t +0.45 -> PASS

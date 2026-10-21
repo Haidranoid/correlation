@@ -1,0 +1,41 @@
+{
+ "market_check": {
+  "corr_same_day": 0.9910902710358082,
+  "corr_next_day": -0.06354765223636503
+ },
+ "weeks_from": "2010-01-04",
+ "weeks_to": "2015-12-24",
+ "last_outcome_day": "2016-01-04",
+ "G": {
+  "mean_ic_raw": -0.009293212868237501,
+  "t": -4.017520803038294,
+  "weeks": 284,
+  "sign": -1.0,
+  "median_names": 846.0,
+  "first_week_with_ic": "2010-05-13"
+ },
+ "A": {
+  "mean_ic_raw": -0.010563178492920178,
+  "t": -3.9166580016666193,
+  "weeks": 284,
+  "sign": -1.0,
+  "median_names": 911.5,
+  "first_week_with_ic": "2010-05-13"
+ },
+ "G_lag": {
+  "mean_ic_raw": -0.006594465148451762,
+  "t": -2.904325591132819,
+  "weeks": 284,
+  "sign": -1.0,
+  "median_names": 845.5,
+  "first_week_with_ic": "2010-05-13"
+ },
+ "A_lag": {
+  "mean_ic_raw": -0.0076600833688666835,
+  "t": -2.88672964138552,
+  "weeks": 284,
+  "sign": -1.0,
+  "median_names": 911.0,
+  "first_week_with_ic": "2010-05-13"
+ }
+}

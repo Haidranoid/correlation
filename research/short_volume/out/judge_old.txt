@@ -1,0 +1,78 @@
+===== delay=0 random_match=uniform =====
+Walk-forward: each year treated as the future, predicted only from census windows that ended before it.
+holdout                    pairs       SPY       QQQ      picks random med  p (0 bps)    hit %     IC t  LS bps/d     LS t  ICret t  picks 5bp    p 5bp picks 20bp   p 20bp
+2015-06-29..2016-06-27      1073     -2.8%     -5.4%      17.0%       8.8%      0.103    50.8%     0.60      4.26     2.14     1.08      14.7%    0.105       8.0%    0.107
+2016-06-28..2017-06-27      1141     23.3%     36.4%      45.0%      27.9%      0.012    50.2%     2.04      5.78     3.91     3.01      39.1%    0.012      22.6%    0.013
+2017-06-28..2018-06-27      1242     13.7%     24.0%      20.1%      13.8%      0.186    52.9%     1.91      1.86     1.31     2.24      15.3%    0.189       2.0%    0.194
+2018-06-28..2019-06-27      1368     10.4%     10.8%      -0.3%       2.9%      0.693    50.7%     0.52      1.96     1.21     0.68      -4.3%    0.696     -15.6%    0.699
+2019-06-28..2020-06-26      1480      5.0%     29.8%       8.1%      -4.5%      0.116    49.8%     1.17      4.71     1.79     0.75       3.6%    0.117      -8.7%    0.118
+2020-06-29..2021-06-25      1552     44.3%     46.3%      65.3%      71.3%      0.655    48.0%     0.39     -0.03    -0.02     0.33      58.6%    0.656      40.0%    0.663
+2021-06-28..2022-06-27      1707     -7.6%    -15.9%      -7.2%     -16.7%      0.119    53.7%     1.32      0.28     0.15     2.02     -10.9%    0.121     -21.3%    0.127
+2022-06-28..2023-06-27      1856     14.1%     25.3%      11.8%       7.5%      0.316    53.4%     1.84     -0.68    -0.29     0.77       7.3%    0.318      -5.3%    0.322
+2023-06-28..2024-06-27      1892     27.0%     33.2%      14.1%       9.0%      0.276    51.8%     2.97      2.85     1.63     1.56       9.5%    0.276      -3.2%    0.280
+2024-06-28..2025-06-27      1978     13.6%     14.3%      13.3%       7.1%      0.287    52.8%     3.33      3.48     1.89     1.91       9.0%    0.287      -3.1%    0.292
+Years where the picks beat random guessers at p < 0.1: 1 of 10 (chance alone: about 1.0)  [1s]
+Rank IC: t positive in 10 of 10 years; combined across years z = 5.09
+Long-short top/bottom 10%: mean 2.45 bps/day gross, positive in 8 of 10 years, combined z = 4.34; turnover 67% of the book per rebalance, so costs of c bps per side take about 0.54 x c bps/day
+Rank IC in actual returns: t positive in 10 of 10 years; combined across years z = 4.54
+Years where the picks beat random guessers at p < 0.1, by cost: 0 bps: 1 of 10; 5 bps: 1 of 10; 20 bps: 1 of 10
+
+===== delay=0 random_match=volatility =====
+Walk-forward: each year treated as the future, predicted only from census windows that ended before it.
+holdout                    pairs       SPY       QQQ      picks random med  p (0 bps)    hit %     IC t  LS bps/d     LS t  ICret t  picks 5bp    p 5bp picks 20bp   p 20bp
+2015-06-29..2016-06-27      1073     -2.8%     -5.4%      17.0%       7.8%      0.056    50.8%     0.60      4.26     2.14     1.08      14.7%    0.056       8.0%    0.056
+2016-06-28..2017-06-27      1141     23.3%     36.4%      45.0%      28.7%      0.020    50.2%     2.04      5.78     3.91     3.01      39.1%    0.020      22.6%    0.020
+2017-06-28..2018-06-27      1242     13.7%     24.0%      20.1%      13.7%      0.180    52.9%     1.91      1.86     1.31     2.24      15.3%    0.180       2.0%    0.179
+2018-06-28..2019-06-27      1368     10.4%     10.8%      -0.3%       2.6%      0.687    50.7%     0.52      1.96     1.21     0.68      -4.3%    0.687     -15.6%    0.687
+2019-06-28..2020-06-26      1480      5.0%     29.8%       8.1%      -6.3%      0.055    49.8%     1.17      4.71     1.79     0.75       3.6%    0.055      -8.7%    0.055
+2020-06-29..2021-06-25      1552     44.3%     46.3%      65.3%      72.8%      0.703    48.0%     0.39     -0.03    -0.02     0.33      58.6%    0.703      40.0%    0.704
+2021-06-28..2022-06-27      1707     -7.6%    -15.9%      -7.2%     -15.7%      0.129    53.7%     1.32      0.28     0.15     2.02     -10.9%    0.129     -21.3%    0.130
+2022-06-28..2023-06-27      1856     14.1%     25.3%      11.8%       4.5%      0.206    53.4%     1.84     -0.68    -0.29     0.77       7.3%    0.206      -5.3%    0.206
+2023-06-28..2024-06-27      1892     27.0%     33.2%      14.1%       9.2%      0.254    51.8%     2.97      2.85     1.63     1.56       9.5%    0.254      -3.2%    0.254
+2024-06-28..2025-06-27      1978     13.6%     14.3%      13.3%       4.6%      0.197    52.8%     3.33      3.48     1.89     1.91       9.0%    0.197      -3.1%    0.197
+Years where the picks beat random guessers at p < 0.1: 3 of 10 (chance alone: about 1.0)  [1s]
+Rank IC: t positive in 10 of 10 years; combined across years z = 5.09
+Long-short top/bottom 10%: mean 2.45 bps/day gross, positive in 8 of 10 years, combined z = 4.34; turnover 67% of the book per rebalance, so costs of c bps per side take about 0.54 x c bps/day
+Rank IC in actual returns: t positive in 10 of 10 years; combined across years z = 4.54
+Years where the picks beat random guessers at p < 0.1, by cost: 0 bps: 3 of 10; 5 bps: 3 of 10; 20 bps: 3 of 10
+Options: the account trades 0 trading day(s) after each decision; random guessers matched on turnover and volatility decile
+
+===== delay=1 random_match=uniform =====
+Walk-forward: each year treated as the future, predicted only from census windows that ended before it.
+holdout                    pairs       SPY       QQQ      picks random med  p (0 bps)    hit %     IC t  LS bps/d     LS t  ICret t  picks 5bp    p 5bp picks 20bp   p 20bp
+2015-06-29..2016-06-27      1073     -2.8%     -5.4%      18.0%       9.8%      0.078    50.8%     0.60      4.26     2.14     1.08      15.7%    0.078       9.0%    0.081
+2016-06-28..2017-06-27      1141     23.3%     36.4%      35.5%      24.9%      0.099    50.2%     2.04      5.78     3.91     3.01      30.0%    0.101      14.6%    0.104
+2017-06-28..2018-06-27      1242     13.7%     24.0%      18.9%      12.5%      0.190    52.9%     1.91      1.86     1.31     2.24      14.1%    0.190       1.0%    0.200
+2018-06-28..2019-06-27      1368     10.4%     10.8%      -3.3%       2.4%      0.810    50.7%     0.52      1.96     1.21     0.68      -7.2%    0.812     -17.9%    0.816
+2019-06-28..2020-06-26      1480      5.0%     29.8%       3.4%      -6.4%      0.177    49.8%     1.17      4.71     1.79     0.75      -0.9%    0.178     -12.7%    0.181
+2020-06-29..2021-06-25      1552     44.3%     46.3%      72.4%      67.6%      0.361    48.0%     0.39     -0.03    -0.02     0.33      65.6%    0.362      46.7%    0.363
+2021-06-28..2022-06-27      1707     -7.6%    -15.9%      -4.1%     -16.0%      0.065    53.7%     1.32      0.28     0.15     2.02      -8.0%    0.066     -18.7%    0.067
+2022-06-28..2023-06-27      1856     14.1%     25.3%      13.9%       9.3%      0.315    53.4%     1.84     -0.68    -0.29     0.77       9.4%    0.315      -3.2%    0.318
+2023-06-28..2024-06-27      1892     27.0%     33.2%      14.1%       8.6%      0.273    51.8%     2.97      2.85     1.63     1.56       9.5%    0.273      -3.2%    0.278
+2024-06-28..2025-06-27      1978     13.6%     14.3%      13.4%       7.2%      0.284    52.8%     3.33      3.48     1.89     1.91       9.0%    0.284      -3.1%    0.286
+Years where the picks beat random guessers at p < 0.1: 3 of 10 (chance alone: about 1.0)  [1s]
+Rank IC: t positive in 10 of 10 years; combined across years z = 5.09
+Long-short top/bottom 10%: mean 2.45 bps/day gross, positive in 8 of 10 years, combined z = 4.34; turnover 67% of the book per rebalance, so costs of c bps per side take about 0.54 x c bps/day
+Rank IC in actual returns: t positive in 10 of 10 years; combined across years z = 4.54
+Years where the picks beat random guessers at p < 0.1, by cost: 0 bps: 3 of 10; 5 bps: 2 of 10; 20 bps: 2 of 10
+Options: the account trades 1 trading day(s) after each decision; random guessers matched on turnover
+
+===== delay=1 random_match=volatility =====
+Walk-forward: each year treated as the future, predicted only from census windows that ended before it.
+holdout                    pairs       SPY       QQQ      picks random med  p (0 bps)    hit %     IC t  LS bps/d     LS t  ICret t  picks 5bp    p 5bp picks 20bp   p 20bp
+2015-06-29..2016-06-27      1073     -2.8%     -5.4%      18.0%      11.0%      0.108    50.8%     0.60      4.26     2.14     1.08      15.7%    0.108       9.0%    0.108
+2016-06-28..2017-06-27      1141     23.3%     36.4%      35.5%      27.3%      0.139    50.2%     2.04      5.78     3.91     3.01      30.0%    0.139      14.6%    0.139
+2017-06-28..2018-06-27      1242     13.7%     24.0%      18.9%      12.2%      0.152    52.9%     1.91      1.86     1.31     2.24      14.1%    0.152       1.0%    0.153
+2018-06-28..2019-06-27      1368     10.4%     10.8%      -3.3%       2.7%      0.805    50.7%     0.52      1.96     1.21     0.68      -7.2%    0.807     -17.9%    0.807
+2019-06-28..2020-06-26      1480      5.0%     29.8%       3.4%      -8.9%      0.092    49.8%     1.17      4.71     1.79     0.75      -0.9%    0.092     -12.7%    0.093
+2020-06-29..2021-06-25      1552     44.3%     46.3%      72.4%      70.5%      0.441    48.0%     0.39     -0.03    -0.02     0.33      65.6%    0.441      46.7%    0.441
+2021-06-28..2022-06-27      1707     -7.6%    -15.9%      -4.1%     -16.2%      0.045    53.7%     1.32      0.28     0.15     2.02      -8.0%    0.045     -18.7%    0.045
+2022-06-28..2023-06-27      1856     14.1%     25.3%      13.9%       8.2%      0.264    53.4%     1.84     -0.68    -0.29     0.77       9.4%    0.264      -3.2%    0.264
+2023-06-28..2024-06-27      1892     27.0%     33.2%      14.1%       8.4%      0.245    51.8%     2.97      2.85     1.63     1.56       9.5%    0.245      -3.2%    0.245
+2024-06-28..2025-06-27      1978     13.6%     14.3%      13.4%       5.6%      0.238    52.8%     3.33      3.48     1.89     1.91       9.0%    0.238      -3.1%    0.238
+Years where the picks beat random guessers at p < 0.1: 2 of 10 (chance alone: about 1.0)  [1s]
+Rank IC: t positive in 10 of 10 years; combined across years z = 5.09
+Long-short top/bottom 10%: mean 2.45 bps/day gross, positive in 8 of 10 years, combined z = 4.34; turnover 67% of the book per rebalance, so costs of c bps per side take about 0.54 x c bps/day
+Rank IC in actual returns: t positive in 10 of 10 years; combined across years z = 4.54
+Years where the picks beat random guessers at p < 0.1, by cost: 0 bps: 2 of 10; 5 bps: 2 of 10; 20 bps: 2 of 10
+Options: the account trades 1 trading day(s) after each decision; random guessers matched on turnover and volatility decile

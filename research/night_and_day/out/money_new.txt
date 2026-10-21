@@ -1,0 +1,2 @@
+uniform: change over random -8.04 pts (per year [-8.04], ahead 0/1, se nan)
+volatility: change over random -21.56 pts (per year [-21.56], ahead 0/1, se nan)

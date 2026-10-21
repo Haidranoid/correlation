@@ -1,0 +1,48 @@
+| # | A → B | This null: noise A → stocks B | This null: stocks A → noise B | Old null (non-overlapping) | Overlapping, `v` flipped |
+|---|---|---|---|---|---|
+| 1 | 1 day → 1 week | 0.97 ± 0.01 | 0.93 ± 0.06 | 0.98 ± 0.04 | 1.04 ± 0.02 |
+| 2 | 1 day → 2 weeks | 0.97 ± 0.01 | **0.85 ± 0.05** | 0.97 ± 0.03 | 1.04 ± 0.01 |
+| 3 | 1 day → 1 month | 0.98 ± 0.01 | 0.90 ± 0.06 | 0.94 ± 0.06 | 1.02 ± 0.01 |
+| 4 | 1 day → 2 months | 1.00 ± 0.00 | 0.96 ± 0.07 | 1.43 ± 0.38 | 1.02 ± 0.01 |
+| 5 | 1 day → 1 quarter | 1.00 ± 0.00 | **0.85 ± 0.06** | 1.11 ± 0.28 | 1.02 ± 0.01 |
+| 6 | 1 week → 2 weeks | 0.92 ± 0.03 | **0.85 ± 0.05** | **1.10 ± 0.05** | **1.16 ± 0.04** |
+| 7 | **1 week → 1 month** | 0.95 ± 0.02 | **0.85 ± 0.06** | 0.97 ± 0.05 | 1.07 ± 0.03 |
+| 8 | 1 week → 2 months | 0.99 ± 0.01 | 1.00 ± 0.06 | 1.53 ± 0.40 | 1.08 ± 0.02 |
+| 9 | 1 week → 1 quarter | 1.00 ± 0.01 | 0.90 ± 0.06 | 1.54 ± 0.47 | 1.09 ± 0.02 |
+| 10 | 1 week → half a year | 0.97 ± 0.01 | **0.78 ± 0.06** | 1.87 ± 0.46 | 1.01 ± 0.02 |
+| 11 | 2 weeks → 1 month | 0.91 ± 0.03 | 0.93 ± 0.06 | 0.99 ± 0.05 | **1.13 ± 0.04** |
+| 12 | 2 weeks → 2 months | 0.98 ± 0.02 | 0.91 ± 0.07 | 1.57 ± 0.36 | **1.16 ± 0.03** |
+| 13 | 2 weeks → 1 quarter | 1.00 ± 0.02 | **0.85 ± 0.07** | 1.40 ± 0.39 | **1.14 ± 0.03** |
+| 14 | 1 month → 2 months | 0.94 ± 0.04 | 1.01 ± 0.08 | **2.30 ± 0.50** | **1.15 ± 0.06** |
+| 15 | 1 month → 1 quarter | 1.04 ± 0.03 | **0.80 ± 0.06** | **2.37 ± 0.52** | 1.06 ± 0.05 |
+| 16 | 1 month → half a year | **0.89 ± 0.03** | **0.73 ± 0.06** | **2.65 ± 0.50** | 0.93 ± 0.06 |
+| 17 | 1 quarter → half a year | 0.98 ± 0.06 | **0.77 ± 0.09** | **3.41 ± 0.57** | 1.24 ± 0.12 |
+| 18 | 1 month → 1 week | 0.87 ± 0.07 | 0.96 ± 0.02 | 0.96 ± 0.04 | **1.18 ± 0.09** |
+| 19 | 1 quarter → 1 month | 0.90 ± 0.07 | **0.88 ± 0.03** | **2.00 ± 0.39** | **1.81 ± 0.14** |
+| 20 | 1 quarter → 1 week | 0.88 ± 0.07 | 0.99 ± 0.01 | 1.06 ± 0.31 | **1.91 ± 0.15** |
+
+| # | A → B | Real/chance, rolling (z) | Noise ref | Same sign next period: real / null (z) | Change over random, 0 bps | 5 bps | p at 5 bps | Years ahead at 5 bps (2020+) | Unseen months, 0 bps | Fails |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1 day → 1 week | 0.85 (-0.3) | 0.98 | 51.9% / 50.2% (+3.2) | +2.7 | +2.5 | 0.079 | 14 of 18 (3 of 5) | -14.2 | excess; money (p, years, unseen) |
+| 2 | 1 day → 2 weeks | 0.86 (-0.4) | 0.98 | 50.7% / 50.0% (+1.6) | -1.1 | -1.1 | 0.835 | 7 of 18 (2 of 5) | -15.4 | excess; replication; money (p, years, unseen) |
+| 3 | 1 day → 1 month | 0.92 (-0.3) | 0.99 | 51.1% / 49.7% (+2.0) | -0.7 | -0.7 | 0.694 | 9 of 18 (2 of 5) | -2.1 | excess; money (p, years, unseen) |
+| 4 | 1 day → 2 months | 0.80 (-0.7) | 1.00 | 51.0% / 49.8% (+1.5) | -1.8 | -1.8 | 0.887 | 7 of 18 (4 of 5) | -16.2 | excess; replication; money (p, years, unseen) |
+| 5 | 1 day → 1 quarter | 0.96 (-0.3) | 1.01 | 50.8% / 49.9% (+1.3) | -0.0 | -0.0 | 0.706 | 9 of 18 (3 of 5) | -13.0 | excess; replication; money (p, years, unseen) |
+| 6 | 1 week → 2 weeks | 1.09 (+1.8) | 0.99 | 50.8% / 50.0% (+1.4) | +0.5 | +0.5 | 0.566 | 10 of 18 (4 of 5) | +0.7 | excess; replication; money (p, years) |
+| 7 | **1 week → 1 month** | 0.94 (-0.3) | 0.98 | 50.6% / 50.4% (+0.6) | +2.6 | +2.6 | 0.131 | 10 of 18 (2 of 5) | -3.3 | excess; replication; money (p, years, unseen) |
+| 8 | 1 week → 2 months | 0.95 (-0.5) | 0.99 | 50.5% / 49.8% (+1.7) | -0.2 | -0.2 | 0.597 | 9 of 18 (2 of 5) | +11.3 | excess; replication; money (p, years) |
+| 9 | 1 week → 1 quarter | 0.95 (-0.4) | 1.00 | 50.6% / 50.1% (+0.7) | +0.6 | +0.5 | 0.509 | 8 of 18 (1 of 5) | -16.9 | excess; replication; money (p, years, unseen) |
+| 10 | 1 week → half a year | 0.94 (-0.5) | 1.00 | 53.0% / 49.6% (+3.9) | -1.0 | -1.0 | 0.746 | 9 of 18 (2 of 5) | -7.2 | excess; money (p, years, unseen) |
+| 11 | 2 weeks → 1 month | 0.91 (-0.5) | 0.98 | 51.2% / 49.9% (+3.1) | +3.0 | +2.9 | 0.116 | 9 of 18 (3 of 5) | +4.2 | excess; money (p, years) |
+| 12 | 2 weeks → 2 months | 0.91 (-0.6) | 1.00 | 50.7% / 49.9% (+1.2) | +1.6 | +1.5 | 0.211 | 9 of 18 (2 of 5) | +15.8 | excess; replication; money (p, years) |
+| 13 | 2 weeks → 1 quarter | 0.98 (-0.2) | 1.02 | 50.8% / 50.4% (+1.2) | -1.1 | -1.1 | 0.680 | 7 of 18 (0 of 5) | -14.9 | excess; replication; money (p, years, unseen) |
+| 14 | 1 month → 2 months | 0.99 (-0.1) | 0.97 | 50.2% / 50.0% (+0.3) | +0.7 | +0.7 | 0.358 | 9 of 18 (2 of 5) | -4.3 | excess; replication; money (p, years, unseen) |
+| 15 | 1 month → 1 quarter | 0.99 (-0.3) | 1.03 | 50.6% / 50.4% (+0.3) | -3.2 | -3.2 | 0.990 | 4 of 18 (1 of 5) | -3.4 | excess; replication; money (p, years, unseen) |
+| 16 | 1 month → half a year | 1.00 (-0.1) | 1.03 | 52.1% / 49.8% (+2.4) | +1.0 | +1.0 | 0.264 | 11 of 18 (1 of 5) | -17.0 | excess; money (p, years, unseen) |
+| 17 | 1 quarter → half a year | 0.96 (-0.6) | 1.10 | 51.2% / 50.2% (+1.4) | -2.3 | -2.3 | 0.835 | 10 of 18 (3 of 5) | +16.2 | excess; replication; money (p, years) |
+| 18 | 1 month → 1 week | 0.99 (-0.1) | 0.96 | 51.1% / 50.3% (+0.9) | +0.5 | +0.4 | 0.384 | 8 of 18 (2 of 5) | -10.5 | excess; replication; money (p, years, unseen) |
+| 19 | 1 quarter → 1 month | 1.02 (+0.5) | 1.04 | 50.8% / 50.2% (+0.7) | -1.2 | -1.2 | 0.800 | 7 of 18 (2 of 5) | -4.0 | excess; replication; money (p, years, unseen) |
+| 20 | 1 quarter → 1 week | 0.96 (-0.6) | 1.00 | 50.8% / 50.1% (+1.0) | +1.1 | +1.0 | 0.441 | 9 of 18 (4 of 5) | -18.1 | excess; replication; money (p, years, unseen) |
+
+mean +0.080; median +0.21; positive 10; sd 1.66
+unseen mean -5.61; ahead 5

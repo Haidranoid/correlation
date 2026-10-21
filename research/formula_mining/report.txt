@@ -1,0 +1,116 @@
+### Test 1: the training-period best t against the shuffled runs
+
+| | Best training \|t\| of the 676 | Its formula | 95th percentile of the 676 \|t\| |
+|---|---|---|---|
+| Real outcomes | **4.67** | −(ret1 × clv5) | 3.51 |
+| 20 shuffled runs, median | 3.24 | | 2.35 |
+| 20 shuffled runs, min–max | 1.84–5.09 | | 1.26–3.50 |
+| **The bar:** 95th percentile of the shuffled runs' best | **4.45** | | |
+
+Shuffled runs at or above the real best: 1 of 20. All 20 shuffled bests, sorted: 1.84, 2.66, 2.70, 2.70, 2.72, 2.78, 2.79, 2.85, 3.09, 3.23, 3.24, 3.24, 3.40, 3.82, 3.83, 3.97, 4.13, 4.25, 4.41, 5.09.
+
+**Each run's composite, later (its holdout IC, 2015–2025-06, real outcomes):**
+
+| Selection | Mean weekly IC | t |
+|---|---|---|
+| Real outcomes | +0.0068 | +1.39 |
+| Shuffled runs, median | +0.0163 | +2.03 |
+| Shuffled runs, min–max | −0.0010 to +0.0233 | −0.20 to +3.84 |
+
+Shuffled composites at or above the real composite's holdout IC: 17 of 20; with t ≥ 3: 1.
+Of the 400 formulas the shuffled runs selected, 85% involve a slow feature (126- or 252-day return, 12-1 momentum, dollar volume, 63-day twin residual) and 88% are oriented positive.
+
+### The 20 selected formulas
+
+Oriented by the training sign, so a positive t is the selected direction working. Training: 503 weeks 2005-01-03..2014-12-22; holdout: 526 weeks 2015-01-07..2025-06-16.
+
+| # | Formula (as used) | Training IC | Training t | Holdout IC | Holdout t |
+|---|---|---|---|---|---|
+| 1 | −(ret1 × clv5) | +0.0240 | +4.67 | +0.0038 | +0.75 |
+| 2 | −(ret1 − mom12_1) | +0.0286 | +4.51 | +0.0148 | +2.29 |
+| 3 | −(ret1 × twres5) | +0.0211 | +4.42 | +0.0046 | +1.03 |
+| 4 | −(ret1 × ret5) | +0.0264 | +4.37 | +0.0036 | +0.62 |
+| 5 | −(vr5_60 × clv5) | +0.0151 | +4.36 | +0.0020 | +0.57 |
+| 6 | −(vr21_252 × clv5) | +0.0153 | +4.32 | +0.0020 | +0.58 |
+| 7 | −ret1 | +0.0246 | +4.24 | +0.0042 | +0.71 |
+| 8 | −(ret1 × vr21_252) | +0.0196 | +4.22 | −0.0004 | −0.09 |
+| 9 | −(ret5 − mom12_1) | +0.0280 | +4.17 | +0.0158 | +2.30 |
+| 10 | −(clv5 × twres5) | +0.0162 | +4.15 | +0.0048 | +1.29 |
+| 11 | −(ret5 × clv5) | +0.0220 | +4.15 | +0.0044 | +0.84 |
+| 12 | −(ret5 × vr21_252) | +0.0197 | +4.12 | +0.0002 | +0.05 |
+| 13 | −(ret5 × twres5) | +0.0197 | +4.09 | +0.0051 | +1.13 |
+| 14 | −(ret1 × vr5_60) | +0.0182 | +4.00 | −0.0008 | −0.18 |
+| 15 | −ret5 | +0.0246 | +3.99 | +0.0054 | +0.92 |
+| 16 | −clv5 | +0.0161 | +3.97 | +0.0048 | +1.12 |
+| 17 | −(ret1 − ret252) | +0.0253 | +3.96 | +0.0137 | +2.10 |
+| 18 | −(vr21_252 × twres5) | +0.0125 | +3.96 | +0.0007 | +0.24 |
+| 19 | −(ret1 × twres21) | +0.0198 | +3.93 | +0.0045 | +0.91 |
+| 20 | −(ret5 × vr5_60) | +0.0186 | +3.89 | +0.0002 | +0.04 |
+
+Holdout t ≥ 2: 3 of 20; ≥ 3: 0; negative: 2.
+
+### Test 2: the composite's holdout IC against 5-day reversal
+
+| Weekly rank IC with the next 5-day market-relative return | Mean | t | Weeks |
+|---|---|---|---|
+| Composite, training 2005–2014 (in sample) | +0.0287 | +5.50 | 503 |
+| **Composite, holdout 2015–2025-06** | +0.0068 | +1.39 | 526 |
+| 5-day reversal, holdout | +0.0054 | +0.92 | 526 |
+| Composite minus reversal, holdout (paired) | +0.0014 | +0.44 | 526 |
+
+Mean weekly rank correlation of the composite with 5-day reversal (holdout): 0.82.
+
+| Year | Composite IC | 5-day reversal IC |
+|---|---|---|
+| 2015 | +0.0172 | +0.0037 |
+| 2016 | +0.0033 | −0.0113 |
+| 2017 | +0.0214 | +0.0155 |
+| 2018 | +0.0107 | +0.0155 |
+| 2019 | −0.0004 | −0.0110 |
+| 2020 | +0.0160 | +0.0270 |
+| 2021 | −0.0049 | −0.0075 |
+| 2022 | +0.0012 | +0.0220 |
+| 2023 | −0.0113 | −0.0187 |
+| 2024 | +0.0188 | +0.0123 |
+| 2025 (to June) | −0.0015 | +0.0189 |
+
+### The money test (the judge), 2015-16..2024-25
+
+Scores = the composite every trading day from 2015-06-29, NaN before; `rebalance=5`; the judge skips the nine earlier years as having no scores. Change over random in points a year (picks minus the median random account), mean of the 10 years.
+
+| | 0 bps | 5 bps | 20 bps | Ahead | Years beating random at p < 0.1 (0 / 5 / 20 bps) |
+|---|---|---|---|---|---|
+| **Composite, uniform random** | +6.0 (se 5.9) | +5.6 | +4.7 | 6 of 10 | 5 / 5 / 5 of 10 |
+| Composite, volatility-matched | +5.8 (se 5.7) | +5.5 | +4.8 | 8 of 10 | 4 / 4 / 4 of 10 |
+| 5-day reversal, uniform (same years and rule) | +9.5 (se 12.3) | +9.0 | +7.6 | 6 of 10 | 4 / 4 / 4 of 10 |
+| 5-day reversal, volatility-matched | +8.3 (se 9.4) | +7.9 | +6.8 | 6 of 10 | 4 / 4 / 4 of 10 |
+
+- **Rank IC in actual returns** (the judge's): z = +2.42 (5-day reversal: +1.82).
+- **Long-short, top minus bottom 10%:** 3.85 bps a day gross, z = +2.14 (reversal: 3.85, z = +1.65). Turnover is 86% of the book per rebalance, so c bps a side costs about 0.69 × c bps a day: about 0.4 bps a day left at 5 bps, -9.9 at 20 bps.
+
+| Year from June 28 | Picks, 0 bps | Median random (uniform) | p | Median random (volatility) | p |
+|---|---|---|---|---|---|
+| 2015-16 | −7.6% | −5.8% | 0.607 | −7.9% | 0.488 |
+| 2016-17 | +12.6% | +27.1% | 0.980 | +32.1% | 0.986 |
+| 2017-18 | +34.5% | +14.2% | 0.006 | +16.6% | 0.027 |
+| 2018-19 | +6.6% | +2.7% | 0.309 | −0.1% | 0.223 |
+| 2019-20 | −8.1% | −4.1% | 0.649 | −8.1% | 0.496 |
+| 2020-21 | +107.4% | +72.0% | 0.009 | +80.2% | 0.083 |
+| 2021-22 | −2.4% | −16.4% | 0.045 | −23.0% | 0.015 |
+| 2022-23 | +29.6% | +7.8% | 0.019 | +14.8% | 0.122 |
+| 2023-24 | +21.6% | +8.8% | 0.076 | +3.9% | 0.062 |
+| 2024-25 | −21.2% | +6.7% | 0.998 | +6.6% | 0.990 |
+
+### The unseen months, 2025-06-30..2026-10-19 (new export and store, once)
+
+| | Value |
+|---|---|
+| **Composite weekly IC** (65 decision days 2025-06-30..2026-10-07) | **+0.0141**, t = +1.04 |
+| 5-day reversal weekly IC, same weeks | +0.0169, t = +1.12 |
+| Picks at 0 bps | −4.4%; median random +17.3% uniform (p = 0.963), +24.8% volatility-matched (p = 0.977) |
+| Picks at 5 bps | −10.2%; median random +10.2% uniform (p = 0.964), +17.2% volatility-matched (p = 0.977) |
+| Picks at 20 bps | −25.6%; median random −8.6% uniform (p = 0.965), −2.9% volatility-matched (p = 0.977) |
+| **Change over random, 0 bps** | **−21.6** uniform; −29.2 volatility-matched |
+| SPY / QQQ / all 2,155 candidates | +24.6% / +31.1% / +20.7% |
+| Judge's rank IC in actual returns | −0.0062, t = −0.43 |
+| Long-short | −1.46 bps a day, t = −0.26; turnover 85% |

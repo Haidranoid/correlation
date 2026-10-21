@@ -1,0 +1,130 @@
+/home/bhoult/programming/correlation2/research/max_lottery/tests.py:132: RuntimeWarning: Mean of empty slice
+  acc['ivol'][i].append(np.nanmean(Z['ivol'][k][p]))
+# MAX lottery tests (new export), 2001-12-31..2026-10-19
+Formations on the fixed calendar: 286; complete 21-day holding periods: 261
+Units: % per 21-day period ("a month"); t = Newey-West (4 lags) with plain t in brackets; alpha = intercept on compounded FF5 + UMD factors over the same 21 days (NW t, plain t, periods with factors).
+
+## Long-short: lowest-MAX tenth minus highest-MAX tenth, equal weight, net of 5 bps per side
+### Universe
+| Period | Periods | Mean net, % | t NW (plain) | Sharpe | FF5+UMD alpha, % | alpha t NW (plain), n | Mkt loading |
+|---|---|---|---|---|---|---|---|
+| Unseen: first return day 2025-06-30..2026-10-19, dividends restored | 15 | -0.945 | -0.92 (-0.62) | -0.56 | +1.216 | +1.80 (+0.91), 13 | +0.01 |
+| Unseen: first return day 2025-06-30..2026-10-19, no dividend fix | 15 | -1.168 | -1.15 (-0.77) | -0.69 | +0.941 | +1.42 (+0.70), 13 | +0.02 |
+
+### 500 largest
+| Period | Periods | Mean net, % | t NW (plain) | Sharpe | FF5+UMD alpha, % | alpha t NW (plain), n | Mkt loading |
+|---|---|---|---|---|---|---|---|
+| Unseen: first return day 2025-06-30..2026-10-19, dividends restored | 15 | -0.468 | -0.31 (-0.18) | -0.16 | +3.773 | +3.03 (+1.33), 13 | -0.17 |
+| Unseen: first return day 2025-06-30..2026-10-19, no dividend fix | 15 | -0.662 | -0.44 (-0.25) | -0.23 | +3.562 | +2.85 (+1.25), 13 | -0.16 |
+
+### IVOL-controlled (MAX tenths within IVOL fifths)
+| Period | Periods | Mean net, % | t NW (plain) | Sharpe | FF5+UMD alpha, % | alpha t NW (plain), n | Mkt loading |
+|---|---|---|---|---|---|---|---|
+| Unseen: first return day 2025-06-30..2026-10-19, dividends restored | 14 | +0.236 | +0.34 (+0.25) | +0.23 | +2.816 | +3.79 (+3.56), 13 | -0.67 |
+| Unseen: first return day 2025-06-30..2026-10-19, no dividend fix | 14 | +0.177 | +0.26 (+0.19) | +0.18 | +2.717 | +3.85 (+3.54), 13 | -0.66 |
+
+## Legs (market-relative = minus the EW mean of the candidates), gross, turnover; universe
+| Period | Gross LS, % | Long - mkt, % | Short - mkt, % | Turnover (both legs, max 4) | Stocks per leg |
+|---|---|---|---|---|---|
+| Unseen: first return day 2025-06-30..2026-10-19, div | -0.805 | -0.554 | +0.252 | 2.80 | 230 |
+| Unseen: first return day 2025-06-30..2026-10-19 | -1.029 | -0.676 | +0.353 | 2.80 | 230 |
+
+## Fama-MacBeth: Universe, percentile ranks (primary)
+Coefficient = mean over formations of the cross-sectional slope; ranks in [0,1], so a rank coefficient is the 21-day return difference, %, between the highest and lowest stock on that variable, others held fixed.
+Cells: coefficient (Newey-West t; plain t).
+### Unseen: first return day 2025-06-30..2026-10-19, dividends restored
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +1.527 (+1.61; +1.04) |  |  |  |  |  | 14 |
+| IVOL alone |  | +2.176 (+2.33; +1.25) |  |  |  |  | 14 |
+| MAX + IVOL | -0.144 (-0.11; -0.09) | +2.315 (+1.85; +1.13) |  |  |  |  | 14 |
+| All controls (the test) | -0.789 (-0.86; -0.73) | +2.370 (+1.99; +1.32) | +0.814 (+1.44; +0.72) | +0.675 (+0.43; +0.33) | -0.936 (-2.30; -0.95) | +0.921 (+0.79; +0.68) | 14 |
+| All controls, no MAX |  | +1.753 (+1.68; +1.17) | +0.613 (+1.30; +0.57) | +0.502 (+0.31; +0.23) | -0.977 (-2.45; -0.99) | +0.866 (+0.76; +0.65) | 14 |
+
+### Unseen: first return day 2025-06-30..2026-10-19, no dividend fix
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +1.763 (+1.88; +1.20) |  |  |  |  |  | 14 |
+| IVOL alone |  | +2.439 (+2.64; +1.40) |  |  |  |  | 14 |
+| MAX + IVOL | -0.061 (-0.05; -0.04) | +2.513 (+2.03; +1.23) |  |  |  |  | 14 |
+| All controls (the test) | -0.730 (-0.81; -0.69) | +2.534 (+2.14; +1.41) | +0.799 (+1.42; +0.71) | +0.807 (+0.52; +0.39) | -0.837 (-2.11; -0.85) | +1.036 (+0.89; +0.77) | 14 |
+| All controls, no MAX |  | +1.956 (+1.90; +1.30) | +0.613 (+1.31; +0.57) | +0.648 (+0.41; +0.30) | -0.878 (-2.26; -0.89) | +0.982 (+0.85; +0.74) | 14 |
+
+## Fama-MacBeth: 500 largest, percentile ranks
+Coefficient = mean over formations of the cross-sectional slope; ranks in [0,1], so a rank coefficient is the 21-day return difference, %, between the highest and lowest stock on that variable, others held fixed.
+Cells: coefficient (Newey-West t; plain t).
+### Unseen: first return day 2025-06-30..2026-10-19, dividends restored
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +1.405 (+0.90; +0.54) |  |  |  |  |  | 14 |
+| IVOL alone |  | +1.401 (+1.00; +0.49) |  |  |  |  | 14 |
+| MAX + IVOL | +1.170 (+0.58; +0.61) | +0.607 (+0.39; +0.23) |  |  |  |  | 14 |
+| All controls (the test) | +0.493 (+0.26; +0.31) | +1.269 (+0.88; +0.55) | +0.747 (+0.66; +0.48) | -0.109 (-0.05; -0.04) | +0.414 (+0.77; +0.53) | +1.402 (+0.96; +0.83) | 14 |
+| All controls, no MAX |  | +1.563 (+1.25; +0.76) | +0.905 (+1.00; +0.65) | -0.078 (-0.04; -0.03) | +0.441 (+0.84; +0.57) | +1.341 (+0.94; +0.80) | 14 |
+
+### Unseen: first return day 2025-06-30..2026-10-19, no dividend fix
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +1.592 (+1.03; +0.61) |  |  |  |  |  | 14 |
+| IVOL alone |  | +1.594 (+1.14; +0.56) |  |  |  |  | 14 |
+| MAX + IVOL | +1.256 (+0.62; +0.66) | +0.733 (+0.47; +0.28) |  |  |  |  | 14 |
+| All controls (the test) | +0.518 (+0.27; +0.32) | +1.345 (+0.93; +0.58) | +0.724 (+0.65; +0.47) | +0.045 (+0.02; +0.02) | +0.434 (+0.80; +0.55) | +1.469 (+0.99; +0.87) | 14 |
+| All controls, no MAX |  | +1.657 (+1.33; +0.80) | +0.894 (+1.01; +0.65) | +0.082 (+0.04; +0.03) | +0.458 (+0.87; +0.59) | +1.408 (+0.97; +0.84) | 14 |
+
+## Fama-MacBeth: Universe, winsorized raw values (1/99%; secondary)
+Coefficient x 100 = mean over formations of the cross-sectional slope on the winsorized raw variable: the 21-day return change, %, per unit of the variable (MAX, IVOL, returns in decimals; beta; log $ volume).
+Cells: coefficient (Newey-West t; plain t).
+### Unseen: first return day 2025-06-30..2026-10-19, dividends restored
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +6.751 (+0.92; +0.50) |  |  |  |  |  | 14 |
+| IVOL alone |  | +41.736 (+1.51; +0.77) |  |  |  |  | 14 |
+| MAX + IVOL | -7.655 (-0.86; -0.72) | +60.294 (+1.61; +0.92) |  |  |  |  | 14 |
+| All controls (the test) | -14.511 (-4.71; -1.84) | +65.235 (+1.74; +1.15) | +2.829 (+1.54; +0.83) | +0.868 (+1.14; +0.86) | -0.171 (-2.31; -0.90) | +0.392 (+0.77; +0.60) | 14 |
+| All controls, no MAX |  | +30.162 (+0.92; +0.64) | +1.381 (+0.68; +0.45) | +0.734 (+0.99; +0.72) | -0.170 (-2.20; -0.88) | +0.411 (+0.79; +0.62) | 14 |
+
+### Unseen: first return day 2025-06-30..2026-10-19, no dividend fix
+| Spec | max | ivol | rev | beta | size | mom | formations |
+|---|---|---|---|---|---|---|---|
+| MAX alone | +8.133 (+1.12; +0.60) |  |  |  |  |  | 14 |
+| IVOL alone |  | +47.039 (+1.72; +0.87) |  |  |  |  | 14 |
+| MAX + IVOL | -7.444 (-0.84; -0.70) | +65.057 (+1.75; +0.99) |  |  |  |  | 14 |
+| All controls (the test) | -14.435 (-4.70; -1.86) | +68.776 (+1.85; +1.21) | +2.834 (+1.53; +0.84) | +0.942 (+1.24; +0.93) | -0.151 (-2.05; -0.79) | +0.416 (+0.81; +0.64) | 14 |
+| All controls, no MAX |  | +33.837 (+1.04; +0.72) | +1.394 (+0.69; +0.45) | +0.810 (+1.08; +0.79) | -0.149 (-1.96; -0.77) | +0.435 (+0.83; +0.66) | 14 |
+
+FM sample size (universe): median 1247, min 284, max 2424
+
+## MAX deciles, universe, Unseen: first return day 2025-06-30..2026-10-19 (averages over formations)
+| Decile | 21-day return, % | MAX, % | IVOL, % a day | Beta | 21-day return before, % | Median $ volume, $M | Stocks |
+|---|---|---|---|---|---|---|---|
+| 1 | +0.80 | 1.75 | 1.04 | 0.52 | -2.84 | 78 | 231 |
+| 2 | +0.99 | 2.45 | 1.24 | 0.65 | -1.84 | 71 | 231 |
+| 3 | +1.02 | 2.97 | 1.41 | 0.77 | -1.28 | 65 | 231 |
+| 4 | +0.96 | 3.50 | 1.57 | 0.85 | -1.05 | 60 | 231 |
+| 5 | +1.04 | 4.07 | 1.75 | 0.95 | -0.34 | 50 | 230 |
+| 6 | +1.28 | 4.75 | 1.94 | 1.03 | +0.39 | 52 | 230 |
+| 7 | +1.80 | 5.59 | 2.20 | 1.12 | +1.01 | 50 | 230 |
+| 8 | +2.06 | 6.76 | 2.50 | 1.25 | +2.53 | 50 | 230 |
+| 9 | +1.94 | 8.81 | 3.01 | 1.44 | +4.83 | 51 | 230 |
+| 10 | +1.61 | 16.33 | 4.61 | 1.64 | +15.42 | 47 | 230 |
+
+## MAX deciles, 500 largest, Unseen: first return day 2025-06-30..2026-10-19 (averages over formations)
+| Decile | 21-day return, % | MAX, % | IVOL, % a day | Beta | 21-day return before, % | Median $ volume, $M | Stocks |
+|---|---|---|---|---|---|---|---|
+| 1 | +0.93 | 1.74 | 1.05 | 0.45 | -2.89 | 385 | 50 |
+| 2 | +0.84 | 2.32 | 1.22 | 0.56 | -2.33 | 400 | 50 |
+| 3 | +0.71 | 2.77 | 1.36 | 0.67 | -1.30 | 404 | 50 |
+| 4 | +0.83 | 3.24 | 1.45 | 0.77 | -0.73 | 417 | 50 |
+| 5 | +1.22 | 3.78 | 1.64 | 0.83 | +0.21 | 374 | 50 |
+| 6 | +1.40 | 4.41 | 1.78 | 1.03 | +0.69 | 406 | 50 |
+| 7 | +1.23 | 5.22 | 2.02 | 1.15 | +1.58 | 428 | 50 |
+| 8 | +1.37 | 6.45 | 2.40 | 1.40 | +2.22 | 412 | 50 |
+| 9 | +2.02 | 8.48 | 2.96 | 1.66 | +4.29 | 449 | 50 |
+| 10 | +1.26 | 15.09 | 4.46 | 2.00 | +14.07 | 492 | 50 |
+
+Cross-sectional correlation of MAX and IVOL, mean over formations: Pearson 0.825, rank 0.784 (14 formations)
+Unseen, universe, raw: 15 periods, compounded net LS -18.21%, first formation 2025-07-16, last 2026-09-16
+Unseen, 500 largest, raw: compounded net LS -15.76%
+Unseen, universe, div: 15 periods, compounded net LS -15.39%, first formation 2025-07-16, last 2026-09-16
+Unseen, 500 largest, div: compounded net LS -13.22%
+Rebuilt (new export) vs old export, gross LS on 245 shared formations: corr 0.9976, mean old -0.225% new -0.252%

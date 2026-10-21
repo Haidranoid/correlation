@@ -1,0 +1,59 @@
+# Night and day: tests on the new export
+
+## Test 1: IC of s with each leg (mean daily rank IC; t from the daily series = clustered by date; NW t, 5 lags)
+
+| Set | Period | Days | Median names | Overnight IC (t) | Intraday IC (t) | Full day IC (t) |
+|---|---|---|---|---|---|---|
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | 329 | 2297 | +0.0068 (+1.28; NW +1.09) | -0.0003 (-0.05; NW -0.05) | +0.0039 (+0.76; NW +0.77) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | 329 | 500 | +0.0159 (+2.00; NW +1.79) | +0.0010 (+0.14; NW +0.16) | +0.0096 (+1.32; NW +1.35) |
+
+## Tests 2-4: the decile long-shorts (bps a day, long minus short; t from daily returns; NW t, 5 lags)
+
+| Set | Period | Book | Gross bps/day (t; NW t) | Net 2 bps (t) | Net 5 bps (t) | Break-even bps/side | Sharpe gross | Hedged gross (t) |
+|---|---|---|---|---|---|---|---|---|
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | overnight (close t -> open t+1) | +2.24 (+0.82; +0.82) | -5.76 (-2.13) | -17.76 (-6.55) | +0.56 | +0.72 | +2.66 (+1.04) |
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | intraday (open t+1 -> close t+1) | -2.43 (-0.64; -0.68) | -10.43 (-2.74) | -22.43 (-5.90) | -0.61 | -0.56 | -1.78 (-0.49) |
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | full day (close t -> close t+1) | -0.19 (-0.04; -0.04) | -8.19 (-1.78) | -20.19 (-4.39) | -0.05 | -0.04 | +0.89 (+0.21) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | overnight (close t -> open t+1) | +8.26 (+1.64; +1.62) | +0.26 (+0.05) | -11.74 (-2.33) | +2.07 | +1.43 | +9.03 (+2.00) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | intraday (open t+1 -> close t+1) | -1.37 (-0.23; -0.25) | -9.37 (-1.56) | -21.37 (-3.56) | -0.34 | -0.20 | +0.51 (+0.09) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | full day (close t -> close t+1) | +7.06 (+0.90; +0.94) | -0.94 (-0.12) | -12.94 (-1.65) | +1.77 | +0.79 | +9.70 (+1.33) |
+
+## Long and short sides against the universe mean (bps a day, t)
+
+| Set | Period | Book | Long minus universe | Short minus universe |
+|---|---|---|---|---|
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | on | +3.60 (+1.63) | +1.36 (+0.66) |
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | in | -0.78 (-0.25) | +1.65 (+0.55) |
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | full | +2.81 (+0.74) | +3.00 (+0.79) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | on | +7.88 (+1.94) | -0.39 (-0.10) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | in | -3.22 (-0.68) | -1.85 (-0.43) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | full | +4.63 (+0.73) | -2.43 (-0.43) |
+
+## By SPY's direction on day t (gross bps a day, t)
+
+| Set | Period | SPY on t | Days | Overnight | Intraday | Full day |
+|---|---|---|---|---|---|---|
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | up | 174 | +3.39 (+0.84) | -4.05 (-0.78) | -0.60 (-0.09) |
+| All liquid stocks | unseen 2025-06-30..2026-10-19 | down | 155 | +0.94 (+0.26) | -0.61 (-0.11) | +0.29 (+0.04) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | up | 174 | +11.15 (+1.62) | +4.39 (+0.53) | +15.77 (+1.50) |
+| The 500 largest | unseen 2025-06-30..2026-10-19 | down | 155 | +5.03 (+0.68) | -7.85 (-0.90) | -2.71 (-0.23) |
+
+## By year (gross bps a day, t; and mean IC)
+
+**All liquid stocks**
+
+| Year | Days | Overnight | Intraday | Full day | IC overnight | IC intraday |
+|---|---|---|---|---|---|---|
+| 2025 | 129 | -0.76 (-0.33) | +1.81 (+0.36) | +1.03 (+0.18) | +0.0029 | +0.0052 |
+| 2026 | 200 | +4.17 (+0.99) | -5.17 (-0.97) | -0.97 (-0.15) | +0.0094 | -0.0038 |
+
+**The 500 largest**
+
+| Year | Days | Overnight | Intraday | Full day | IC overnight | IC intraday |
+|---|---|---|---|---|---|---|
+| 2025 | 129 | -3.10 (-0.76) | +5.96 (+0.79) | +3.07 (+0.35) | +0.0005 | +0.0036 |
+| 2026 | 200 | +15.60 (+1.99) | -6.10 (-0.71) | +9.64 (+0.83) | +0.0259 | -0.0007 |
+
+## Pass/fail (rules fixed in the .md)
+
+- Test 4b (intraday, all, unseen months, net of 2 bps/side, positive): -10.43 bps/day, t -2.74 -> FAIL

@@ -1,0 +1,375 @@
+== 2007-01-03: the 30 loneliest of 299 (c median 0.411) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+UIS       0.167  0.163  0.167 IWS (fund)       IWF       10.4    32   nan  UNISYS CORP
+NKE       0.173  0.173  0.157 COF              XLY      128.7    15   nan  NIKE, Inc.
+EPC       0.178  0.178  0.123 AEP              MDY       35.2    23   nan  EDGEWELL PERSONAL CARE Co
+IPG       0.185  0.185  0.180 ADI              QQQ       29.1    22   nan  (not in SEC map)
+PRDO      0.190  0.190  0.108 AES              IWF       30.1    51   nan  PERDOCEO EDUCATION Corp
+TMO       0.200  0.200  0.133 GNTX             XLY       42.1    19   nan  THERMO FISHER SCIENTIFIC INC.
+FLEX      0.204  0.204  0.176 FI               SPY       54.1    27   nan  FLEX LTD.
+GRMN      0.204  0.204  0.178 ADM              IWM      105.3    42   nan  GARMIN LTD
+ITT       0.204  0.175  0.204 XLI (fund)       XLI       52.9    21   nan  ITT INC.
+JBL       0.205  0.183  0.205 EWH (fund)       IJH       59.0    40   nan  JABIL INC
+SHW       0.206  0.186  0.206 RTH (fund)       RTH       53.2    32   nan  SHERWIN WILLIAMS CO
+MMC       0.208  0.208  0.179 NTRS             SPY       67.9    20   nan  (not in SEC map)
+WEN       0.208  0.208  0.182 YUM              IWF       69.8    20   nan  Wendy's Co
+HRB       0.209  0.209  0.131 EMR              DIA       36.0    23   nan  H&R BLOCK INC
+THC       0.209  0.209  0.151 GPC              XLY       22.1    40   nan  TENET HEALTHCARE CORP
+FLR       0.210  0.210  0.196 GFI              MDY       74.6    30   nan  FLUOR CORP
+JCI       0.211  0.191  0.211 XLI (fund)       IWF      187.1    20   nan  Johnson Controls International plc
+DAL       0.212  0.212  0.077 ADBE             OIH       67.9    86   nan  DELTA AIR LINES, INC.
+BALL      0.213  0.212  0.213 XLB (fund)       XLB       21.4    24   nan  BALL Corp
+COF       0.214  0.214  0.153 AXP              XLF      169.1    24   nan  CAPITAL ONE FINANCIAL CORP
+AVY       0.215  0.215  0.178 PCAR             XLI       22.9    16   nan  Avery Dennison Corp
+LAMR      0.216  0.144  0.216 IWP (fund)       IWP       36.8    19   nan  LAMAR ADVERTISING CO/NEW
+DGX       0.217  0.217  0.127 MAR              XLV       61.3    27   nan  QUEST DIAGNOSTICS INC
+XRX       0.218  0.218  0.202 MAT              VTI       53.7    20   nan  Xerox Holdings Corp
+DLX       0.220  0.220  0.188 GEN              XLK       10.3    43   nan  DELUXE CORP
+APD       0.223  0.223  0.220 AEP              SPY       65.2    20   nan  Air Products & Chemicals, Inc.
+A         0.224  0.224  0.212 CSCO             IWF       82.6    29   nan  AGILENT TECHNOLOGIES, INC.
+OMC       0.226  0.226  0.226 FI               SPY       87.5    16   nan  OMNICOM GROUP INC.
+VRSN      0.227  0.227  0.176 MRVL             IWP       67.1    29   nan  VERISIGN INC/CA
+TEVA      0.229  0.165  0.229 IBB (fund)       IBB      174.4    29   nan  TEVA PHARMACEUTICAL INDUSTRIES LTD
+
+== 2010-01-04: the 30 loneliest of 855 (c median 0.472) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+DLX       0.192  0.192  0.169 WABC             IWM        5.2    66  1.08  DELUXE CORP
+AYI       0.200  0.200  0.160 PNR              IWM       13.4    44  0.91  ACUITY INC. (DE)
+MTZ       0.204  0.204  0.114 J                MDY        8.5    50  0.82  MASTEC INC
+FDS       0.208  0.208  0.154 HAE              SPY       28.2    35  0.76  FACTSET RESEARCH SYSTEMS INC
+VECO      0.214  0.214  0.212 AMAT             SPY        5.0    84  1.28  VEECO INSTRUMENTS INC
+EQIX      0.216  0.216  0.215 TEX              MDY       53.9    46  0.94  EQUINIX INC
+MSTR      0.217  0.217  0.139 WST              IVV        5.1    40  0.70  Strategy Inc
+BHC       0.218  0.218  0.203 TDG              EEM       11.3    42  0.63  Bausch Health Companies Inc.
+ALGN      0.218  0.218  0.188 IDXX             IWM        6.3    65  0.84  ALIGN TECHNOLOGY INC
+BSAC      0.219  0.219  0.180 ON               SPY       10.0    33  0.77  BANCO SANTANDER CHILE
+GRMN      0.224  0.204  0.224 VBK (fund)       IWM       54.2    59  0.96  GARMIN LTD
+LSAK      0.224  0.224  0.159 PCAR             IWM        5.2    53  0.90  LESAKA TECHNOLOGIES INC
+WKC       0.224  0.206  0.224 IJT (fund)       IWM       20.7    46  0.83  WORLD KINECT CORP
+URI       0.228  0.210  0.228 XLI (fund)       IWM        6.2    72  1.19  UNITED RENTALS, INC.
+HURN      0.228  0.228  0.194 RSG              MBB       13.0   130  0.81  Huron Consulting Group Inc.
+TAP       0.228  0.228  0.225 BDX              SPY       58.3    29  0.55  MOLSON COORS BEVERAGE CO
+NTES      0.229  0.229  0.181 SOHU             EFA       55.9    48  0.73  NetEase, Inc.
+BRC       0.232  0.232  0.218 ADI              MDY        7.2    47  0.95  BRADY CORP
+IDCC      0.234  0.234  0.230 ED               IWM       15.8    59  0.82  InterDigital, Inc.
+TPC       0.234  0.234  0.155 THG              MDY        6.4    68  1.17  TUTOR PERINI CORP
+MORN      0.234  0.234  0.183 RIO              IWM        5.4    37  0.70  Morningstar, Inc.
+RGS       0.235  0.235  0.172 CMPR             IWM        7.3    63  1.10  REGIS CORP
+TKR       0.237  0.237  0.167 TT               SPY       14.9    59  1.14  TIMKEN CO
+CMPR      0.238  0.238  0.148 WRLD             IWM       27.7    56  0.83  CIMPRESS plc
+TDG       0.239  0.239  0.219 SPXC             MDY       15.5    36  0.74  TransDigm Group INC
+XRX       0.241  0.241  0.199 HON              MDY       45.8    58  1.13  Xerox Holdings Corp
+WRLD      0.241  0.240  0.241 DUG (fund)       IWM        5.4    73  1.26  WORLD ACCEPTANCE CORP
+INGR      0.241  0.241  0.225 TECK             EEM       16.5    45  0.77  Ingredion Inc
+INSG      0.242  0.242  0.218 DD               VB         5.3    73  0.91  INSEEGO CORP.
+ZBRA      0.244  0.244  0.235 TPR              IWM        6.3    32  0.75  ZEBRA TECHNOLOGIES CORP
+
+== 2013-01-04: the 30 loneliest of 1010 (c median 0.415) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+GPN       0.172  0.168  0.172 XRT (fund)       MDY       31.2    22  0.98  GLOBAL PAYMENTS INC
+AMRN      0.195  0.195  0.177 PODD             IWO       46.6    71  0.94  AMARIN CORP PLC\UK
+RHP       0.201  0.201  0.119 OLED             IWM       17.4    32  1.39  Ryman Hospitality Properties, Inc.
+LYV       0.203  0.203  0.192 BKH              IWM        7.9    31  1.22  Live Nation Entertainment, Inc.
+ALLT      0.204  0.204  0.153 MASI             QQQ        8.3    59  1.29  Allot Ltd.
+YPF       0.205  0.205  0.203 OIS              XLE        9.1    58  1.12  YPF SOCIEDAD ANONIMA
+IDCC      0.205  0.205  0.156 OII              IJH       19.7    53  1.34  InterDigital, Inc.
+BX        0.206  0.206  0.170 ERIC             SPY       38.9    27  1.13  Blackstone Inc.
+SCS       0.208  0.206  0.208 IJS (fund)       MDY        5.1    35  1.28  (not in SEC map)
+IRM       0.210  0.210  0.170 ARLP             XLI       40.9    23  0.96  IRON MOUNTAIN INC
+BGS       0.210  0.210  0.210 SJM              DVY        9.4    23  0.87  B&G Foods, Inc.
+GHC       0.211  0.211  0.134 LOPE             SPY        9.0    22  0.90  Graham Holdings Co
+SCHL      0.212  0.212  0.165 SLAB             IWM        5.4    35  1.29  SCHOLASTIC CORP
+ZD        0.213  0.213  0.140 HAE              IWM        9.2    21  0.94  ZIFF DAVIS, INC.
+CBT       0.213  0.213  0.156 CDNS             IWM       12.3    29  1.28  CABOT CORP
+BBY       0.214  0.204  0.214 XRT (fund)       XRT      124.8    49  1.64  BEST BUY CO INC
+SNX       0.216  0.216  0.185 JBL              IWM        6.3    26  1.01  TD SYNNEX CORP
+LNG       0.216  0.216  0.215 CLNE             IWR       70.3    56  1.39  Cheniere Energy, Inc.
+CGNX      0.216  0.216  0.160 CRS              IWM        6.6    31  1.19  COGNEX CORP
+AIG       0.217  0.217  0.214 AFG              SPY      409.5    30  0.91  AMERICAN INTERNATIONAL GROUP, INC.
+ANDE      0.218  0.218  0.160 GVA              IWM        5.0    27  0.94  Andersons, Inc.
+GTLS      0.218  0.218  0.152 GAP              IWM       26.4    39  1.49  (not in SEC map)
+GVA       0.218  0.218  0.218 URTY (fund)      IWM        5.9    32  1.27  GRANITE CONSTRUCTION INC
+AYI       0.219  0.219  0.170 ABG              IWM       18.1    35  1.43  ACUITY INC. (DE)
+DPZ       0.219  0.219  0.152 WWW              SPY       20.8    31  1.13  DOMINOS PIZZA INC
+FHI       0.220  0.220  0.217 SCHW             SPY       21.9    32  1.22  FEDERATED HERMES, INC.
+ASH       0.220  0.220  0.209 AMT              MDY       48.0    26  1.08  ASHLAND INC.
+PODD      0.221  0.221  0.198 IONS             IWM        5.0    29  0.98  INSULET CORP
+CNK       0.221  0.221  0.163 PZZA             IWM       18.1    22  0.88  Cinemark Holdings, Inc.
+LRN       0.222  0.222  0.211 SMG              IWM        5.8    52  1.25  Stride, Inc.
+
+== 2016-01-06: the 30 loneliest of 1293 (c median 0.501) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+CALM      0.186  0.186  0.141 DRI              CWB       33.0    43  1.10  CAL-MAINE FOODS INC
+VYX       0.188  0.188  0.123 AXS              MDY       43.7    34  1.22  NCR Voyix Corp
+AZPN      0.191  0.191  0.175 TCBI             IWM       22.5    30  1.08  (not in SEC map)
+HIMX      0.202  0.202  0.196 MU               SOXX      15.3    50  0.96  Himax Technologies, Inc.
+AVDL      0.206  0.206  0.179 SEM              IWO        5.0    76  1.08  (not in SEC map)
+TGI       0.207  0.206  0.207 ITA (fund)       ITA       26.1    38  1.26  (not in SEC map)
+ADTN      0.211  0.211  0.197 BSAC             VGK        8.5    28  0.93  ADTRAN Holdings, Inc.
+WGHTQ     0.213  0.213  0.143 MLKN             KRE        9.7   116  1.48  (not in SEC map)
+SATS      0.215  0.215  0.189 LBTYK            MDY        5.3    22  0.95  (not in SEC map)
+AXON      0.217  0.217  0.125 LKQ              CWB       40.1    52  1.19  AXON ENTERPRISE, INC.
+PRMB      0.219  0.219  0.191 VRSK             XLY        5.1    34  0.90  Primo Brands Corp
+MNKD      0.220  0.220  0.186 SYNA             IWO       21.3    95  1.49  MANNKIND CORP
+RBBN      0.220  0.220  0.101 OTEX             XLF        5.2    61  1.51  Ribbon Communications Inc.
+RBA       0.223  0.223  0.190 MET              DIA       15.9    27  0.94  RB GLOBAL INC.
+LNW       0.227  0.227  0.223 WYNN             IWM       11.4    62  1.59  (not in SEC map)
+GSAT      0.227  0.191  0.227 SH (fund)        IWM        5.4    63  1.38  Globalstar, Inc.
+ODP       0.229  0.229  0.195 MLI              IWM       54.2    39  1.18  (not in SEC map)
+BLDR      0.233  0.233  0.176 CADE             IWM        8.7    72  1.91  Builders FirstSource, Inc.
+KNDI      0.234  0.234  0.231 BKNG             FXI        5.0    64  1.09  Kandi Technologies Group, Inc.
+MODG      0.236  0.236  0.200 CHDN             IWM        5.0    30  1.00  (not in SEC map)
+MEI       0.240  0.240  0.126 BGS              MDY       11.9    49  1.37  METHODE ELECTRONICS INC
+CACC      0.240  0.240  0.142 OMCL             HYS       17.3    45  1.14  CREDIT ACCEPTANCE CORP
+MAT       0.242  0.230  0.242 BIS (fund)       IWD      116.7    30  1.02  MATTEL INC /DE/
+CPA       0.242  0.242  0.216 NXST             EEM       40.8    49  1.27  Copa Holdings, S.A.
+ARWR      0.243  0.243  0.238 SGMO             IWO        7.0    66  1.19  ARROWHEAD PHARMACEUTICALS, INC.
+HAS       0.246  0.237  0.246 IWF (fund)       SPY       81.3    27  0.96  HASBRO, INC.
+OLED      0.247  0.224  0.247 IWO (fund)       IWO       22.8    45  1.27  UNIVERSAL DISPLAY CORP \PA\
+WNC       0.249  0.249  0.174 PCAR             XLI       14.0    33  1.25  WABASH NATIONAL Corp
+MIDD      0.250  0.250  0.230 LECO             MDY       31.9    26  1.03  MIDDLEBY Corp
+WOLF      0.251  0.251  0.186 STX              IJH       43.6    39  1.17  WOLFSPEED, INC.
+
+== 2019-01-08: the 30 loneliest of 1582 (c median 0.514) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+RBA       0.190  0.190  0.163 BN               VTI       12.5    22  0.71  RB GLOBAL INC.
+PZZA      0.190  0.190  0.146 MELI             HACK      45.7    42  0.81  PAPA JOHNS INTERNATIONAL INC
+PETS      0.193  0.193  0.192 PSMT             CWB       19.4    44  0.83  PETMED EXPRESS INC
+WATT      0.198  0.198  0.169 GPRO             XLB        7.9    86  1.38  Energous Corp
+ARES      0.203  0.203  0.163 CBIO             SPY        8.6    33  0.87  Ares Management Corp
+STZ       0.205  0.205  0.175 DDS              SPY      365.1    23  0.73  CONSTELLATION BRANDS, INC.
+IRDM      0.210  0.210  0.186 FLEX             IWM       13.6    45  1.21  Iridium Communications Inc.
+GHC       0.216  0.216  0.132 RGA              VTI       11.6    19  0.70  Graham Holdings Co
+SRI       0.219  0.219  0.176 MMI              IWM        7.0    40  1.01  STONERIDGE INC
+BFH       0.220  0.220  0.169 COF              VTI      118.8    30  1.00  BREAD FINANCIAL HOLDINGS, INC.
+BXC       0.223  0.223  0.132 BCC              IWM        5.7    86  1.24  BlueLinx Holdings Inc.
+EBS       0.224  0.224  0.218 MTN              IWM       17.9    34  0.93  Emergent BioSolutions Inc.
+DLB       0.224  0.224  0.224 ISRG             IWO       23.2    26  0.90  Dolby Laboratories, Inc.
+FUN       0.227  0.227  0.183 PRKS             IWD        8.8    26  0.76  Six Flags Entertainment Corporation/NEW
+TBCH      0.228  0.228  0.135 ASRT             FBT       17.9   120  1.28  Turtle Beach Corp
+IEP       0.229  0.229  0.210 WYNN             IWM        5.8    33  1.03  ICAHN ENTERPRISES L.P.
+TXMD      0.229  0.229  0.203 INSM             IWM       12.6    54  1.14  TherapeuticsMD, Inc.
+PRMB      0.232  0.232  0.209 WCN              RSP       13.2    24  0.69  Primo Brands Corp
+HRB       0.232  0.232  0.180 PHM              MDY       70.2    35  0.81  H&R BLOCK INC
+AZZ       0.233  0.233  0.204 ETD              IWM        6.0    33  1.04  AZZ INC
+BMI       0.234  0.234  0.189 IBM              IWM        5.4    28  0.89  BADGER METER INC
+AYI       0.237  0.237  0.184 SSRM             XLB       75.9    39  1.09  ACUITY INC. (DE)
+TNC       0.238  0.238  0.212 USPH             IWM        6.1    29  0.95  TENNANT CO
+ENTA      0.241  0.241  0.220 IRBT             IWM       19.6    54  1.06  ENANTA PHARMACEUTICALS INC
+IRBT      0.241  0.241  0.195 ENTA             VB        54.7    64  1.39  (not in SEC map)
+HIMX      0.242  0.242  0.216 COHR             IWM       14.0    54  0.96  Himax Technologies, Inc.
+TISI      0.243  0.235  0.243 GSY (fund)       IWN        6.4    42  1.02  TEAM INC
+VEON      0.244  0.244  0.212 KOF              IGF        8.2    44  1.14  VEON Ltd.
+PRKS      0.245  0.245  0.237 W                IWM       36.1    41  0.90  United Parks & Resorts Inc.
+SEDG      0.247  0.247  0.205 FSLR             QQQ       35.0    56  1.21  SOLAREDGE TECHNOLOGIES, INC.
+
+== 2022-01-06: the 30 loneliest of 1921 (c median 0.576) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+TBPH      0.193  0.193  0.184 SJM              XBI        5.6    66  0.94  (not in SEC map)
+FTAI      0.209  0.209  0.194 OKE              IWM       11.7    39  1.26  FTAI Aviation Ltd.
+VEON      0.211  0.211  0.167 WOW              IWM        7.6    38  0.92  VEON Ltd.
+ERII      0.211  0.211  0.199 LNN              IWM        6.2    44  1.16  Energy Recovery, Inc.
+PTGX      0.213  0.213  0.175 AZPN             VEA       13.1   135  1.35  Protagonist Therapeutics, Inc
+IDT       0.217  0.217  0.169 ASTH             IWM        5.6    66  1.17  IDT CORP
+GRFS      0.223  0.223  0.199 WTRG             EWY        9.7    32  0.85  Grifols SA
+STKL      0.223  0.223  0.201 BGS              IWM        7.5    50  0.93  (not in SEC map)
+GSAT      0.224  0.224  0.203 UAVS             CWB       17.6   153  1.91  Globalstar, Inc.
+CTXR      0.229  0.229  0.219 BIDU             ARKQ       6.5    85  0.86  Citius Pharmaceuticals, Inc.
+ANY       0.231  0.231  0.223 GILT             IBB       11.3   155  1.54  (not in SEC map)
+RILY      0.232  0.232  0.143 LADR             IWM       14.0    44  1.19  BRC Group Holdings, Inc.
+INVA      0.236  0.236  0.220 SGMO             XBI        7.5    31  0.88  Innoviva, Inc.
+OXLC      0.237  0.237  0.180 HCM              DRIV       7.0    24  0.85  Oxford Lane Capital Corp.
+HAE       0.241  0.241  0.163 MO               IWO       33.0    63  1.20  HAEMONETICS CORP
+GSM       0.242  0.242  0.161 PR               IWM        7.5    90  1.49  Ferroglobe PLC
+COTY      0.244  0.244  0.202 HST              IWM       60.2    56  1.44  COTY INC.
+ASTH      0.246  0.246  0.147 GOOS             IWO       22.7    76  1.10  Astrana Health, Inc.
+TGLS      0.246  0.246  0.215 VYX              IJJ        5.1    82  1.72  Tecnoglass Holdings Inc.
+WSC       0.250  0.250  0.250 LFUS             VB        45.5    30  1.09  WillScot Holdings Corp
+OPCH      0.250  0.250  0.236 TECH             IWO       18.7    41  1.01  Option Care Health, Inc.
+LRN       0.250  0.250  0.226 ATGE             IWO       14.9    44  0.72  Stride, Inc.
+SNDX      0.251  0.251  0.247 CLNE             XBI        8.7    68  1.07  Syndax Pharmaceuticals Inc
+CARM      0.251  0.251  0.239 ORMP             XBI       14.5   138  1.64  (not in SEC map)
+EVH       0.256  0.256  0.178 EXPO             IWM       10.7    42  1.06  Evolent Health, Inc.
+LBTYK     0.259  0.259  0.233 IVZ              MDY       55.7    24  0.76  Liberty Global Ltd.
+LNTH      0.260  0.260  0.260 IWC (fund)       IWM       10.4    40  1.05  Lantheus Holdings, Inc.
+GEN       0.261  0.204  0.261 BUG (fund)       CIBR     102.9    28  0.69  Gen Digital Inc.
+JYNT      0.262  0.262  0.145 SGRY             VXF       10.6    59  1.29  JOINT Corp
+TGTX      0.263  0.263  0.252 ATRC             IWO       40.9    77  1.32  TG THERAPEUTICS, INC.
+
+== 2025-01-13: the 30 loneliest of 2135 (c median 0.496) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+SIRI      0.176  0.176  0.130 NYT              SPHB      91.2    52  1.25  SIRIUS XM HOLDINGS INC.
+RILY      0.182  0.182  0.168 HRL              FVD       15.0   137  2.30  BRC Group Holdings, Inc.
+INMD      0.211  0.211  0.166 SSRM             IWM       20.0    44  1.46  InMode Ltd.
+CCOI      0.216  0.216  0.185 ASTH             IJR       27.6    33  0.78  COGENT COMMUNICATIONS HOLDINGS, INC.
+IRTC      0.220  0.220  0.182 SDGR             ARKG      34.3    56  1.19  iRhythm Holdings, Inc.
+ESGR      0.225  0.225  0.215 SWX              IWN       17.8    20  0.80  (not in SEC map)
+CGEM      0.225  0.225  0.205 EWTX             IWO        8.3    70  1.36  Cullinan Therapeutics, Inc.
+CNMD      0.226  0.222  0.226 SPXS (fund)      HYGV      29.9    40  1.46  CONMED Corp
+PRMB      0.228  0.228  0.141 PLRX             CWB       23.9    25  0.93  Primo Brands Corp
+LQDA      0.229  0.229  0.158 LLY              QYLD       8.9    60  0.94  Liquidia Corp
+MEG       0.230  0.230  0.194 HLMN             XRT       11.3    71  1.68  (not in SEC map)
+INFN      0.231  0.231  0.161 CDMO             IJH       12.4    49  1.27  (not in SEC map)
+PLTK      0.236  0.236  0.196 ZLAB             IWM        5.7    36  1.14  Playtika Holding Corp.
+AMRX      0.237  0.237  0.172 MLTX             IBB        8.1    38  1.00  Amneal Pharmaceuticals, Inc.
+URGN      0.238  0.232  0.238 XBI (fund)       XBI        5.0    65  1.17  UroGen Pharma Ltd.
+MULN      0.238  0.238  0.138 WT               EWC        5.6   177  1.87  (not in SEC map)
+AMED      0.240  0.240  0.163 MDB              IBB       29.7    14  0.57  (not in SEC map)
+TTC       0.241  0.241  0.210 REPL             MDY       62.5    30  1.07  TORO CO
+SYRE      0.242  0.242  0.209 PRAX             XBI       12.0    73  0.98  Spyre Therapeutics, Inc.
+GRPN      0.243  0.243  0.117 JBL              IWM       12.9    90  1.99  Groupon, Inc.
+FIZZ      0.243  0.243  0.210 WMK              SDY        6.7    30  0.66  NATIONAL BEVERAGE CORP
+ADT       0.244  0.244  0.199 WH               HYG       29.9    37  1.18  ADT Inc.
+NCNO      0.244  0.244  0.158 NBIX             VB        28.0    39  1.16  nCino, Inc.
+RDY       0.245  0.245  0.236 TIMB             EMXC      14.9    21  0.66  DR REDDYS LABORATORIES LTD
+RGR       0.245  0.245  0.215 CAG              SDY        5.5    23  0.66  STURM RUGER & CO INC
+MNKD      0.246  0.228  0.246 XBI (fund)       XBI       11.3    44  1.03  MANNKIND CORP
+ZUO       0.247  0.247  0.177 UAL              IWM       11.4    34  1.08  (not in SEC map)
+VIAV      0.248  0.248  0.247 AVAV             IWM       12.6    38  1.27  VIAVI SOLUTIONS INC.
+ACI       0.248  0.248  0.184 EPC              ACWV      55.1    18  0.52  Albertsons Companies, Inc.
+LYV       0.248  0.246  0.248 AVUS (fund)      RSP      191.9    26  1.09  Live Nation Entertainment, Inc.
+
+== Legs over 159 formations ==
+best match is a fund: long leg 31%, short leg 57%
+twin fund (c2eval.twins, the groups map labels), share of leg-months:
+  long : IWM 16.9%, SPY 9.9%, MDY 9.6%, XLI 4.6%, XRT 3.4%, QQQ 2.9%, XLY 2.9%, IWO 2.3%, XLP 2.2%, IWN 1.7%, XLV 1.7%, IJR 1.6%, XLF 1.5%, DIA 1.4%, XLB 1.4%, IWF 1.2%, IWP 1.1%, XBI 1.1%, IBB 1.0%, IVV 1.0%
+  short: KRE 7.8%, IYR 7.5%, XLU 7.1%, IWM 3.7%, GDX 3.4%, XLF 3.2%, VNQ 3.0%, OIH 2.7%, XRT 2.5%, XLE 2.5%, IYT 2.3%, SMH 2.0%, XOP 2.0%, EWC 1.9%, ITB 1.9%, KBE 1.7%, MDY 1.6%, EWZ 1.3%, XME 1.3%, XLP 1.3%
+
+most frequent long-leg names (months in the long leg):
+  JCI 159 (Johnson Controls Inter), GRMN 153 (GARMIN LTD), TEVA 152 (TEVA PHARMACEUTICAL IN), IFF 151 (INTERNATIONAL FLAVORS ), BB 150 (BLACKBERRY Ltd), CTAS 149 (CINTAS CORP), HRB 149 (H&R BLOCK INC), XRX 148 (Xerox Holdings Corp), GT 147 (GOODYEAR TIRE & RUBBER), VRSN 146 (VERISIGN INC/CA), GLW 146 (CORNING INC /NY), ECL 145 (ECOLAB INC.), ASH 143 (ASHLAND INC.), ADM 142 (Archer-Daniels-Midland), EBAY 141 (EBAY INC), GEN 140 (Gen Digital Inc.), NTAP 140 (NetApp, Inc.), MCD 139 (MCDONALDS CORP), YUM 138 (YUM BRANDS INC), EFX 137 (EQUIFAX INC), SHW 137 (SHERWIN WILLIAMS CO), SYY 136 (SYSCO CORP), AVY 134 (Avery Dennison Corp), RBA 133 (RB GLOBAL INC.), DOX 133 (AMDOCS LTD), FDS 133 (FACTSET RESEARCH SYSTE), AYI 132 (ACUITY INC. (DE)), CCEP 131 (COCA-COLA EUROPACIFIC ), HOG 129 (HARLEY-DAVIDSON, INC.), DHR 128 (DANAHER CORP /DE/), NWL 127 (NEWELL BRANDS INC.), MSI 127 (Motorola Solutions, In), LAMR 126 (LAMAR ADVERTISING CO/N), CHKP 126 (CHECK POINT SOFTWARE T), KR 125 (KROGER CO), WHR 125 (WHIRLPOOL CORP /DE/), OMC 124 (OMNICOM GROUP INC.), NKE 124 (NIKE, Inc.), SWK 124 (STANLEY BLACK & DECKER), WY 123 (WEYERHAEUSER CO), EL 123 (ESTEE LAUDER COMPANIES), IDCC 123 (InterDigital, Inc.), CMCSA 122 (COMCAST CORP), TT 122 (Trane Technologies plc), BFH 122 (BREAD FINANCIAL HOLDIN), DIS 121 (Walt Disney Co), PBI 120 (PITNEY BOWES INC /DE/), BBY 120 (BEST BUY CO INC), TRI 120 (THOMSON REUTERS CORP /), ACN 120 (Accenture plc), CAR 120 (AVIS BUDGET GROUP, INC), ADSK 118 (Autodesk, Inc.), HPQ 117 (HP INC), RYAAY 116 (RYANAIR HOLDINGS PLC), BC 116 (BRUNSWICK CORP), MTN 116 (VAIL RESORTS INC), PARA 116 (Banzai International, ), GPC 115 (GENUINE PARTS CO), INTU 115 (INTUIT INC.), ODP 115 ((not in SEC map)), VYX 115 (NCR Voyix Corp), STZ 115 (CONSTELLATION BRANDS, ), AXP 114 (AMERICAN EXPRESS CO), CTSH 114 (COGNIZANT TECHNOLOGY S), ROP 114 (ROPER TECHNOLOGIES INC), LYV 114 (Live Nation Entertainm), TCOM 113 (Trip.com Group Ltd), CAG 112 (CONAGRA BRANDS INC.), JNPR 112 ((not in SEC map)), SBUX 112 (STARBUCKS CORP), HLF 112 (HERBALIFE LTD.), GHC 112 (Graham Holdings Co), ORCL 111 (ORACLE CORP), SEE 111 ((not in SEC map)), GPN 111 (GLOBAL PAYMENTS INC), SMG 111 (SCOTTS MIRACLE-GRO CO), TXT 110 (TEXTRON INC), HAIN 110 (HAIN CELESTIAL GROUP I), TTC 110 (TORO CO), FFIV 110 (F5, INC.)
+
+long-leg names whose SEC name looks fund-like or is missing (134 of 1417):
+  ODP      115  (not in SEC map)
+  JNPR     112  (not in SEC map)
+  SEE      111  (not in SEC map)
+  IPG       97  (not in SEC map)
+  ERJ       97  (not in SEC map)
+  HOLX      94  (not in SEC map)
+  QVCGA     91  (not in SEC map)
+  WBA       88  (not in SEC map)
+  ALEX      87  (not in SEC map)
+  LNW       87  (not in SEC map)
+  FI        82  (not in SEC map)
+  LEG       81  (not in SEC map)
+  WGHTQ     79  (not in SEC map)
+  IAC       76  (not in SEC map)
+  JHG       76  (not in SEC map)
+  MODG      73  (not in SEC map)
+  TGI       72  (not in SEC map)
+  OMI       72  (not in SEC map)
+  FDP       71  (not in SEC map)
+  LANC      71  (not in SEC map)
+  VRNT      71  (not in SEC map)
+  KAR       70  (not in SEC map)
+  TGNA      67  (not in SEC map)
+  SKX       67  (not in SEC map)
+  ANSS      66  (not in SEC map)
+  SATS      66  (not in SEC map)
+  HBI       64  (not in SEC map)
+  BECN      63  (not in SEC map)
+  KW        60  (not in SEC map)
+  MMC       59  (not in SEC map)
+  CACC      58  CREDIT ACCEPTANCE CORP
+  AXL       57  (not in SEC map)
+  THS       56  (not in SEC map)
+  IRBT      56  (not in SEC map)
+  EXAS      55  (not in SEC map)
+  HI        54  (not in SEC map)
+  GTLS      50  (not in SEC map)
+  CVGW      49  (not in SEC map)
+  DFS       48  (not in SEC map)
+  AZPN      48  (not in SEC map)
+  MASI      47  (not in SEC map)
+  ATGE      41  (not in SEC map)
+  FL        40  (not in SEC map)
+  PRA       39  (not in SEC map)
+  SEM       37  (not in SEC map)
+  PDCO      36  (not in SEC map)
+  SPR       35  (not in SEC map)
+  WNS       34  (not in SEC map)
+  CSGS      33  (not in SEC map)
+  AMED      33  (not in SEC map)
+  AMWD      33  (not in SEC map)
+  BERY      33  (not in SEC map)
+  K         32  (not in SEC map)
+  BYON      32  (not in SEC map)
+  GLPG      29  (not in SEC map)
+  BPT       27  (not in SEC map)
+  HOUS      27  (not in SEC map)
+  SNBR      26  (not in SEC map)
+  ATSG      25  (not in SEC map)
+  INFN      24  (not in SEC map)
+  PINC      24  (not in SEC map)
+  STRA      22  Strategic Education, Inc.
+  GES       21  (not in SEC map)
+  JWN       21  (not in SEC map)
+  ASRT      20  (not in SEC map)
+  SCS       20  (not in SEC map)
+  AXDXQ     20  (not in SEC map)
+  DVAX      19  (not in SEC map)
+  ESGR      19  (not in SEC map)
+  PCH       17  (not in SEC map)
+  BXMT      17  BLACKSTONE MORTGAGE TRUST, INC.
+  NVRO      17  (not in SEC map)
+  LC        16  (not in SEC map)
+  EA        15  (not in SEC map)
+  RVNC      15  (not in SEC map)
+  BRFS      14  (not in SEC map)
+  ASGN      14  (not in SEC map)
+  BGFV      14  (not in SEC map)
+  AHT       13  ASHFORD HOSPITALITY TRUST INC
+  PMT       12  PennyMac Mortgage Investment Trust
+  ITCI      12  (not in SEC map)
+  BK        11  (not in SEC map)
+  RWT       11  REDWOOD TRUST INC
+  SVC       10  Service Properties Trust
+  BLUE      10  (not in SEC map)
+  TBPH       9  (not in SEC map)
+  SAGE       9  (not in SEC map)
+  SPTN       8  (not in SEC map)
+  STWD       8  STARWOOD PROPERTY TRUST, INC.
+  FARO       8  (not in SEC map)
+  TSE        8  (not in SEC map)
+  OPI        7  OFFICE PROPERTIES INCOME TRUST
+  X          7  (not in SEC map)
+  CTRA       7  (not in SEC map)
+  FOLD       7  (not in SEC map)
+  EVRI       7  (not in SEC map)
+  HLX        6  (not in SEC map)
+  FR         6  FIRST INDUSTRIAL REALTY TRUST INC
+  LPSN       6  (not in SEC map)
+  ABR        6  ARBOR REALTY TRUST INC
+  COOP       6  (not in SEC map)
+  SNV        5  (not in SEC map)
+  GOGL       5  (not in SEC map)
+  HMST       5  (not in SEC map)
+  GCI        5  (not in SEC map)
+  ESPR       5  (not in SEC map)
+  PRO        5  (not in SEC map)
+  GDEN       5  (not in SEC map)
+  DENN       5  (not in SEC map)
+  AVNS       5  (not in SEC map)
+  NVEE       5  (not in SEC map)
+  AVDL       4  (not in SEC map)
+  XOMA       4  (not in SEC map)
+  IRT        4  INDEPENDENCE REALTY TRUST, INC.
+  COMM       4  (not in SEC map)
+  PSTG       4  (not in SEC map)
+  HSII       3  (not in SEC map)
+  DLR        3  DIGITAL REALTY TRUST, INC.
+  HEES       3  (not in SEC map)
+  AMBC       3  (not in SEC map)
+  TRUE       3  (not in SEC map)
+  MSB        2  MESABI TRUST
+  TBRG       2  (not in SEC map)
+  CLDT       2  Chatham Lodging Trust
+  MODV       2  (not in SEC map)
+  CYBR       2  (not in SEC map)
+  SCVL       2  (not in SEC map)
+  NTRS       1  NORTHERN TRUST CORP
+  ASPS       1  ALTISOURCE PORTFOLIO SOLUTIONS S.A.
+  SGMO       1  (not in SEC map)
+  RMAX       1  (not in SEC map)
+  VRE        1  (not in SEC map)
+  ADVM       1  (not in SEC map)
+  IGT        1  (not in SEC map)

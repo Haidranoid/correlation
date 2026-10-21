@@ -1,0 +1,2 @@
+2005-2019: bystanders vs sympathy -0.3 (se 1.7, n 65,980); twist events vs mismatch -0.7 (se 3.1, n 15,950); twist events vs sympathy -2.2 (se 3.1, n 15,950); matched quiet days vs own move +4.3 (se 0.8, n 258,824)
+2020-2025: bystanders vs sympathy +6.0 (se 2.4, n 64,874); twist events vs mismatch +10.8 (se 3.3, n 21,406); twist events vs sympathy +5.7 (se 3.3, n 21,406); matched quiet days vs own move +9.1 (se 1.1, n 251,351)

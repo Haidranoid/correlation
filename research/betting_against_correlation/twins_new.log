@@ -1,0 +1,5 @@
+/home/bhoult/programming/correlation2/research/lib/c2eval.py:231: RuntimeWarning: All-NaN slice encountered
+  f_ok = ((np.isfinite(Fw).mean(1) >= min_frac) & (np.nanmedian(fdv[:, a:b], 1) >= min_dv)
+/usr/lib/python3/dist-packages/numpy/lib/_nanfunctions_impl.py:2015: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+done (286, 9508) 23 s

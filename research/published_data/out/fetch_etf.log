@@ -1,0 +1,4 @@
+15:31:49 etf: 23 symbols in 1 batches -> /home/bhoult/.local/share/correlation2/experiments/published_data/raw/yahoo_etf
+15:31:53 etf: 23 symbols in 1 batches -> /home/bhoult/.local/share/correlation2/experiments/published_data/raw/yahoo_etf
+15:31:55 batch 1/1: 23 of 23 symbols; failed so far 0
+15:31:58 DONE etf: failed 0 of 23

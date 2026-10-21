@@ -1,0 +1,7 @@
+# Checks, new export
+744 stock-days (444 events + 300 random universe stock-days); 644 pass the twin rule
+largest |panel - direct| by panel: rho_b 2.98e-08, rho_n 2.97e-08, S3 4.75e-08, Sall 3.35e-08, fwd 2.47e-08
+NaN-pattern mismatches by panel: rho_b 0, rho_n 0, S3 0, Sall 0, fwd 0
+events: twin k-3 == k: 100%; k-1 == k: 100%; in universe at k: 100%; rho_b >= 0.5: 100%; drop >= 0.3: 100%; drop21 >= 0.3: 100%
+smallest gap between events of one stock: 127 trading days
+candidate stock-days: 6533 without the twin-at-t-21 requirement, 6457 with it

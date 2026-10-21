@@ -1,0 +1,35 @@
+== Lag profile, 2007-05..2019-12: mean Fama-MacBeth slope x 100 (t), univariate, universe stocks (winsorized 1/99) ==
+  lag-year  1: annual lag  12: -0.35 (-0.35), n 152;   mean of the other 11 lags: +0.64 (+1.16)
+  lag-year  2: annual lag  24: -0.73 (-0.90), n 152;   mean of the other 11 lags: +0.11 (+0.26)
+  lag-year  3: annual lag  36: +0.45 (+0.55), n 152;   mean of the other 11 lags: +0.25 (+0.85)
+  lag-year  4: annual lag  48: +0.22 (+0.26), n 152;   mean of the other 11 lags: +0.88 (+3.36)
+  lag-year  5: annual lag  60: +0.51 (+0.63), n 152;   mean of the other 11 lags: -0.25 (-0.86)
+  lag-year  6: annual lag  72: +0.94 (+1.03), n 144;   mean of the other 11 lags: -0.08 (-0.32)
+  lag-year  7: annual lag  84: +0.33 (+0.43), n 132;   mean of the other 11 lags: +0.22 (+0.84)
+  lag-year  8: annual lag  96: +0.72 (+0.97), n 120;   mean of the other 11 lags: -0.22 (-0.82)
+  lag-year  9: annual lag 108: -0.19 (-0.26), n 108;   mean of the other 11 lags: -0.04 (-0.16)
+  lag-year 10: annual lag 120: -0.71 (-0.99), n 96;   mean of the other 11 lags: -0.18 (-0.70)
+  mean of annual lags 12..120: +0.114 (+0.44), n 152
+  mean of annual lags 24..60 (years 2-5): +0.114 (+0.28), n 152
+  mean of non-annual lags 13..119 (years 2-10): +0.121 (+0.78), n 152
+  lag 1: +0.03 (+0.03)
+
+== Lag profile, 2020-01..2025-06: mean Fama-MacBeth slope x 100 (t), univariate, universe stocks (winsorized 1/99) ==
+  lag-year  1: annual lag  12: +1.28 (+0.93), n 66;   mean of the other 11 lags: +2.11 (+3.38)
+  lag-year  2: annual lag  24: -0.27 (-0.24), n 66;   mean of the other 11 lags: +0.62 (+1.04)
+  lag-year  3: annual lag  36: +0.72 (+0.65), n 66;   mean of the other 11 lags: +1.19 (+2.64)
+  lag-year  4: annual lag  48: +1.86 (+1.53), n 66;   mean of the other 11 lags: +0.39 (+0.92)
+  lag-year  5: annual lag  60: +0.08 (+0.08), n 66;   mean of the other 11 lags: +0.24 (+0.43)
+  lag-year  6: annual lag  72: +1.24 (+1.24), n 66;   mean of the other 11 lags: +0.87 (+2.35)
+  lag-year  7: annual lag  84: -0.01 (-0.01), n 66;   mean of the other 11 lags: +0.44 (+1.32)
+  lag-year  8: annual lag  96: +2.01 (+1.80), n 66;   mean of the other 11 lags: +0.48 (+1.38)
+  lag-year  9: annual lag 108: +1.24 (+1.39), n 66;   mean of the other 11 lags: +0.17 (+0.63)
+  lag-year 10: annual lag 120: -0.92 (-0.78), n 66;   mean of the other 11 lags: +0.37 (+1.10)
+  mean of annual lags 12..120: +0.721 (+1.81), n 66
+  mean of annual lags 24..60 (years 2-5): +0.595 (+0.98), n 66
+  mean of non-annual lags 13..119 (years 2-10): +0.529 (+2.83), n 66
+  lag 1: +1.70 (+0.85)
+
+== Plumbing: the same decile arithmetic on known signals, gross %/month (t) ==
+  2007-05..2019-12: 1-month reversal +0.333 (+0.86), n 152;  12-2 momentum -0.437 (-0.65), n 152
+  2020-01..2025-06: 1-month reversal +0.240 (+0.31), n 66;  12-2 momentum +0.595 (+0.69), n 66

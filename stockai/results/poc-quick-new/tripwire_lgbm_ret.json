@@ -1,0 +1,28 @@
+{
+  "top": 500,
+  "threshold": 0.05,
+  "adv_window": 63,
+  "overall": {
+    "mean": 0.024258995118455556,
+    "t": 3.0074310144906407,
+    "days": 503
+  },
+  "max_year_mean": 0.027373481445499125,
+  "flagged": [],
+  "tripped": false,
+  "years": [
+    {
+      "year": 2022,
+      "mean": 0.021132100479352045,
+      "t": 1.6577572409264147,
+      "days": 251
+    },
+    {
+      "year": 2023,
+      "mean": 0.027373481445499125,
+      "t": 2.758621781988644,
+      "days": 252
+    }
+  ],
+  "scores": "runs/poc-quick-new/baselines/lgbm_ret/scores.npy"
+}

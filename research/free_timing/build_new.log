@@ -1,0 +1,20 @@
+09:06:37 new export 9508 6240 2001-12-31 2026-10-19
+/home/bhoult/programming/correlation2/research/lib/c2eval.py:231: RuntimeWarning: All-NaN slice encountered
+  f_ok = ((np.isfinite(Fw).mean(1) >= min_frac) & (np.nanmedian(fdv[:, a:b], 1) >= min_dv)
+/usr/lib/python3/dist-packages/numpy/lib/_nanfunctions_impl.py:2015: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+09:07:01 twins 286 refreshes
+09:07:01 evaluated rebalances 15 2025-07-16 .. 2026-09-16
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:55: RuntimeWarning: All-NaN slice encountered
+  ok &= np.nan_to_num(np.nanmedian(c, 1)) >= 5.0
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:56: RuntimeWarning: All-NaN slice encountered
+  ok &= np.nan_to_num(np.nanmedian(v, 1)) >= 5e6
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:93: RuntimeWarning: All-NaN slice encountered
+  med = np.where(ok, np.nanmedian(v63, 1), -np.inf)
+09:07:03 trades 943 P1 729 P2 214
+09:07:04 bad opens set missing: 12277
+09:07:04 S1: twin residual
+09:07:54 S2: 5-day reversal
+09:07:56 S1 day-0 coverage 0.973
+09:07:56 S2 day-0 coverage 1.0
+09:07:56 wrote /home/bhoult/programming/correlation2/research/free_timing/trades_new.npz [79s]

@@ -1,0 +1,8 @@
+/home/bhoult/programming/correlation2/research/seasonality/book.py:78: RuntimeWarning: Mean of empty slice
+  ('otherL', float(np.nanmean(sig['other_kln'][Lx, i]))),
+/home/bhoult/programming/correlation2/research/seasonality/book.py:79: RuntimeWarning: Mean of empty slice
+  ('otherS', float(np.nanmean(sig['other_kln'][Sx, i])))):
+old raw same: 222 months from 2007-01, mean turnover 3.44, mean n 1207
+old raw same500: 222 months from 2007-01, mean turnover 3.44, mean n 444
+old raw other: 223 months from 2006-12, mean turnover 1.35, mean n 1208
+old raw other_kln: 216 months from 2007-07, mean turnover 1.36, mean n 1196

@@ -1,0 +1,88 @@
+ranked set: open == previous close 3.55%, open == close 1.02%
+twin legs: open == previous close 1.88%, open == close 1.11%; 500 largest legs n/a (ranked separately)
+without open == previous close, all: 2008-2019: gross +66.48 (+46.59), head +41.01 (+28.81), raw head +16.87 (+13.30); 2020-2025-06: gross +47.13 (+25.23), head +21.25 (+11.39), raw head +3.12 (+1.77)
+without open == previous close, 500: 2008-2019: gross +61.74 (+42.00), head +35.60 (+24.26), raw head +12.54 (+9.56); 2020-2025-06: gross +40.37 (+18.84), head +13.39 (+6.25), raw head +0.43 (+0.21)
+without open == close, all: 2008-2019: gross +66.68 (+46.59), head +41.19 (+28.86), raw head +16.40 (+12.95); 2020-2025-06: gross +47.49 (+25.56), head +21.61 (+11.65), raw head +3.10 (+1.76)
+without open == close, 500: 2008-2019: gross +61.78 (+41.94), head +35.65 (+24.24), raw head +12.15 (+9.29); 2020-2025-06: gross +40.22 (+19.00), head +13.25 (+6.26), raw head +0.11 (+0.05)
+without either, all: 2008-2019: gross +66.32 (+46.29), head +40.83 (+28.57), raw head +16.53 (+12.99); 2020-2025-06: gross +47.19 (+25.23), head +21.31 (+11.41), raw head +3.08 (+1.74)
+without either, 500: 2008-2019: gross +61.57 (+41.76), head +35.43 (+24.07), raw head +12.30 (+9.35); 2020-2025-06: gross +40.39 (+18.88), head +13.41 (+6.27), raw head +0.41 (+0.20)
+
+mean hedged intraday return (bps) by within-day percentile of z, 2008-2019 (bin: all stocks | 500 largest | median z | median raw gap bps):
+   0-5  %:  +36.78 |  +35.69 | -1.55 | -88.8
+   5-10 %:  +24.72 |  +25.31 | -0.86 | -34.8
+  10-15 %:  +18.58 |  +20.32 | -0.63 | -25.1
+  15-20 %:  +15.09 |  +15.32 | -0.49 | -19.5
+  20-25 %:  +13.03 |  +13.00 | -0.39 | -15.0
+  25-30 %:  +11.38 |  +11.11 | -0.30 | -11.5
+  30-35 %:   +7.86 |   +7.72 | -0.23 | -7.8
+  35-40 %:   +5.46 |   +5.74 | -0.16 | -4.0
+  40-45 %:   +3.63 |   +3.29 | -0.10 | +0.0
+  45-50 %:   +1.75 |   +1.88 | -0.04 | +0.0
+  50-55 %:   -0.38 |   -0.19 | +0.02 | +4.9
+  55-60 %:   -2.69 |   -1.90 | +0.08 | +9.5
+  60-65 %:   -5.09 |   -4.50 | +0.14 | +13.6
+  65-70 %:   -6.41 |   -6.03 | +0.21 | +17.6
+  70-75 %:   -8.62 |   -8.79 | +0.28 | +21.2
+  75-80 %:  -10.33 |  -10.74 | +0.37 | +25.0
+  80-85 %:  -12.75 |  -13.78 | +0.48 | +29.3
+  85-90 %:  -17.28 |  -17.29 | +0.62 | +34.6
+  90-95 %:  -21.10 |  -22.07 | +0.86 | +44.8
+  95-100%:  -30.48 |  -31.38 | +1.56 | +100.5
+  tail 0.00-0.01:   +46.00 bps, median z -3.68, n 33604
+  tail 0.01-0.05:   +34.48 bps, median z -1.39, n 134643
+  tail 0.05-0.10:   +24.72 bps, median z -0.86, n 168114
+  tail 0.90-0.95:   -21.10 bps, median z +0.86, n 168279
+  tail 0.95-0.99:   -28.73 bps, median z +1.40, n 134799
+  tail 0.99-1.00:   -37.51 bps, median z +3.54, n 33607
+
+legs of the twin book, 2008-2019: mean raw gap g (bps) long / short: -101.8 / +107.8
+
+funds: OLS slope of intraday log return on overnight log return, by period (clean data: near 0; open noise: toward -1); share of days with open == previous close
+  SPY: 2008-19: slope +0.07, corr +0.05, open==prev close 0.5%; 2020-25: slope +0.03, corr +0.03, open==prev close 0.3%
+  QQQ: 2008-19: slope -0.01, corr -0.01, open==prev close 0.9%; 2020-25: slope +0.03, corr +0.03, open==prev close 0.1%
+  IWM: 2008-19: slope -0.02, corr -0.01, open==prev close 0.9%; 2020-25: slope +0.02, corr +0.02, open==prev close 0.4%
+  XLF: 2008-19: slope -0.02, corr -0.02, open==prev close 3.6%; 2020-25: slope +0.01, corr +0.01, open==prev close 1.9%
+  XLE: 2008-19: slope +0.12, corr +0.08, open==prev close 1.0%; 2020-25: slope +0.06, corr +0.06, open==prev close 0.9%
+  XLK: 2008-19: slope -0.09, corr -0.07, open==prev close 2.7%; 2020-25: slope +0.01, corr +0.01, open==prev close 0.5%
+  XLU: 2008-19: slope -0.10, corr -0.06, open==prev close 3.9%; 2020-25: slope +0.17, corr +0.10, open==prev close 2.3%
+  GLD: 2008-19: slope +0.03, corr +0.03, open==prev close 0.6%; 2020-25: slope +0.04, corr +0.05, open==prev close 0.3%
+  TLT: 2008-19: slope +0.07, corr +0.07, open==prev close 0.7%; 2020-25: slope -0.04, corr -0.04, open==prev close 0.4%
+  EEM: 2008-19: slope +0.16, corr +0.16, open==prev close 1.0%; 2020-25: slope -0.01, corr -0.01, open==prev close 0.8%
+
+20 most-traded stocks of 2019: slope of intraday on overnight, 2008-2019 / 2020-2025, and open==prev close share
+  AMZN: -0.08 (corr -0.06, stale 1.1%) / -0.07 (corr -0.06, stale 0.8%)
+  AAPL: -0.10 (corr -0.08, stale 1.2%) / -0.05 (corr -0.04, stale 0.2%)
+  MSFT: +0.07 (corr +0.05, stale 2.5%) / +0.04 (corr +0.03, stale 0.4%)
+  META: -0.04 (corr -0.04, stale 1.6%) / +0.00 (corr +0.00, stale 0.2%)
+  BABA: -0.18 (corr -0.16, stale 0.6%) / +0.02 (corr +0.02, stale 0.4%)
+  TSLA: -0.03 (corr -0.02, stale 2.0%) / +0.01 (corr +0.01, stale 0.1%)
+  NFLX: -0.06 (corr -0.05, stale 0.9%) / +0.10 (corr +0.09, stale 1.8%)
+  NVDA: -0.01 (corr -0.01, stale 3.8%) / -0.01 (corr -0.01, stale 0.5%)
+  AMD: -0.01 (corr -0.01, stale 8.4%) / +0.02 (corr +0.01, stale 0.4%)
+  GOOGL: +0.02 (corr +0.02, stale 0.9%) / -0.02 (corr -0.02, stale 0.8%)
+  GOOG: -0.06 (corr -0.05, stale 0.6%) / -0.02 (corr -0.01, stale 0.7%)
+  BA: +0.02 (corr +0.01, stale 1.7%) / +0.09 (corr +0.08, stale 1.2%)
+  BAC: +0.02 (corr +0.02, stale 3.2%) / +0.00 (corr +0.00, stale 2.0%)
+  JPM: +0.09 (corr +0.06, stale 1.2%) / +0.04 (corr +0.04, stale 1.1%)
+  V: -0.14 (corr -0.09, stale 1.6%) / -0.02 (corr -0.02, stale 1.9%)
+  ROKU: +0.15 (corr +0.11, stale 1.2%) / -0.01 (corr -0.01, stale 0.9%)
+  DIS: +0.05 (corr +0.03, stale 2.6%) / +0.03 (corr +0.03, stale 1.1%)
+  INTC: +0.02 (corr +0.01, stale 3.7%) / +0.09 (corr +0.08, stale 1.6%)
+  MU: +0.08 (corr +0.04, stale 4.2%) / +0.04 (corr +0.03, stale 0.8%)
+  CSCO: +0.02 (corr +0.01, stale 3.8%) / -0.04 (corr -0.03, stale 1.6%)
+
+by listing exchange (the book ranked within each exchange), bps/day (t):
+  nyse all: 2008-09 gross +155.69 (+25.34) raw +115.58 (+18.98) (ranked 617); 2010-14 gross +49.32 (+44.87) raw +28.41 (+26.17) (ranked 724); 2015-19 gross +36.29 (+28.48) raw +14.13 (+11.71) (ranked 918); 2020-25 gross +40.45 (+22.00) raw +24.29 (+14.29) (ranked 1172)
+  nyse 500: 2008-09 gross +153.30 (+24.83) raw +109.53 (+17.73) (ranked 383); 2010-14 gross +49.06 (+41.91) raw +29.43 (+25.36) (ranked 378); 2015-19 gross +33.53 (+24.26) raw +15.22 (+11.20) (ranked 363); 2020-25 gross +37.51 (+16.20) raw +26.16 (+11.50) (ranked 337)
+  nasdaq all: 2008-09 gross +149.90 (+18.67) raw +97.73 (+13.49) (ranked 216); 2010-14 gross +65.53 (+36.60) raw +49.40 (+25.92) (ranked 293); 2015-19 gross +55.22 (+32.42) raw +34.06 (+19.94) (ranked 442); 2020-25 gross +56.79 (+24.19) raw +39.84 (+16.98) (ranked 756)
+  nasdaq 500: 2008-09 gross +143.73 (+16.84) raw +92.10 (+11.68) (ranked 104); 2010-14 gross +51.36 (+24.03) raw +38.20 (+16.05) (ranked 121); 2015-19 gross +45.90 (+21.25) raw +27.97 (+12.85) (ranked 136); 2020-25 gross +44.78 (+15.98) raw +33.66 (+11.24) (ranked 162)
+
+open as the day's extreme (post hoc):
+  2008-2019: open == day low: longs 9.8% vs all ranked 4.9%; open == day high: shorts 10.0% vs all ranked 5.1%
+  2020-2025-06: open == day low: longs 8.9% vs all ranked 5.1%; open == day high: shorts 9.5% vs all ranked 5.3%
+
+the 100 most traded (legs of 10), bps/day (t):
+  2008-2019: twin gross +50.79 (+30.14), head +24.00 (+14.26), raw gross +31.70 (+19.37), break-even p +22.0 bps
+  2020-2025-06: twin gross +35.95 (+11.91), head +8.52 (+2.82), raw gross +27.22 (+8.51), break-even p +14.3 bps
+  2015-2019: twin gross +32.66 (+16.01), head +5.81 (+2.85), raw gross +19.85 (+9.48), break-even p +12.9 bps
+  2023-2025-06: twin gross +26.12 (+5.52), head -1.17 (-0.25), raw gross +22.42 (+4.60), break-even p +9.4 bps

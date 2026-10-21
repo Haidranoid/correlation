@@ -1,0 +1,20 @@
+[   21.1s] universe ready; sizes median 1284
+[   21.6s] prices ready plain
+[   22.3s] old plain all: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 256/257; turnover FIP 1.53 MOM 1.08
+[   22.8s] old plain big: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 94/94; turnover FIP 1.58 MOM 1.11
+[   22.8s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_old_plain.npz
+[    0.0s] universe ready; sizes median 1284
+[    0.9s] prices ready divfix
+[    1.6s] old divfix all: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 256/257; turnover FIP 1.53 MOM 1.08
+[    2.1s] old divfix big: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 94/94; turnover FIP 1.58 MOM 1.11
+[    2.1s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_old_divfix.npz
+[   25.0s] universe ready; sizes median 1247
+[   25.6s] prices ready plain
+[   26.4s] new plain all: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 254/255; turnover FIP 1.51 MOM 1.08
+[   27.0s] new plain big: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 94/94; turnover FIP 1.58 MOM 1.11
+[   27.0s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_new_plain.npz
+[    0.0s] universe ready; sizes median 1247
+[    1.0s] prices ready divfix
+[    1.8s] new divfix all: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 254/255; turnover FIP 1.51 MOM 1.08
+[    2.4s] new divfix big: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 94/94; turnover FIP 1.58 MOM 1.11
+[    2.4s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_new_divfix.npz

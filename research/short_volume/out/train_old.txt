@@ -1,0 +1,6 @@
+market[d] vs median stock log return: corr same day 0.991, next day -0.064
+training decision days 2010-01-04..2015-12-24 (last outcome close 2016-01-04)
+G      raw mean weekly IC -0.0093 (t -4.02, 284 weeks, median names 846, first 2010-05-13) -> sign -1
+A      raw mean weekly IC -0.0106 (t -3.92, 284 weeks, median names 912, first 2010-05-13) -> sign -1
+G_lag  raw mean weekly IC -0.0066 (t -2.90, 284 weeks, median names 846, first 2010-05-13) -> sign -1
+A_lag  raw mean weekly IC -0.0077 (t -2.89, 284 weeks, median names 911, first 2010-05-13) -> sign -1

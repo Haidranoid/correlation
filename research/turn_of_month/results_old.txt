@@ -1,0 +1,93 @@
+span 2006-01-03..2025-06-27: 4902 days, 935 TOM days, 234 months
+
+Seed 20261021; 10000 random timings; trades over the span: rule 468 (entries + exits), random median 1586
+
+=== 2006-2025-06
+ [all days] days 4902
+  SPY excess: TOM +0.042% (n 935) vs other +0.041% (n 3967); diff +0.000%, se +0.043%, Welch t +0.01 | EW market diff -0.004% t -0.07 | SPY excess log/yr: TOM +1.7%, other +6.8%, all +8.5%
+     positions (SPY excess mean, t vs other): -1: -0.066% t -1.53 (n 233); +1: +0.128% t +0.98 (n 234); +2: +0.080% t +0.53 (n 234); +3: +0.022% t -0.23 (n 234)
+     rule vs random, 0 bps: rule +3.35%, median random +3.26%, diff +0.08 pts, p 0.4808 | 1 bp/side: rule +3.10%, median +2.42%, diff +0.68, p 0.3586 | buy-hold +10.61%, cash +1.64%
+ [without 2008] days 4649
+  SPY excess: TOM +0.054% (n 887) vs other +0.051% (n 3762); diff +0.002%, se +0.040%, Welch t +0.06 | EW market diff +0.005% t +0.09 | SPY excess log/yr: TOM +2.3%, other +9.2%, all +11.5%
+     positions (SPY excess mean, t vs other): -1: -0.091% t -2.10 (n 221); +1: +0.155% t +1.28 (n 222); +2: +0.090% t +0.54 (n 222); +3: +0.061% t +0.12 (n 222)
+     rule vs random, 0 bps: rule +4.02%, median random +3.88%, diff +0.14 pts, p 0.4678 | 1 bp/side: rule +3.77%, median +3.04%, diff +0.73, p 0.3379 | buy-hold +14.02%, cash +1.65%
+ [without March 2020] days 4880
+  SPY excess: TOM +0.037% (n 931) vs other +0.045% (n 3949); diff -0.008%, se +0.042%, Welch t -0.18 | EW market diff -0.015% t -0.28 | SPY excess log/yr: TOM +1.5%, other +7.7%, all +9.2%
+     positions (SPY excess mean, t vs other): -1: -0.060% t -1.50 (n 232); +1: +0.110% t +0.75 (n 233); +2: +0.093% t +0.66 (n 233); +3: +0.004% t -0.52 (n 233)
+     rule vs random, 0 bps: rule +3.15%, median random +3.41%, diff -0.25 pts, p 0.5595 | 1 bp/side: rule +2.91%, median +2.57%, diff +0.34, p 0.4218 | buy-hold +11.43%, cash +1.64%
+ [without 2008 and March 2020] days 4627
+  SPY excess: TOM +0.049% (n 883) vs other +0.055% (n 3744); diff -0.006%, se +0.039%, Welch t -0.15 | EW market diff -0.007% t -0.14 | SPY excess log/yr: TOM +2.1%, other +10.2%, all +12.3%
+     positions (SPY excess mean, t vs other): -1: -0.085% t -2.07 (n 220); +1: +0.136% t +1.02 (n 221); +2: +0.103% t +0.68 (n 221); +3: +0.042% t -0.18 (n 221)
+     rule vs random, 0 bps: rule +3.82%, median random +4.05%, diff -0.23 pts, p 0.5533 | 1 bp/side: rule +3.57%, median +3.20%, diff +0.36, p 0.4112 | buy-hold +14.92%, cash +1.66%
+
+=== 2006-2019
+ [all days] days 3523
+  SPY excess: TOM +0.035% (n 672) vs other +0.038% (n 2851); diff -0.003%, se +0.049%, Welch t -0.07 | EW market diff +0.007% t +0.11 | SPY excess log/yr: TOM +1.4%, other +6.3%, all +7.6%
+     positions (SPY excess mean, t vs other): -1: -0.041% t -1.00 (n 168); +1: +0.113% t +0.70 (n 168); +2: +0.010% t -0.32 (n 168); +3: +0.056% t +0.21 (n 168)
+     rule vs random, 0 bps: rule +2.58%, median random +2.66%, diff -0.09 pts, p 0.5175 | 1 bp/side: rule +2.33%, median +1.83%, diff +0.50, p 0.4062 | buy-hold +9.22%, cash +1.19%
+ [without 2008] days 3270
+  SPY excess: TOM +0.051% (n 624) vs other +0.052% (n 2646); diff -0.001%, se +0.044%, Welch t -0.02 | EW market diff +0.019% t +0.35 | SPY excess log/yr: TOM +2.2%, other +9.6%, all +11.9%
+     positions (SPY excess mean, t vs other): -1: -0.075% t -1.70 (n 156); +1: +0.150% t +1.02 (n 156); +2: +0.018% t -0.42 (n 156); +3: +0.113% t +0.79 (n 156)
+     rule vs random, 0 bps: rule +3.46%, median random +3.49%, diff -0.03 pts, p 0.5074 | 1 bp/side: rule +3.21%, median +2.66%, diff +0.56, p 0.3790 | buy-hold +13.93%, cash +1.18%
+ [without March 2020] days 3523
+  SPY excess: TOM +0.035% (n 672) vs other +0.038% (n 2851); diff -0.003%, se +0.049%, Welch t -0.07 | EW market diff +0.007% t +0.11 | SPY excess log/yr: TOM +1.4%, other +6.3%, all +7.6%
+     positions (SPY excess mean, t vs other): -1: -0.041% t -1.00 (n 168); +1: +0.113% t +0.70 (n 168); +2: +0.010% t -0.32 (n 168); +3: +0.056% t +0.21 (n 168)
+     rule vs random, 0 bps: rule +2.58%, median random +2.66%, diff -0.09 pts, p 0.5175 | 1 bp/side: rule +2.33%, median +1.83%, diff +0.50, p 0.4062 | buy-hold +9.22%, cash +1.19%
+ [without 2008 and March 2020] days 3270
+  SPY excess: TOM +0.051% (n 624) vs other +0.052% (n 2646); diff -0.001%, se +0.044%, Welch t -0.02 | EW market diff +0.019% t +0.35 | SPY excess log/yr: TOM +2.2%, other +9.6%, all +11.9%
+     positions (SPY excess mean, t vs other): -1: -0.075% t -1.70 (n 156); +1: +0.150% t +1.02 (n 156); +2: +0.018% t -0.42 (n 156); +3: +0.113% t +0.79 (n 156)
+     rule vs random, 0 bps: rule +3.46%, median random +3.49%, diff -0.03 pts, p 0.5074 | 1 bp/side: rule +3.21%, median +2.66%, diff +0.56, p 0.3790 | buy-hold +13.93%, cash +1.18%
+
+=== 2020-2025-06
+ [all days] days 1379
+  SPY excess: TOM +0.059% (n 263) vs other +0.049% (n 1116); diff +0.010%, se +0.087%, Welch t +0.11 | EW market diff -0.030% t -0.28 | SPY excess log/yr: TOM +2.5%, other +8.1%, all +10.6%
+     positions (SPY excess mean, t vs other): -1: -0.130% t -1.23 (n 65); +1: +0.167% t +0.76 (n 66); +2: +0.259% t +1.43 (n 66); +3: -0.063% t -0.62 (n 66)
+     rule vs random, 0 bps: rule +5.35%, median random +4.79%, diff +0.56 pts, p 0.4446 | 1 bp/side: rule +5.10%, median +3.93%, diff +1.17, p 0.3849 | buy-hold +14.25%, cash +2.78%
+ [without 2008] days 1379
+  SPY excess: TOM +0.059% (n 263) vs other +0.049% (n 1116); diff +0.010%, se +0.087%, Welch t +0.11 | EW market diff -0.030% t -0.28 | SPY excess log/yr: TOM +2.5%, other +8.1%, all +10.6%
+     positions (SPY excess mean, t vs other): -1: -0.130% t -1.23 (n 65); +1: +0.167% t +0.76 (n 66); +2: +0.259% t +1.43 (n 66); +3: -0.063% t -0.62 (n 66)
+     rule vs random, 0 bps: rule +5.35%, median random +4.79%, diff +0.56 pts, p 0.4446 | 1 bp/side: rule +5.10%, median +3.93%, diff +1.17, p 0.3849 | buy-hold +14.25%, cash +2.78%
+ [without March 2020] days 1357
+  SPY excess: TOM +0.044% (n 259) vs other +0.063% (n 1098); diff -0.019%, se +0.081%, Welch t -0.24 | EW market diff -0.070% t -0.68 | SPY excess log/yr: TOM +1.8%, other +11.5%, all +13.2%
+     positions (SPY excess mean, t vs other): -1: -0.109% t -1.19 (n 64); +1: +0.103% t +0.28 (n 65); +2: +0.307% t +1.76 (n 65); +3: -0.128% t -1.14 (n 65)
+     rule vs random, 0 bps: rule +4.67%, median random +5.38%, diff -0.71 pts, p 0.5864 | 1 bp/side: rule +4.42%, median +4.52%, diff -0.10, p 0.5141 | buy-hold +17.37%, cash +2.82%
+ [without 2008 and March 2020] days 1357
+  SPY excess: TOM +0.044% (n 259) vs other +0.063% (n 1098); diff -0.019%, se +0.081%, Welch t -0.24 | EW market diff -0.070% t -0.68 | SPY excess log/yr: TOM +1.8%, other +11.5%, all +13.2%
+     positions (SPY excess mean, t vs other): -1: -0.109% t -1.19 (n 64); +1: +0.103% t +0.28 (n 65); +2: +0.307% t +1.76 (n 65); +3: -0.128% t -1.14 (n 65)
+     rule vs random, 0 bps: rule +4.67%, median random +5.38%, diff -0.71 pts, p 0.5864 | 1 bp/side: rule +4.42%, median +4.52%, diff -0.10, p 0.5141 | buy-hold +17.37%, cash +2.82%
+
+=== 2006-2009
+ [all days] days 1007
+  SPY excess: TOM -0.026% (n 192) vs other +0.007% (n 815); diff -0.033%, se +0.122%, Welch t -0.27 | EW market diff -0.023% t -0.15 | SPY excess log/yr: TOM -1.8%, other -1.6%, all -3.4%
+     positions (SPY excess mean, t vs other): -1: -0.036% t -0.23 (n 48); +1: +0.037% t +0.11 (n 48); +2: +0.095% t +0.43 (n 48); +3: -0.202% t -1.03 (n 48)
+     rule vs random, 0 bps: rule +0.92%, median random +2.00%, diff -1.08 pts, p 0.5852 | 1 bp/side: rule +0.67%, median +1.17%, diff -0.50, p 0.5399 | buy-hold -0.69%, cash +2.75%
+
+=== 2010-2014
+ [all days] days 1258
+  SPY excess: TOM +0.106% (n 240) vs other +0.051% (n 1018); diff +0.055%, se +0.073%, Welch t +0.76 | EW market diff +0.054% t +0.61 | SPY excess log/yr: TOM +4.8%, other +9.4%, all +14.2%
+     positions (SPY excess mean, t vs other): -1: -0.079% t -0.96 (n 60); +1: +0.157% t +0.64 (n 60); +2: +0.076% t +0.20 (n 60); +3: +0.270% t +1.98 (n 60)
+     rule vs random, 0 bps: rule +5.04%, median random +2.87%, diff +2.17 pts, p 0.2343 | 1 bp/side: rule +4.79%, median +2.04%, diff +2.75, p 0.1772 | buy-hold +15.37%, cash +0.07%
+
+=== 2015-2019
+ [all days] days 1258
+  SPY excess: TOM +0.012% (n 240) vs other +0.050% (n 1018); diff -0.038%, se +0.064%, Welch t -0.59 | EW market diff -0.017% t -0.24 | SPY excess log/yr: TOM +0.4%, other +9.5%, all +9.9%
+     positions (SPY excess mean, t vs other): -1: -0.007% t -0.58 (n 60); +1: +0.130% t +0.68 (n 60); +2: -0.122% t -1.35 (n 60); +3: +0.048% t -0.01 (n 60)
+     rule vs random, 0 bps: rule +1.48%, median random +3.01%, diff -1.53 pts, p 0.7306 | 1 bp/side: rule +1.24%, median +2.17%, diff -0.94, p 0.6471 | buy-hold +11.58%, cash +1.08%
+
+=== by year: SPY excess TOM mean - other mean (%), EW market diff, rule - median random (0 bps, pts)
+  2006:-0.005 2007:-0.030 2008:-0.038 2009:-0.060 2010:+0.308 2011:-0.051 2012:+0.142 2013:-0.029 2014:-0.095 2015:-0.058 2016:-0.083 2017:+0.021 2018:-0.017 2019:-0.050 2020:+0.294 2021:-0.074 2022:+0.035 2023:+0.052 2024:-0.230 2025:-0.046
+  SPY TOM ahead in 6 of 20 years (2006-2019: 3 of 14); EW ahead in 11 of 20
+  neighbours 2006-2025-06: -5: -0.045% t -1.21; -4: +0.212% t +1.82; -3: +0.104% t +0.87; -2: +0.104% t +0.76; +4: -0.012% t -0.58; +5: +0.041% t +0.00
+  neighbours 2006-2019: -5: -0.101% t -1.65; -4: +0.266% t +2.00; -3: +0.177% t +1.73; -2: +0.038% t -0.00; +4: -0.016% t -0.53; +5: -0.026% t -0.75
+  neighbours 2020-2025-06: -5: +0.097% t +0.36; -4: +0.075% t +0.16; -3: -0.082% t -0.87; -2: +0.275% t +1.38; +4: -0.001% t -0.26; +5: +0.211% t +1.21
+  L&S comparison 2006-2025-06: mean 4-day TOM return +0.177% (233 windows), mean month +0.923% (233 months)
+  L&S comparison 2006-2019: mean 4-day TOM return +0.138% (167 windows), mean month +0.820% (168 months)
+  L&S comparison 2020-2025-06: mean 4-day TOM return +0.266% (65 windows), mean month +1.189% (65 months)
+
+  div_fix cross-sectional mean 2023-01..2025-06 (stocks with closes): TOM 0.0036%/day, other 0.0027%/day: missing-dividend bias on the EW TOM-minus-other difference -0.0008% (positive = flatters TOM)
+
+=== TESTS
+ 1. 2006-2019: diff -0.003%, Welch t -0.07 (pass t >= 2: False); planned se 0.05%, actual se +0.049%; rule - median random -0.09 pts, p 0.5175 (pass p < 0.10: False)
+ 2. EW market 2006-2019 diff +0.007% t +0.11: same sign False
+ 3. 2020-2025-06 diff +0.010% t +0.11: same sign False (unseen months: unseen.py)
+ NUMBER: rule - median random, 2006-2025-06, 0 bps: +0.1 points a year (p 0.4808)

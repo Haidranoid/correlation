@@ -1,0 +1,18 @@
+fingerprint 8b5ac076267c83ab matches /home/bhoult/.local/share/correlation2/export/full/meta.json
+skipped 2006-06-28 .. 2007-06-28: only 0 stocks can be picked (history before the holdout too short?)
+skipped 2007-06-28 .. 2008-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2008-06-28 .. 2009-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2009-06-28 .. 2010-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2010-06-28 .. 2011-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2011-06-28 .. 2012-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2012-06-28 .. 2013-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2013-06-28 .. 2014-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2014-06-28 .. 2015-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2015-06-28 .. 2016-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2016-06-28 .. 2017-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2017-06-28 .. 2018-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2018-06-28 .. 2019-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2019-06-28 .. 2020-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2020-06-28 .. 2021-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2021-06-28 .. 2022-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2023-06-28 .. 2024-06-28: no candidate has a finite score on the holdout's rebalance days

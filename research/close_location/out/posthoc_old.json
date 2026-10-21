@@ -1,0 +1,118 @@
+{
+ "reversal5_same_cells_uniform": {
+  "change": {
+   "change": 11.824264468888622,
+   "per_year": [
+    -0.12,
+    16.8,
+    27.28,
+    -2.28,
+    22.12,
+    40.38,
+    23.0,
+    -15.71,
+    2.32,
+    3.31,
+    29.78,
+    10.87,
+    55.96,
+    90.84,
+    -10.22,
+    -28.82,
+    -9.75,
+    -42.93
+   ],
+   "ahead": 11,
+   "years": 18,
+   "se": 7.385063222655132
+  },
+  "summary_line": "years 18; beat random at p<0.1 (0 bps: 9, 5 bps: 9, 20 bps: 9) of 18; change over random +11.8 pts/yr (se 7.4, ahead 11/18); IC actual returns z +3.39; long-short 4.16 bps/day z +2.94, turnover 86%, costs 0.69 x c bps/day"
+ },
+ "reversal5_same_cells_volatility": {
+  "change": {
+   "change": 8.994597248705034,
+   "per_year": [
+    -0.88,
+    -0.52,
+    14.65,
+    -4.58,
+    24.46,
+    32.43,
+    18.04,
+    -9.19,
+    4.77,
+    -7.38,
+    23.22,
+    18.11,
+    55.98,
+    51.32,
+    8.66,
+    -31.6,
+    3.04,
+    -38.63
+   ],
+   "ahead": 11,
+   "years": 18,
+   "se": 5.753036750947246
+  },
+  "summary_line": "years 18; beat random at p<0.1 (0 bps: 7, 5 bps: 7, 20 bps: 7) of 18; change over random +9.0 pts/yr (se 5.8, ahead 11/18); IC actual returns z +3.39; long-short 4.16 bps/day z +2.94, turnover 86%, costs 0.69 x c bps/day"
+ },
+ "P_own_part_uniform": {
+  "change": {
+   "change": -1.538584806057078,
+   "per_year": [
+    6.1,
+    15.62,
+    10.08,
+    -3.7,
+    -5.69,
+    3.01,
+    -18.79,
+    6.7,
+    -8.28,
+    15.04,
+    -0.58,
+    -13.45,
+    5.13,
+    -6.75,
+    -7.59,
+    2.03,
+    -8.73,
+    -17.84
+   ],
+   "ahead": 8,
+   "years": 18,
+   "se": 2.4237371184885848
+  },
+  "summary_line": "years 18; beat random at p<0.1 (0 bps: 3, 5 bps: 2, 20 bps: 2) of 18; change over random -1.5 pts/yr (se 2.4, ahead 8/18); IC actual returns z +1.61; long-short 0.63 bps/day z +0.22, turnover 87%, costs 0.70 x c bps/day"
+ },
+ "P_own_part_volatility": {
+  "change": {
+   "change": -0.637207358521104,
+   "per_year": [
+    7.42,
+    16.86,
+    7.08,
+    -5.84,
+    0.97,
+    9.53,
+    -19.02,
+    4.84,
+    -5.81,
+    19.84,
+    -1.44,
+    -13.27,
+    -5.66,
+    -9.16,
+    6.88,
+    -0.2,
+    -5.49,
+    -19.0
+   ],
+   "ahead": 8,
+   "years": 18,
+   "se": 2.590436855167655
+  },
+  "summary_line": "years 18; beat random at p<0.1 (0 bps: 3, 5 bps: 3, 20 bps: 3) of 18; change over random -0.6 pts/yr (se 2.6, ahead 8/18); IC actual returns z +1.61; long-short 0.63 bps/day z +0.22, turnover 87%, costs 0.70 x c bps/day"
+ }
+}

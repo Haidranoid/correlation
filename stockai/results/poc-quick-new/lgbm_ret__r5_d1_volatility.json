@@ -1,0 +1,261 @@
+{
+  "c2_commit": "93351262d1f155aa049b39198cc17c59f66e0867",
+  "mode": "walk-forward",
+  "options": {
+    "cash": 10000.0,
+    "costs_bps": [
+      0.0,
+      5.0,
+      20.0
+    ],
+    "delay": 1,
+    "dump_scores": null,
+    "end": null,
+    "export": "/home/bhoult/.local/share/correlation2/export/full",
+    "family": "scores",
+    "fingerprint_check": "fingerprint 8b5ac076267c83ab matches /home/bhoult/.local/share/correlation2/export/full/meta.json",
+    "locked": false,
+    "lookback": null,
+    "peer_window": 756,
+    "picks": 20,
+    "random": 1000,
+    "random_match": "volatility",
+    "rebalance": 5,
+    "scores": "runs/poc-quick-new/baselines/lgbm_ret/scores.npy",
+    "scores_dtype": "<f4",
+    "start": "2023-06-28",
+    "walk_forward": true
+  },
+  "skipped": [
+    {
+      "end": "2007-06-28",
+      "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+      "start": "2006-06-28"
+    },
+    {
+      "end": "2008-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2007-06-28"
+    },
+    {
+      "end": "2009-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2008-06-28"
+    },
+    {
+      "end": "2010-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2009-06-28"
+    },
+    {
+      "end": "2011-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2010-06-28"
+    },
+    {
+      "end": "2012-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2011-06-28"
+    },
+    {
+      "end": "2013-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2012-06-28"
+    },
+    {
+      "end": "2014-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2013-06-28"
+    },
+    {
+      "end": "2015-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2014-06-28"
+    },
+    {
+      "end": "2016-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2015-06-28"
+    },
+    {
+      "end": "2017-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2016-06-28"
+    },
+    {
+      "end": "2018-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2017-06-28"
+    },
+    {
+      "end": "2019-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2018-06-28"
+    },
+    {
+      "end": "2020-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2019-06-28"
+    },
+    {
+      "end": "2021-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2020-06-28"
+    },
+    {
+      "end": "2022-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2021-06-28"
+    }
+  ],
+  "summary": {
+    "beat_random_p_lt_0_1": [
+      {
+        "cost_bps": 0.0,
+        "years": 0
+      },
+      {
+        "cost_bps": 5.0,
+        "years": 0
+      },
+      {
+        "cost_bps": 20.0,
+        "years": 0
+      }
+    ],
+    "ic_ret_t_positive_years": 1,
+    "ic_ret_z": 0.23121313814031721,
+    "ic_t_positive_years": 0,
+    "ic_z": -3.7490753911466865,
+    "ls_bps_per_day_mean": -3.5746143180496843,
+    "ls_cost_bps_per_day_per_bps": 0.5982040816326532,
+    "ls_positive_years": 1,
+    "ls_turnover_mean": 0.7477551020408164,
+    "ls_z": -0.2906456898472744,
+    "years": 2
+  },
+  "tool": "stockai-judge 0.1.0",
+  "variable": {
+    "fingerprint": "8b5ac076267c83ab",
+    "first_day": "2001-12-31",
+    "last_day": "2025-06-27",
+    "n": 8503,
+    "t": 5911
+  },
+  "years": [
+    {
+      "candidates": 1969,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 12191.242560241611,
+          "final_pct": 21.912425602416107,
+          "p": 0.27,
+          "random_median_pct": 14.070746903391274
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 11646.729867671695,
+          "final_pct": 16.467298676716947,
+          "p": 0.27,
+          "random_median_pct": 8.985411734848302
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 10152.232414721184,
+          "final_pct": 1.5223241472118287,
+          "p": 0.27,
+          "random_median_pct": -4.990045462009607
+        }
+      ],
+      "days": 251,
+      "end": "2023-06-28",
+      "first_day": "2022-06-28",
+      "hit_rate": 0.45,
+      "hits": 1020,
+      "hold_all_pct": 6.834551627593299,
+      "ic_mean": -0.05659822674987435,
+      "ic_ret_mean": -0.02437691090795698,
+      "ic_ret_t": -1.0534021888931173,
+      "ic_t": -3.1144967762653097,
+      "last_day": "2023-06-27",
+      "ls_bps_per_day": -13.346659309532988,
+      "ls_sharpe": -1.5300508004455657,
+      "ls_t": -1.5391313003461908,
+      "ls_turnover": 0.7501020408163268,
+      "pairs": 1969,
+      "qqq_pct": 25.295569859837187,
+      "random_check": {
+        "mode": "volatility",
+        "random_buy_decile": 6.113636363636363,
+        "random_buys_max": 924,
+        "random_buys_mean": 924.0,
+        "random_buys_min": 924,
+        "random_held_decile": 6.1295858,
+        "strategy_buy_decile": 6.113636363636363,
+        "strategy_buys": 924,
+        "strategy_held_decile": 6.1324,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 14.078919880511421,
+      "start": "2022-06-28"
+    },
+    {
+      "candidates": 1968,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 12475.377524070485,
+          "final_pct": 24.753775240704854,
+          "p": 0.526,
+          "random_median_pct": 25.56641663993009
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 11906.749262080597,
+          "final_pct": 19.067492620805957,
+          "p": 0.526,
+          "random_median_pct": 19.84351751558777
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 10349.018811434646,
+          "final_pct": 3.4901881143464486,
+          "p": 0.527,
+          "random_median_pct": 4.1716961932789065
+        }
+      ],
+      "days": 252,
+      "end": "2024-06-28",
+      "first_day": "2023-06-28",
+      "hit_rate": 0.5029411764705882,
+      "hits": 1020,
+      "hold_all_pct": 9.612316757331808,
+      "ic_mean": -0.034342874927694146,
+      "ic_ret_mean": 0.022882996872897497,
+      "ic_ret_t": 1.380386944649998,
+      "ic_t": -2.187496488253551,
+      "last_day": "2024-06-27",
+      "ls_bps_per_day": 6.19743067343362,
+      "ls_sharpe": 1.1214407308840302,
+      "ls_t": 1.1280962239188912,
+      "ls_turnover": 0.7454081632653061,
+      "pairs": 1968,
+      "qqq_pct": 33.214695691650874,
+      "random_check": {
+        "mode": "volatility",
+        "random_buy_decile": 6.475583864118896,
+        "random_buys_max": 942,
+        "random_buys_mean": 942.0,
+        "random_buys_min": 942,
+        "random_held_decile": 6.622348804780876,
+        "strategy_buy_decile": 6.475583864118896,
+        "strategy_buys": 942,
+        "strategy_held_decile": 6.653187250996016,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 27.01733795304426,
+      "start": "2023-06-28"
+    }
+  ]
+}

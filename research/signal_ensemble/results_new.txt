@@ -1,0 +1,39 @@
+==== new: weeks 2025-07-01..2026-10-08 (65) ====
+
+## Rank IC, Unseen months: mean weekly IC (t), weeks; composite paired on the component's weeks and stocks
+composite: +0.0113 (t +0.86, 65 weeks)
+5-day reversal               +0.0097 (t +0.59, 65 weeks from 2025-07-01); composite on the same: +0.0113 (t +0.85)
+12-1 momentum                +0.0200 (t +0.98, 65 weeks from 2025-07-01); composite on the same: +0.0113 (t +0.86)
+Twin residual reversal       +0.0013 (t +0.14, 65 weeks from 2025-07-01); composite on the same: +0.0113 (t +0.86)
+Low correlation              -0.0005 (t -0.03, 65 weeks from 2025-07-01); composite on the same: +0.0113 (t +0.86)
+
+## Weekly books, Unseen months: mean weekly return in bps (t); turnover = share of the book traded a week
+composite                        gross +21.80 (+0.71)  net +12.12 (+0.40)  = +6.11% a year net; turnover 48.4%; names/leg 310/308; long leg +44.1, short leg +22.3 bps/wk
+composite, no buffer             gross +25.06 (+0.77)  net +10.29 (+0.31)  = +5.18% a year net; turnover 73.9%; names/leg 226/226; long leg +47.9, short leg +22.8 bps/wk
+5-day reversal                   gross +16.86 (+0.44)  net +3.41 (+0.09)  = +1.72% a year net; turnover 67.3%; names/leg 279/278; long leg +56.5, short leg +39.6 bps/wk
+12-1 momentum                    gross +10.03 (+0.21)  net +8.70 (+0.18)  = +4.39% a year net; turnover 6.7%; names/leg 350/346; long leg +52.7, short leg +42.7 bps/wk
+Twin residual reversal           gross +8.70 (+0.44)  net -5.21 (-0.26)  = -2.63% a year net; turnover 69.5%; names/leg 283/281; long leg +39.6, short leg +30.9 bps/wk
+Low correlation                  gross +6.33 (+0.24)  net +5.66 (+0.21)  = +2.85% a year net; turnover 3.3%; names/leg 297/292; long leg +40.4, short leg +34.1 bps/wk
+
+## By period: composite IC mean (t); buffered long-short gross and net bps/week (t); turnover; no-buffer net; long-only net minus equal-weight universe, % a year (t)
+Unseen months            IC +0.0113 (+0.86) [65 wk]  gross +21.80 (+0.71)  net +12.12 (+0.40)  turnover 48.4%  no-buffer net +10.29 (+0.31)  long-only vs EW +18.04 (+0.90)
+TEST 3 (unseen months): IC +0.0113, net +12.12 bps/wk -> same sign: PASS
+
+## Each component's IC by period: mean (t)
+Unseen months            composite +0.0113 (+0.86); 5-day reversal +0.0097 (+0.59); 12-1 momentum +0.0200 (+0.98); Twin residual reversal +0.0013 (+0.14); Low correlation -0.0005 (-0.03)
+
+## Buffered long-only account (enter top 20, hold while top 60), net of 5 bps unless gross
+Unseen months            account +34.7%/yr compounded (gross +40.0%, vol 27.1%); SPY +18.9%; EW universe +15.3%; excess vs SPY +15.3% (t +0.78), alpha +9.4% (t +0.47, beta 1.33); excess vs EW +18.0% (t +0.90), alpha +18.1% (t +0.88, beta 1.00); turnover 78.0%/wk; 22 names
+
+## The 500 largest: IC mean (t); buffered long-short gross and net bps/week (t), turnover
+Unseen months:
+   composite                        IC +0.0081 (+0.49)  gross +7.06 (+0.18)  net -2.93 (-0.08)  turnover 49.9%
+   5-day reversal                   IC +0.0046 (+0.22)  gross -7.46 (-0.16)  net -21.02 (-0.45)  turnover 67.8%
+   12-1 momentum                    IC +0.0246 (+0.96)  gross +44.29 (+0.70)  net +42.95 (+0.68)  turnover 6.7%
+   Twin residual reversal           IC +0.0003 (+0.02)  gross -5.91 (-0.23)  net -20.10 (-0.77)  turnover 71.0%
+   Low correlation                  IC -0.0088 (-0.43)  gross -3.03 (-0.10)  net -3.73 (-0.13)  turnover 3.5%
+   composite, no buffer             gross +15.75 (+0.39)  net +0.76 (+0.02)  turnover 74.9%
+
+## By calendar year: composite IC, buffered long-short net bps/week, long-only net minus EW (% a year)
+2025: IC +0.0091  net   +16.6  long-only vs EW +16.7%
+2026: IC +0.0128  net    +9.1  long-only vs EW +19.0%

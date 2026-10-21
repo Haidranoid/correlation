@@ -1,0 +1,22 @@
+{
+  "top": 500,
+  "threshold": 0.05,
+  "adv_window": 63,
+  "overall": {
+    "mean": 0.0002962234672573385,
+    "t": 0.03655801455499509,
+    "days": 251
+  },
+  "max_year_mean": 0.0002962234672573385,
+  "flagged": [],
+  "tripped": false,
+  "years": [
+    {
+      "year": 2022,
+      "mean": 0.0002962234672573385,
+      "t": 0.03655801455499509,
+      "days": 251
+    }
+  ],
+  "scores": "runs/poc-quick-new/gpt_null/scores_seed0.npy"
+}

@@ -1,0 +1,20 @@
+{
+ "uniform": {
+  "change": -31.08492895663443,
+  "per_year": [
+   -31.08
+  ],
+  "ahead": 0,
+  "years": 1,
+  "se": NaN
+ },
+ "volatility": {
+  "change": -20.700489497601428,
+  "per_year": [
+   -20.7
+  ],
+  "ahead": 0,
+  "years": 1,
+  "se": NaN
+ }
+}

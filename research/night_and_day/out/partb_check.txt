@@ -1,0 +1,1 @@
+new export, days through 2025-06-27: 5628 days compared, max |diff| 8.11e-09, mean |diff| 2.53e-09, days with |diff| > 1e-6: 0

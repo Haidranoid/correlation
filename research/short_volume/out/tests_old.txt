@@ -1,0 +1,54 @@
+signs from training: G -1, A -1, G_lag -1, A_lag -1
+
+== train: decision days 2010-01-04..2015-12-24 (302)
+U G      IC +0.0093 (t +4.02, 284 wk, 58% >0, 846 names) | book gross +11.1 bps/wk (t +3.20), net -3.4 (t -0.97), turnover 145%/side, break-even 3.8 bps/side, 85/side
+U A      IC +0.0106 (t +3.92, 284 wk, 60% >0, 912 names) | book gross +11.5 bps/wk (t +3.20), net -2.8 (t -0.77), turnover 143%/side, break-even 4.0 bps/side, 91/side
+U G_lag  IC +0.0066 (t +2.90, 284 wk, 58% >0, 846 names) | book gross +7.0 bps/wk (t +2.03), net -7.5 (t -2.17), turnover 145%/side, break-even 2.4 bps/side, 84/side
+U A_lag  IC +0.0077 (t +2.89, 284 wk, 58% >0, 911 names) | book gross +10.4 bps/wk (t +2.80), net -3.9 (t -1.04), turnover 143%/side, break-even 3.6 bps/side, 91/side
+B G      IC +0.0157 (t +4.63, 284 wk, 60% >0, 407 names) | book gross +15.2 bps/wk (t +3.23), net +0.8 (t +0.17), turnover 144%/side, break-even 5.3 bps/side, 41/side
+B A      IC +0.0169 (t +4.82, 284 wk, 63% >0, 441 names) | book gross +17.4 bps/wk (t +3.58), net +3.2 (t +0.66), turnover 143%/side, break-even 6.1 bps/side, 44/side
+B G_lag  IC +0.0131 (t +3.79, 284 wk, 58% >0, 407 names) | book gross +9.6 bps/wk (t +1.95), net -4.8 (t -0.96), turnover 144%/side, break-even 3.3 bps/side, 41/side
+B A_lag  IC +0.0135 (t +3.67, 284 wk, 57% >0, 441 names) | book gross +10.2 bps/wk (t +2.11), net -4.0 (t -0.82), turnover 142%/side, break-even 3.6 bps/side, 44/side
+
+== test1: decision days 2016-01-04..2019-12-31 (202)
+U G      IC +0.0062 (t +2.89, 202 wk, 62% >0, 1216 names) | book gross +13.3 bps/wk (t +3.31), net -0.5 (t -0.12), turnover 137%/side, break-even 4.8 bps/side, 122/side
+U A      IC +0.0054 (t +1.98, 202 wk, 58% >0, 1341 names) | book gross +13.3 bps/wk (t +3.03), net -0.2 (t -0.05), turnover 135%/side, break-even 4.9 bps/side, 134/side
+U G_lag  IC +0.0024 (t +1.14, 202 wk, 55% >0, 1216 names) | book gross +6.4 bps/wk (t +1.58), net -7.4 (t -1.84), turnover 137%/side, break-even 2.3 bps/side, 122/side
+U A_lag  IC +0.0015 (t +0.56, 202 wk, 52% >0, 1341 names) | book gross +7.8 bps/wk (t +1.74), net -5.7 (t -1.27), turnover 135%/side, break-even 2.9 bps/side, 134/side
+B G      IC +0.0049 (t +1.39, 202 wk, 53% >0, 422 names) | book gross +10.2 bps/wk (t +1.62), net -3.2 (t -0.51), turnover 134%/side, break-even 3.8 bps/side, 42/side
+B A      IC +0.0023 (t +0.58, 202 wk, 53% >0, 460 names) | book gross +3.2 bps/wk (t +0.51), net -9.9 (t -1.60), turnover 131%/side, break-even 1.2 bps/side, 46/side
+B G_lag  IC +0.0029 (t +0.85, 202 wk, 50% >0, 422 names) | book gross +1.7 bps/wk (t +0.29), net -11.9 (t -2.05), turnover 135%/side, break-even 0.6 bps/side, 42/side
+B A_lag  IC -0.0003 (t -0.07, 202 wk, 52% >0, 460 names) | book gross +1.7 bps/wk (t +0.29), net -11.5 (t -1.99), turnover 132%/side, break-even 0.6 bps/side, 46/side
+
+== test3: decision days 2020-01-08..2025-06-13 (274)
+U G      IC +0.0023 (t +1.33, 274 wk, 53% >0, 1755 names) | book gross +6.5 bps/wk (t +1.58), net -6.7 (t -1.63), turnover 132%/side, break-even 2.5 bps/side, 176/side
+U A      IC +0.0015 (t +0.64, 274 wk, 55% >0, 1921 names) | book gross +6.8 bps/wk (t +1.31), net -6.2 (t -1.20), turnover 130%/side, break-even 2.6 bps/side, 192/side
+U G_lag  IC +0.0016 (t +0.91, 274 wk, 53% >0, 1755 names) | book gross +4.8 bps/wk (t +1.15), net -8.4 (t -2.01), turnover 132%/side, break-even 1.8 bps/side, 176/side
+U A_lag  IC +0.0003 (t +0.12, 274 wk, 53% >0, 1920 names) | book gross +4.0 bps/wk (t +0.76), net -9.0 (t -1.71), turnover 130%/side, break-even 1.5 bps/side, 192/side
+B G      IC +0.0016 (t +0.54, 274 wk, 50% >0, 439 names) | book gross +8.6 bps/wk (t +1.23), net -4.3 (t -0.62), turnover 129%/side, break-even 3.3 bps/side, 44/side
+B A      IC +0.0035 (t +1.08, 274 wk, 53% >0, 488 names) | book gross +8.0 bps/wk (t +1.19), net -4.6 (t -0.69), turnover 126%/side, break-even 3.2 bps/side, 49/side
+B G_lag  IC +0.0013 (t +0.42, 274 wk, 49% >0, 439 names) | book gross +0.3 bps/wk (t +0.04), net -12.5 (t -1.90), turnover 128%/side, break-even 0.1 bps/side, 44/side
+B A_lag  IC +0.0026 (t +0.82, 274 wk, 50% >0, 488 names) | book gross +7.7 bps/wk (t +1.13), net -4.9 (t -0.71), turnover 126%/side, break-even 3.1 bps/side, 49/side
+
+== by year, G (primary), all universe stocks
+2010: IC +0.0134 (t +1.82, 33 wk); gross +18.7 bps/wk (t +1.81); net +3.9 (t +0.37); 500 largest IC +0.0194 (t +1.70)
+2011: IC +0.0112 (t +1.92, 50 wk); gross +19.8 bps/wk (t +1.91); net +4.9 (t +0.48); 500 largest IC +0.0220 (t +2.46)
+2012: IC +0.0054 (t +1.01, 50 wk); gross -0.5 bps/wk (t -0.06); net -15.2 (t -1.88); 500 largest IC +0.0079 (t +1.00)
+2013: IC +0.0080 (t +1.47, 51 wk); gross -0.5 bps/wk (t -0.07); net -14.9 (t -2.02); 500 largest IC +0.0225 (t +3.35)
+2014: IC +0.0146 (t +2.81, 50 wk); gross +19.5 bps/wk (t +2.68); net +5.1 (t +0.70); 500 largest IC +0.0158 (t +1.99)
+2015: IC +0.0046 (t +0.84, 50 wk); gross +12.6 bps/wk (t +1.63); net -1.4 (t -0.18); 500 largest IC +0.0079 (t +0.97)
+2016: IC +0.0086 (t +1.88, 51 wk); gross +22.3 bps/wk (t +2.87); net +8.1 (t +1.04); 500 largest IC +0.0012 (t +0.16)
+2017: IC +0.0134 (t +3.12, 50 wk); gross +22.6 bps/wk (t +3.52); net +8.8 (t +1.37); 500 largest IC +0.0188 (t +2.43)
+2018: IC -0.0004 (t -0.12, 50 wk); gross +7.3 bps/wk (t +1.01); net -6.0 (t -0.83); 500 largest IC -0.0028 (t -0.50)
+2019: IC +0.0032 (t +0.73, 51 wk); gross +0.9 bps/wk (t +0.09); net -12.7 (t -1.29); 500 largest IC +0.0024 (t +0.37)
+2020: IC +0.0002 (t +0.04, 50 wk); gross +3.2 bps/wk (t +0.34); net -10.2 (t -1.09); 500 largest IC -0.0010 (t -0.17)
+2021: IC +0.0017 (t +0.42, 51 wk); gross -6.3 bps/wk (t -0.70); net -19.8 (t -2.19); 500 largest IC +0.0032 (t +0.52)
+2022: IC +0.0019 (t +0.38, 50 wk); gross +4.6 bps/wk (t +0.35); net -8.6 (t -0.65); 500 largest IC +0.0026 (t +0.31)
+2023: IC -0.0042 (t -1.38, 50 wk); gross +2.2 bps/wk (t +0.35); net -10.9 (t -1.74); 500 largest IC -0.0008 (t -0.11)
+2024: IC +0.0094 (t +2.64, 50 wk); gross +18.3 bps/wk (t +2.19); net +5.2 (t +0.62); 500 largest IC +0.0008 (t +0.10)
+2025: IC +0.0082 (t +1.16, 23 wk); gross +29.8 bps/wk (t +1.98); net +17.6 (t +1.17); 500 largest IC +0.0092 (t +0.91)
+
+== tests (G, training sign)
+Test 1 (2016-2019): IC t +2.89 (needs >= 2.5) and book net -0.5 bps/wk (needs > 0): FAIL
+Test 2 (500 largest, 2016-2019): IC +0.0049 (needs > 0): PASS
+Test 3a (2020-2025-06): IC +0.0023 (needs > 0): PASS

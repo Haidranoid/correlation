@@ -1,0 +1,8 @@
+[    0.7s] div_fix: stock-days with a correction 13608
+[    0.9s] prices ready
+[    1.7s] old bab: 208 months, first 2008-03, last 2025-06; mean names per leg 719/719; mean ex-ante leg betas 0.84/1.42; mean turnover 0.28
+[    1.7s] old bab500: 208 months, first 2008-03, last 2025-06; mean names per leg 249/249; mean ex-ante leg betas 0.83/1.40; mean turnover 0.34
+[    1.7s] old bab_unlev: 208 months, first 2008-03, last 2025-06; mean names per leg 719/719; mean ex-ante leg betas 0.84/1.42; mean turnover 0.30
+[    1.7s] old nmv_ew: 208 months, first 2008-03, last 2025-06; mean names per leg 480/479; mean ex-ante leg betas 0.85/1.40; mean turnover 0.35
+[    1.7s] old nmv_dv: 208 months, first 2008-03, last 2025-06; mean names per leg 480/479; mean ex-ante leg betas 0.85/1.41; mean turnover 0.40
+[    1.7s] saved /home/bhoult/.local/share/correlation2/experiments/betting_against_beta/series_old_divfix.npz

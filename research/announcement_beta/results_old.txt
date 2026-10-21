@@ -1,0 +1,112 @@
+Announcement-day beta, export old (/home/bhoult/.local/share/correlation2/export/full)
+Units: slopes in bps of daily log return per unit of beta; strategy in bps per A day (simple returns).
+Calendar releases in the export span that are not trading days (dropped): 2007-04-06, 2010-04-02, 2012-04-06, 2015-04-03, 2017-04-14, 2020-04-10, 2021-04-02, 2023-04-07
+First day with a slope: 2006-01-23
+Crash days (|SPY| >= 4% in (2008, 2020)): 43, of which A days 5: 2008-03-18*, 2008-09-15, 2008-09-17, 2008-09-29, 2008-09-30, 2008-10-06, 2008-10-07, 2008-10-09, 2008-10-13, 2008-10-15, 2008-10-16*, 2008-10-20, 2008-10-22, 2008-10-24, 2008-10-28, 2008-11-05, 2008-11-06, 2008-11-12, 2008-11-13, 2008-11-14, 2008-11-19*, 2008-11-20, 2008-11-21, 2008-11-24, 2008-12-01, 2008-12-16*, 2020-02-27, 2020-03-02, 2020-03-04, 2020-03-09, 2020-03-10, 2020-03-11*, 2020-03-12, 2020-03-13, 2020-03-16, 2020-03-17, 2020-03-18, 2020-03-20, 2020-03-24, 2020-03-26, 2020-04-01, 2020-04-06, 2020-06-11
+
+=== 2006-2019 (2006-01-01..2019-12-31), with crash days
+  slope A days: +18.7 (t +2.67, n 429);  N days: -4.4 (t -1.67, n 3081)
+  A - N: +23.1  Welch t +3.09
+  fomc  days: slope +38.5 (t +2.71, n 112);  minus N +42.9 (Welch t +2.97)
+  cpi   days: slope +16.3 (t +1.40, n 166);  minus N +20.7 (Welch t +1.74)
+  jobs  days: slope +16.0 (t +1.42, n 163);  minus N +20.4 (Welch t +1.76)
+  SPY log return: A +12.9 (t +2.28), N +1.8 (t +0.86)
+  strategy (top - bottom beta tenth, A days): gross +29.5 (t +3.17, n 429); net of 20 bps +9.5 (t +1.02); net > 0 on 50% of A days; about 31 A days a year -> net +2.9% a year (simple sum)
+  the same long-short on N days (not traded): gross +1.1 (t +0.32); beta spread top - bottom 1.42 (top 1.90, bottom 0.48); stocks per tenth 108; slope regression stocks 1080
+    strategy on fomc  days: gross +54.8 (t +2.80, n 112); net +34.8
+    strategy on cpi   days: gross +27.5 (t +1.80, n 166); net +7.5
+    strategy on jobs  days: gross +26.1 (t +1.73, n 163); net +6.1
+
+=== 2006-2019 (2006-01-01..2019-12-31), without crash days
+  slope A days: +17.8 (t +2.72, n 425);  N days: -2.9 (t -1.15, n 3059)
+  A - N: +20.6  Welch t +2.95
+  fomc  days: slope +30.7 (t +2.31, n 110);  minus N +33.6 (Welch t +2.48)
+  cpi   days: slope +16.1 (t +1.63, n 163);  minus N +18.9 (Welch t +1.86)
+  jobs  days: slope +16.0 (t +1.42, n 163);  minus N +18.9 (Welch t +1.63)
+  SPY log return: A +11.5 (t +2.22), N +3.1 (t +1.69)
+  strategy (top - bottom beta tenth, A days): gross +27.9 (t +3.14, n 425); net of 20 bps +7.9 (t +0.89); net > 0 on 50% of A days; about 31 A days a year -> net +2.4% a year (simple sum)
+  the same long-short on N days (not traded): gross +2.5 (t +0.75); beta spread top - bottom 1.42 (top 1.90, bottom 0.48); stocks per tenth 108; slope regression stocks 1081
+    strategy on fomc  days: gross +45.0 (t +2.42, n 110); net +25.0
+    strategy on cpi   days: gross +26.2 (t +1.91, n 163); net +6.2
+    strategy on jobs  days: gross +26.1 (t +1.73, n 163); net +6.1
+
+=== 2020-2025-06 (2020-01-01..2025-06-27), with crash days
+  slope A days: +5.5 (t +0.40, n 170);  N days: -1.5 (t -0.31, n 1209)
+  A - N: +7.0  Welch t +0.48
+  fomc  days: slope +59.3 (t +1.98, n 43);  minus N +60.9 (Welch t +2.01)
+  cpi   days: slope -34.3 (t -1.48, n 65);  minus N -32.7 (Welch t -1.38)
+  jobs  days: slope +3.1 (t +0.16, n 64);  minus N +4.7 (Welch t +0.23)
+  SPY log return: A +3.2 (t +0.29), N +5.6 (t +1.44)
+  strategy (top - bottom beta tenth, A days): gross +19.8 (t +0.92, n 170); net of 20 bps -0.2 (t -0.01); net > 0 on 47% of A days; about 31 A days a year -> net -0.1% a year (simple sum)
+  the same long-short on N days (not traded): gross +2.8 (t +0.38); beta spread top - bottom 1.64 (top 2.04, bottom 0.41); stocks per tenth 198; slope regression stocks 1988
+    strategy on fomc  days: gross +104.4 (t +2.41, n 43); net +84.4
+    strategy on cpi   days: gross -27.0 (t -0.70, n 65); net -47.0
+    strategy on jobs  days: gross +3.8 (t +0.12, n 64); net -16.2
+
+=== 2020-2025-06 (2020-01-01..2025-06-27), without crash days
+  slope A days: +7.1 (t +0.51, n 169);  N days: +0.6 (t +0.13, n 1193)
+  A - N: +6.5  Welch t +0.45
+  fomc  days: slope +59.3 (t +1.98, n 43);  minus N +58.8 (Welch t +1.94)
+  cpi   days: slope -30.7 (t -1.32, n 64);  minus N -31.3 (Welch t -1.32)
+  jobs  days: slope +3.1 (t +0.16, n 64);  minus N +2.6 (Welch t +0.12)
+  SPY log return: A +6.2 (t +0.58), N +6.2 (t +1.95)
+  strategy (top - bottom beta tenth, A days): gross +21.4 (t +0.99, n 169); net of 20 bps +1.4 (t +0.06); net > 0 on 47% of A days; about 31 A days a year -> net +0.4% a year (simple sum)
+  the same long-short on N days (not traded): gross +4.8 (t +0.68); beta spread top - bottom 1.64 (top 2.05, bottom 0.40); stocks per tenth 199; slope regression stocks 1991
+    strategy on fomc  days: gross +104.4 (t +2.41, n 43); net +84.4
+    strategy on cpi   days: gross -23.5 (t -0.61, n 64); net -43.5
+    strategy on jobs  days: gross +3.8 (t +0.12, n 64); net -16.2
+
+=== 2006-2025-06 (2006-01-01..2025-06-27), with crash days
+  slope A days: +14.9 (t +2.35, n 599);  N days: -3.6 (t -1.53, n 4290)
+  A - N: +18.5  Welch t +2.74
+  fomc  days: slope +44.3 (t +3.36, n 155);  minus N +47.9 (Welch t +3.58)
+  cpi   days: slope +2.1 (t +0.20, n 231);  minus N +5.7 (Welch t +0.52)
+  jobs  days: slope +12.4 (t +1.25, n 227);  minus N +16.0 (Welch t +1.57)
+  SPY log return: A +10.1 (t +1.98), N +2.9 (t +1.53)
+  strategy (top - bottom beta tenth, A days): gross +26.8 (t +2.97, n 599); net of 20 bps +6.8 (t +0.75); net > 0 on 49% of A days; about 31 A days a year -> net +2.1% a year (simple sum)
+  the same long-short on N days (not traded): gross +1.6 (t +0.49); beta spread top - bottom 1.48 (top 1.94, bottom 0.46); stocks per tenth 133; slope regression stocks 1336
+    strategy on fomc  days: gross +68.5 (t +3.69, n 155); net +48.5
+    strategy on cpi   days: gross +12.2 (t +0.79, n 231); net -7.8
+    strategy on jobs  days: gross +19.8 (t +1.43, n 227); net -0.2
+
+=== 2006-2025-06 (2006-01-01..2025-06-27), without crash days
+  slope A days: +14.7 (t +2.42, n 594);  N days: -1.9 (t -0.86, n 4252)
+  A - N: +16.6  Welch t +2.56
+  fomc  days: slope +38.8 (t +3.05, n 153);  minus N +40.7 (Welch t +3.15)
+  cpi   days: slope +2.9 (t +0.30, n 227);  minus N +4.8 (Welch t +0.48)
+  jobs  days: slope +12.4 (t +1.25, n 227);  minus N +14.3 (Welch t +1.41)
+  SPY log return: A +10.0 (t +2.08), N +4.0 (t +2.48)
+  strategy (top - bottom beta tenth, A days): gross +26.0 (t +2.95, n 594); net of 20 bps +6.0 (t +0.69); net > 0 on 49% of A days; about 31 A days a year -> net +1.9% a year (simple sum)
+  the same long-short on N days (not traded): gross +3.1 (t +1.01); beta spread top - bottom 1.48 (top 1.94, bottom 0.46); stocks per tenth 133; slope regression stocks 1337
+    strategy on fomc  days: gross +61.7 (t +3.40, n 153); net +41.7
+    strategy on cpi   days: gross +12.2 (t +0.83, n 227); net -7.8
+    strategy on jobs  days: gross +19.8 (t +1.43, n 227); net -0.2
+
+Per year (with crash days): A days, slope A, slope N, A - N (Welch t), strategy net per A day, SPY A, SPY N
+  2006:  30     +6.6    -6.9    +13.5 (+0.63)    -14.9     +9.7    +4.2
+  2007:  31     -7.9    +2.8    -10.8 (-0.43)    -33.1     -3.4    +1.9
+  2008:  30    +90.4   -18.4   +108.8 (+1.98)   +116.9    +45.8   -27.8
+  2009:  30   +103.5    -6.2   +109.7 (+2.17)   +134.8    +58.1    +1.6
+  2010:  31    -16.4    +6.1    -22.5 (-1.30)    -41.2    -13.7    +7.4
+  2011:  32    -32.6    -6.1    -26.5 (-0.93)    -60.2    -28.5    +4.7
+  2012:  31    +22.2    -1.4    +23.7 (+1.07)    +24.1    +16.7    +4.4
+  2013:  31    +18.1    +2.8    +15.3 (+1.23)     +7.9    +24.8    +9.2
+  2014:  30    +18.8    -8.3    +27.0 (+1.80)    +12.5    +19.5    +3.1
+  2015:  31    +23.3   -12.9    +36.2 (+1.43)     +7.9    +18.7    -2.1
+  2016:  31    +13.5    -3.0    +16.6 (+0.73)     +0.2     -6.1    +6.0
+  2017:  28     +8.3    +1.3     +7.0 (+0.87)     -2.3    +18.9    +6.4
+  2018:  32     -6.3   -10.5     +4.2 (+0.21)    -26.1    -16.4    +0.3
+  2019:  31    +26.2    -0.5    +26.8 (+1.27)    +15.9    +40.3    +6.6
+  2020:  29    +10.7    +6.2     +4.5 (+0.09)    -10.4     -5.0    +8.2
+  2021:  31     -6.3    +7.2    -13.5 (-0.64)    -17.0    +13.8    +9.5
+  2022:  32    -13.4   -14.6     +1.2 (+0.03)    -21.4     -8.3    -7.9
+  2023:  31    +32.0    -0.4    +32.4 (+1.23)    +41.6    +34.5    +5.7
+  2024:  31     -9.5    -5.8     -3.7 (-0.17)    -25.6     +3.4    +9.6
+  2025:  16    +34.1    -2.3    +36.4 (+0.89)    +61.0    -40.6   +11.0
+
+Ranked stocks with no return on the day, inside the two tenths (counted as 0): A days total 148 over 599 A days
+
+Test 1 (2006-2019): A - N slope +23.1 bps, Welch t +3.09 -> pass; strategy net +9.5 bps per A day, t +1.02 -> FAIL
+Test 2 (2006-2019, each kind positive): fomc +38.5 (t +2.71), cpi +16.3 (t +1.40), jobs +16.0 (t +1.42) -> pass
+Test 3 (2020-2025-06): A - N +7.0 (Welch t +0.48), same sign as 2006-2019: yes
+Verdict stops at: test 1

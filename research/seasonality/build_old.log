@@ -1,0 +1,5 @@
+old N 8503 T 5911 2001-12-31 .. 2025-06-27
+months 283 2001-12 .. 2025-06
+universe built; rebal days 270
+START MONTH (first holding month with >= 300 universe stocks holding a signal): 2007-05, formed at the close of 2007-04-30, 300 stocks with a signal of 300 in the universe. Recorded before any book return was computed.
+saved

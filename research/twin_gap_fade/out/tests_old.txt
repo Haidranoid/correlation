@@ -1,0 +1,99 @@
+
+===== universe: all =====
+bps/day (t). head = entry 10 bps worse than the open + netted twin costs; bound = entry at the open + twin costs; gross = no costs.
+period | days | ranked/day | twin gross | twin bound | TWIN HEAD | head un-netted | raw (a) head | akbas (b) head | twin-(a) | twin-(b) | twin-(a) gross | twin-(b) gross | break-even p bps | NW t head
+2008..2019 (Test 1) | 3019 | 1098 | +66.75 (+46.78) | +61.27 (+43.05) | +41.27 (+28.99) | +38.25 (+26.80) | +16.70 (+13.25) | -32.80 (-32.14) | +24.57 (+28.74) | +74.07 (+41.81) | +24.12 (+28.21) | +73.71 (+41.59) | +30.63 | +15.48
+2020..2025-06 (Test 3) | 1379 | 1936 | +47.48 (+25.54) | +41.59 (+22.41) | +21.59 (+11.63) | +18.30 (+9.86) | +3.08 (+1.76) | -31.27 (-17.36) | +18.51 (+16.76) | +52.86 (+19.61) | +16.51 (+15.00) | +51.33 (+19.04) | +20.80 | +8.62
+2008..2025-06 (all) | 4398 | 1292 | +60.71 (+52.90) | +55.10 (+48.10) | +35.10 (+30.64) | +31.99 (+27.87) | +12.43 (+12.08) | -32.32 (-35.92) | +22.67 (+33.21) | +67.42 (+45.30) | +21.74 (+31.83) | +66.69 (+44.78) | +27.55 | +17.38
+2008..2009 | 505 | 835 | +156.28 (+25.71) | +150.34 (+24.77) | +130.34 (+21.47) | +127.83 (+21.03) | +86.58 (+15.89) | -42.24 (-8.49) | +43.76 (+10.88) | +172.58 (+22.20) | +43.70 (+10.87) | +172.19 (+22.14) | +75.17 | +12.69
+2010..2014 | 1256 | 1023 | +54.55 (+50.65) | +49.45 (+46.08) | +29.45 (+27.44) | +26.13 (+24.29) | +10.50 (+9.74) | -34.31 (-35.65) | +18.95 (+24.94) | +63.76 (+43.60) | +18.82 (+24.77) | +63.59 (+43.46) | +24.73 | +18.73
+2015..2019 | 1258 | 1365 | +42.99 (+35.12) | +37.31 (+30.56) | +17.31 (+14.18) | +14.39 (+11.75) | -5.16 (-4.63) | -27.52 (-26.97) | +22.47 (+23.89) | +44.82 (+29.20) | +21.55 (+22.93) | +44.29 (+28.81) | +18.65 | +10.29
+2020..2022 | 756 | 1801 | +55.61 (+19.58) | +49.44 (+17.43) | +29.44 (+10.38) | +26.18 (+9.22) | +10.59 (+3.97) | -32.56 (-11.02) | +18.85 (+10.93) | +62.00 (+14.25) | +16.56 (+9.63) | +60.11 (+13.81) | +24.72 | +7.96
+2023..2025-06 | 623 | 1961 | +37.61 (+17.20) | +32.07 (+14.68) | +12.07 (+5.52) | +8.74 (+4.00) | -6.03 (-2.92) | -29.71 (-17.04) | +18.09 (+14.32) | +41.78 (+15.35) | +16.45 (+13.07) | +40.67 (+14.95) | +16.03 | +4.02
+
+legs (mean hedged return of each leg, bps/day; a long-short = long - short) and twin costs:
+2008..2019 (Test 1): twin long +36.22 short -30.53; raw long +23.77 short -18.86; akbas long -4.16 short +2.81; twin costs netted 5.48, un-netted 8.50 bps/day; legs 110
+2020..2025-06 (Test 3): twin long +24.62 short -22.86; raw long +15.69 short -15.28; akbas long -2.02 short +1.83; twin costs netted 5.89, un-netted 9.18 bps/day; legs 194
+2008..2025-06 (all): twin long +32.58 short -28.12; raw long +21.24 short -17.73; akbas long -3.49 short +2.50; twin costs netted 5.61, un-netted 8.71 bps/day; legs 129
+2008..2009: twin long +84.16 short -72.12; raw long +61.70 short -50.87; akbas long -9.07 short +6.84; twin costs netted 5.93, un-netted 8.44 bps/day; legs 84
+2010..2014: twin long +30.45 short -24.09; raw long +20.27 short -15.46; akbas long -5.72 short +3.32; twin costs netted 5.10, un-netted 8.41 bps/day; legs 102
+2015..2019: twin long +22.73 short -20.26; raw long +12.03 short -9.40; akbas long -0.62 short +0.69; twin costs netted 5.68, un-netted 8.60 bps/day; legs 136
+2020..2022: twin long +29.65 short -25.96; raw long +21.21 short -17.84; akbas long +0.18 short +4.68; twin costs netted 6.17, un-netted 9.44 bps/day; legs 180
+2023..2025-06: twin long +18.52 short -19.09; raw long +9.00 short -12.17; akbas long -4.69 short -1.63; twin costs netted 5.54, un-netted 8.87 bps/day; legs 196
+
+volume split of the twin book (post hoc): day volume >= 2x its 60-day median vs below; gross long-short within each group, bps/day (t); the 10 bps penalty would subtract 20 more.
+2008..2019 (Test 1): positions with a volume spike 14%; spike -60.37 (-13.29, 2950 days), no spike +86.05 (+56.83, 3019 days); legs: spike long -25.1 short +33.9, no spike long +45.6 short -40.5
+2020..2025-06 (Test 3): positions with a volume spike 15%; spike -92.69 (-16.00, 1379 days), no spike +69.60 (+35.37, 1379 days); legs: spike long -37.9 short +54.8, no spike long +34.9 short -34.7
+2008..2025-06 (all): positions with a volume spike 14%; spike -70.66 (-19.57, 4329 days), no spike +80.90 (+66.63, 4398 days); legs: spike long -29.1 short +40.5, no spike long +42.2 short -38.6
+2008..2009: positions with a volume spike 11%; spike -75.58 (-3.30, 458 days), no spike +184.05 (+28.72, 505 days); legs: spike long -20.5 short +46.9, no spike long +97.7 short -86.4
+2010..2014: positions with a volume spike 14%; spike -51.56 (-10.40, 1242 days), no spike +71.77 (+67.01, 1256 days); legs: spike long -16.9 short +33.4, no spike long +38.3 short -33.5
+2015..2019: positions with a volume spike 15%; spike -63.54 (-14.20, 1250 days), no spike +60.98 (+46.40, 1258 days); legs: spike long -35.0 short +29.4, no spike long +32.0 short -29.0
+2020..2022: positions with a volume spike 14%; spike -80.81 (-9.66, 756 days), no spike +76.22 (+24.18, 756 days); legs: spike long -31.6 short +49.2, no spike long +39.4 short -36.8
+2023..2025-06: positions with a volume spike 15%; spike -107.10 (-13.71, 623 days), no spike +61.57 (+30.14, 623 days); legs: spike long -45.6 short +61.5, no spike long +29.5 short -32.1
+
+===== universe: 500 =====
+bps/day (t). head = entry 10 bps worse than the open + netted twin costs; bound = entry at the open + twin costs; gross = no costs.
+period | days | ranked/day | twin gross | twin bound | TWIN HEAD | head un-netted | raw (a) head | akbas (b) head | twin-(a) | twin-(b) | twin-(a) gross | twin-(b) gross | break-even p bps | NW t head
+2008..2019 (Test 1) | 3019 | 500 | +62.02 (+42.20) | +55.89 (+38.09) | +35.89 (+24.46) | +33.46 (+22.76) | +12.51 (+9.58) | -31.64 (-28.81) | +23.38 (+25.51) | +67.53 (+36.70) | +22.63 (+24.67) | +66.75 (+36.25) | +27.94 | +13.38
+2020..2025-06 (Test 3) | 1379 | 500 | +40.29 (+19.02) | +33.32 (+15.73) | +13.32 (+6.29) | +11.24 (+5.30) | +0.22 (+0.11) | -29.16 (-15.92) | +13.11 (+9.60) | +42.48 (+15.19) | +10.88 (+7.97) | +40.32 (+14.41) | +16.66 | +5.30
+2008..2025-06 (all) | 4398 | 500 | +55.20 (+45.35) | +48.81 (+40.12) | +28.81 (+23.68) | +26.49 (+21.75) | +8.66 (+7.82) | -30.86 (-32.56) | +20.16 (+26.38) | +59.67 (+38.57) | +18.95 (+24.74) | +58.46 (+37.73) | +24.41 | +14.12
+2008..2009 | 505 | 500 | +152.48 (+24.72) | +146.05 (+23.70) | +126.05 (+20.46) | +123.91 (+20.08) | +80.31 (+14.36) | -37.30 (-7.12) | +45.75 (+10.72) | +163.35 (+20.45) | +45.51 (+10.66) | +162.72 (+20.36) | +73.03 | +12.22
+2010..2014 | 1256 | 500 | +50.39 (+45.32) | +44.64 (+40.23) | +24.64 (+22.21) | +21.83 (+19.63) | +6.24 (+5.48) | -33.63 (-31.09) | +18.40 (+21.86) | +58.27 (+37.77) | +17.89 (+21.25) | +57.65 (+37.36) | +22.32 | +17.13
+2015..2019 | 1258 | 500 | +37.31 (+27.18) | +30.93 (+22.57) | +10.93 (+7.98) | +8.76 (+6.38) | -8.44 (-6.59) | -27.38 (-23.67) | +19.37 (+19.27) | +38.31 (+21.47) | +18.19 (+18.08) | +37.31 (+20.88) | +15.46 | +6.22
+2020..2022 | 756 | 500 | +46.39 (+16.38) | +39.24 (+13.86) | +19.24 (+6.79) | +17.15 (+6.05) | +3.80 (+1.45) | -30.73 (-10.66) | +15.44 (+7.33) | +49.97 (+12.34) | +12.85 (+6.11) | +47.37 (+11.69) | +19.62 | +5.47
+2023..2025-06 | 623 | 500 | +32.90 (+10.39) | +26.14 (+8.25) | +6.14 (+1.94) | +4.06 (+1.28) | -4.13 (-1.27) | -27.25 (-13.33) | +10.27 (+6.38) | +33.39 (+8.93) | +8.49 (+5.28) | +31.76 (+8.50) | +13.07 | +1.79
+
+legs (mean hedged return of each leg, bps/day; a long-short = long - short) and twin costs:
+2008..2019 (Test 1): twin long +32.92 short -29.10; raw long +21.50 short -17.88; akbas long -3.07 short +1.67; twin costs netted 6.13, un-netted 8.56 bps/day; legs 50
+2020..2025-06 (Test 3): twin long +20.77 short -19.52; raw long +15.93 short -13.48; akbas long +1.90 short +1.92; twin costs netted 6.97, un-netted 9.06 bps/day; legs 50
+2008..2025-06 (all): twin long +29.11 short -26.09; raw long +19.76 short -16.50; akbas long -1.51 short +1.75; twin costs netted 6.39, un-netted 8.71 bps/day; legs 50
+2008..2009: twin long +82.13 short -70.35; raw long +58.98 short -47.99; akbas long -5.79 short +4.45; twin costs netted 6.43, un-netted 8.57 bps/day; legs 50
+2010..2014: twin long +27.16 short -23.23; raw long +18.02 short -14.48; akbas long -5.19 short +2.07; twin costs netted 5.75, un-netted 8.56 bps/day; legs 50
+2015..2019: twin long +18.91 short -18.40; raw long +9.94 short -9.17; akbas long +0.15 short +0.15; twin costs netted 6.38, un-netted 8.55 bps/day; legs 50
+2020..2022: twin long +25.05 short -21.33; raw long +19.12 short -14.42; akbas long +3.15 short +4.14; twin costs netted 7.14, un-netted 9.24 bps/day; legs 50
+2023..2025-06: twin long +15.58 short -17.31; raw long +12.05 short -12.35; akbas long +0.37 short -0.77; twin costs netted 6.75, un-netted 8.83 bps/day; legs 50
+
+volume split of the twin book (post hoc): day volume >= 2x its 60-day median vs below; gross long-short within each group, bps/day (t); the 10 bps penalty would subtract 20 more.
+2008..2019 (Test 1): positions with a volume spike 13%; spike -55.63 (-10.25, 2806 days), no spike +77.94 (+50.36, 3019 days); legs: spike long -31.7 short +27.1, no spike long +41.8 short -36.1
+2020..2025-06 (Test 3): positions with a volume spike 13%; spike -70.04 (-8.30, 1258 days), no spike +54.76 (+25.34, 1379 days); legs: spike long -36.8 short +33.0, no spike long +28.6 short -26.2
+2008..2025-06 (all): positions with a volume spike 13%; spike -60.09 (-13.15, 4064 days), no spike +70.67 (+55.63, 4398 days); legs: spike long -33.3 short +29.0, no spike long +37.7 short -33.0
+2008..2009: positions with a volume spike 11%; spike -62.34 (-2.53, 433 days), no spike +178.22 (+27.43, 505 days); legs: spike long -22.3 short +39.5, no spike long +95.7 short -82.5
+2010..2014: positions with a volume spike 13%; spike -48.28 (-7.09, 1183 days), no spike +64.72 (+62.64, 1256 days); legs: spike long -24.7 short +29.0, no spike long +34.7 short -30.1
+2015..2019: positions with a volume spike 13%; spike -60.50 (-9.88, 1190 days), no spike +50.88 (+35.90, 1258 days); legs: spike long -42.4 short +20.5, no spike long +27.4 short -23.5
+2020..2022: positions with a volume spike 12%; spike -63.45 (-5.16, 683 days), no spike +60.52 (+19.75, 756 days); legs: spike long -33.8 short +28.8, no spike long +32.4 short -28.1
+2023..2025-06: positions with a volume spike 14%; spike -77.86 (-6.89, 575 days), no spike +47.77 (+15.99, 623 days); legs: spike long -40.3 short +38.0, no spike long +23.9 short -23.9
+
+sensitivity: stock days with an intraday bad print kept with the return clipped at +-0.5 (all stocks)
+2008..2019 (Test 1): head +41.15 (+28.93); such positions in the twin legs: 8, raw legs 15, akbas legs 11
+2020..2025-06 (Test 3): head +21.37 (+11.41); such positions in the twin legs: 40, raw legs 46, akbas legs 46
+2008..2025-06 (all): head +34.95 (+30.45); such positions in the twin legs: 48, raw legs 61, akbas legs 57
+2008..2009: head +129.72 (+21.34); such positions in the twin legs: 7, raw legs 7, akbas legs 4
+2010..2014: head +29.42 (+27.39); such positions in the twin legs: 1, raw legs 3, akbas legs 3
+2015..2019: head +17.31 (+14.18); such positions in the twin legs: 0, raw legs 5, akbas legs 4
+2020..2022: head +29.04 (+10.11); such positions in the twin legs: 25, raw legs 27, akbas legs 29
+2023..2025-06: head +12.07 (+5.51); such positions in the twin legs: 15, raw legs 19, akbas legs 17
+rows with an intraday-only bad print: 87 of 5978228
+
+calendar years, all stocks, bps/day (t): head, bound, raw (a) head, akbas (b) head, twin-(a), twin-(b)
+2008 253 +158.74 (+15.23) +178.74 (+17.15) +106.21 (+11.56) -32.68 (-3.84) +52.53 (+7.49) +191.41 (+14.16)
+2009 252 +101.84 (+17.91) +121.84 (+21.42) +66.87 (+11.95) -51.84 (-10.20) +34.97 (+9.06) +153.67 (+20.49)
+2010 252 +31.21 (+11.62) +51.21 (+19.06) +12.54 (+4.96) -35.71 (-16.70) +18.67 (+9.40) +66.92 (+19.41)
+2011 250 +40.00 (+13.10) +60.00 (+19.64) +20.68 (+6.99) -37.22 (-15.10) +19.33 (+9.86) +77.22 (+18.37)
+2012 250 +26.30 (+11.85) +46.30 (+20.85) +7.75 (+3.24) -37.19 (-16.54) +18.55 (+11.74) +63.49 (+20.19)
+2013 252 +22.97 (+13.72) +42.97 (+25.66) +3.72 (+2.17) -30.56 (-17.72) +19.26 (+13.13) +53.54 (+22.79)
+2014 252 +26.83 (+13.47) +46.83 (+23.52) +7.86 (+3.62) -30.89 (-14.75) +18.97 (+13.23) +57.72 (+21.16)
+2015 252 +31.84 (+7.48) +51.84 (+12.17) -0.21 (-0.07) -28.86 (-11.57) +32.05 (+12.14) +60.70 (+12.62)
+2016 252 +26.99 (+12.32) +46.99 (+21.45) -1.92 (-0.73) -26.78 (-10.29) +28.91 (+12.31) +53.77 (+16.77)
+2017 251 +9.27 (+4.87) +29.27 (+15.39) -6.50 (-3.08) -27.91 (-15.59) +15.76 (+10.28) +37.17 (+14.83)
+2018 251 +10.41 (+4.45) +30.41 (+13.01) -8.49 (-3.76) -25.54 (-12.63) +18.90 (+9.98) +35.95 (+12.15)
+2019 252 +7.97 (+4.39) +27.97 (+15.40) -8.72 (-4.22) -28.50 (-11.87) +16.69 (+9.88) +36.46 (+12.57)
+2020 253 +45.64 (+6.15) +65.64 (+8.84) +17.37 (+2.54) -36.29 (-4.98) +28.27 (+6.83) +81.92 (+7.24)
+2021 252 +22.68 (+7.89) +42.68 (+14.85) +11.67 (+4.08) -24.59 (-6.45) +11.01 (+5.85) +47.27 (+10.51)
+2022 251 +19.91 (+7.40) +39.91 (+14.83) +2.68 (+0.90) -36.80 (-11.32) +17.23 (+7.37) +56.71 (+12.97)
+2023 250 +6.83 (+2.20) +26.83 (+8.64) -7.97 (-2.66) -30.94 (-12.59) +14.80 (+7.82) +37.76 (+10.09)
+2024 252 +6.34 (+2.13) +26.34 (+8.85) -7.55 (-2.69) -28.86 (-11.83) +13.89 (+8.65) +35.21 (+8.92)
+2025 121 +34.81 (+5.36) +54.81 (+8.44) +1.16 (+0.18) -28.93 (-5.35) +33.66 (+9.15) +63.74 (+7.92)
+
+Test 1 (2008-2019 headline mean, t >= 3 net): +41.27 bps/day, t +28.99 -> PASS
+Test 2 (paired vs (a) and (b), t >= 2 both): +24.57 (t +28.74), +74.07 (t +41.81) -> PASS
+Test 3a (2020-2025-06 headline positive): +21.59 bps/day (t +11.63) -> PASS

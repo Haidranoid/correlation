@@ -1,0 +1,109 @@
+Decisions for the intraday-bar check of the twin gap fade. Written 2026-10-21T11:32-05:00, BEFORE any intraday
+bar was fetched (the only Yahoo contact so far: one bare curl to the chart endpoint, answered 429, no data).
+Items added later carry their own time and say whether any intraday return had been seen.
+
+D1  Positions. The headline book as tested, from rows_new.npz with the original books.py logic (stable argsort of z,
+    round(10% x n) per leg, intraday bad-print rows out). Reproduction check (positions.py): on 2026-07-01..2026-10-19
+    (77 days) the gross and netted twin costs equal books.books() exactly and daily_new.tsv to its 6 decimals, for
+    the all-stocks and the 500-largest books.
+
+D2  Price scale. The store holds Stooq's split- and dividend-adjusted prices as of 2026-10-19; Yahoo intraday with
+    auto_adjust=False is split-adjusted only. Before using any Yahoo entry against the store's close, verify on daily
+    closes (not intraday returns) whether store_close / Yahoo_close steps at ex-dates. Rule: per symbol and segment
+    between Yahoo events (dividend or split ex-dates in or after the window through 2026-10-19), k = median of
+    store_close / Yahoo_daily_close over the segment's days (see D2a for days that disagree). Every Yahoo price is
+    put on the store's scale as yahoo_price x k, so the exit stays the store's close and the store's open-to-close
+    (entry a) is untouched. k comes from closes only, never opens.
+D2a A stock-day (or twin-day) is usable for Yahoo entries if |store_close / (k x Yahoo_daily_close) - 1| <= 0.1%.
+    Otherwise it is a close disagreement: counted and reported, and positions on it are out of the common set.
+D2b The rule's event drop: a stock with a dividend or split ex-date on day t is dropped that day; so is any position
+    whose twin has one that day (conservative reading: "the stock dropped on that day" applied to both instruments
+    of a position). Counted and reported.
+
+D3  Entry prices. (a) the store's open. (b) the open of Yahoo's first regular-session bar, whatever its timestamp.
+    (c) 9:35, (d) 9:45, (e) 10:00, and 9:31 on 1-minute bars: the open of the bar whose timestamp is exactly that
+    time. No fallback: a missing bar makes the position missing at that time. The twin is entered at the same moment
+    from its own bars, by the same definition. Exit: the store's close (on Yahoo's scale via k); reported alongside:
+    exit at the close of Yahoo's last bar with timestamp < 16:00 (any 16:00 bars are noted, not used).
+D3a Bars are filtered to 09:30 <= time < 16:00 America/New_York whatever prepost says; timestamps are checked to be
+    America/New_York.
+
+D4  Windows. A 5-minute window day = a store day in the book where SPY's 5-minute bars run from 09:30 through 15:55
+    (America/New_York) with all 78 bars. The 1-minute window: SPY's 1-minute bars run 09:30 through 15:59 (390 bars).
+    This drops half-days and a partial first day of Yahoo's range.
+
+D5  Common position set per window: positions whose stock and twin both have every bar the window's entry times need
+    (first bar, 9:35, 9:45, 10:00, and 9:31 on 1-minute), a usable close (D2a), and no event flag (D2b). All entry
+    times, (a) included, are priced on this set, so paired differences are on identical positions. Legs are the
+    mean over the set's positions in each leg; a day with an empty leg is skipped. (a) is also reported on all
+    positions (= daily_new.tsv) and on all positions with bars.
+
+D6  Costs for the net figures: the plan's headline costs at every entry time: 2 x 10 bps entry penalty plus 2 bps per
+    side on the twin legs netted across stocks (books.fund_cost on the common set's positions). Net does not decide
+    the verdict.
+
+D7  Verdict quantities, on the 5-minute window, all-stocks book, gross: share kept = mean over days of the 9:35 gross
+    spread / mean over the same days of the (a) gross spread, both on the common set. t = plain t of the daily 9:35
+    gross spread. Real: share >= 0.5 and 9:35 mean > 0 with t >= 2. Opening-print effect: share < 0.25. Unresolved:
+    anything else. Paired differences: daily (X - a) gross, mean and plain t.
+
+D8  Variant: z_v = (log(P1 x k / C_prev) - beta x log(P1f x kf / Cf_prev)) / sd, where P1 is Yahoo's first-bar open
+    (put on the store's scale with k), C_prev the store's previous close, and sd the trailing sd recovered in
+    positions.py (it reproduces the rows' z to 5e-5). Ranked set: the day's ranked rows that have a first-bar open
+    for stock and twin and pass D2a/D2b; legs round(10% x n) of that set. Priced at every entry time like the main
+    book (positions then need the same bars as in D5).
+
+D9  Fetch. 5-minute (period 60d) and daily (auto_adjust=False, actions=True) bars for the window's whole ranked set
+    and their twins: the variant needs every ranked stock's first-bar open, and over 2026-07..10 the positions
+    already include 2,421 of the 2,453 ranked stocks. 1-minute bars (7-day pieces within the last 30 days) only for
+    the stocks and twins in positions (all, 500 and variant books) on 1-minute window days, after the 5-minute pass.
+
+D10 Open agreement: on the 5-minute window's position stock-days of the all-stocks book (each stock-day once),
+    pairs store open vs Yahoo daily open, store open vs Yahoo first-bar open, Yahoo daily open vs first-bar open;
+    share with |diff| > 1 cent and with |diff| > 0.5%. The store open is compared on Yahoo's scale (store_open / k).
+    The 1-cent test is reported on stock-days with k = 1 (no event after the day through 2026-10-19; the store is
+    then raw); the 0.5% test on all. Split by exchange (store's: nyse, nasdaq, nysemkt) and by dollar volume (the
+    100 most traded, 101-500, the rest; build.py's in100 / in500 flags).
+
+D11 Coverage = positions in the common set / positions in the book on the window's days, per window and book; also
+    positions with any bars / positions.
+
+D8a (2026-10-21T11:35-05:00, before any bar was fetched) The variant's ranking always uses the 5-minute bars' first-
+    bar open (the same price as the 1-minute first bar's open in principle). On the 1-minute window its positions
+    are priced with 1-minute bars. The variant is reported at every entry time, with its share kept measured against
+    the main book's entry (a) on the same days (and its own entry (a) shown too).
+D12 (same time) The 500-largest book is priced exactly like the all-stocks book, on both windows; reported, not graded.
+    Daily tables are in out/daily_check.tsv; all numbers in out/check.txt and out/check.json.
+
+D4a (2026-10-21T11:38-05:00, after the 5-minute fetch started, before any bar was read into an analysis) Yahoo's
+    period='60d' for 5-minute bars returned 60 trading days (from 2026-07-29), not 60 calendar days, so the
+    5-minute window is every store day from 2026-07-29 that passes D4 (the rules' "days that Yahoo's bars cover").
+    The ranked set and twins of 2026-07-29..08-19 not in symbols_5m.txt (38 symbols) are fetched as a supplement.
+    Yahoo refuses 1-minute requests starting before 2026-09-22 (probe with SPY), so the 1-minute window is
+    2026-09-22..2026-10-19 (20 days), in 7-day pieces. 1-minute symbols: the stocks and twins of the all-stocks
+    and 500-largest books on those days (2,493 with SPY); the variant's extra positions follow after the 5-minute
+    pass.
+
+D2 result (2026-10-21T12:02-05:00, on daily closes only, before any intraday return was computed; scale_check.txt)
+    Over 2026-06..10 the store's closes equal Yahoo's unadjusted (split-adjusted only) closes exactly, before and
+    after dividend ex-dates: k = 1.000000 at the median and the 5th-95th percentiles of every segment class; 0.1-2%
+    of segments have |k - 1| > 1e-4; 27 of 204,321 symbol-days disagree with their segment's k by more than 0.1%.
+    So the store is not dividend-adjusted relative to Yahoo in this window (c2eval's docstring notwithstanding);
+    the rescaling stays in the code as decided but changes almost nothing.
+D9a (same time) Six symbols have no Yahoo daily bars for 2026-06-01..10-21 ("possibly delisted": CRNX, DBRG, HLX,
+    LEG, QRVO, WBD); one identical retry also failed. Without a daily close there is no k, so their positions fall
+    out of the common set. Not pursued further (no other source).
+
+D13 (2026-10-21T12:21-05:00, AFTER seeing the first full results, including the 1-minute window's) Yahoo's 1-minute
+    bars are not split-adjusted for splits that came later, while its 5-minute and daily bars are: CTVA (6.665:1 on
+    2026-10-01), DXJ (3:1 on 10-09; a twin of many positions) and ETHA (1:3 on 10-06) have 1-minute prices 6.66x, 3x
+    and 0.33x Yahoo's daily bars on 20 symbol-days before their splits. k comes from Yahoo's daily closes, so those
+    1-minute prices are on the wrong scale and wreck the twin hedges (the first 1-minute run gave exit-at-last-bar
+    (a) +100.6 against +67.8 at the store's close). This is the case the rule's "a split ... in the window is flagged
+    and the stock dropped" exists for, which D2b had applied only on the ex-date itself. Fix, applied to both windows
+    and the variant: an intraday symbol-day is usable only if its last-bar close is within 2% of Yahoo's daily close
+    (a scale check of the intraday bars against the daily bars k is built on). Positions whose stock or twin fails it
+    leave the common set. On 5-minute bars it removes 7 of 165,086 symbol-days (BYND, DDS, FFAI, IART, SUN; none a
+    split); on 1-minute bars 25 of 50,892 (the 20 split days plus DDS, FFAI, SUN). The 5-minute verdict before this
+    fix was: 9:35 keeps 0.22 of (a), +16.18 bps a day (t +3.18) against (a) +73.96 -> Opening-print effect; it is
+    reported again after the fix. Nothing else changed.

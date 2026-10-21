@@ -1,0 +1,10 @@
+[    0.2s] N 9508 T 6240
+[    0.9s] returns check {'max_abs_whole_minus_export_cc': 5.893403942636155e-08, 'stock_days_whole': 19033079, 'whole_nan_but_export_return_2008+': 174114, 'export_returns_2008+': 17589818, 'whole_without_export_return': 27}
+[    1.3s] adjusted legs add up: max diff 1.1920928955078125e-07
+[    1.3s] calendar days 17 2025-06-13 .. 2026-10-15
+[    6.6s] {'k': 280, 't': 6132, 'date': '2026-05-15', 'n_uni': 2359, 'n_on': 2359, 'npeer_on': 20.0, 'corr_on': 0.4213578999042511, 'corr1_on': 0.5610882043838501, 'full20_on': 2359, 'n_intra': 2359, 'npeer_intra': 20.0, 'corr_intra': 0.3969486951828003, 'corr1_intra': 0.528362512588501, 'full20_intra': 2359, 'n_whole': 2359, 'npeer_whole': 20.0, 'corr_whole': 0.4150049090385437, 'corr1_whole': 0.555374801158905, 'full20_whole': 2359, 'jac_on_whole': 0.19913382212179703, 'njac_on_whole': 2359, 'jac_on_intra': 0.1367113424084946, 'njac_on_intra': 2359, 'jac_intra_whole': 0.45754816606821314, 'njac_intra_whole': 2359, 'jac_random': 0.004240882103477523}
+[    9.2s] peers saved
+[    9.9s] resid saved on stocks with a signal per calendar day: median 2297
+[   10.1s] resid saved intra stocks with a signal per calendar day: median 2297
+[   10.2s] resid saved whole stocks with a signal per calendar day: median 2297
+[   10.3s] done

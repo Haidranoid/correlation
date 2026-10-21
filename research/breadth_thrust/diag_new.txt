@@ -1,0 +1,4 @@
+# Pick concentration, new export, decision days from 2025-06-30 (post-hoc, reported only)
+days with picks 324; mean thrusting groups among the 20 picks 2.34; days with all 20 from one group 59 (18%)
+  unseen: 324 days, 2.34 groups, one group 18%
+share of pick-days by group label (top 12): KRE 21%, XOP 16%, GDX 13%, FXU 12%, XLU 10%, KIE 7%, STCE 3%, PSI 3%, XHB 3%, ITB 2%, WCLD 2%, EUFN 2%

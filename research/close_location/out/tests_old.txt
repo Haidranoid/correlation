@@ -1,0 +1,57 @@
+rows 1194537
+
+== Test 1: weekly Fama-MacBeth, 2008-2019 (y = next 5-day simple return minus the market; regressors ranked 0..1)
+weeks 604, median names 1103
+P (controls)      -0.073% a week, t -1.40
+same-day return   +0.025% a week, t +0.29
+5-day return      -0.228% a week, t -2.21
+P alone (raw)     -0.162% a week, t -4.04
+diag: P with ranked y (rank units) -0.0019, t -0.62; stock-only CLV (controls) -0.060 t -1.04, alone -0.192 t -2.96
+mean rank correlation of P with the same-day return +0.190, with the 5-day return +0.394
+Direction fixed: long low P (reversal) (sign -1); Test 1 FAILS (|t| 1.40 vs 3)
+
+== Test 2: the weekly book in that direction, 2008-2019 (% a week on $1 long + $1 short)
+gross +0.183 (t +4.01), net +0.009 (t +0.19); long leg vs ranked mean +0.098, short leg -0.084 (the book earns long - short); weekly sd +1.12; traded 3.48 per week (of 4 max), cost +0.174
+Test 2 FAILS (net t +0.19 vs 2)
+
+== Test 3: 2020..2025-06 (holds ending by 2025-06-27)
+weeks 275; P (controls) +0.037 t +0.39; raw -0.201 t -1.72; book gross +0.248 (t +1.87), net +0.073 (t +0.55)
+Test 3 (old export part) FAILS: P's coefficient sign +1 vs Test 1 -1
+
+== The 500 largest (ranked within the 500)
+2008-2019: weeks 604; P (controls) -0.080 t -1.43; raw -0.168 t -3.61; book gross +0.170 t +3.23, net -0.004 t -0.07; traded 3.48
+2020-2025-06: weeks 275; P (controls) +0.038 t +0.40; raw -0.159 t -1.35; book gross +0.195 t +1.43, net +0.019 t +0.14; traded 3.52
+2008-2025-06: weeks 879; P (controls) -0.043 t -0.89; raw -0.165 t -3.38; book gross +0.178 t +3.18, net +0.003 t +0.06; traded 3.49
+
+== By period: weeks, P coef % (t), raw P % (t), book gross % (t), book net % (t) | 500 largest: P coef (t), book net (t)
+2008-2011      201  -0.137 (-1.11)  -0.315 (-3.31)  +0.328 (+3.01)  +0.154 (+1.41) | -0.150 (-1.14)  +0.169 (+1.34)
+2012-2015      202  -0.056 (-0.83)  -0.080 (-1.57)  +0.091 (+1.62)  -0.082 (-1.46) | -0.099 (-1.45)  -0.031 (-0.53)
+2016-2019      201  -0.025 (-0.37)  -0.090 (-1.76)  +0.129 (+2.16)  -0.045 (-0.75) | +0.009 (+0.12)  -0.150 (-2.06)
+2020-2022      151  -0.054 (-0.37)  -0.400 (-1.98)  +0.480 (+2.09)  +0.305 (+1.33) | -0.068 (-0.47)  +0.206 (+0.89)
+2023-2025-06   124  +0.148 (+1.31)  +0.042 (+0.56)  -0.034 (-0.40)  -0.210 (-2.45) | +0.167 (+1.45)  -0.208 (-1.95)
+2008-2025-06   879  -0.038 (-0.83)  -0.174 (-3.81)  +0.203 (+3.91)  +0.029 (+0.56) | -0.043 (-0.89)  +0.003 (+0.06)
+
+== By calendar year: P coef % (t), book gross %, book net % (sum over the year's weeks)
+2008  -0.044 (-0.12)  +23.5  +15.0
+2009  -0.656 (-2.56)  +24.9  +16.0
+2010  -0.116 (-1.17)  +12.9  +4.1
+2011  +0.280 (+1.80)  +4.6  -4.2
+2012  -0.023 (-0.18)  +7.1  -1.6
+2013  -0.073 (-0.68)  +6.5  -2.4
+2014  -0.062 (-0.50)  -1.4  -10.1
+2015  -0.067 (-0.38)  +6.4  -2.5
+2016  +0.204 (+1.28)  +4.2  -4.4
+2017  -0.195 (-1.57)  +11.8  +3.2
+2018  +0.036 (+0.29)  +5.1  -3.6
+2019  -0.143 (-1.11)  +4.8  -4.1
+2020  -0.244 (-0.75)  +49.1  +40.4
+2021  -0.058 (-0.29)  +8.6  -0.2
+2022  +0.141 (+0.64)  +14.6  +5.9
+2023  -0.062 (-0.42)  +2.9  -5.9
+2024  +0.355 (+2.20)  -8.9  -17.8
+2025  +0.152 (+0.42)  +1.9  -2.3
+years with P's coefficient in the Test-1 direction: 12 of 18
+
+== Raw deciles of P, 2008-2019: mean next-week return minus the ranked set, % (decile 1 = lowest P)
++0.096  +0.058  -0.004  +0.003  +0.018  +0.034  -0.030  -0.039  -0.051  -0.084
+2020-2025-06: +0.121  +0.068  +0.034  +0.018  -0.021  -0.006  -0.010  -0.042  -0.037  -0.125

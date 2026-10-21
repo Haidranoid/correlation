@@ -1,0 +1,30 @@
+[package]
+name = "stockai-judge"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+publish = false
+description = "stockai's judge: correlation2's export and $10,000 holdout test, with a scores family, built on correlation2's crates pinned at 9335126"
+
+# Not part of any parent workspace.
+[workspace]
+
+[dependencies]
+# correlation2, pinned. Cargo fetches it read-only into ~/.cargo/git; nothing in
+# /home/bhoult/programming/correlation is modified or built.
+c2-data = { git = "file:///home/bhoult/programming/correlation", rev = "93351262d1f155aa049b39198cc17c59f66e0867" }
+c2-census = { git = "file:///home/bhoult/programming/correlation", rev = "93351262d1f155aa049b39198cc17c59f66e0867", default-features = false }
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+rayon = "1"
+serde_json = "1"
+# import-sharadar: the bulk CSVs (plain, gzip or zip; the same zip and flate2 builds as c2-data's) and their SHA-256.
+csv = "1"
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
+sha2 = "0.10"
+zip = { version = "9", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+# Same as correlation2's workspace.
+[profile.release]
+codegen-units = 1
+lto = "thin"

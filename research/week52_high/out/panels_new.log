@@ -1,0 +1,25 @@
+[    0.0s] new N 9508 T 6240 2001-12-31 .. 2026-10-19
+[    0.9s] PTH finite stock-days 17102309 max 1.0 min 1.943989900610177e-06
+2004-12-31 universe 286 with PTH 286 PTH==1 18 median PTH 0.968 with mom 286 big 286
+2005-12-30 universe 285 with PTH 285 PTH==1 1 median PTH 0.933 with mom 285 big 285
+2007-01-03 universe 285 with PTH 285 PTH==1 21 median PTH 0.952 with mom 285 big 285
+2008-01-03 universe 929 with PTH 929 PTH==1 18 median PTH 0.814 with mom 929 big 500
+2009-01-02 universe 929 with PTH 929 PTH==1 2 median PTH 0.571 with mom 929 big 500
+2010-01-04 universe 831 with PTH 831 PTH==1 114 median PTH 0.960 with mom 831 big 500
+2011-01-03 universe 910 with PTH 910 PTH==1 157 median PTH 0.963 with mom 910 big 500
+2012-01-03 universe 982 with PTH 982 PTH==1 45 median PTH 0.845 with mom 982 big 500
+2013-01-04 universe 973 with PTH 973 PTH==1 212 median PTH 0.965 with mom 973 big 500
+2014-01-06 universe 1073 with PTH 1073 PTH==1 44 median PTH 0.955 with mom 1073 big 500
+2015-01-06 universe 1199 with PTH 1199 PTH==1 38 median PTH 0.911 with mom 1199 big 500
+2016-01-06 universe 1249 with PTH 1249 PTH==1 7 median PTH 0.812 with mom 1249 big 500
+2017-01-05 universe 1293 with PTH 1293 PTH==1 62 median PTH 0.943 with mom 1293 big 500
+2018-01-05 universe 1415 with PTH 1415 PTH==1 255 median PTH 0.956 with mom 1415 big 500
+2019-01-08 universe 1533 with PTH 1533 PTH==1 11 median PTH 0.778 with mom 1533 big 500
+2020-01-08 universe 1567 with PTH 1567 PTH==1 127 median PTH 0.937 with mom 1567 big 500
+2021-01-07 universe 1644 with PTH 1644 PTH==1 425 median PTH 0.947 with mom 1644 big 500
+2022-01-06 universe 1876 with PTH 1876 PTH==1 103 median PTH 0.878 with mom 1876 big 500
+2023-01-09 universe 1883 with PTH 1883 PTH==1 26 median PTH 0.794 with mom 1883 big 500
+2024-01-10 universe 1946 with PTH 1946 PTH==1 65 median PTH 0.884 with mom 1946 big 500
+2025-01-13 universe 2109 with PTH 2109 PTH==1 17 median PTH 0.824 with mom 2109 big 500
+2026-01-14 universe 2276 with PTH 2276 PTH==1 213 median PTH 0.879 with mom 2276 big 500
+[   27.3s] saved

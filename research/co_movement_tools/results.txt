@@ -1,0 +1,284 @@
+##### run: raw (data as the tool reads it; the pre-registered headline)
+
+=== Best diversifiers (raw) ===
+Per year: mean over 300 portfolios x 2 arms of 100 x (1 - next-year vol with the tool's pick / with a random pick). + = lower volatility = better.
+year               vs uniform vs median vs vol-matched  vs SPY vs nothing beats random pick rank bets vs random bets vs nothing
+2008-10..2009-10         +6.4      +6.3           +4.7    +5.2       +8.6         100%      0.01          +0.08           +0.10
+2009-10..2010-10         +4.8      +5.1           +3.9    +4.6       +7.7          77%      0.01          +0.24           +0.27
+2010-10..2011-10         +5.6      +5.7           +3.8    +4.2       +7.2          97%      0.06          +0.06           +0.10
+2011-10..2012-10         +6.6      +6.6           +2.4    +5.1       +8.8         100%      0.01          +0.05           +0.09
+2012-10..2013-10         +1.3      +0.8           +0.5    -0.1       +4.3          66%      0.02          +0.21           +0.30
+2013-10..2014-10         -0.5      -0.7           +3.2    -1.5       +3.3          60%      0.19          +0.28           +0.40
+2014-10..2015-10         +7.0      +6.5           +5.2    +6.1       +9.8          98%      0.01          +0.34           +0.43
+2015-10..2016-10         +6.4      +5.9           +4.4    +4.5       +9.2          92%      0.01          +0.15           +0.23
+2016-10..2017-10         +5.6      +5.1           +3.1    +3.8      +10.4          98%      0.00          +0.12           +0.33
+2017-10..2018-10         +5.9      +5.7           +6.0    +5.5       +9.6          94%      0.01          +0.39           +0.52
+2018-10..2019-10         +6.1      +5.8           +8.2    +5.3       +9.2          94%      0.02          +0.40           +0.49
+2019-10..2020-10         +7.3      +7.0           +6.6    +5.9       +8.8         100%      0.02          +0.26           +0.30
+2020-10..2021-10         +2.9      +2.7           +1.9    +1.9       +7.5          82%      0.07          +0.19           +0.32
+2021-10..2022-10         +5.5      +4.9           +5.8    +4.7       +8.7          96%      0.01          +0.29           +0.36
+2022-10..2023-10         +4.6      +4.5           +5.8    +3.8       +8.5          82%      0.00          +0.52           +0.62
+2023-10..2024-10         +5.5      +5.0           +6.8    +3.4       +9.4          94%      0.01          +0.57           +0.70
+2024-10..2025-10         +7.5      +7.2           +8.8    +7.1      +11.0          97%      0.00          +0.58           +0.68
+2025-10..2026-10         +2.6      +2.1           +2.6    +1.2       +8.6          82%      0.09          +0.44           +0.66
+vs uniform : all 18 years +5.1 (se 0.5; better in 17/18 years); 17 seen years +5.2 (se 0.5); unseen year +2.6
+vs median  : all 18 years +4.8 (se 0.5; better in 17/18 years); 17 seen years +4.9 (se 0.5); unseen year +2.1
+vs matched : all 18 years +4.6 (se 0.5; better in 18/18 years); 17 seen years +4.8 (se 0.5); unseen year +2.6
+vs spy     : all 18 years +3.9 (se 0.5; better in 16/18 years); 17 seen years +4.1 (se 0.5); unseen year +1.2
+vs nothing : all 18 years +8.4 (se 0.4; better in 18/18 years); 17 seen years +8.3 (se 0.5); unseen year +8.6
+bets vs random: 18 years +0.29 (se 0.04); seen +0.28; unseen +0.44
+bets vs nothing added (5 holdings): 18 years +0.38 (se 0.05); seen +0.37; unseen +0.66
+pick beats the uniform-random expectation: 89% of cases; median rank of the pick among eligible candidates next year 0.02 (0 = best)
+By arm and set (mean of yearly values, se over 18 years; vs uniform / vs vol-matched / vs SPY; unseen year in brackets):
+  fund  random       +7.1 ± 0.5 (+1.3)   +6.1 ± 0.9 (+3.8)   +6.9 ± 0.5 (+0.9)
+  fund  concentrated +6.0 ± 0.4 (+2.4)   +4.8 ± 0.7 (+3.5)   +5.7 ± 0.4 (+1.9)
+  fund  all          +6.7 ± 0.4 (+1.7)   +5.7 ± 0.9 (+3.7)   +6.5 ± 0.5 (+1.2)
+  stock random       +3.5 ± 1.0 (+3.8)   +3.7 ± 0.7 (+1.3)   +1.3 ± 1.0 (+1.3)
+  stock concentrated +3.2 ± 0.7 (+3.0)   +3.4 ± 0.5 (+1.9)   +1.3 ± 0.7 (+0.7)
+  stock all          +3.4 ± 0.9 (+3.6)   +3.6 ± 0.7 (+1.5)   +1.3 ± 0.9 (+1.1)
+most frequent fund picks: SCO 416, FXY 371, TIP 314, ZSL 298, DUST 283, MBB 271, UUP 256, FIXD 195, ERY 176, BIV 163, BITI 155, DZZ 148
+most frequent stock picks: PHYS 761, CEF 759, VIRT 276, FCN 263, MCK 174, CBOE 171, AVAV 160, TDOC 124, VRTX 108, ROG 102, SSRM 98, AU 89
+pick's past volatility (median): fund 0.098, stock 0.334; uniform candidates' (mean of means): fund 0.229, stock 0.361; vol-matched set: fund 0.114, stock 0.334
+the tool's predicted vol cut from adding the pick (vs not adding): +9.9%; realized next year: +8.4%; corr across cases +0.75
+
+=== Hedge finder (raw) ===
+Risk left next year = sd(stock - ratio x hedge) / sd(stock), at the past ratio. Lower = better. Per year: mean (median) over ~500 stocks.
+year                   top tracker        top fund     random fund             SPY predicted (top) top < SPY top < random
+2008-10..2009-10       63.1% (63)     63.5% (63)     80.5% (81)     72.2% (72)     61.6% (63)       82%          96%
+2009-10..2010-10       64.9% (65)     66.0% (66)     83.0% (83)     74.1% (74)     57.5% (58)       84%          98%
+2010-10..2011-10       61.2% (61)     61.7% (61)     80.8% (81)     69.7% (69)     61.6% (62)       86%          97%
+2011-10..2012-10       66.3% (66)     67.4% (67)     84.2% (84)     75.3% (76)     58.2% (58)       87%          98%
+2012-10..2013-10       73.5% (74)     74.7% (76)     93.0% (93)     83.7% (85)     64.2% (65)       82%          95%
+2013-10..2014-10       74.7% (75)     75.9% (78)     93.1% (94)     85.5% (87)     70.2% (71)       81%          93%
+2014-10..2015-10       68.3% (69)     69.5% (71)     89.2% (90)     81.3% (82)     70.8% (72)       88%          95%
+2015-10..2016-10       68.3% (68)     70.0% (72)     89.6% (90)     82.6% (84)     63.7% (65)       89%          97%
+2016-10..2017-10       77.0% (79)     79.2% (81)     98.1% (98)     93.2% (95)     63.4% (64)       87%          94%
+2017-10..2018-10       72.1% (72)     74.0% (74)     94.0% (94)     88.0% (90)     72.0% (75)       87%          94%
+2018-10..2019-10       68.6% (68)     70.3% (71)     89.9% (90)     82.3% (83)     68.3% (69)       87%          96%
+2019-10..2020-10       60.1% (59)     61.6% (61)     86.4% (85)     74.6% (73)     64.8% (65)       86%          96%
+2020-10..2021-10       71.0% (73)     74.0% (76)     98.1% (97)     90.3% (91)     54.2% (52)       86%          95%
+2021-10..2022-10       60.9% (60)     64.3% (64)     90.6% (91)     80.7% (81)     64.7% (67)       90%          99%
+2022-10..2023-10       67.6% (67)     69.7% (69)     92.6% (93)     85.1% (86)     55.2% (55)       92%          98%
+2023-10..2024-10       73.8% (76)     76.4% (79)     95.6% (96)     92.5% (94)     63.3% (64)       92%          95%
+2024-10..2025-10       68.6% (70)     70.9% (74)     92.8% (93)     86.1% (87)     69.1% (72)       88%          93%
+2025-10..2026-10       70.9% (72)     75.5% (80)     98.9% (99)     95.9% (97)     61.4% (64)       91%          94%
+top vs random fund       mean  : risk left lower by +22.2 points (se 0.9; 18/18 years); seen +21.9; unseen +28.0
+top vs random fund       median: risk left lower by +21.9 points (se 0.9; 18/18 years); seen +21.6; unseen +27.3
+top vs SPY               mean  : risk left lower by +14.6 points (se 1.1; 18/18 years); seen +14.0; unseen +25.0
+top vs SPY               median: risk left lower by +14.8 points (se 1.1; 18/18 years); seen +14.2; unseen +25.0
+top fund vs random fund  mean  : risk left lower by +20.3 points (se 0.7; 18/18 years); seen +20.1; unseen +23.4
+top fund vs random fund  median: risk left lower by +19.3 points (se 0.7; 18/18 years); seen +19.2; unseen +19.7
+top fund vs SPY          mean  : risk left lower by +12.7 points (se 0.9; 18/18 years); seen +12.2; unseen +20.4
+top fund vs SPY          median: risk left lower by +12.2 points (se 0.7; 18/18 years); seen +11.9; unseen +17.4
+  top_next    all years: mean 68.4%, median 68.5%, worst 592%, missing 0
+  fund_next   all years: mean 70.3%, median 71.1%, worst 315%, missing 0
+  funds_next  all years: mean 90.6%, median 92.0%, worst 154%, missing 0
+  spy_next    all years: mean 82.9%, median 84.7%, worst 158%, missing 0
+top tracker: predicted risk left 63.6% (median 64.4), realized 68.4% (median 68.5); median realized - predicted +3.9 points; corr +0.67
+top tracker is a fund in 65% of cases, a stock in 35%; past correlation >= 0.97 (share-class twins, leveraged copies) in 1%
+  excluding those: top tracker realized median 68.9% vs random fund median 92.0% vs SPY median 84.7%
+top fund's rank among all scanned funds next year (median, 0 = best): 0.003
+
+=== Portfolio check (raw) ===
+Independent bets: predicted (last year) vs realized (next year), 300 portfolios per year.
+year               predicted  realized   corr corr random corr conc.   bias    MAE MAE flat vol corr
+2008-10..2009-10        1.75      1.58  +0.70       +0.61      +0.82  -0.17   0.19     0.20    +0.83
+2009-10..2010-10        1.57      1.73  +0.75       +0.67      +0.82  +0.15   0.18     0.22    +0.78
+2010-10..2011-10        1.71      1.62  +0.69       +0.59      +0.75  -0.09   0.15     0.18    +0.90
+2011-10..2012-10        1.60      1.81  +0.76       +0.68      +0.89  +0.21   0.22     0.27    +0.90
+2012-10..2013-10        1.81      2.20  +0.76       +0.67      +0.83  +0.38   0.40     0.45    +0.74
+2013-10..2014-10        2.23      2.35  +0.75       +0.63      +0.82  +0.12   0.23     0.32    +0.83
+2014-10..2015-10        2.34      2.07  +0.70       +0.58      +0.80  -0.27   0.32     0.34    +0.75
+2015-10..2016-10        2.01      2.08  +0.78       +0.65      +0.85  +0.06   0.17     0.28    +0.90
+2016-10..2017-10        2.05      2.88  +0.74       +0.57      +0.79  +0.83   0.84     0.91    +0.85
+2017-10..2018-10        2.84      2.43  +0.71       +0.52      +0.83  -0.41   0.48     0.48    +0.86
+2018-10..2019-10        2.37      2.07  +0.74       +0.63      +0.78  -0.30   0.34     0.37    +0.82
+2019-10..2020-10        2.13      1.66  +0.55       +0.52      +0.62  -0.47   0.49     0.48    +0.51
+2020-10..2021-10        1.67      2.46  +0.57       +0.42      +0.50  +0.80   0.80     0.83    +0.76
+2021-10..2022-10        2.42      1.83  +0.65       +0.41      +0.65  -0.59   0.62     0.59    +0.71
+2022-10..2023-10        1.84      2.16  +0.82       +0.70      +0.79  +0.32   0.33     0.40    +0.94
+2023-10..2024-10        2.12      2.49  +0.84       +0.71      +0.83  +0.37   0.38     0.50    +0.92
+2024-10..2025-10        2.49      2.23  +0.75       +0.63      +0.76  -0.26   0.34     0.42    +0.91
+2025-10..2026-10        2.20      2.94  +0.67       +0.43      +0.72  +0.74   0.78     0.90    +0.62
+corr              : 18 years +0.72 (se 0.02); seen +0.72; unseen +0.67
+corr random       : 18 years +0.59 (se 0.02); seen +0.60; unseen +0.43
+corr concentrated : 18 years +0.77 (se 0.02); seen +0.77; unseen +0.72
+bias              : 18 years +0.08 (se 0.10); seen +0.04; unseen +0.74
+MAE               : 18 years +0.40 (se 0.05); seen +0.38; unseen +0.78
+MAE flat          : 18 years +0.45 (se 0.05); seen +0.43; unseen +0.90
+vol corr          : 18 years +0.81 (se 0.03); seen +0.82; unseen +0.62
+pooled over all 5,400 portfolios: corr +0.51; realized / predicted bets (median) 1.03
+
+=== Groups map (raw) ===
+Within-group mean correlation (all within-group pairs) vs random groups of the same sizes (= mean over all pairs; sd from 200 relabelings).
+year               past within next within next random       z   kept next raw within next raw random
+2008-10..2009-10        +0.216      +0.133      +0.003     177    61%          +0.563          +0.488
+2009-10..2010-10        +0.185      +0.110      +0.001     195    60%          +0.502          +0.447
+2010-10..2011-10        +0.132      +0.119      +0.002     177    89%          +0.569          +0.507
+2011-10..2012-10        +0.163      +0.117      +0.003     215    71%          +0.488          +0.407
+2012-10..2013-10        +0.134      +0.108      +0.002     185    81%          +0.362          +0.290
+2013-10..2014-10        +0.137      +0.124      +0.003     209    89%          +0.343          +0.243
+2014-10..2015-10        +0.152      +0.168      +0.007     206   109%          +0.442          +0.322
+2015-10..2016-10        +0.212      +0.182      +0.007     218    85%          +0.436          +0.304
+2016-10..2017-10        +0.216      +0.163      +0.002     210    77%          +0.283          +0.137
+2017-10..2018-10        +0.211      +0.170      +0.002     251    80%          +0.359          +0.218
+2018-10..2019-10        +0.198      +0.172      +0.003     232    87%          +0.425          +0.295
+2019-10..2020-10        +0.203      +0.159      +0.005     150    77%          +0.573          +0.486
+2020-10..2021-10        +0.242      +0.199      +0.008     174    80%          +0.363          +0.213
+2021-10..2022-10        +0.295      +0.235      +0.015     202    79%          +0.524          +0.369
+2022-10..2023-10        +0.280      +0.185      +0.006     215    67%          +0.415          +0.280
+2023-10..2024-10        +0.216      +0.158      +0.004     197    73%          +0.327          +0.202
+2024-10..2025-10        +0.188      +0.183      +0.005     218    97%          +0.404          +0.265
+2025-10..2026-10        +0.231      +0.211      +0.008     190    91%          +0.297          +0.112
+past within               : 18 years +0.201 (se 0.011); seen +0.199; unseen +0.231
+next within               : 18 years +0.161 (se 0.009); seen +0.158; unseen +0.211
+next random               : 18 years +0.005 (se 0.001); seen +0.005; unseen +0.008
+next within - random      : 18 years +0.156 (se 0.008); seen +0.153; unseen +0.203
+kept                      : 18 years +0.807 (se 0.029); seen +0.801; unseen +0.913
+raw next within - random  : 18 years +0.116 (se 0.009); seen +0.112; unseen +0.185
+z                         : 18 years +201.167 (se 5.588); seen +201.831; unseen +189.896
+check: the re-implemented market-relative correlations match the tool's to within 1.0e-06
+groups (of 360): next-year within-group market-relative corr <= 0.02 in 2%; median group past +0.176 -> next +0.126
+
+##### run: clean (next-year daily moves over 2x up or down blanked)
+
+=== Best diversifiers (clean) ===
+Per year: mean over 300 portfolios x 2 arms of 100 x (1 - next-year vol with the tool's pick / with a random pick). + = lower volatility = better.
+year               vs uniform vs median vs vol-matched  vs SPY vs nothing beats random pick rank bets vs random bets vs nothing
+2008-10..2009-10         +6.4      +6.3           +4.7    +5.2       +8.6         100%      0.01          +0.08           +0.10
+2009-10..2010-10         +4.9      +5.2           +4.0    +4.7       +7.8          76%      0.01          +0.24           +0.27
+2010-10..2011-10         +5.6      +5.7           +3.8    +4.2       +7.2          97%      0.06          +0.06           +0.10
+2011-10..2012-10         +6.6      +6.6           +2.4    +5.1       +8.8         100%      0.01          +0.05           +0.09
+2012-10..2013-10         +1.3      +0.8           +0.5    -0.1       +4.3          66%      0.02          +0.21           +0.30
+2013-10..2014-10         -0.5      -0.7           +3.1    -1.5       +3.4          60%      0.19          +0.28           +0.40
+2014-10..2015-10         +7.0      +6.5           +5.2    +6.1       +9.8          98%      0.01          +0.34           +0.43
+2015-10..2016-10         +6.4      +5.9           +4.4    +4.5       +9.2          92%      0.01          +0.15           +0.23
+2016-10..2017-10         +5.6      +5.1           +3.1    +3.8      +10.4          98%      0.00          +0.12           +0.33
+2017-10..2018-10         +5.9      +5.7           +6.0    +5.5       +9.6          93%      0.01          +0.39           +0.52
+2018-10..2019-10         +6.1      +5.8           +8.2    +5.3       +9.2          94%      0.02          +0.40           +0.49
+2019-10..2020-10         +7.3      +7.0           +6.3    +5.9       +8.8         100%      0.02          +0.26           +0.30
+2020-10..2021-10         +2.9      +2.7           +1.9    +1.9       +7.5          82%      0.07          +0.19           +0.32
+2021-10..2022-10         +5.5      +4.9           +5.8    +4.7       +8.7          96%      0.01          +0.29           +0.36
+2022-10..2023-10         +4.6      +4.5           +5.7    +3.8       +8.5          82%      0.00          +0.52           +0.62
+2023-10..2024-10         +5.4      +5.0           +6.8    +3.4       +9.4          94%      0.01          +0.57           +0.70
+2024-10..2025-10         +7.5      +7.2           +8.8    +7.1      +11.0          97%      0.00          +0.58           +0.68
+2025-10..2026-10         +2.7      +2.2           +2.6    +1.2       +8.6          82%      0.09          +0.45           +0.67
+vs uniform : all 18 years +5.1 (se 0.5; better in 17/18 years); 17 seen years +5.2 (se 0.5); unseen year +2.7
+vs median  : all 18 years +4.8 (se 0.5; better in 17/18 years); 17 seen years +5.0 (se 0.5); unseen year +2.2
+vs matched : all 18 years +4.6 (se 0.5; better in 18/18 years); 17 seen years +4.7 (se 0.5); unseen year +2.6
+vs spy     : all 18 years +3.9 (se 0.5; better in 16/18 years); 17 seen years +4.1 (se 0.5); unseen year +1.2
+vs nothing : all 18 years +8.4 (se 0.4; better in 18/18 years); 17 seen years +8.3 (se 0.5); unseen year +8.6
+bets vs random: 18 years +0.29 (se 0.04); seen +0.28; unseen +0.45
+bets vs nothing added (5 holdings): 18 years +0.38 (se 0.05); seen +0.37; unseen +0.67
+pick beats the uniform-random expectation: 89% of cases; median rank of the pick among eligible candidates next year 0.02 (0 = best)
+By arm and set (mean of yearly values, se over 18 years; vs uniform / vs vol-matched / vs SPY; unseen year in brackets):
+  fund  random       +7.1 ± 0.5 (+1.4)   +6.2 ± 0.9 (+4.0)   +7.0 ± 0.5 (+1.0)
+  fund  concentrated +6.0 ± 0.4 (+2.4)   +4.8 ± 0.7 (+3.5)   +5.7 ± 0.4 (+1.9)
+  fund  all          +6.7 ± 0.4 (+1.8)   +5.7 ± 0.9 (+3.8)   +6.6 ± 0.5 (+1.3)
+  stock random       +3.5 ± 1.0 (+3.8)   +3.6 ± 0.7 (+1.3)   +1.4 ± 1.0 (+1.3)
+  stock concentrated +3.2 ± 0.7 (+3.0)   +3.4 ± 0.5 (+1.9)   +1.3 ± 0.7 (+0.8)
+  stock all          +3.4 ± 0.9 (+3.6)   +3.5 ± 0.7 (+1.5)   +1.3 ± 0.9 (+1.1)
+most frequent fund picks: SCO 416, FXY 371, TIP 314, ZSL 298, DUST 283, MBB 271, UUP 256, FIXD 195, ERY 176, BIV 163, BITI 155, DZZ 148
+most frequent stock picks: PHYS 761, CEF 759, VIRT 276, FCN 263, MCK 174, CBOE 171, AVAV 160, TDOC 124, VRTX 108, ROG 102, SSRM 98, AU 89
+pick's past volatility (median): fund 0.098, stock 0.334; uniform candidates' (mean of means): fund 0.229, stock 0.361; vol-matched set: fund 0.114, stock 0.334
+the tool's predicted vol cut from adding the pick (vs not adding): +9.9%; realized next year: +8.4%; corr across cases +0.75
+
+=== Hedge finder (clean) ===
+Risk left next year = sd(stock - ratio x hedge) / sd(stock), at the past ratio. Lower = better. Per year: mean (median) over ~500 stocks.
+year                   top tracker        top fund     random fund             SPY predicted (top) top < SPY top < random
+2008-10..2009-10       63.0% (63)     63.5% (63)     80.4% (80)     72.2% (72)     61.6% (63)       82%          96%
+2009-10..2010-10       64.9% (65)     66.0% (66)     83.0% (83)     74.1% (74)     57.5% (58)       84%          98%
+2010-10..2011-10       61.2% (61)     61.7% (61)     80.8% (81)     69.7% (69)     61.6% (62)       86%          97%
+2011-10..2012-10       66.3% (66)     67.4% (67)     84.2% (84)     75.3% (76)     58.2% (58)       87%          98%
+2012-10..2013-10       73.5% (74)     74.7% (76)     93.0% (93)     83.7% (85)     64.2% (65)       82%          95%
+2013-10..2014-10       74.7% (75)     75.9% (78)     93.1% (94)     85.5% (87)     70.2% (71)       81%          93%
+2014-10..2015-10       68.3% (69)     69.5% (71)     89.2% (90)     81.3% (82)     70.8% (72)       88%          95%
+2015-10..2016-10       68.1% (68)     70.0% (72)     89.6% (90)     82.6% (84)     63.7% (65)       89%          97%
+2016-10..2017-10       77.0% (79)     79.2% (81)     98.1% (98)     93.2% (95)     63.4% (64)       87%          94%
+2017-10..2018-10       72.1% (72)     74.0% (74)     94.0% (94)     88.0% (90)     72.0% (75)       87%          94%
+2018-10..2019-10       68.6% (68)     70.3% (71)     89.9% (90)     82.3% (83)     68.3% (69)       87%          96%
+2019-10..2020-10       60.1% (59)     61.6% (61)     86.4% (85)     74.6% (73)     64.8% (65)       86%          96%
+2020-10..2021-10       71.1% (73)     74.0% (76)     98.1% (97)     90.3% (91)     54.2% (52)       86%          95%
+2021-10..2022-10       60.9% (60)     64.3% (64)     90.6% (91)     80.7% (81)     64.7% (67)       90%          99%
+2022-10..2023-10       67.6% (67)     69.7% (69)     92.6% (93)     85.1% (86)     55.2% (55)       92%          98%
+2023-10..2024-10       73.8% (76)     76.4% (79)     95.6% (96)     92.5% (94)     63.3% (64)       92%          95%
+2024-10..2025-10       68.6% (70)     70.9% (74)     92.8% (93)     86.1% (87)     69.1% (72)       88%          93%
+2025-10..2026-10       69.5% (71)     74.7% (79)     98.8% (99)     95.9% (97)     61.4% (64)       91%          94%
+top vs random fund       mean  : risk left lower by +22.3 points (se 0.9; 18/18 years); seen +21.9; unseen +29.3
+top vs random fund       median: risk left lower by +21.9 points (se 0.9; 18/18 years); seen +21.6; unseen +27.7
+top vs SPY               mean  : risk left lower by +14.7 points (se 1.1; 18/18 years); seen +14.0; unseen +26.3
+top vs SPY               median: risk left lower by +14.8 points (se 1.1; 18/18 years); seen +14.2; unseen +25.0
+top fund vs random fund  mean  : risk left lower by +20.4 points (se 0.7; 18/18 years); seen +20.1; unseen +24.2
+top fund vs random fund  median: risk left lower by +19.3 points (se 0.7; 18/18 years); seen +19.2; unseen +19.8
+top fund vs SPY          mean  : risk left lower by +12.7 points (se 0.9; 18/18 years); seen +12.2; unseen +21.2
+top fund vs SPY          median: risk left lower by +12.2 points (se 0.7; 18/18 years); seen +11.9; unseen +17.2
+  top_next    all years: mean 68.3%, median 68.5%, worst 376%, missing 0
+  fund_next   all years: mean 70.2%, median 71.1%, worst 300%, missing 0
+  funds_next  all years: mean 90.6%, median 92.0%, worst 154%, missing 0
+  spy_next    all years: mean 82.9%, median 84.7%, worst 158%, missing 0
+top tracker: predicted risk left 63.6% (median 64.4), realized 68.3% (median 68.5); median realized - predicted +3.9 points; corr +0.72
+top tracker is a fund in 65% of cases, a stock in 35%; past correlation >= 0.97 (share-class twins, leveraged copies) in 1%
+  excluding those: top tracker realized median 68.9% vs random fund median 91.9% vs SPY median 84.7%
+top fund's rank among all scanned funds next year (median, 0 = best): 0.003
+
+=== Portfolio check (clean) ===
+Independent bets: predicted (last year) vs realized (next year), 300 portfolios per year.
+year               predicted  realized   corr corr random corr conc.   bias    MAE MAE flat vol corr
+2008-10..2009-10        1.75      1.58  +0.70       +0.61      +0.82  -0.18   0.20     0.20    +0.83
+2009-10..2010-10        1.57      1.72  +0.75       +0.67      +0.82  +0.15   0.17     0.22    +0.80
+2010-10..2011-10        1.71      1.62  +0.69       +0.59      +0.75  -0.09   0.15     0.18    +0.90
+2011-10..2012-10        1.60      1.80  +0.77       +0.68      +0.89  +0.20   0.22     0.27    +0.90
+2012-10..2013-10        1.81      2.20  +0.76       +0.67      +0.83  +0.38   0.40     0.45    +0.74
+2013-10..2014-10        2.23      2.35  +0.75       +0.64      +0.82  +0.13   0.23     0.32    +0.84
+2014-10..2015-10        2.34      2.07  +0.70       +0.58      +0.80  -0.27   0.32     0.34    +0.75
+2015-10..2016-10        2.01      2.08  +0.78       +0.65      +0.85  +0.06   0.17     0.28    +0.90
+2016-10..2017-10        2.05      2.88  +0.74       +0.57      +0.79  +0.83   0.84     0.91    +0.85
+2017-10..2018-10        2.84      2.43  +0.71       +0.52      +0.83  -0.41   0.48     0.48    +0.86
+2018-10..2019-10        2.37      2.08  +0.74       +0.64      +0.78  -0.29   0.34     0.37    +0.83
+2019-10..2020-10        2.13      1.66  +0.55       +0.52      +0.61  -0.47   0.48     0.48    +0.50
+2020-10..2021-10        1.67      2.47  +0.58       +0.43      +0.51  +0.80   0.80     0.84    +0.77
+2021-10..2022-10        2.42      1.83  +0.65       +0.41      +0.66  -0.59   0.62     0.59    +0.71
+2022-10..2023-10        1.84      2.16  +0.82       +0.70      +0.79  +0.32   0.33     0.40    +0.94
+2023-10..2024-10        2.12      2.49  +0.84       +0.71      +0.83  +0.37   0.38     0.50    +0.92
+2024-10..2025-10        2.49      2.23  +0.75       +0.63      +0.76  -0.26   0.34     0.42    +0.91
+2025-10..2026-10        2.20      2.95  +0.68       +0.44      +0.73  +0.75   0.77     0.90    +0.87
+corr              : 18 years +0.72 (se 0.02); seen +0.72; unseen +0.68
+corr random       : 18 years +0.59 (se 0.02); seen +0.60; unseen +0.44
+corr concentrated : 18 years +0.77 (se 0.02); seen +0.77; unseen +0.73
+bias              : 18 years +0.08 (se 0.10); seen +0.04; unseen +0.75
+MAE               : 18 years +0.40 (se 0.05); seen +0.38; unseen +0.77
+MAE flat          : 18 years +0.45 (se 0.05); seen +0.43; unseen +0.90
+vol corr          : 18 years +0.82 (se 0.02); seen +0.82; unseen +0.87
+pooled over all 5,400 portfolios: corr +0.51; realized / predicted bets (median) 1.03
+
+=== Groups map (clean) ===
+Within-group mean correlation (all within-group pairs) vs random groups of the same sizes (= mean over all pairs; sd from 200 relabelings).
+year               past within next within next random       z   kept next raw within next raw random
+2008-10..2009-10        +0.216      +0.133      +0.003     177    61%          +0.563          +0.488
+2009-10..2010-10        +0.185      +0.110      +0.001     195    60%          +0.503          +0.448
+2010-10..2011-10        +0.132      +0.119      +0.002     177    89%          +0.569          +0.507
+2011-10..2012-10        +0.163      +0.117      +0.003     216    71%          +0.489          +0.407
+2012-10..2013-10        +0.134      +0.108      +0.002     185    81%          +0.362          +0.290
+2013-10..2014-10        +0.137      +0.124      +0.003     209    89%          +0.343          +0.243
+2014-10..2015-10        +0.152      +0.168      +0.007     206   109%          +0.442          +0.322
+2015-10..2016-10        +0.212      +0.183      +0.007     218    86%          +0.437          +0.305
+2016-10..2017-10        +0.216      +0.163      +0.002     210    77%          +0.283          +0.137
+2017-10..2018-10        +0.211      +0.170      +0.002     251    80%          +0.359          +0.218
+2018-10..2019-10        +0.198      +0.172      +0.003     231    87%          +0.425          +0.295
+2019-10..2020-10        +0.203      +0.158      +0.005     148    76%          +0.572          +0.486
+2020-10..2021-10        +0.242      +0.199      +0.008     174    80%          +0.363          +0.214
+2021-10..2022-10        +0.295      +0.236      +0.015     203    79%          +0.525          +0.370
+2022-10..2023-10        +0.280      +0.184      +0.006     215    67%          +0.415          +0.280
+2023-10..2024-10        +0.216      +0.158      +0.004     197    73%          +0.327          +0.202
+2024-10..2025-10        +0.188      +0.183      +0.005     218    97%          +0.404          +0.265
+2025-10..2026-10        +0.231      +0.212      +0.008     190    92%          +0.298          +0.113
+past within               : 18 years +0.201 (se 0.011); seen +0.199; unseen +0.231
+next within               : 18 years +0.161 (se 0.009); seen +0.158; unseen +0.212
+next random               : 18 years +0.005 (se 0.001); seen +0.004; unseen +0.008
+next within - random      : 18 years +0.156 (se 0.008); seen +0.153; unseen +0.204
+kept                      : 18 years +0.807 (se 0.029); seen +0.801; unseen +0.916
+raw next within - random  : 18 years +0.116 (se 0.009); seen +0.112; unseen +0.185
+z                         : 18 years +201.069 (se 5.646); seen +201.747; unseen +189.534
+check: the re-implemented market-relative correlations match the tool's to within 1.0e-06
+groups (of 360): next-year within-group market-relative corr <= 0.02 in 2%; median group past +0.176 -> next +0.126
+

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Stock Correlation Analysis Platform" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dark_theme", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "sidebar", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body data-turbo-cache="<%= user_signed_in? ? 'authenticated' : 'unauthenticated' %>">
+    <!-- Flash messages -->
+    <% if notice %>
+      <div class="alert alert-notice" id="flash-notice"><%= notice %></div>
+    <% end %>
+    <% if alert %>
+      <div class="alert alert-alert" id="flash-alert"><%= alert %></div>
+    <% end %>
+    
+    <% if user_signed_in? %>
+      <!-- Authenticated Layout with Sidebar -->
+      <div class="app-layout">
+        <%= render 'shared/sidebar' %>
+        
+        <div class="main-content">
+          <!-- Mobile Header -->
+          <div class="mobile-header">
+            <button class="mobile-menu-btn" id="mobile-menu-toggle">
+              ☰
+            </button>
+          </div>
+          
+          <%= yield %>
+        </div>
+      </div>
+      
+      <!-- Mobile sidebar overlay -->
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <% else %>
+      <!-- Unauthenticated Layout with Title Bar -->
+      <div class="auth-layout">
+        <div class="title-bar">
+          <div class="title-content">
+            <h1>📊 Stock Correlation Analysis Platform</h1>
+            <p>Advanced statistical analysis and visualization of stock market correlations</p>
+          </div>
+        </div>
+        
+        <div class="auth-content">
+          <%= yield %>
+        </div>
+      </div>
+    <% end %>
+
+    <script>
+      // Global sidebar state management
+      let sidebarState = {
+        collapsed: localStorage.getItem('sidebarCollapsed') === 'true'
+      };
+      
+      // Sidebar functionality (only for authenticated users)
+      function initializeSidebar() {
+        // Only initialize if user is authenticated and sidebar exists
+        if (!document.querySelector('.app-layout')) return;
+        
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mainContent = document.querySelector('.main-content');
+        
+        if (!sidebar) return; // Exit if sidebar not found
+        
+        // Apply current state to elements
+        function applySidebarState() {
+          if (sidebarState.collapsed) {
+            sidebar.classList.add('collapsed');
+            if (mainContent) {
+              mainContent.classList.add('sidebar-collapsed');
+            }
+          } else {
+            sidebar.classList.remove('collapsed');
+            if (mainContent) {
+              mainContent.classList.remove('sidebar-collapsed');
+            }
+          }
+        }
+        
+        // Apply state immediately on page load
+        applySidebarState();
+        
+        // Mobile sidebar toggle
+        if (mobileToggle) {
+          // Remove existing listeners to prevent duplicates
+          const newMobileToggle = mobileToggle.cloneNode(true);
+          mobileToggle.parentNode.replaceChild(newMobileToggle, mobileToggle);
+          
+          newMobileToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+          });
+        }
+        
+        if (overlay) {
+          // Remove existing listeners to prevent duplicates
+          const newOverlay = overlay.cloneNode(true);
+          overlay.parentNode.replaceChild(newOverlay, overlay);
+          
+          newOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            newOverlay.classList.remove('active');
+          });
+        }
+        
+        // Close mobile sidebar on navigation
+        document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+          link.addEventListener('click', function() {
+            // Only close on mobile
+            if (window.innerWidth <= 768) {
+              sidebar.classList.remove('open');
+              const currentOverlay = document.getElementById('sidebar-overlay');
+              if (currentOverlay) {
+                currentOverlay.classList.remove('active');
+              }
+            }
+          });
+        });
+      }
+      
+      // Desktop sidebar collapse/expand using event delegation (global)
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('#sidebar-toggle')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const sidebar = document.querySelector('.sidebar');
+          const mainContent = document.querySelector('.main-content');
+          if (!sidebar) return;
+          
+          // Toggle state
+          sidebarState.collapsed = !sidebarState.collapsed;
+          
+          // Apply visual changes
+          if (sidebarState.collapsed) {
+            sidebar.classList.add('collapsed');
+            if (mainContent) {
+              mainContent.classList.add('sidebar-collapsed');
+            }
+          } else {
+            sidebar.classList.remove('collapsed');
+            if (mainContent) {
+              mainContent.classList.remove('sidebar-collapsed');
+            }
+          }
+          
+          // Save state to localStorage
+          localStorage.setItem('sidebarCollapsed', sidebarState.collapsed);
+        }
+      });
+      
+      // Keyboard shortcut for sidebar toggle (Ctrl+B) - global
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+          e.preventDefault();
+          const sidebarToggle = document.getElementById('sidebar-toggle');
+          if (sidebarToggle) {
+            sidebarToggle.click();
+          }
+        }
+      });
+      
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', initializeSidebar);
+      
+      // Re-initialize on Turbo navigation
+      document.addEventListener('turbo:load', initializeSidebar);
+      
+      // Also handle turbo:render event for more comprehensive coverage
+      document.addEventListener('turbo:render', initializeSidebar);
+      
+      // Force full reload when authentication state changes
+      document.addEventListener('turbo:before-cache', function() {
+        // Check if the current page cache state differs from body data attribute
+        const currentCacheState = document.body.dataset.turboCache;
+        const currentAuthState = document.querySelector('.app-layout') ? 'authenticated' : 'unauthenticated';
+        
+        // If authentication state has changed, prevent caching to force fresh content
+        if (currentCacheState !== currentAuthState) {
+          event.detail.newBody.dataset.turboCache = currentAuthState;
+        }
+      });
+      
+      // Auto-hide flash messages
+      function initializeFlashMessages() {
+        const flashNotice = document.getElementById('flash-notice');
+        const flashAlert = document.getElementById('flash-alert');
+        
+        function hideFlashMessage(element) {
+          if (!element) return;
+          
+          // Auto-hide after 3 seconds
+          setTimeout(() => {
+            element.classList.add('fade-out');
+            // Remove from DOM after transition completes
+            setTimeout(() => {
+              element.classList.add('hidden');
+            }, 500);
+          }, 3000);
+          
+          // Also allow manual click to dismiss
+          element.addEventListener('click', () => {
+            element.classList.add('fade-out');
+            setTimeout(() => {
+              element.classList.add('hidden');
+            }, 500);
+          });
+        }
+        
+        hideFlashMessage(flashNotice);
+        hideFlashMessage(flashAlert);
+      }
+      
+      // Initialize flash messages on page load
+      document.addEventListener('DOMContentLoaded', initializeFlashMessages);
+      document.addEventListener('turbo:load', initializeFlashMessages);
+    </script>
+    
+    <style>
+      /* Flash message styles */
+      .alert {
+        padding: 1rem 1.5rem;
+        margin: 0;
+        border: none;
+        font-weight: 500;
+        position: relative;
+        z-index: 1001;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        cursor: pointer;
+      }
+      
+      .alert-notice {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+      }
+      
+      .alert-alert {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+      }
+      
+      .alert.fade-out {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      
+      .alert.hidden {
+        display: none;
+      }
+      
+      /* Authentication Layout Styles */
+      .auth-layout {
+        min-height: 100vh;
+        background: var(--bg-primary, #1a1b23);
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .title-bar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .title-content h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      
+      .title-content p {
+        font-size: 1.125rem;
+        margin: 0;
+        opacity: 0.9;
+        font-weight: 400;
+      }
+      
+      .auth-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: var(--bg-primary, #1a1b23);
+      }
+      
+      /* Override Devise form styles for dark theme */
+      .auth-content .form-container {
+        background: var(--bg-secondary, #2a2d3a);
+        border-radius: 1rem;
+        padding: 2rem;
+        border: 1px solid var(--border-color, #3a3d4a);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 400px;
+      }
+      
+      .auth-content h2 {
+        color: var(--text-primary, #ffffff);
+        text-align: center;
+        margin: 0 0 1.5rem 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      
+      .auth-content .field {
+        margin-bottom: 1rem;
+      }
+      
+      .auth-content label {
+        display: block;
+        color: var(--text-secondary, #94a3b8);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      
+      .auth-content input[type="email"],
+      .auth-content input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--bg-primary, #1a1b23);
+        color: var(--text-primary, #ffffff);
+        border: 1px solid var(--border-color, #3a3d4a);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease;
+      }
+      
+      .auth-content input[type="email"]:focus,
+      .auth-content input[type="password"]:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+      
+      .auth-content input[type="submit"] {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 0.5rem;
+      }
+      
+      .auth-content input[type="submit"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+      
+      .auth-content .actions {
+        text-align: center;
+        margin-top: 1rem;
+      }
+      
+      .auth-content a {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+      
+      .auth-content a:hover {
+        text-decoration: underline;
+      }
+      
+      /* Checkbox styling for remember me */
+      .auth-content input[type="checkbox"] {
+        margin-right: 0.5rem;
+        accent-color: #667eea;
+      }
+      
+      .auth-content .field input[type="checkbox"] {
+        width: auto;
+        display: inline-block;
+      }
+      
+      .auth-content .field label:has(input[type="checkbox"]) {
+        display: flex;
+        align-items: center;
+        color: var(--text-secondary, #94a3b8);
+        font-size: 0.875rem;
+      }
+      
+      @media (max-width: 768px) {
+        .title-content h1 {
+          font-size: 2rem;
+        }
+        
+        .title-content p {
+          font-size: 1rem;
+        }
+        
+        .auth-content {
+          padding: 1rem;
+        }
+        
+        .auth-content .form-container {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </body>
+</html>

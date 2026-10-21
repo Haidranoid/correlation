@@ -1,0 +1,209 @@
+start: rebalance 37 = 2006-02-01; last formation 2025-05-14; months 232
+strategies built
+
+== Long-short by strategy (mean monthly return, t, months), 21-day holds, $1 long + $1 short ==
+
+-- P1 2006-02..2019
+                                                 mean      t    n
+twin gross                                    -0.177%  -0.69  167
+twin net                                      -0.378%  -1.48  167
+twin long leg                                 -0.133%  -0.73  167
+twin short leg                                +0.044%  +0.34  167
+   turnover per rebalance (of $2 stock book) stock 3.65  fund 1.90  cost 20.1 bps/month
+twin (1 day late) gross                       -0.149%  -0.57  167
+twin (1 day late) net                         -0.350%  -1.33  167
+plain gross                                   +0.118%  +0.24  167
+plain net                                     -0.058%  -0.12  167
+plain long leg                                +0.699%  +0.98  167
+plain short leg                               +0.582%  +1.26  167
+   turnover per rebalance (of $2 stock book) stock 3.52  fund 0.00  cost 17.5 bps/month
+plain (1 day late) gross                      +0.239%  +0.45  167
+plain (1 day late) net                        +0.064%  +0.12  167
+mkt gross                                     -0.193%  -0.46  167
+mkt net                                       -0.370%  -0.88  167
+mkt long leg                                  -0.385%  -1.08  167
+mkt short leg                                 -0.193%  -0.87  167
+   turnover per rebalance (of $2 stock book) stock 3.49  fund 0.29  cost 17.7 bps/month
+mkt (1 day late) gross                        -0.092%  -0.21  167
+mkt (1 day late) net                          -0.269%  -0.61  167
+mkt_scaled (diag) gross                       -0.025%  -0.07  167
+mkt_scaled (diag) net                         -0.211%  -0.59  167
+mkt_scaled (diag) long leg                    -0.235%  -0.84  167
+mkt_scaled (diag) short leg                   -0.210%  -1.22  167
+   turnover per rebalance (of $2 stock book) stock 3.68  fund 0.30  cost 18.6 bps/month
+mkt_scaled (diag) (1 day late) gross          +0.029%  +0.08  167
+mkt_scaled (diag) (1 day late) net            -0.158%  -0.43  167
+twin_unscaled (diag) gross                    -0.184%  -0.60  167
+twin_unscaled (diag) net                      -0.379%  -1.23  167
+twin_unscaled (diag) long leg                 -0.135%  -0.56  167
+twin_unscaled (diag) short leg                +0.049%  +0.32  167
+   turnover per rebalance (of $2 stock book) stock 3.47  fund 2.16  cost 19.5 bps/month
+twin_unscaled (diag) (1 day late) gross       -0.135%  -0.43  167
+twin_unscaled (diag) (1 day late) net         -0.329%  -1.05  167
+twin signal, SPY hedge (diag) gross           -0.201%  -0.77  167
+twin signal, SPY hedge (diag) net             -0.384%  -1.48  167
+twin signal, SPY hedge (diag) long leg        -0.268%  -1.15  167
+twin signal, SPY hedge (diag) short leg       -0.067%  -0.44  167
+   turnover per rebalance (of $2 stock book) stock 3.65  fund 0.14  cost 18.4 bps/month
+twin signal, SPY hedge (diag) (1 day late) gross  -0.144%  -0.53  167
+twin signal, SPY hedge (diag) (1 day late) net  -0.327%  -1.20  167
+
+-- P3 2020..2025-06
+                                                 mean      t    n
+twin gross                                    +0.141%  +0.33   65
+twin net                                      -0.071%  -0.17   65
+twin long leg                                 +0.409%  +1.41   65
+twin short leg                                +0.268%  +1.11   65
+   turnover per rebalance (of $2 stock book) stock 3.68  fund 2.74  cost 21.2 bps/month
+twin (1 day late) gross                       -0.132%  -0.31   65
+twin (1 day late) net                         -0.344%  -0.81   65
+plain gross                                   +0.545%  +0.57   65
+plain net                                     +0.370%  +0.39   65
+plain long leg                                +1.260%  +1.03   65
+plain short leg                               +0.715%  +0.80   65
+   turnover per rebalance (of $2 stock book) stock 3.50  fund 0.00  cost 17.5 bps/month
+plain (1 day late) gross                      +0.198%  +0.22   65
+plain (1 day late) net                        +0.023%  +0.03   65
+mkt gross                                     -0.018%  -0.02   65
+mkt net                                       -0.196%  -0.24   65
+mkt long leg                                  -0.675%  -0.85   65
+mkt short leg                                 -0.657%  -1.19   65
+   turnover per rebalance (of $2 stock book) stock 3.48  fund 0.46  cost 17.8 bps/month
+mkt (1 day late) gross                        -0.257%  -0.33   65
+mkt (1 day late) net                          -0.436%  -0.55   65
+mkt_scaled (diag) gross                       +0.750%  +1.24   65
+mkt_scaled (diag) net                         +0.560%  +0.93   65
+mkt_scaled (diag) long leg                    -0.003%  -0.01   65
+mkt_scaled (diag) short leg                   -0.752%  -2.06   65
+   turnover per rebalance (of $2 stock book) stock 3.70  fund 0.44  cost 19.0 bps/month
+mkt_scaled (diag) (1 day late) gross          +0.554%  +0.91   65
+mkt_scaled (diag) (1 day late) net            +0.364%  +0.60   65
+twin_unscaled (diag) gross                    +0.392%  +0.67   65
+twin_unscaled (diag) net                      +0.182%  +0.31   65
+twin_unscaled (diag) long leg                 +0.798%  +1.76   65
+twin_unscaled (diag) short leg                +0.406%  +1.25   65
+   turnover per rebalance (of $2 stock book) stock 3.47  fund 3.63  cost 21.0 bps/month
+twin_unscaled (diag) (1 day late) gross       -0.091%  -0.17   65
+twin_unscaled (diag) (1 day late) net         -0.301%  -0.56   65
+twin signal, SPY hedge (diag) gross           +0.217%  +0.49   65
+twin signal, SPY hedge (diag) net             +0.031%  +0.07   65
+twin signal, SPY hedge (diag) long leg        -0.065%  -0.15   65
+twin signal, SPY hedge (diag) short leg       -0.282%  -0.92   65
+   turnover per rebalance (of $2 stock book) stock 3.68  fund 0.19  cost 18.6 bps/month
+twin signal, SPY hedge (diag) (1 day late) gross  -0.100%  -0.23   65
+twin signal, SPY hedge (diag) (1 day late) net  -0.286%  -0.67   65
+
+== Paired monthly differences: twin minus baseline ==
+-- P1 2006-02..2019
+twin - plain gross                            -0.294%  -0.97  167
+twin - plain net                              -0.320%  -1.05  167
+   overlap of picks with twin (long / short) 0.57 / 0.55
+twin - mkt gross                              +0.016%  +0.06  167
+twin - mkt net                                -0.008%  -0.03  167
+   overlap of picks with twin (long / short) 0.58 / 0.57
+twin - mkt_scaled (diag) gross                -0.152%  -0.81  167
+twin - mkt_scaled (diag) net                  -0.167%  -0.89  167
+   overlap of picks with twin (long / short) 0.69 / 0.68
+twin - twin_unscaled (diag) gross             +0.007%  +0.06  167
+twin - twin_unscaled (diag) net               +0.001%  +0.01  167
+   overlap of picks with twin (long / short) 0.70 / 0.68
+twin - twin signal, SPY hedge (diag) gross    +0.024%  +0.37  167
+twin - twin signal, SPY hedge (diag) net      +0.007%  +0.10  167
+   overlap of picks with twin (long / short) 1.00 / 1.00
+-- P3 2020..2025-06
+twin - plain gross                            -0.404%  -0.49   65
+twin - plain net                              -0.441%  -0.54   65
+   overlap of picks with twin (long / short) 0.49 / 0.51
+twin - mkt gross                              +0.159%  +0.24   65
+twin - mkt net                                +0.126%  +0.19   65
+   overlap of picks with twin (long / short) 0.50 / 0.52
+twin - mkt_scaled (diag) gross                -0.609%  -1.38   65
+twin - mkt_scaled (diag) net                  -0.631%  -1.43   65
+   overlap of picks with twin (long / short) 0.63 / 0.63
+twin - twin_unscaled (diag) gross             -0.251%  -0.73   65
+twin - twin_unscaled (diag) net               -0.253%  -0.74   65
+   overlap of picks with twin (long / short) 0.64 / 0.66
+twin - twin signal, SPY hedge (diag) gross    -0.076%  -0.48   65
+twin - twin signal, SPY hedge (diag) net      -0.101%  -0.64   65
+   overlap of picks with twin (long / short) 1.00 / 1.00
+
+== By period (gross mean %/month, t): twin, plain, mkt, twin-plain, twin-mkt; twin net ==
+2006-02..2009  twin -0.11 (-0.1)  plain +0.38 (+0.3)  mkt -0.31 (-0.2)  d_plain -0.49 (-0.6)  d_mkt +0.20 (+0.3)  twin_net -0.30 (-0.4)  twin_late -0.09 (-0.1)  n 47
+2010..2014     twin -0.11 (-0.4)  plain -0.16 (-0.3)  mkt -0.18 (-0.4)  d_plain +0.05 (+0.1)  d_mkt +0.08 (+0.3)  twin_net -0.30 (-1.1)  twin_late -0.12 (-0.4)  n 60
+2015..2019     twin -0.30 (-1.2)  plain +0.19 (+0.4)  mkt -0.11 (-0.2)  d_plain -0.49 (-1.4)  d_mkt -0.19 (-0.6)  twin_net -0.51 (-1.9)  twin_late -0.22 (-0.8)  n 60
+2020..2022     twin +0.06 (+0.1)  plain +0.45 (+0.3)  mkt +0.16 (+0.1)  d_plain -0.39 (-0.3)  d_mkt -0.10 (-0.1)  twin_net -0.15 (-0.2)  twin_late -0.36 (-0.6)  n 36
+2023..2025-06  twin +0.24 (+0.4)  plain +0.66 (+0.6)  mkt -0.24 (-0.3)  d_plain -0.42 (-0.5)  d_mkt +0.48 (+0.9)  twin_net +0.03 (+0.0)  twin_late +0.15 (+0.3)  n 29
+
+== By calendar year of formation: twin gross, twin net, plain gross, mkt gross (% per month) ==
+2006  twin  -0.47  net  -0.66  plain  -0.13  mkt  -0.49  months 11
+2007  twin  -1.70  net  -1.90  plain  -3.36  mkt  -3.78  months 12
+2008  twin  +0.24  net  +0.04  plain  +1.25  mkt  +0.70  months 12
+2009  twin  +1.48  net  +1.27  plain  +3.72  mkt  +2.32  months 12
+2010  twin  -0.05  net  -0.25  plain  +0.12  mkt  +0.63  months 12
+2011  twin  -0.40  net  -0.60  plain  +0.04  mkt  +0.31  months 12
+2012  twin  +0.80  net  +0.60  plain  +1.60  mkt  +1.29  months 12
+2013  twin  -0.44  net  -0.64  plain  -0.90  mkt  -0.96  months 12
+2014  twin  -0.45  net  -0.65  plain  -1.64  mkt  -2.18  months 12
+2015  twin  -1.03  net  -1.23  plain  -1.29  mkt  -1.35  months 12
+2016  twin  +0.67  net  +0.46  plain  +1.42  mkt  +0.56  months 12
+2017  twin  -0.68  net  -0.89  plain  +0.09  mkt  -0.09  months 12
+2018  twin  -0.54  net  -0.75  plain  +0.01  mkt  +0.01  months 12
+2019  twin  +0.07  net  -0.14  plain  +0.72  mkt  +0.30  months 12
+2020  twin  -0.06  net  -0.28  plain  +2.92  mkt  +1.86  months 12
+2021  twin  +0.59  net  +0.37  plain  -0.74  mkt  -0.44  months 12
+2022  twin  -0.33  net  -0.54  plain  -0.82  mkt  -0.93  months 12
+2023  twin  +0.42  net  +0.22  plain  +0.91  mkt  -0.02  months 12
+2024  twin  -0.95  net  -1.17  plain  -2.00  mkt  -2.45  months 12
+2025  twin  +2.64  net  +2.43  plain  +6.43  mkt  +4.52  months 5
+
+== Twin coverage by year (mean over the year's rebalances) ==
+year  eligible  universe  plain-top500-without-twin  plain-top500-fund-like  median-corr  distinct-twins  broad-index-share
+2003      290      290      7.2      0.0  0.513      1  1.00
+2004      303      303      3.7      0.0  0.433      1  1.00
+2005      305      305    196.2      0.0  0.419      1  1.00
+2006     1705      500      6.9      0.9  0.567     52  0.28
+2007     1821      500      7.4      0.9  0.611     67  0.31
+2008     1759      500      4.4      1.0  0.715     82  0.30
+2009     1615      500      0.8      1.0  0.794     71  0.38
+2010     1881      500      3.2      0.9  0.753     66  0.31
+2011     2005      500      4.5      1.9  0.758     69  0.30
+2012     2104      500      6.2      2.3  0.792     66  0.31
+2013     2282      500      5.7      0.8  0.669     76  0.25
+2014     2498      500      7.1      1.2  0.650     88  0.21
+2015     2628      500      5.9      1.4  0.699     97  0.14
+2016     2746      500      4.0      1.8  0.740    105  0.15
+2017     2956      500      5.7      2.4  0.644    111  0.11
+2018     3165      500      7.9      1.6  0.658     99  0.13
+2019     3337      500     11.8      1.2  0.718    103  0.11
+2020     3491      500     11.3      1.6  0.788    114  0.17
+2021     4076      500     20.6      1.8  0.729    129  0.12
+2022     4368      500      6.6      2.1  0.759    131  0.08
+2023     4525      500      2.5      2.2  0.763    116  0.10
+2024     4599      500      5.0      2.9  0.634    127  0.09
+2025     4510      500      9.2      5.5  0.656    128  0.08
+top twins 2006-02-01: XLF 47, QQQ 38, RTH 29, IWM 27, XLU 26, XLY 25, XLB 24, XLI 20
+top twins 2015-10-06: XLF 33, XLI 31, XLP 23, XLU 22, XLY 19, XRT 16, SPY 15, XLE 15
+top twins 2025-05-14: IYK 21, RSP 18, USMV 17, XLI 15, XLU 15, KBWB 13, SPLV 13, XRT 13
+
+== News proxy: twin long-short within stocks with / without a volume spike (>= 3x) in the signal window ==
+-- P1 2006-02..2019: share of picks flagged 0.40
+  spike (news) stocks                         -0.155%  -0.42  167
+  no spike stocks                             -0.101%  -0.45  167
+-- P3 2020..2025-06: share of picks flagged 0.41
+  spike (news) stocks                         +0.093%  +0.15   65
+  no spike stocks                             +0.182%  +0.39   65
+
+== Earnings-season months (signal window mostly in Jan15-Feb15, Apr15-May15, Jul15-Aug15, Oct15-Nov15) ==
+-- P1 2006-02..2019 twin: season                                        -0.825%  -2.62   57 | other                                         +0.159%  +0.46  110
+-- P1 2006-02..2019 plain: season                                        -1.236%  -2.08   57 | other                                         +0.819%  +1.20  110
+-- P1 2006-02..2019 mkt: season                                        -1.002%  -1.81   57 | other                                         +0.227%  +0.40  110
+-- P1 2006-02..2019 twin-plain: season                                        +0.411%  +0.99   57 | other                                         -0.660%  -1.63  110
+-- P3 2020..2025-06 twin: season                                        +0.644%  +0.98   22 | other                                         -0.116%  -0.21   43
+-- P3 2020..2025-06 plain: season                                        +2.542%  +1.55   22 | other                                         -0.477%  -0.41   43
+-- P3 2020..2025-06 mkt: season                                        +1.761%  +1.10   22 | other                                         -0.928%  -1.00   43
+-- P3 2020..2025-06 twin-plain: season                                        -1.898%  -1.38   22 | other                                         +0.360%  +0.36   43
+
+== Tests ==
+Test 1 (2006-02..2019 twin LS): gross -0.177%/mo t -0.69; net -0.378%/mo t -1.48 -> FAIL
+Test 2 (paired gross differences): vs plain -0.294 t -0.97; vs mkt +0.016 t +0.06 -> FAIL
+Test 3 (2020..2025-06): gross +0.141 t +0.33; one day late -0.132 t -0.31 -> FAIL

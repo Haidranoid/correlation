@@ -1,0 +1,2 @@
+skipped 2006-06-28 .. 2007-06-28: only 0 stocks can be picked (history before the holdout too short?)
+wrote the computed scores to runs/poc-quick-new/g0/judge_rev5_dump.npy

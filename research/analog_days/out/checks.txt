@@ -1,0 +1,7 @@
+first complete state 2006-03-27 first forecast 2007-06-12 n forecasts 4531 gaps in forecasts after first: 10
+notes: ['forward-filled: SPY 2011-02-17', 'forward-filled: XLB 2011-02-17', 'forward-filled: XLE 2011-02-17', 'forward-filled: XLF 2011-02-17', 'forward-filled: XLI 2011-02-17', 'forward-filled: XLK 2011-02-17', 'forward-filled: XLP 2011-02-17', 'forward-filled: XLU 2011-02-17', 'forward-filled: XLV 2011-02-17', 'forward-filled: XLY 2011-02-17']
+feature sd check (z over all ok days, should be ~1): [1.03 1.05 1.08 1.04 1.04 1.07 1.04 1.05 1.06 1.07 1.09 1.12 1.09 1.09
+ 1.1  1.07 1.09 1.11 1.09 1.13 1.35]
+oracle: gross +328.8 bps/wk (t +51.5); one week stale: -1.69 bps/wk (t -0.25)
+hand-computed week 2009-07-06 gross -14.232 code -14.232 turnover 1.3524 code 1.3524
+first week turnover (from cash): 2.0

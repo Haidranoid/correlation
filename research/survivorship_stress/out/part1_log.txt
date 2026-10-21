@@ -1,0 +1,261 @@
+universe 2286; window days 61; m = 316/21 = 15.048; newer store calendar ends 2026-10-19
+rename candidates with >= 40 window closes: 260
+{
+ "raw_rates": {
+  "all": {
+   "n": 2264,
+   "gone": 123,
+   "rate": 0.054328621908127206,
+   "monthly": 0.003705343417190421
+  },
+  "below -80%": {
+   "n": 8,
+   "gone": 3,
+   "rate": 0.375,
+   "monthly": 0.030751663200696
+  },
+  "-80% to -50%": {
+   "n": 87,
+   "gone": 7,
+   "rate": 0.08045977011494253,
+   "monthly": 0.005558894264895753
+  },
+  "-50% to 0": {
+   "n": 826,
+   "gone": 51,
+   "rate": 0.06174334140435835,
+   "monthly": 0.004226381036203319
+  },
+  "above 0": {
+   "n": 1343,
+   "gone": 62,
+   "rate": 0.04616530156366344,
+   "monthly": 0.0031360936312213594
+  },
+  "12-month return missing": {
+   "n": 0,
+   "gone": 0,
+   "rate": NaN,
+   "monthly": NaN
+  },
+  "price below $5": {
+   "n": 40,
+   "gone": 8,
+   "rate": 0.2,
+   "monthly": 0.014719749551339145
+  },
+  "price $5 or more": {
+   "n": 2224,
+   "gone": 115,
+   "rate": 0.05170863309352518,
+   "monthly": 0.0035221464765740063
+  }
+ },
+ "coefficients": [
+  {
+   "name": "intercept",
+   "beta": -3.0523809641841444,
+   "se": 0.11115524391835076,
+   "z": -27.460521488543314,
+   "p": 5.202517958371247e-166,
+   "odds_ratio": 0.04724629862053522
+  },
+  {
+   "name": "ret12",
+   "beta": -0.02337641247860388,
+   "se": 0.10880875804824018,
+   "z": -0.2148394384599077,
+   "p": 0.8298925033163417,
+   "odds_ratio": 0.9768946992032067
+  },
+  {
+   "name": "down50",
+   "beta": -0.05990595196885755,
+   "se": 0.42014419817725757,
+   "z": -0.14258426566105623,
+   "p": 0.8866185246848801,
+   "odds_ratio": 0.9418531088495314
+  },
+  {
+   "name": "vol63",
+   "beta": 0.03220311232922681,
+   "se": 0.08620883495923688,
+   "z": 0.3735477036020007,
+   "p": 0.7087408480688082,
+   "odds_ratio": 1.0327272436400883
+  },
+  {
+   "name": "logp",
+   "beta": -0.48782441677565896,
+   "se": 0.13405003206184307,
+   "z": -3.639121970150701,
+   "p": 0.0002735692117926952,
+   "odds_ratio": 0.6139606647724697
+  },
+  {
+   "name": "logdv",
+   "beta": -0.27616762717308974,
+   "se": 0.125893976393282,
+   "z": -2.1936524294884903,
+   "p": 0.028260406144316755,
+   "odds_ratio": 0.7586857437550509
+  }
+ ],
+ "early_enders": {
+  "n": 6,
+  "ret_to_last_mean": 0.5181375542368115,
+  "ret_to_last_median": 0.515401963159052,
+  "ret_to_last_quartiles": [
+   -0.2226619711123234,
+   0.114162995633179,
+   0.515401963159052,
+   0.655407486570769,
+   1.2616726706637063
+  ],
+  "share_below_-50%": 0.0,
+  "share_below_-90%": 0.0,
+  "share_above_0": 0.6666666666666666,
+  "last21_mean": 0.018290100364433348,
+  "last21_median": 0.010757928671701888,
+  "collapsed_n": 0,
+  "collapsed_ret_mean": NaN,
+  "not_collapsed_ret_mean": 0.5181375542368115
+ },
+ "diagnostics": {
+  "universe_candidates": 2286,
+  "no_close_on_2025_06_27": [
+   "ALTR",
+   "ATSG",
+   "AZPN",
+   "BECN",
+   "BERY",
+   "DESP",
+   "DFS",
+   "EDR",
+   "HEES",
+   "ITCI",
+   "JWN",
+   "LGF-A",
+   "LGF-B",
+   "ML",
+   "PDCO",
+   "PLYA",
+   "PTVE",
+   "PYCR",
+   "SASR",
+   "SWI",
+   "VRN",
+   "X"
+  ],
+  "analysed": 2264,
+  "status": {
+   "survived": 2141,
+   "vanished": 117,
+   "ended early": 6
+  },
+  "status_how": {
+   "survived / same": 2104,
+   "survived / rename": 34,
+   "vanished / not in newer store": 111,
+   "survived / same (untestable)": 3,
+   "vanished / ticker reused or broken": 6,
+   "ended early / same": 6
+  },
+  "renames": 34,
+  "renames_list": [
+   "AHH>AHRT",
+   "AMBC>OSG",
+   "AMRK>GOLD",
+   "ASGN>EFOR",
+   "ATGE>CVSA",
+   "AXL>DCH",
+   "BHLB>BBT",
+   "BYON>NXH",
+   "CCCS>CCC",
+   "CMPO>GPGI",
+   "COMM>VISN",
+   "DOOO>DOO",
+   "EQR>VMRK",
+   "ERJ>EMBJ",
+   "EXPI>AGNT",
+   "FDP>DMC",
+   "FI>FISV",
+   "IAC>PPLI",
+   "IGT>BRSL",
+   "KAR>OPLN",
+   "LANC>MZTI",
+   "LC>HAPN",
+   "MEG>ONT",
+   "MMC>MRSH",
+   "MNMD>DFTX",
+   "MODG>CALY",
+   "OMI>ACH",
+   "PARA>PSKY",
+   "PSTG>P",
+   "RYI>RYZ",
+   "SATS>ECHO",
+   "SCVL>SHOE",
+   "USM>AD",
+   "VSCO>VSXY"
+  ],
+  "ticker_reused_or_broken": [
+   "BRKL",
+   "GOGL",
+   "LAZR",
+   "PINC",
+   "RNA",
+   "WOLF"
+  ],
+  "renamed_while_old_ticker_reused": [
+   "PARA"
+  ],
+  "untestable_list": [
+   "BAC_L",
+   "NEA",
+   "UITB"
+  ],
+  "no_same_ticker_close_after": 144,
+  "untestable_same_ticker": 3,
+  "multiple_rename_matches": [],
+  "same_ticker_failing_literal_level_test": [
+   "ALIT",
+   "AMCR",
+   "BDX",
+   "CAG",
+   "CIB",
+   "DD",
+   "FDX",
+   "FNF",
+   "HON",
+   "NGG",
+   "OXLC",
+   "PHG",
+   "SBS",
+   "SCCO",
+   "UL",
+   "UNH"
+  ],
+  "window_days": 61,
+  "rename_candidates": 260,
+  "sensitivity_with_dead_before": {
+   "n": 2286,
+   "gone": 145,
+   "rate": 0.06342957130358705
+  },
+  "sensitivity_literal_level_test": {
+   "n": 2264,
+   "gone": 145,
+   "rate": 0.06404593639575971,
+   "monthly": 0.00438896837494096
+  }
+ },
+ "predicted_h_month": {
+  "mean": 0.0037482754560184107,
+  "quantiles": [
+   0.001260436563963796,
+   0.003170276979887976,
+   0.007047713319475834,
+   0.011105396838052388
+  ]
+ }
+}

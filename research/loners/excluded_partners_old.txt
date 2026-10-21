@@ -1,0 +1,16 @@
+old: long-leg stock-months 55571; with an excluded stock at market-relative correlation >= 0.6: 286 (0.51%) in 15 stocks
+  EPC       73 months; partner(s): ENR 73
+  LBTYK     36 months; partner(s): LBTYA 36
+  LBTYA     30 months; partner(s): LBTYK 30
+  CHTR      27 months; partner(s): LBRDA 27
+  FWONK     20 months; partner(s): FWONA 20
+  UAA       15 months; partner(s): UA 15
+  ALEX      14 months; partner(s): MATX 14
+  CENTA     14 months; partner(s): CENT 14
+  BRK-B     12 months; partner(s): BRK-A 12
+  CIB       12 months; partner(s): COLO 12
+  NWSA      10 months; partner(s): NWS 10
+  MATX       9 months; partner(s): ALEX 9
+  LILAK      9 months; partner(s): LILA 9
+  FWONA      3 months; partner(s): FWONK 3
+  Z          2 months; partner(s): ZG 2

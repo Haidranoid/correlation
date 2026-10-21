@@ -1,0 +1,12 @@
+old export (8503, 5911) calendar points 270 2002-12-31 .. 2025-06-13
+  2002-12-31 n 316 avg corr 0.315 AR 0.525
+  2006-05-03 n 500 avg corr 0.155 AR 0.374
+  2009-09-02 n 500 avg corr 0.373 AR 0.562
+  2013-01-04 n 500 avg corr 0.310 AR 0.464
+  2016-05-06 n 500 avg corr 0.285 AR 0.543
+  2019-09-09 n 500 avg corr 0.307 AR 0.479
+  2023-01-09 n 500 avg corr 0.392 AR 0.609
+avg corr: min 0.062 median 0.281 max 0.674 at 2011-11-01
+absorption: min 0.307 median 0.497 max 0.788
+universe size: min 314 eligible min 314
+corr(avg corr, absorption) = 0.869

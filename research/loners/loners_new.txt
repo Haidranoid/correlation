@@ -1,0 +1,128 @@
+== 2025-07-16: the 30 loneliest of 2139 (c median 0.531) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+FUBO      0.195  0.195  0.184 NXH              EZU       32.5   149  2.17  FuboTV Inc.
+GRFS      0.217  0.217  0.211 ZM               BUFR       6.4    48  0.81  Grifols SA
+LQDA      0.227  0.212  0.227 CGGO (fund)      MTUM      11.4    69  0.94  Liquidia Corp
+PBI       0.227  0.227  0.137 PPLI             IWM       15.6    45  0.94  PITNEY BOWES INC /DE/
+PCT       0.229  0.229  0.191 QS               CWB       20.2    92  1.41  PureCycle Technologies, Inc.
+BUR       0.230  0.230  0.188 EGBN             IWM       11.1    43  0.94  Burford Capital Ltd
+CAR       0.232  0.232  0.154 PARR             IWM       67.4    66  1.29  AVIS BUDGET GROUP, INC.
+SPHR      0.239  0.239  0.189 HPE              CWB       26.4    54  1.15  Sphere Entertainment Co.
+PRMB      0.240  0.240  0.237 SPGI             XLF       70.2    29  0.78  Primo Brands Corp
+HQY       0.241  0.241  0.206 MOG-A            IWM       72.0    43  0.77  HEALTHEQUITY, INC.
+PRSU      0.242  0.242  0.216 EW               IWM        6.3    43  1.11  Pursuit Attractions & Hospitality, Inc.
+EWTX      0.243  0.243  0.207 AER              CGBL      19.3    82  1.19  Edgewise Therapeutics, Inc.
+TD        0.243  0.207  0.243 EWC (fund)       EWC      112.2    19  0.71  TORONTO DOMINION BANK
+PGNY      0.243  0.243  0.156 ACAD             XLV       28.1    64  1.23  Progyny, Inc.
+ATRO      0.244  0.244  0.231 KTOS             IWM        5.6    54  1.08  ASTRONICS CORP
+PRCT      0.246  0.246  0.181 EYPT             HYG       49.2    62  1.20  PROCEPT BioRobotics Corp
+ECHO      0.246  0.246  0.186 IIIV             IAI       39.7    81  1.19  EchoStar CORP
+ASND      0.251  0.251  0.227 VERA             XBI       63.3    45  0.81  Ascendis Pharma A/S
+OSIS      0.251  0.234  0.251 IJT (fund)       IWM       32.9    40  1.01  OSI SYSTEMS INC
+ESTA      0.253  0.253  0.116 ANF              CWB       15.0    81  1.57  ESTABLISHMENT LABS HOLDINGS INC.
+XPOF      0.254  0.254  0.146 PAR              ICVT       5.4    93  1.32  Xponential Fitness, Inc.
+TDOC      0.259  0.259  0.220 CARS             IWM       43.8    63  1.34  Teladoc Health, Inc.
+KRUS      0.259  0.259  0.181 CMG              IJH       14.1    70  1.32  KURA SUSHI USA, INC.
+GRPN      0.259  0.259  0.208 ZETA             ARKK      16.9    88  1.30  Groupon, Inc.
+WT        0.260  0.260  0.233 TPB              IWM       14.8    35  0.95  WisdomTree, Inc.
+PTLO      0.261  0.261  0.260 SHOO             XRT       16.0    52  1.13  Portillo's Inc.
+IIIV      0.261  0.261  0.187 RPAY             IWM        5.0    36  0.95  i3 Verticals, Inc.
+GME       0.262  0.262  0.223 MARA             ARKW     189.7    68  0.78  GameStop Corp.
+DJT       0.262  0.262  0.227 COIN             YMAX     164.8   102  0.97  Trump Media & Technology Group Corp.
+UNIT      0.263  0.263  0.220 NNN              IJR       10.3    51  1.08  Uniti Group Inc.
+
+== 2026-01-14: the 30 loneliest of 2235 (c median 0.529) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+NXH       0.212  0.212  0.200 GDYN             IWN       17.0    98  1.88  NEIGHBORHOOD INTELLIGENCE, INC.
+QXO       0.213  0.213  0.191 HRI              IWM      117.4    56  0.67  QXO, Inc.
+FEIM      0.222  0.212  0.222 IWM (fund)       IWM        6.0    74  0.79  FREQUENCY ELECTRONICS INC
+NUTX      0.224  0.224  0.217 MS               MTUM      14.7   112  1.36  Nutex Health Inc.
+OSIS      0.228  0.228  0.202 SPXC             IWM       41.4    43  1.06  OSI SYSTEMS INC
+BYND      0.229  0.229  0.162 MLTX             VFLO       8.5   179  2.04  BEYOND MEAT, INC.
+NVRI      0.229  0.229  0.178 TFII             RSP        7.6    55  1.19  Enviri Corp
+NEGG      0.229  0.229  0.124 MOMO             XME        6.6   189  2.06  Newegg Commerce, Inc.
+SEB       0.231  0.231  0.147 SCHL             VYMI       6.2    33  0.64  SEABOARD CORP /DE/
+CELC      0.231  0.231  0.173 NRIX             XBI        6.3   120  1.03  Celcuity Inc.
+LQDA      0.232  0.232  0.203 KROS             ACWI      34.9    65  1.02  Liquidia Corp
+HROW      0.233  0.233  0.166 MDGL             IWM       16.2    62  0.92  HARROW, INC.
+VEEV      0.233  0.233  0.190 AI               DIA      308.4    35  0.92  VEEVA SYSTEMS INC
+TDUP      0.234  0.234  0.184 UPWK             ULTY      12.2    85  1.33  ThredUp Inc.
+SGHC      0.235  0.235  0.203 PAY              CGBL      16.3    50  0.98  Super Group (SGHC) Ltd
+CNNE      0.236  0.236  0.186 MSGS             XLF       11.3    33  1.06  Cannae Holdings, Inc.
+HQY       0.237  0.237  0.224 PTON             BUFD      85.2    42  0.72  HEALTHEQUITY, INC.
+AIOT      0.237  0.230  0.237 SPHB (fund)      IWM        7.3    69  1.24  Powerfleet, Inc.
+SPRY      0.239  0.239  0.182 AEVA             XBI       19.4    71  0.99  ARS Pharmaceuticals, Inc.
+FICO      0.240  0.240  0.227 FAF              XLF      396.4    48  1.03  FAIR ISAAC CORP
+UNIT      0.245  0.245  0.199 PRAA             IWM       12.9    52  1.12  Uniti Group Inc.
+GTX       0.245  0.245  0.162 LVS              IJH       24.1    43  0.84  Garrett Motion Inc.
+LKFT      0.246  0.236  0.246 EWL (fund)       EFA        5.8    30  0.71  Lakefront Biotherapeutics NV
+DBRG      0.246  0.246  0.180 DLR              SPY       25.8    68  1.47  (not in SEC map)
+CRNC      0.247  0.247  0.222 CODI             IWM       14.3    91  1.47  Cerence Inc.
+ASTL      0.248  0.248  0.183 SPT              IWM        5.1    65  1.30  Algoma Steel Group Inc.
+TRNS      0.249  0.249  0.197 EXPO             IWM        6.8    50  0.92  TRANSCAT INC
+CCC       0.253  0.253  0.179 WEAV             IWM       55.2    31  0.84  CCC Intelligent Solutions Holdings Inc.
+INMD      0.253  0.253  0.211 SCHL             IJH       14.1    37  1.07  InMode Ltd.
+PAHC      0.255  0.255  0.205 LZ               IJR        7.8    50  0.98  PHIBRO ANIMAL HEALTH CORP
+
+== 2026-07-17: the 30 loneliest of 2360 (c median 0.568) ==
+ticker        c stocks  funds best match       twin    $M/day  vol%  beta  SEC name
+DJCO      0.205  0.205  0.182 ROP              IJR       30.6    51  1.22  DAILY JOURNAL CORP
+CODI      0.211  0.211  0.197 PEP              IWN        7.7    70  1.21  Compass Diversified Holdings
+OPEN      0.214  0.214  0.190 NXH              PBW      354.8   136  3.03  Opendoor Technologies Inc.
+SPRY      0.215  0.215  0.203 NBIX             XBI       16.0    71  1.17  ARS Pharmaceuticals, Inc.
+BETR      0.219  0.219  0.193 BKSY             YMAX      12.9   123  0.87  Better Home & Finance Holding Co
+RNW       0.225  0.217  0.225 DTCR (fund)      DTCR       5.7    43  0.99  ReNew Energy Global plc
+FFAI      0.226  0.226  0.177 KSS              EAGL       7.7   135  1.53  FARADAY FUTURE INTELLIGENT ELECTRIC INC.
+ARI       0.229  0.229  0.191 VSH              PFF       10.9    45  1.38  Apollo Commercial Real Estate Finance, Inc.
+GME       0.231  0.231  0.175 LVS              FPE      134.7    36  0.90  GameStop Corp.
+MANU      0.233  0.233  0.192 MSGS             USHY       5.3    36  0.76  Manchester United plc
+BH        0.239  0.239  0.195 CBRL             XRT       16.7    53  1.05  Biglari Holdings Inc.
+CAPR      0.240  0.240  0.184 DC               XBI       21.9   177  1.47  CAPRICOR THERAPEUTICS, INC.
+PZZA      0.241  0.241  0.160 NVTS             XME       35.7    51  1.24  PAPA JOHNS INTERNATIONAL INC
+XMAX      0.242  0.235  0.242 PWZ (fund)       PWZ        5.1    85  0.98  XMax Inc.
+NXH       0.247  0.247  0.168 ARQQ             IWM       13.1    79  2.01  NEIGHBORHOOD INTELLIGENCE, INC.
+OGN       0.248  0.248  0.156 ATKR             GOF       36.6    66  1.23  Organon & Co.
+GRPN      0.255  0.255  0.173 AVPT             JQUA      23.7    75  1.49  Groupon, Inc.
+GDOT      0.257  0.257  0.224 QCRH             AVSC       6.9    44  1.27  GREEN DOT CORP
+UNIT      0.258  0.185  0.258 EIS (fund)       IJR       17.3    54  1.35  Uniti Group Inc.
+SONO      0.259  0.259  0.229 EXTR             SPGP      23.5    43  1.31  Sonos Inc
+RYAM      0.260  0.260  0.239 JAZZ             AOR        5.2    68  1.36  RAYONIER ADVANCED MATERIALS INC.
+GKOS      0.261  0.261  0.251 BMY              BBCA      84.8    52  1.34  GLAUKOS Corp
+ETON      0.261  0.261  0.224 AORT             XBI        5.4    54  0.93  Eton Pharmaceuticals, Inc.
+NVRI      0.261  0.261  0.234 MAGN             IJR       16.8    44  1.22  Enviri Corp
+RDNT      0.262  0.262  0.224 COR              IWM       49.7    44  1.29  RadNet, Inc.
+TKO       0.262  0.262  0.228 IMAX             JPIB     210.9    33  0.79  TKO Group Holdings, Inc.
+IEP       0.265  0.265  0.209 CVI              AVUV       6.2    28  0.70  ICAHN ENTERPRISES L.P.
+SGHC      0.265  0.265  0.185 PAY              XLF       29.7    46  1.09  Super Group (SGHC) Ltd
+FIP       0.265  0.265  0.206 PBR              IWM        6.0    72  1.53  FTAI Infrastructure Inc.
+REPL      0.265  0.265  0.205 LMT              DUSB      16.1   246  1.54  Replimune Group, Inc.
+
+== Legs over 17 formations ==
+best match is a fund: long leg 26%, short leg 41%
+twin fund (c2eval.twins, the groups map labels), share of leg-months:
+  long : XBI 6.6%, IWM 6.0%, IJR 5.2%, XRT 5.1%, RSP 4.0%, IJH 3.8%, NOBL 2.2%, IHI 2.1%, IWP 2.0%, XLI 1.7%, XLP 1.5%, MOAT 1.5%, USMV 1.5%, VBR 1.4%, XLF 1.4%, IBB 1.2%, PAVE 1.2%, XLB 1.2%, CALF 1.2%, IGV 1.1%
+  short: KRE 11.5%, WCLD 3.5%, XOP 3.4%, GDX 3.0%, OIH 2.4%, KIE 2.4%, ITB 2.3%, XHB 2.1%, RWR 2.0%, XBI 2.0%, IYR 2.0%, FXU 2.0%, SPLV 1.9%, SMH 1.7%, KWEB 1.4%, KBWB 1.3%, IAK 1.3%, IJR 1.3%, XSD 1.2%, XRT 1.2%
+
+most frequent long-leg names (months in the long leg):
+  AB 17 (ALLIANCEBERNSTEIN HOLD), ABM 17 (ABM INDUSTRIES INC /DE), ADUS 17 (Addus HomeCare Corp), ARLP 17 (ALLIANCE RESOURCE PART), BATRK 17 (Atlanta Braves Holding), BCPC 17 (BALCHEM CORP), BRC 17 (BRADY CORP), CNNE 17 (Cannae Holdings, Inc.), CNS 17 (COHEN & STEERS, INC.), DOLE 17 (Dole plc), FIZZ 17 (NATIONAL BEVERAGE CORP), FMS 17 (Fresenius Medical Care), FSV 17 (FirstService Corp), GATX 17 (GATX CORP), INVA 17 (Innoviva, Inc.), MCRI 17 (MONARCH CASINO & RESOR), MGRC 17 (MCGRATH RENTCORP), MSGS 17 (Madison Square Garden ), NEU 17 (NEWMARKET CORP), OTTR 17 (Otter Tail Corp), PAX 17 (Patria Investments Ltd), PSMT 17 (PRICESMART INC), RDY 17 (DR REDDYS LABORATORIES), SEB 17 (SEABOARD CORP /DE/), STN 17 (STANTEC INC), SUZ 17 (Suzano S.A.), SXT 17 (SENSIENT TECHNOLOGIES ), TIGO 17 (MILLICOM INTERNATIONAL), WDFC 17 (WD 40 CO), WINA 17 (WINMARK CORP), ANIP 17 (ANI PHARMACEUTICALS IN), CAE 17 (CAE INC), CALX 17 (CALIX, INC), CXT 17 (Crane NXT, Co.), GRND 17 (Grindr Inc.), HHH 17 (Howard Hughes Holdings), HWKN 17 (HAWKINS INC), INMD 17 (InMode Ltd.), IPAR 17 (INTERPARFUMS INC), JOYY 17 (JOYY Inc.), LGND 17 (LIGAND PHARMACEUTICALS), LNN 17 (LINDSAY CORP), NTCT 17 (NETSCOUT SYSTEMS INC), WOR 17 (WORTHINGTON ENTERPRISE), WT 17 (WisdomTree, Inc.), ARDX 17 (ARDELYX, INC.), ATRC 17 (AtriCure, Inc.), BBW 17 (BUILD-A-BEAR WORKSHOP ), BCRX 17 (BIOCRYST PHARMACEUTICA), CAPR 17 (CAPRICOR THERAPEUTICS,), CRNC 17 (Cerence Inc.), DAKT 17 (DAKTRONICS INC /SD/), ESTA 17 (ESTABLISHMENT LABS HOL), EYE 17 (National Vision Holdin), GOOS 17 (Canada Goose Holdings ), GRPN 17 (Groupon, Inc.), IIPR 17 (INNOVATIVE INDUSTRIAL ), KNSA 17 (Kiniksa Pharmaceutical), LQDA 17 (Liquidia Corp), NTGR 17 (NETGEAR, INC.), NVCR 17 (NovoCure Ltd), NXH 17 (NEIGHBORHOOD INTELLIGE), OPRA 17 (Opera Ltd), PBI 17 (PITNEY BOWES INC /DE/), PCT 17 (PureCycle Technologies), RXST 17 (RxSight, Inc.), SCHL 17 (SCHOLASTIC CORP), SONO 17 (Sonos Inc), SPRY 17 (ARS Pharmaceuticals, I), TRNS 17 (TRANSCAT INC), UNIT 17 (Uniti Group Inc.), URGN 17 (UroGen Pharma Ltd.), WLFC 17 (WILLIS LEASE FINANCE C), AMG 17 (AFFILIATED MANAGERS GR), ARMK 17 (Aramark), ATR 17 (APTARGROUP, INC.), BCO 17 (BRINKS CO), COLD 17 (AMERICOLD REALTY TRUST), DCI 17 (DONALDSON Co INC), DLB 17 (Dolby Laboratories, In)
+
+long-leg names whose SEC name looks fund-like or is missing (19 of 1391):
+  COLD      17  AMERICOLD REALTY TRUST
+  RPRX      17  Royalty Pharma plc
+  CACC      17  CREDIT ACCEPTANCE CORP
+  GBTG      16  (not in SEC map)
+  ABR       16  ARBOR REALTY TRUST INC
+  DBRG      16  (not in SEC map)
+  AHRT      15  AH Realty Trust, Inc.
+  LEG        9  (not in SEC map)
+  FBRT       9  Franklin BSP Realty Trust, Inc.
+  TRTX       7  TPG RE Finance Trust, Inc.
+  NTRS       4  NORTHERN TRUST CORP
+  KREF       4  KKR Real Estate Finance Trust Inc.
+  MPT        4  MEDICAL PROPERTIES TRUST INC
+  CRNX       3  (not in SEC map)
+  ITIC       2  INVESTORS TITLE CO
+  TBPH       2  (not in SEC map)
+  ADAM       2  ADAMAS TRUST, INC.
+  SVC        2  Service Properties Trust
+  HR         1  Healthcare Realty Trust Inc

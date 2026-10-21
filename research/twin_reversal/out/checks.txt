@@ -1,0 +1,5 @@
+oracle (next 21 days from close d), twin hedge, delay 0: +22.55%/month t +55.8 n 231
+oracle (next 21 days from close d), twin hedge, delay 1: +21.37%/month t +52.7 n 231
+hand check FCX vs XLB beta 1.566 formed 2013-01-04: code -0.011583 hand -0.011583
+deciles: n 499 legs 50/50; min s in long 0.897 = 90th pct 0.897; max s in short -1.058 = 10th pct -1.058
+hedge net fund exposure: twin book sum of fund weights +0.038; long-leg mean beta 1.08, short-leg 1.12

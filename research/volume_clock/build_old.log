@@ -1,0 +1,9 @@
+old: 8503 stocks x 5911 days, 2001-12-31..2025-06-27
+rolling volume median
+raw spikes 743986, counted 314172
+projections inside the export 275188, with recurrence 74777
+after the 10-day rule 70093
+universe at entry
+events 70093, in universe and not fund-like 13356
+outside baseline
+saved /home/bhoult/.local/share/correlation2/experiments/volume_clock/events_old.npz

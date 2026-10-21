@@ -1,0 +1,8 @@
+# Overnight auctions: Yahoo ex-dates dropped in the unseen months (2026-07-01..2026-10-19 exits)
+
+Ranked stock-days 181231, symbol in the Yahoo file 98.2%; dividend or split ex-dates in the file 3070.
+
+| Version | Twin book gross (t) | Twin book net (t) | Account % | Median random % | Difference | p | Daily excess over mean random (t) |
+|---|---|---|---|---|---|---|---|
+| headline | +1.65 (+0.49) | -9.82 (-2.89) | +3.8 | +6.7 | -2.8 | 0.787 | -3.26 (-0.42) |
+| ex_dates_dropped | +3.28 (+0.95) | -8.06 (-2.34) | +3.2 | +7.1 | -3.9 | 0.867 | -4.61 (-0.61) |

@@ -1,0 +1,64 @@
+[   21.8s] universe built; median size 1284
+export old: universe stock-days from 2009-08-03 (judge-like liquid set with a twin, minus excluded)
+year  stock-days  FINRA record  SVR usable  FINRA/export volume: median, p10, p90, share >1  volume corr (63d): median, share <0.3, share NaN
+stock-days left out of the volume correlation as broken export volume (FINRA > 20x export): 275635; days with the most: 2010-04-26 299, 2022-05-16 229, 2022-09-21 163, 2022-09-28 162, 2022-09-22 161, 2022-09-29 160, 2022-10-06 160, 2022-10-07 159
+2009       91306        88.8%       87.2%  0.168, 0.063, 0.327, 1.96%   0.866, 1.89%, 44.09%; usable with corr >= 0.3: 54.0%, >= 0.5: 53.8%; corr < 0.5: 2.39%
+2010      233604        89.0%       87.5%  0.164, 0.059, 0.333, 2.52%   0.873, 1.58%, 11.05%; usable with corr >= 0.3: 86.2%, >= 0.5: 85.8%; corr < 0.5: 2.06%
+2011      252840        89.2%       87.7%  0.148, 0.054, 0.309, 2.80%   0.856, 1.12%, 10.85%; usable with corr >= 0.3: 86.7%, >= 0.5: 86.2%; corr < 0.5: 1.80%
+2012      259283        89.5%       88.5%  0.177, 0.071, 0.333, 2.70%   0.860, 1.14%, 10.60%; usable with corr >= 0.3: 87.4%, >= 0.5: 86.7%; corr < 0.5: 1.99%
+2013      268864        89.9%       89.2%  0.209, 0.093, 0.373, 2.75%   0.875, 0.85%, 10.22%; usable with corr >= 0.3: 88.4%, >= 0.5: 87.9%; corr < 0.5: 1.37%
+2014      305224        90.0%       89.3%  0.211, 0.103, 0.372, 3.17%   0.882, 0.97%, 10.21%; usable with corr >= 0.3: 88.3%, >= 0.5: 87.9%; corr < 0.5: 1.33%
+2015      327732        90.4%       89.8%  0.212, 0.105, 0.373, 2.99%   0.878, 1.30%, 9.89%; usable with corr >= 0.3: 88.4%, >= 0.5: 88.0%; corr < 0.5: 1.71%
+2016      337382        90.8%       90.1%  0.229, 0.116, 0.395, 2.34%   0.885, 1.01%, 9.38%; usable with corr >= 0.3: 89.0%, >= 0.5: 88.7%; corr < 0.5: 1.37%
+2017      361314        91.8%       90.5%  0.220, 0.111, 0.369, 2.17%   0.870, 0.95%, 8.43%; usable with corr >= 0.3: 89.4%, >= 0.5: 89.1%; corr < 0.5: 1.30%
+2018      395755        93.1%       91.8%  0.218, 0.112, 0.366, 2.13%   0.858, 0.82%, 7.22%; usable with corr >= 0.3: 90.7%, >= 0.5: 90.3%; corr < 0.5: 1.34%
+2019      413407        94.3%       93.1%  0.223, 0.116, 0.364, 1.71%   0.844, 0.76%, 5.86%; usable with corr >= 0.3: 92.2%, >= 0.5: 91.7%; corr < 0.5: 1.32%
+2020      431992        95.8%       94.5%  0.242, 0.131, 0.382, 1.56%   0.855, 0.50%, 4.54%; usable with corr >= 0.3: 93.8%, >= 0.5: 93.3%; corr < 0.5: 1.04%
+2021      476088        96.3%       95.0%  0.257, 0.150, 0.402, 2.78%   0.845, 0.43%, 4.48%; usable with corr >= 0.3: 93.9%, >= 0.5: 93.3%; corr < 0.5: 0.99%
+2022      508252        97.2%       96.3%  0.262, 0.161, 0.392, 2.21%   0.859, 0.28%, 3.24%; usable with corr >= 0.3: 95.6%, >= 0.5: 95.3%; corr < 0.5: 0.64%
+2023      507911        98.1%       97.4%  0.284, 0.180, 0.405, 1.17%   0.866, 0.11%, 2.16%; usable with corr >= 0.3: 97.0%, >= 0.5: 96.8%; corr < 0.5: 0.30%
+2024      544611        99.0%       98.3%  0.315, 0.204, 0.436, 0.50%   0.865, 0.19%, 1.30%; usable with corr >= 0.3: 97.8%, >= 0.5: 97.5%; corr < 0.5: 0.54%
+2025      273961        99.5%       99.2%  0.356, 0.251, 0.467, 0.10%   0.893, 0.07%, 0.54%; usable with corr >= 0.3: 98.9%, >= 0.5: 98.7%; corr < 0.5: 0.20%
+universe stock-days on rebalance days with volume corr < 0.2: 1340; e.g.
+  2009-11-02 B corr 0.05 ratio 0.004
+  2010-02-03 BRK-B corr -0.18 ratio 0.003
+  2010-05-05 FHI corr -0.02 ratio 0.018
+  2010-08-04 JEF corr 0.08 ratio 0.147
+  2010-11-02 GAP corr 0.11 ratio 0.019
+  2011-03-04 SGI corr 0.06 ratio 0.048
+  2011-07-05 COR corr -0.10 ratio 0.028
+  2011-11-01 SAN corr -0.01 ratio 0.013
+  2012-03-05 SGI corr -0.25 ratio 0.035
+  2012-07-03 B corr -0.08 ratio 0.005
+  2012-10-02 SGI corr -0.28 ratio 0.008
+  2013-05-07 ET corr 0.07 ratio 0.038
+  2013-10-04 SGI corr -0.24 ratio 0.045
+  2014-04-07 COR corr 0.03 ratio 0.008
+  2014-07-08 JCI corr 0.16 ratio 0.249
+  2014-11-04 JCI corr 0.09 ratio 0.421
+  2015-02-05 WTW corr 0.18 ratio 0.408
+  2015-05-07 V corr 0.14 ratio 0.321
+  2015-08-06 GEN corr -0.16 ratio 0.009
+  2015-10-06 TAL corr -0.21 ratio 0.119
+  2016-01-06 HR corr 0.15 ratio 0.141
+  2016-05-06 GEN corr 0.16 ratio 0.005
+  2016-08-05 GEN corr 0.10 ratio 0.001
+  2016-11-03 B corr -0.06 ratio 0.002
+  2017-04-06 AXON corr 0.03 ratio 0.081
+  2017-07-07 FI corr 0.03 ratio 0.154
+  2017-10-05 DOC corr -0.03 ratio 0.323
+  2018-01-05 FI corr 0.19 ratio 0.119
+  2018-05-08 CZR corr 0.04 ratio 2.179
+  2018-08-07 FI corr 0.13 ratio 0.080
+  2018-12-06 GEN corr -0.02 ratio 0.008
+  2019-03-11 HR corr 0.17 ratio 0.084
+  2019-06-10 GEN corr 0.15 ratio 0.009
+  2019-10-08 RDUS corr -0.05 ratio 1.042
+  2020-06-09 CTRA corr -0.06 ratio 0.024
+  2020-11-05 GEN corr -0.18 ratio 0.059
+  2021-05-10 JOYY corr 0.08 ratio 0.000
+  2021-10-07 COR corr -0.00 ratio 0.041
+  2022-06-08 RDUS corr 0.16 ratio 0.886
+  2023-08-10 B corr -0.05 ratio 0.002
+ORF records of universe stocks on the 191 monthly sample days: 246 (ORF volume 345,441,923.0, their TRF+ADF volume the same day 228,417,252.0); e.g. 2009-08-03 INVX orf 21400.0 fac 0; 2009-09-01 INVX orf 65500.0 fac 0; 2009-10-01 ACGL orf 124234.0 fac 128327.0; 2009-10-01 ADBE orf 1425039.0 fac 1604279.0; 2009-10-01 ADP orf 791168.0 fac 948451.0; 2009-10-01 ADSK orf 1499743.0 fac 1564301.0; 2009-10-01 ADTN orf 83528.0 fac 88701.0; 2009-10-01 AKAM orf 2017150.0 fac 2126024.0; 2009-10-01 ALGN orf 286298.0 fac 304533.0; 2009-10-01 ALGT orf 88468.0 fac 94686.0; 2009-10-01 ALKS orf 129739.0 fac 137639.0; 2009-10-01 ALNY orf 44009.0 fac 44572.0
+

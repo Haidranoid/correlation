@@ -1,0 +1,29 @@
+== The unseen months: daily P&L of the continuing book, 2025-06-30..2026-10-19 (329 days) ==
+loners     net  : days 329, total -23.06% (-1.472% per 21 days, t -2.71); alpha vs EW market -17.63%/yr (NW t -3.04), beta +0.03
+loners     gross: days 329, total -22.63% (-1.444% per 21 days, t -2.65); alpha vs EW market -17.30%/yr (NW t -2.98), beta +0.03
+loners500  net  : days 329, total -22.62% (-1.444% per 21 days, t -2.09); alpha vs EW market -17.27%/yr (NW t -2.27), beta +0.06
+loners500  gross: days 329, total -22.14% (-1.413% per 21 days, t -2.05); alpha vs EW market -16.91%/yr (NW t -2.22), beta +0.05
+bac        net  : days 329, total +6.21% (+0.426% per 21 days, t +0.58); alpha vs EW market +4.90%/yr (NW t +0.63), beta -0.23
+bac        gross: days 329, total +6.52% (+0.445% per 21 days, t +0.61); alpha vs EW market +5.12%/yr (NW t +0.66), beta -0.23
+lowvol     net  : days 329, total -19.56% (-1.285% per 21 days, t -1.11); alpha vs EW market -15.90%/yr (NW t -1.36), beta -0.52
+lowvol     gross: days 329, total -19.33% (-1.267% per 21 days, t -1.09); alpha vs EW market -15.68%/yr (NW t -1.34), beta -0.52
+
+-- each holding period of the loners book inside the window (net, % of the $1/$1 book):
+  formed 2025-06-13: 2025-06-30..2025-07-16 (12 days) loners -1.12%  500 largest -1.11%
+  formed 2025-07-16: 2025-07-17..2025-08-14 (21 days) loners -0.24%  500 largest -2.23%
+  formed 2025-08-14: 2025-08-15..2025-09-15 (21 days) loners -2.70%  500 largest -2.59%
+  formed 2025-09-15: 2025-09-16..2025-10-14 (21 days) loners -2.26%  500 largest -2.69%
+  formed 2025-10-14: 2025-10-15..2025-11-12 (21 days) loners -3.13%  500 largest -2.67%
+  formed 2025-11-12: 2025-11-13..2025-12-12 (21 days) loners +0.53%  500 largest -0.40%
+  formed 2025-12-12: 2025-12-15..2026-01-14 (21 days) loners -2.51%  500 largest -2.05%
+  formed 2026-01-14: 2026-01-15..2026-02-13 (21 days) loners -6.33%  500 largest -8.59%
+  formed 2026-02-13: 2026-02-17..2026-03-17 (21 days) loners -0.02%  500 largest +0.27%
+  formed 2026-03-17: 2026-03-18..2026-04-16 (21 days) loners -1.84%  500 largest -0.92%
+  formed 2026-04-16: 2026-04-17..2026-05-15 (21 days) loners -2.45%  500 largest -3.83%
+  formed 2026-05-15: 2026-05-18..2026-06-16 (21 days) loners +0.81%  500 largest +2.19%
+  formed 2026-06-16: 2026-06-17..2026-07-17 (21 days) loners +1.80%  500 largest +2.44%
+  formed 2026-07-17: 2026-07-20..2026-08-17 (21 days) loners -3.73%  500 largest -2.68%
+  formed 2026-08-17: 2026-08-18..2026-09-16 (21 days) loners -0.67%  500 largest +0.08%
+  formed 2026-09-16: 2026-09-17..2026-10-15 (21 days) loners +1.50%  500 largest +2.45%
+  formed 2026-10-15: 2026-10-16..2026-10-19 (2 days) loners -0.70%  500 largest -0.29%
+-- loadings over the unseen days (daily, NW 5 lags): alpha -15.87%/yr (t -2.77); mkt +0.09 (t +2.63); low vol +0.11 (t +3.36); BAC -0.01 (t -0.17); R2 0.05

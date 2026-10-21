@@ -1,0 +1,3 @@
+tripwire runs/poc-quick-new/baselines/lgbm/scores.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return -0.0134 (t -1.37, 503 days); largest year mean -0.0134; not tripped (<= 0.05)
+  2022: -0.0134 (t -0.96, 251 days)
+  2023: -0.0134 (t -0.98, 252 days)

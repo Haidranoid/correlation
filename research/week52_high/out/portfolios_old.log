@@ -1,0 +1,9 @@
+[    0.5s] old raw periods 269 2002-12-31 .. 2025-06-13
+[    0.7s] pth: periods with 6 cohorts 240, legs median 385
+[    0.8s] mom: periods with 6 cohorts 240, legs median 385
+[    1.0s] jt6: periods with 6 cohorts 240, legs median 385
+[    1.2s] pth_skip: periods with 6 cohorts 240, legs median 385
+[    1.2s] pth_big: periods with 6 cohorts 240, legs median 150
+[    1.3s] mom_big: periods with 6 cohorts 240, legs median 150
+[    1.3s] pth_skip_big: periods with 6 cohorts 240, legs median 150
+[    1.4s] saved /home/bhoult/.local/share/correlation2/experiments/week52_high/series_old.npz

@@ -1,0 +1,5 @@
+1. hand P vs code on 300 random rows: max abs difference 5.96e-08
+2. week 2013-12-20: n 1098, legs 110 each = round(10% n); legs are the top / bottom by P: True
+3. oracle 2010-2011: P coef +11.76% a week (t +51.9); book gross +13.36% (t +54.4), net +13.18%
+4. planted 1.000% top-minus-bottom: recovered +1.012% (t +17.4); raw +1.009%
+5. unchanged book, zero returns: traded per week [np.float64(2.0), np.float64(0.0), np.float64(0.0)] (2 to build, then 0)

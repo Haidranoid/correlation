@@ -1,0 +1,10 @@
+[    0.0s] new N 9508 T 6240 2001-12-31 .. 2026-10-19
+[    0.0s] SPY first store close 2005-02-25 ; days with a return 5443
+[    2.0s] beta: first day with any beta 2006-01-23 ; finite stock-days 16629963
+[    2.1s]   check stock 5982 day 2025-10-09: rolling 0.405822 direct 0.405822 (n 251)
+[    2.1s]   check stock 4799 day 2026-02-23: rolling 0.802648 direct 0.802648 (n 251)
+[    2.1s]   check stock 2519 day 2026-10-15: rolling 1.646976 direct 1.646975 (n 251)
+[    2.1s]   check stock 2860 day 2026-09-11: rolling 0.351350 direct 0.351350 (n 251)
+[    2.1s]   check stock 8015 day 2026-09-08: rolling 0.829904 direct 0.829904 (n 251)
+[   26.8s] universe sizes: first nonempty rebalance 2004-12-31 median 1247 min 284 max 2471
+[   26.8s] saved

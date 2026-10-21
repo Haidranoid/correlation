@@ -1,0 +1,9 @@
+[    0.0s] build new
+[    0.0s] N 9508 T 6240
+[    0.0s] SPY days with a return 5443
+[    3.7s] dimson done; finite b_lag 16646656
+[    3.9s] store panels
+[    5.6s] store close vs export close: both finite 19445225 differ > 1% 0
+[    7.8s] legs: valid stock-days 19033106
+[   33.7s] universe sizes (k with any): median 1247 max 2471
+[   33.7s] saved

@@ -1,0 +1,5 @@
+scores = -1 x P -> /home/bhoult/.local/share/correlation2/experiments/close_location/score_old.npy
+uniform: change over random +8.23 pts (per year [8.48, 43.21, 15.36, 6.83, -2.82, 29.64, 16.15, -0.51, 6.61, 6.23, 13.25, 5.69, 14.23, 20.5, 6.55, -1.73, -8.19, -31.4], ahead 13/18, se 3.69); by cost 0/5/20 bps [8.23, 7.77, 6.57]
+  years 18; beat random at p<0.1 (0 bps: 8, 5 bps: 8, 20 bps: 8) of 18; change over random +8.2 pts/yr (se 3.7, ahead 13/18); IC actual returns z +4.62; long-short 3.97 bps/day z +4.91, turnover 86%, costs 0.69 x c bps/day
+volatility: change over random +8.26 pts (per year [8.19, 35.06, 13.75, 7.61, 0.64, 29.35, 14.75, -0.81, 9.95, 5.15, 12.88, 8.37, 14.39, 27.61, 1.39, -1.93, -7.55, -30.16], ahead 14/18, se 3.48); by cost 0/5/20 bps [8.26, 7.89, 6.88]
+  years 18; beat random at p<0.1 (0 bps: 8, 5 bps: 8, 20 bps: 8) of 18; change over random +8.3 pts/yr (se 3.5, ahead 14/18); IC actual returns z +4.62; long-short 3.97 bps/day z +4.91, turnover 86%, costs 0.69 x c bps/day

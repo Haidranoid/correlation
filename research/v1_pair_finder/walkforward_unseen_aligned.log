@@ -1,0 +1,11 @@
+== 2026-10-21 07:50 variant=aligned null=None windows=[7, 14, 21, 30, 40, 60, 90, 180] export=/home/bhoult/.local/share/c2-sandbox-2026-10-19/export/full
+  2025-06-30..: training 2018-06-28..2025-06-27, decisions 2025-06-27..2026-10-16
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,503,843 on 1733 offsets; scores on 100% of stock-days, 15,748 terms each; 8 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 30,971,613 on 2473 offsets; scores on 100% of stock-days, 42,570 terms each; 9 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 50,674,070 on 2472 offsets; scores on 100% of stock-days, 69,765 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 72,952,067 on 2453 offsets; scores on 100% of stock-days, 100,614 terms each; 8 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 94,952,151 on 2424 offsets; scores on 100% of stock-days, 130,926 terms each; 9 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 128,427,696 on 2366 offsets; scores on 100% of stock-days, 177,022 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 165,576,424 on 2282 offsets; scores on 100% of stock-days, 228,094 terms each; 8 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 228,385,615 on 2022 offsets; scores on 100% of stock-days, 313,743 terms each; 7 s
+  done in 71 s: {7: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w7.npy', 14: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w14.npy', 21: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w21.npy', 30: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w30.npy', 40: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w40.npy', 60: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w60.npy', 90: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w90.npy', 180: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w180.npy', 'all': '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_wall.npy'}

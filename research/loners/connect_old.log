@@ -1,0 +1,34 @@
+old: N=8503 T=5911 K=270 funds=3027 (not_common funds 33) 0s
+returns ready 1s
+  cal 0/270 2002-12-31: universe 0, funds ok 1, single 0, eligible 1  1s
+  cal 24/270 2004-12-31: universe 0, funds ok 1, single 0, eligible 1  2s
+  cal 48/270 2007-01-03: universe 299, funds ok 84, single 1, eligible 82  3s
+  cal 72/270 2009-01-02: universe 956, funds ok 160, single 5, eligible 149  8s
+  cal 96/270 2011-01-03: universe 936, funds ok 232, single 13, eligible 210  12s
+  cal 120/270 2013-01-04: universe 1010, funds ok 257, single 0, eligible 251  17s
+  cal 144/270 2015-01-06: universe 1223, funds ok 310, single 31, eligible 274  22s
+  cal 168/270 2017-01-05: universe 1310, funds ok 350, single 38, eligible 307  27s
+  cal 192/270 2019-01-08: universe 1582, funds ok 416, single 14, eligible 397  32s
+  cal 216/270 2021-01-07: universe 1689, funds ok 483, single 30, eligible 446  37s
+  cal 240/270 2023-01-09: universe 1937, funds ok 617, single 29, eligible 583  43s
+  cal 264/270 2025-01-13: universe 2135, funds ok 652, single 38, eligible 609  49s
+  2007-01-03: scored 299, funds 82, c median 0.411 p10 0.231 p90 0.724  50s
+  2008-01-03: scored 300, funds 133, c median 0.414 p10 0.248 p90 0.736  51s
+  2009-01-02: scored 956, funds 149, c median 0.464 p10 0.282 p90 0.762  51s
+  2010-01-04: scored 855, funds 173, c median 0.472 p10 0.277 p90 0.725  52s
+  2011-01-03: scored 936, funds 210, c median 0.405 p10 0.264 p90 0.667  53s
+  2012-01-03: scored 1032, funds 211, c median 0.440 p10 0.277 p90 0.716  54s
+  2013-01-04: scored 1010, funds 251, c median 0.415 p10 0.267 p90 0.686  56s
+  2014-01-06: scored 1109, funds 262, c median 0.425 p10 0.261 p90 0.707  57s
+  2015-01-06: scored 1223, funds 274, c median 0.470 p10 0.290 p90 0.759  59s
+  2016-01-06: scored 1293, funds 326, c median 0.501 p10 0.314 p90 0.805  61s
+  2017-01-05: scored 1310, funds 307, c median 0.528 p10 0.325 p90 0.794  63s
+  2018-01-05: scored 1456, funds 312, c median 0.501 p10 0.310 p90 0.769  65s
+  2019-01-08: scored 1582, funds 397, c median 0.514 p10 0.311 p90 0.799  68s
+  2020-01-08: scored 1611, funds 389, c median 0.488 p10 0.309 p90 0.760  70s
+  2021-01-07: scored 1689, funds 446, c median 0.567 p10 0.379 p90 0.803  74s
+  2022-01-06: scored 1921, funds 491, c median 0.576 p10 0.349 p90 0.811  77s
+  2023-01-09: scored 1937, funds 583, c median 0.601 p10 0.367 p90 0.826  81s
+  2024-01-10: scored 1959, funds 567, c median 0.521 p10 0.332 p90 0.786  85s
+  2025-01-13: scored 2135, funds 609, c median 0.496 p10 0.318 p90 0.781  90s
+old: done in 92s

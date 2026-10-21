@@ -1,0 +1,224 @@
+{
+ "uniform": {
+  "change": [
+   {
+    "change": -13.639351673851332,
+    "per_year": [
+     -13.64
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   },
+   {
+    "change": -13.455961406891316,
+    "per_year": [
+     -13.46
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   },
+   {
+    "change": -12.986259751505314,
+    "per_year": [
+     -12.99
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   }
+  ],
+  "skipped": null,
+  "summary": null,
+  "years": null,
+  "report": {
+   "benchmarks": [
+    {
+     "final_value": 12464.913791349307,
+     "label": "Buy and hold SPY (S&P 500)",
+     "return_pct": 24.649137913493057,
+     "ticker": "SPY"
+    },
+    {
+     "final_value": 13106.605669746914,
+     "label": "Buy and hold QQQ (Nasdaq-100)",
+     "return_pct": 31.066056697469136,
+     "ticker": "QQQ"
+    },
+    {
+     "final_value": 12066.06248842616,
+     "label": "Buy and hold all 2155 candidates",
+     "return_pct": 20.66062488426159,
+     "ticker": null
+    }
+   ],
+   "candidates": 2155,
+   "days": 329,
+   "first_day": "2025-06-30",
+   "hit_rate": 0.4749240121580547,
+   "hits": 6580,
+   "ic_mean": -0.012406745379117838,
+   "ic_ret_mean": -0.006635479106754795,
+   "ic_ret_t": -1.5129288116969073,
+   "ic_t": -3.098165520958057,
+   "last_day": "2026-10-19",
+   "ls_bps_per_day": -7.066162757508686,
+   "ls_mean": -0.0007066162757508686,
+   "ls_sharpe": -1.5511069459378717,
+   "ls_t": -1.772308911605497,
+   "ls_turnover": 0.04019000541504793,
+   "pairs": 2114,
+   "random_check": {
+    "mode": "uniform",
+    "random_buy_decile": 4.495158893033815,
+    "random_buys_max": 310,
+    "random_buys_mean": 307.471,
+    "random_buys_min": 299,
+    "random_held_decile": 4.489081610942249,
+    "strategy_buy_decile": 7.406451612903226,
+    "strategy_buys": 310,
+    "strategy_held_decile": 7.404863221884498,
+    "unmatched_buys": 0
+   },
+   "strategy": [
+    {
+     "cost_bps": 0.0,
+     "final": 10574.263551392167,
+     "final_pct": 5.742635513921668,
+     "p": 0.856,
+     "random_median": 11938.1987187773,
+     "random_median_pct": 19.381987187773
+    },
+    {
+     "cost_bps": 5.0,
+     "final": 10416.978321133536,
+     "final_pct": 4.169783211335365,
+     "p": 0.856,
+     "random_median": 11762.574461822669,
+     "random_median_pct": 17.62574461822668
+    },
+    {
+     "cost_bps": 20.0,
+     "final": 9958.21503395418,
+     "final_pct": -0.4178496604581916,
+     "p": 0.857,
+     "random_median": 11256.841009104712,
+     "random_median_pct": 12.568410091047122
+    }
+   ],
+   "windows_used": 0
+  }
+ },
+ "volatility": {
+  "change": [
+   {
+    "change": -19.48399545295225,
+    "per_year": [
+     -19.48
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   },
+   {
+    "change": -19.192754208784216,
+    "per_year": [
+     -19.19
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   },
+   {
+    "change": -18.34338782807419,
+    "per_year": [
+     -18.34
+    ],
+    "ahead": 0,
+    "years": 1,
+    "se": NaN
+   }
+  ],
+  "skipped": null,
+  "summary": null,
+  "years": null,
+  "report": {
+   "benchmarks": [
+    {
+     "final_value": 12464.913791349307,
+     "label": "Buy and hold SPY (S&P 500)",
+     "return_pct": 24.649137913493057,
+     "ticker": "SPY"
+    },
+    {
+     "final_value": 13106.605669746914,
+     "label": "Buy and hold QQQ (Nasdaq-100)",
+     "return_pct": 31.066056697469136,
+     "ticker": "QQQ"
+    },
+    {
+     "final_value": 12066.06248842616,
+     "label": "Buy and hold all 2155 candidates",
+     "return_pct": 20.66062488426159,
+     "ticker": null
+    }
+   ],
+   "candidates": 2155,
+   "days": 329,
+   "first_day": "2025-06-30",
+   "hit_rate": 0.4749240121580547,
+   "hits": 6580,
+   "ic_mean": -0.012406745379117838,
+   "ic_ret_mean": -0.006635479106754795,
+   "ic_ret_t": -1.5129288116969073,
+   "ic_t": -3.098165520958057,
+   "last_day": "2026-10-19",
+   "ls_bps_per_day": -7.066162757508686,
+   "ls_mean": -0.0007066162757508686,
+   "ls_sharpe": -1.5511069459378717,
+   "ls_t": -1.772308911605497,
+   "ls_turnover": 0.04019000541504793,
+   "pairs": 2114,
+   "random_check": {
+    "mode": "volatility",
+    "random_buy_decile": 7.406451612903226,
+    "random_buys_max": 310,
+    "random_buys_mean": 310.0,
+    "random_buys_min": 310,
+    "random_held_decile": 7.282604863221884,
+    "strategy_buy_decile": 7.406451612903226,
+    "strategy_buys": 310,
+    "strategy_held_decile": 7.404863221884498,
+    "unmatched_buys": 0
+   },
+   "strategy": [
+    {
+     "cost_bps": 0.0,
+     "final": 10574.263551392167,
+     "final_pct": 5.742635513921668,
+     "p": 0.845,
+     "random_median": 12522.663096687393,
+     "random_median_pct": 25.22663096687392
+    },
+    {
+     "cost_bps": 5.0,
+     "final": 10416.978321133536,
+     "final_pct": 4.169783211335365,
+     "p": 0.845,
+     "random_median": 12336.253742011959,
+     "random_median_pct": 23.36253742011958
+    },
+    {
+     "cost_bps": 20.0,
+     "final": 9958.21503395418,
+     "final_pct": -0.4178496604581916,
+     "p": 0.845,
+     "random_median": 11792.5538167616,
+     "random_median_pct": 17.925538167615997
+    }
+   ],
+   "windows_used": 0
+  }
+ }
+}

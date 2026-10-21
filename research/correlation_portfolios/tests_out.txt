@@ -1,0 +1,28 @@
+== 1. Ledoit-Wolf (constant correlation) vs the paper's formulas, element by element
+  case 0: N=5 T=30 delta vectorised 0.666880428125 loops 0.666880428125; max rel diff 3.77e-16; rbar +0.043; min eigenvalue 4.70e-05
+  case 1: N=5 T=30 delta vectorised 1.000000000000 loops 1.000000000000; max rel diff 1.66e-16; rbar +0.189; min eigenvalue 8.78e-05
+  case 2: N=7 T=25 delta vectorised 1.000000000000 loops 1.000000000000; max rel diff 1.48e-17; rbar +0.138; min eigenvalue 3.09e-05
+  case 3: N=8 T=60 delta vectorised 0.745148579620 loops 0.745148579620; max rel diff 1.80e-16; rbar +0.726; min eigenvalue 8.87e-05
+  case 4: N=6 T=12 delta vectorised 1.000000000000 loops 1.000000000000; max rel diff 1.56e-16; rbar +0.234; min eigenvalue 2.08e-05
+  PASS (worst difference 6.7e-16)
+== 2. Capped minimum variance vs brute force (all 3^n patterns of {0, cap, free})
+  trial 0: n=5 cap=0.250 solver 2.432674692945e-01 brute 2.432674692945e-01 max|dw| 1.4e-17 (pg+face, 3 at cap, 2 free)
+  trial 1: n=3 cap=0.343 solver 2.887549830658e-01 brute 2.887549830658e-01 max|dw| 5.6e-17 (pg+face, 1 at cap, 2 free)
+  trial 2: n=6 cap=0.500 solver 2.579855275107e-01 brute 2.579855275107e-01 max|dw| 0.0e+00 (pg+active-set(1), 2 at cap, 0 free)
+  trial 3: n=5 cap=0.300 solver 3.831993388462e-01 brute 3.831993388462e-01 max|dw| 2.8e-17 (pg+face, 2 at cap, 3 free)
+  trial 4: n=3 cap=0.500 solver 1.292085117284e+00 brute 1.292085117284e+00 max|dw| 5.6e-17 (pg+face, 1 at cap, 2 free)
+  trial 5: n=6 cap=0.500 solver 1.990979555688e-01 brute 1.990979555688e-01 max|dw| 0.0e+00 (pg+active-set(1), 2 at cap, 0 free)
+  PASS: 300 random cases (203 with the cap binding); worst relative objective gap 1.5e-15, worst weight difference 5.7e-16
+== 3. Full size: projected gradient + finish vs a pure primal active-set run from equal weights
+  trial 0: PG 1500 iterations, residual 9.1e-11, pg+face; KKT primal 2.2e-16 dual 3.2e-13; vs pure active set (82 iterations): max|dw| 0.0e+00, objective gap 0.0e+00; names 303, at cap 0
+  trial 1: PG 1550 iterations, residual 9.2e-11, pg+face; KKT primal 2.2e-16 dual 7.4e-13; vs pure active set (82 iterations): max|dw| 0.0e+00, objective gap 0.0e+00; names 333, at cap 0
+  trial 2: PG 1590 iterations, residual 9.5e-11, pg+face; KKT primal -0.0e+00 dual 3.1e-13; vs pure active set (92 iterations): max|dw| 0.0e+00, objective gap 0.0e+00; names 322, at cap 0
+  PASS
+== 4. HRP
+  single linkage = the naive agglomerative loop (same merge distances and members) on 20 random cases: PASS
+  diagonal covariance -> HRP = inverse variance: max diff 5.6e-17
+  two-block toy (interleaved): quasi-diagonal order puts each block together: [0, 0, 0, 0, 1, 1, 1, 1]; weights [0.125 0.125 0.125 0.125 0.125 0.125 0.125 0.125]
+  PASS
+== 5. Twin covariance
+  diag(Sigma) vs sample variances: max rel diff 4.3e-16; min eigenvalue 1.98e-04; twins used 29, funds 4, market-only because the twin is the market 4
+  PASS

@@ -1,0 +1,11 @@
+11:12:55 old rev5: 18,685,542 finite values; first day with a value 256
+11:12:56 old mom12_1: 16,980,292 finite values; first day with a value 252
+11:13:42 old twin5: 16,358,852 finite values; first day with a value 252
+11:13:42 old: market-wide gap days (fewer than half the usual closes): ['2011-02-17']
+11:13:50   rows 7000..8000 done 8s
+11:13:51   rows 8000..8503 done 9s
+11:13:51 old vol: 18,067,956 finite values; first day with a value 120
+11:13:51 old corr: 13,801,510 finite values; first day with a value 1003
+11:13:55 momentum vs stockai: 15,389,366 both finite; max |diff| 4.77e-07 (float32 storage); finite only here 1,590,926 (of which after stockai's last column 2024-06-26: 1,590,926); finite only in stockai's 0
+11:13:56 vol vs BAC panels: same finite cells True; max |diff| 0
+11:13:56 corr vs BAC panels: same finite cells True; max |diff| 0

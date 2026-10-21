@@ -1,0 +1,4 @@
+uniform: change over random +10.31 pts (per year [26.43, 42.63, 81.64, 17.29, 22.19, 21.34, -18.19, -17.1, -0.88, -2.13, 4.57, 3.9, 40.75, 32.61, -29.51, -10.78, 0.88, -30.14], ahead 11/18, se 6.72)
+  years 18; beat random at p<0.1 (0 bps: 8, 5 bps: 8, 20 bps: 8) of 18; change over random +10.3 pts/yr (se 6.7, ahead 11/18); IC actual returns z +6.66; long-short 8.40 bps/day z +6.01, turnover 53%, costs 2.11 x c bps/day
+volatility: change over random +10.09 pts (per year [27.05, 54.05, 65.71, 10.89, 24.08, 15.39, -19.05, -9.14, 5.77, -4.12, -1.36, 10.26, 20.68, 13.17, -4.37, -6.0, 5.54, -26.99], ahead 11/18, se 5.45)
+  years 18; beat random at p<0.1 (0 bps: 5, 5 bps: 5, 20 bps: 5) of 18; change over random +10.1 pts/yr (se 5.5, ahead 11/18); IC actual returns z +6.66; long-short 8.40 bps/day z +6.01, turnover 53%, costs 2.11 x c bps/day

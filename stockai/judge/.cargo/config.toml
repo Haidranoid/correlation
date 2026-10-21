@@ -1,0 +1,4 @@
+# Same as correlation2's .cargo/config.toml at 9335126: built for this machine's CPU (Core Ultra 9
+# 285K: AVX2, FMA, AVX-VNNI), so the judge and the reference `c2` are compiled the same way.
+[build]
+rustflags = ["-C", "target-cpu=native"]

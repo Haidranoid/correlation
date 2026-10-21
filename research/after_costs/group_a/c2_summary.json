@@ -1,0 +1,815 @@
+{
+ "+3.0-census-picks.md": {
+  "family": "census",
+  "years": 19,
+  "span": "2006-06-28..2025-06-27",
+  "all_years_match_walkforward_0bps": true,
+  "acct0_mean": 14.259473684210526,
+  "rand0_mean": 11.244210526315788,
+  "change_over_random_0bps": 3.015263157894738,
+  "acct5_mean": 0.6857894736842118,
+  "spy_yahoo_mean": 12.066255692966601,
+  "after_cost": -11.38046621928239,
+  "per_year": [
+   {
+    "year": "2006",
+    "first_day": "2006-06-28",
+    "last_day": "2007-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 28.279999999999994,
+    "rand0": 21.609999999999996,
+    "acct5": 10.270000000000001,
+    "spy_yahoo": 23.608172616582234
+   },
+   {
+    "year": "2007",
+    "first_day": "2007-06-28",
+    "last_day": "2008-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -12.339999999999996,
+    "rand0": -13.119999999999997,
+    "acct5": -23.2,
+    "spy_yahoo": -13.497138495247341
+   },
+   {
+    "year": "2008",
+    "first_day": "2008-06-30",
+    "last_day": "2009-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": -35.07,
+    "rand0": -16.479999999999993,
+    "acct5": -42.75,
+    "spy_yahoo": -26.042663348418316
+   },
+   {
+    "year": "2009",
+    "first_day": "2009-06-29",
+    "last_day": "2010-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 48.97,
+    "rand0": 31.240000000000002,
+    "acct5": 29.74000000000001,
+    "spy_yahoo": 19.70447641946247
+   },
+   {
+    "year": "2010",
+    "first_day": "2010-06-28",
+    "last_day": "2011-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 27.02,
+    "rand0": 23.209999999999997,
+    "acct5": 12.509999999999998,
+    "spy_yahoo": 20.985371031653344
+   },
+   {
+    "year": "2011",
+    "first_day": "2011-06-28",
+    "last_day": "2012-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -6.940000000000001,
+    "rand0": -0.32999999999999696,
+    "acct5": -17.669999999999998,
+    "spy_yahoo": 6.299291696337028
+   },
+   {
+    "year": "2012",
+    "first_day": "2012-06-28",
+    "last_day": "2013-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 32.61000000000001,
+    "rand0": 27.669999999999995,
+    "acct5": 16.199999999999992,
+    "spy_yahoo": 23.661895475150317
+   },
+   {
+    "year": "2013",
+    "first_day": "2013-06-28",
+    "last_day": "2014-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 24.209999999999997,
+    "rand0": 26.09999999999999,
+    "acct5": 9.68,
+    "spy_yahoo": 23.955917269672945
+   },
+   {
+    "year": "2014",
+    "first_day": "2014-06-30",
+    "last_day": "2015-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 13.290000000000003,
+    "rand0": 5.580000000000007,
+    "acct5": 0.5800000000000027,
+    "spy_yahoo": 9.25648587895913
+   },
+   {
+    "year": "2015",
+    "first_day": "2015-06-29",
+    "last_day": "2016-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -10.240000000000006,
+    "rand0": -9.360000000000001,
+    "acct5": -20.279999999999998,
+    "spy_yahoo": -2.8082281564344114
+   },
+   {
+    "year": "2016",
+    "first_day": "2016-06-28",
+    "last_day": "2017-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 40.17999999999999,
+    "rand0": 29.279999999999994,
+    "acct5": 24.83,
+    "spy_yahoo": 23.36424907365837
+   },
+   {
+    "year": "2017",
+    "first_day": "2017-06-28",
+    "last_day": "2018-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 21.219999999999995,
+    "rand0": 14.510000000000002,
+    "acct5": 7.06,
+    "spy_yahoo": 13.697667473440145
+   },
+   {
+    "year": "2018",
+    "first_day": "2018-06-28",
+    "last_day": "2019-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 9.190000000000008,
+    "rand0": 2.4599999999999955,
+    "acct5": -3.839999999999999,
+    "spy_yahoo": 10.364071026879573
+   },
+   {
+    "year": "2019",
+    "first_day": "2019-06-28",
+    "last_day": "2020-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 24.83,
+    "rand0": -4.590000000000005,
+    "acct5": 9.020000000000007,
+    "spy_yahoo": 4.987894215181754
+   },
+   {
+    "year": "2020",
+    "first_day": "2020-06-29",
+    "last_day": "2021-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 92.54,
+    "rand0": 73.11000000000001,
+    "acct5": 68.31,
+    "spy_yahoo": 44.297364269258345
+   },
+   {
+    "year": "2021",
+    "first_day": "2021-06-28",
+    "last_day": "2022-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -22.770000000000003,
+    "rand0": -18.14,
+    "acct5": -30.56,
+    "spy_yahoo": -7.6170566437596126
+   },
+   {
+    "year": "2022",
+    "first_day": "2022-06-28",
+    "last_day": "2023-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -18.94,
+    "rand0": 6.53999999999999,
+    "acct5": -25.980000000000004,
+    "spy_yahoo": 14.077207842015383
+   },
+   {
+    "year": "2023",
+    "first_day": "2023-06-28",
+    "last_day": "2024-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -8.389999999999997,
+    "rand0": 6.6400000000000015,
+    "acct5": -19.06,
+    "spy_yahoo": 27.017516833217204
+   },
+   {
+    "year": "2024",
+    "first_day": "2024-06-28",
+    "last_day": "2025-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 23.27999999999999,
+    "rand0": 7.709999999999995,
+    "acct5": 8.17000000000001,
+    "spy_yahoo": 13.946363688756858
+   }
+  ]
+ },
+ "-2.1-peer-momentum.md": {
+  "family": "peers",
+  "years": 18,
+  "span": "2007-06-28..2025-06-27",
+  "all_years_match_walkforward_0bps": true,
+  "acct0_mean": 7.391111111111112,
+  "rand0_mean": 9.452777777777778,
+  "change_over_random_0bps": -2.0616666666666656,
+  "acct5_mean": 6.269999999999999,
+  "spy_yahoo_mean": 11.425038086099066,
+  "after_cost": -5.155038086099068,
+  "per_year": [
+   {
+    "year": "2007",
+    "first_day": "2007-06-28",
+    "last_day": "2008-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -10.650000000000004,
+    "rand0": -22.719999999999995,
+    "acct5": -11.460000000000004,
+    "spy_yahoo": -13.497138495247341
+   },
+   {
+    "year": "2008",
+    "first_day": "2008-06-30",
+    "last_day": "2009-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": -27.390000000000004,
+    "rand0": -25.660000000000004,
+    "acct5": -28.069999999999993,
+    "spy_yahoo": -26.042663348418316
+   },
+   {
+    "year": "2009",
+    "first_day": "2009-06-29",
+    "last_day": "2010-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 22.59,
+    "rand0": 32.59000000000001,
+    "acct5": 21.28000000000001,
+    "spy_yahoo": 19.70447641946247
+   },
+   {
+    "year": "2010",
+    "first_day": "2010-06-28",
+    "last_day": "2011-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 28.15000000000001,
+    "rand0": 21.829999999999995,
+    "acct5": 26.679999999999993,
+    "spy_yahoo": 20.985371031653344
+   },
+   {
+    "year": "2011",
+    "first_day": "2011-06-28",
+    "last_day": "2012-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 3.730000000000011,
+    "rand0": -9.219999999999995,
+    "acct5": 2.70999999999999,
+    "spy_yahoo": 6.299291696337028
+   },
+   {
+    "year": "2012",
+    "first_day": "2012-06-28",
+    "last_day": "2013-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 33.13999999999999,
+    "rand0": 27.859999999999996,
+    "acct5": 31.760000000000012,
+    "spy_yahoo": 23.661895475150317
+   },
+   {
+    "year": "2013",
+    "first_day": "2013-06-28",
+    "last_day": "2014-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 9.220000000000006,
+    "rand0": 26.069999999999993,
+    "acct5": 8.200000000000006,
+    "spy_yahoo": 23.955917269672945
+   },
+   {
+    "year": "2014",
+    "first_day": "2014-06-30",
+    "last_day": "2015-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": -9.450000000000003,
+    "rand0": 6.509999999999994,
+    "acct5": -10.440000000000005,
+    "spy_yahoo": 9.25648587895913
+   },
+   {
+    "year": "2015",
+    "first_day": "2015-06-29",
+    "last_day": "2016-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 21.930000000000007,
+    "rand0": -6.950000000000001,
+    "acct5": 20.75,
+    "spy_yahoo": -2.8082281564344114
+   },
+   {
+    "year": "2016",
+    "first_day": "2016-06-28",
+    "last_day": "2017-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 11.969999999999992,
+    "rand0": 27.849999999999998,
+    "acct5": 10.719999999999995,
+    "spy_yahoo": 23.36424907365837
+   },
+   {
+    "year": "2017",
+    "first_day": "2017-06-28",
+    "last_day": "2018-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 0.7300000000000084,
+    "rand0": 13.680000000000003,
+    "acct5": -0.39000000000000146,
+    "spy_yahoo": 13.697667473440145
+   },
+   {
+    "year": "2018",
+    "first_day": "2018-06-28",
+    "last_day": "2019-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -20.650000000000002,
+    "rand0": 2.519999999999989,
+    "acct5": -21.560000000000002,
+    "spy_yahoo": 10.364071026879573
+   },
+   {
+    "year": "2019",
+    "first_day": "2019-06-28",
+    "last_day": "2020-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 1.849999999999996,
+    "rand0": 6.05,
+    "acct5": 0.8899999999999908,
+    "spy_yahoo": 4.987894215181754
+   },
+   {
+    "year": "2020",
+    "first_day": "2020-06-29",
+    "last_day": "2021-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 72.6,
+    "rand0": 70.69000000000001,
+    "acct5": 70.63,
+    "spy_yahoo": 44.297364269258345
+   },
+   {
+    "year": "2021",
+    "first_day": "2021-06-28",
+    "last_day": "2022-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -29.479999999999997,
+    "rand0": -17.45,
+    "acct5": -30.23,
+    "spy_yahoo": -7.6170566437596126
+   },
+   {
+    "year": "2022",
+    "first_day": "2022-06-28",
+    "last_day": "2023-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 7.269999999999999,
+    "rand0": -0.21999999999999797,
+    "acct5": 6.2999999999999945,
+    "spy_yahoo": 14.077207842015383
+   },
+   {
+    "year": "2023",
+    "first_day": "2023-06-28",
+    "last_day": "2024-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 4.75000000000001,
+    "rand0": 8.889999999999997,
+    "acct5": 3.6499999999999977,
+    "spy_yahoo": 27.017516833217204
+   },
+   {
+    "year": "2024",
+    "first_day": "2024-06-28",
+    "last_day": "2025-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 12.729999999999997,
+    "rand0": 7.830000000000004,
+    "acct5": 11.440000000000005,
+    "spy_yahoo": 13.946363688756858
+   }
+  ]
+ },
+ "+11.8-reversal-control.md": {
+  "family": "reversal5",
+  "years": 18,
+  "span": "2007-06-28..2025-06-27",
+  "all_years_match_walkforward_0bps": true,
+  "acct0_mean": 22.480555555555554,
+  "rand0_mean": 10.664444444444444,
+  "change_over_random_0bps": 11.81611111111111,
+  "acct5_mean": 16.834444444444447,
+  "spy_yahoo_mean": 11.425038086099066,
+  "after_cost": 5.409406358345381,
+  "per_year": [
+   {
+    "year": "2007",
+    "first_day": "2007-06-28",
+    "last_day": "2008-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -17.259999999999998,
+    "rand0": -15.680000000000005,
+    "acct5": -20.88,
+    "spy_yahoo": -13.497138495247341,
+    "g0_judge_acct5": -20.879546761124057
+   },
+   {
+    "year": "2008",
+    "first_day": "2008-06-30",
+    "last_day": "2009-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 5.889999999999995,
+    "rand0": -16.220000000000002,
+    "acct5": 1.3800000000000034,
+    "spy_yahoo": -26.042663348418316,
+    "g0_judge_acct5": 1.3833247072060573
+   },
+   {
+    "year": "2009",
+    "first_day": "2009-06-29",
+    "last_day": "2010-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 59.349999999999994,
+    "rand0": 29.32999999999999,
+    "acct5": 51.970000000000006,
+    "spy_yahoo": 19.70447641946247,
+    "g0_judge_acct5": 51.966656036009695
+   },
+   {
+    "year": "2010",
+    "first_day": "2010-06-28",
+    "last_day": "2011-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 23.320000000000007,
+    "rand0": 23.09000000000001,
+    "acct5": 17.510000000000005,
+    "spy_yahoo": 20.985371031653344,
+    "g0_judge_acct5": 17.51459263322701
+   },
+   {
+    "year": "2011",
+    "first_day": "2011-06-28",
+    "last_day": "2012-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 22.229999999999993,
+    "rand0": 0.36000000000000476,
+    "acct5": 16.53,
+    "spy_yahoo": 6.299291696337028,
+    "g0_judge_acct5": 16.531282229842482
+   },
+   {
+    "year": "2012",
+    "first_day": "2012-06-28",
+    "last_day": "2013-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 64.38999999999999,
+    "rand0": 27.960000000000008,
+    "acct5": 56.97000000000001,
+    "spy_yahoo": 23.661895475150317,
+    "g0_judge_acct5": 56.97150394237691
+   },
+   {
+    "year": "2013",
+    "first_day": "2013-06-28",
+    "last_day": "2014-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 49.760000000000005,
+    "rand0": 25.540000000000006,
+    "acct5": 42.78999999999999,
+    "spy_yahoo": 23.955917269672945,
+    "g0_judge_acct5": 42.78920755479258
+   },
+   {
+    "year": "2014",
+    "first_day": "2014-06-30",
+    "last_day": "2015-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": -5.100000000000005,
+    "rand0": 6.529999999999991,
+    "acct5": -9.419999999999995,
+    "spy_yahoo": 9.25648587895913,
+    "g0_judge_acct5": -9.424046100538453
+   },
+   {
+    "year": "2015",
+    "first_day": "2015-06-29",
+    "last_day": "2016-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -0.13999999999999568,
+    "rand0": -7.909999999999995,
+    "acct5": -4.6599999999999975,
+    "spy_yahoo": -2.8082281564344114,
+    "g0_judge_acct5": -4.658881464255371
+   },
+   {
+    "year": "2016",
+    "first_day": "2016-06-28",
+    "last_day": "2017-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 33.63,
+    "rand0": 27.50999999999999,
+    "acct5": 27.43,
+    "spy_yahoo": 23.36424907365837,
+    "g0_judge_acct5": 27.426097072217082
+   },
+   {
+    "year": "2017",
+    "first_day": "2017-06-28",
+    "last_day": "2018-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 53.61,
+    "rand0": 14.22000000000001,
+    "acct5": 46.34,
+    "spy_yahoo": 13.697667473440145,
+    "g0_judge_acct5": 46.341905874127164
+   },
+   {
+    "year": "2018",
+    "first_day": "2018-06-28",
+    "last_day": "2019-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 11.349999999999994,
+    "rand0": 2.9300000000000104,
+    "acct5": 6.119999999999992,
+    "spy_yahoo": 10.364071026879573,
+    "g0_judge_acct5": 6.1167752460195235
+   },
+   {
+    "year": "2019",
+    "first_day": "2019-06-28",
+    "last_day": "2020-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 52.46999999999999,
+    "rand0": -4.520000000000001,
+    "acct5": 45.28000000000001,
+    "spy_yahoo": 4.987894215181754,
+    "g0_judge_acct5": 45.27552909091299
+   },
+   {
+    "year": "2020",
+    "first_day": "2020-06-29",
+    "last_day": "2021-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 150.73,
+    "rand0": 72.21,
+    "acct5": 139.0,
+    "spy_yahoo": 44.297364269258345,
+    "g0_judge_acct5": 138.99524996292604
+   },
+   {
+    "year": "2021",
+    "first_day": "2021-06-28",
+    "last_day": "2022-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -37.019999999999996,
+    "rand0": -16.939999999999998,
+    "acct5": -39.949999999999996,
+    "spy_yahoo": -7.6170566437596126,
+    "g0_judge_acct5": -39.95086627508867
+   },
+   {
+    "year": "2022",
+    "first_day": "2022-06-28",
+    "last_day": "2023-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -23.219999999999995,
+    "rand0": 7.889999999999997,
+    "acct5": -26.770000000000003,
+    "spy_yahoo": 14.077207842015383,
+    "g0_judge_acct5": -26.774477694066256
+   },
+   {
+    "year": "2023",
+    "first_day": "2023-06-28",
+    "last_day": "2024-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -4.790000000000005,
+    "rand0": 8.34999999999999,
+    "acct5": -9.140000000000004,
+    "spy_yahoo": 27.017516833217204,
+    "g0_judge_acct5": -9.136291759873039
+   },
+   {
+    "year": "2024",
+    "first_day": "2024-06-28",
+    "last_day": "2025-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -34.550000000000004,
+    "rand0": 7.309999999999994,
+    "acct5": -37.480000000000004,
+    "spy_yahoo": 13.946363688756858
+   }
+  ]
+ },
+ "+5.6-cluster-lead-lag.md": {
+  "family": "clusters",
+  "years": 19,
+  "span": "2006-06-28..2025-06-27",
+  "all_years_match_walkforward_0bps": true,
+  "acct0_mean": 17.786315789473683,
+  "rand0_mean": 12.180000000000003,
+  "change_over_random_0bps": 5.60631578947368,
+  "acct5_mean": 7.5210526315789465,
+  "spy_yahoo_mean": 12.066255692966601,
+  "after_cost": -4.545203061387655,
+  "per_year": [
+   {
+    "year": "2006",
+    "first_day": "2006-06-28",
+    "last_day": "2007-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 42.61999999999999,
+    "rand0": 20.48000000000001,
+    "acct5": 29.220000000000002,
+    "spy_yahoo": 23.608172616582234
+   },
+   {
+    "year": "2007",
+    "first_day": "2007-06-28",
+    "last_day": "2008-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 34.93999999999999,
+    "rand0": 25.019999999999996,
+    "acct5": 23.770000000000003,
+    "spy_yahoo": -13.497138495247341
+   },
+   {
+    "year": "2008",
+    "first_day": "2008-06-30",
+    "last_day": "2009-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 81.94999999999999,
+    "rand0": 4.84,
+    "acct5": 67.94,
+    "spy_yahoo": -26.042663348418316
+   },
+   {
+    "year": "2009",
+    "first_day": "2009-06-29",
+    "last_day": "2010-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 7.709999999999995,
+    "rand0": 8.590000000000009,
+    "acct5": 1.2299999999999978,
+    "spy_yahoo": 19.70447641946247
+   },
+   {
+    "year": "2010",
+    "first_day": "2010-06-28",
+    "last_day": "2011-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 27.63,
+    "rand0": 20.47000000000001,
+    "acct5": 17.15,
+    "spy_yahoo": 20.985371031653344
+   },
+   {
+    "year": "2011",
+    "first_day": "2011-06-28",
+    "last_day": "2012-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 3.2499999999999973,
+    "rand0": -0.7600000000000051,
+    "acct5": -2.32,
+    "spy_yahoo": 6.299291696337028
+   },
+   {
+    "year": "2012",
+    "first_day": "2012-06-28",
+    "last_day": "2013-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 32.84,
+    "rand0": 15.399999999999991,
+    "acct5": 23.350000000000005,
+    "spy_yahoo": 23.661895475150317
+   },
+   {
+    "year": "2013",
+    "first_day": "2013-06-28",
+    "last_day": "2014-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 20.55,
+    "rand0": 30.36000000000001,
+    "acct5": 5.44,
+    "spy_yahoo": 23.955917269672945
+   },
+   {
+    "year": "2014",
+    "first_day": "2014-06-30",
+    "last_day": "2015-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 2.210000000000001,
+    "rand0": 2.550000000000008,
+    "acct5": -7.6200000000000045,
+    "spy_yahoo": 9.25648587895913
+   },
+   {
+    "year": "2015",
+    "first_day": "2015-06-29",
+    "last_day": "2016-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -9.57,
+    "rand0": -8.689999999999998,
+    "acct5": -17.600000000000005,
+    "spy_yahoo": -2.8082281564344114
+   },
+   {
+    "year": "2016",
+    "first_day": "2016-06-28",
+    "last_day": "2017-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 10.099999999999998,
+    "rand0": 27.590000000000003,
+    "acct5": -2.2800000000000042,
+    "spy_yahoo": 23.36424907365837
+   },
+   {
+    "year": "2017",
+    "first_day": "2017-06-28",
+    "last_day": "2018-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 22.78,
+    "rand0": 11.220000000000008,
+    "acct5": 10.08,
+    "spy_yahoo": 13.697667473440145
+   },
+   {
+    "year": "2018",
+    "first_day": "2018-06-28",
+    "last_day": "2019-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 8.410000000000007,
+    "rand0": 0.20000000000000018,
+    "acct5": -1.649999999999996,
+    "spy_yahoo": 10.364071026879573
+   },
+   {
+    "year": "2019",
+    "first_day": "2019-06-28",
+    "last_day": "2020-06-26",
+    "match_walkforward_0bps": true,
+    "acct0": 26.439999999999998,
+    "rand0": 8.370000000000012,
+    "acct5": 16.599999999999994,
+    "spy_yahoo": 4.987894215181754
+   },
+   {
+    "year": "2020",
+    "first_day": "2020-06-29",
+    "last_day": "2021-06-25",
+    "match_walkforward_0bps": true,
+    "acct0": 39.78999999999999,
+    "rand0": 46.69000000000001,
+    "acct5": 29.279999999999994,
+    "spy_yahoo": 44.297364269258345
+   },
+   {
+    "year": "2021",
+    "first_day": "2021-06-28",
+    "last_day": "2022-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -15.869999999999996,
+    "rand0": -8.020000000000005,
+    "acct5": -22.250000000000004,
+    "spy_yahoo": -7.6170566437596126
+   },
+   {
+    "year": "2022",
+    "first_day": "2022-06-28",
+    "last_day": "2023-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 0.34000000000000696,
+    "rand0": 8.860000000000001,
+    "acct5": -8.46,
+    "spy_yahoo": 14.077207842015383
+   },
+   {
+    "year": "2023",
+    "first_day": "2023-06-28",
+    "last_day": "2024-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": 12.91,
+    "rand0": 16.45000000000001,
+    "acct5": 1.3400000000000079,
+    "spy_yahoo": 27.017516833217204
+   },
+   {
+    "year": "2024",
+    "first_day": "2024-06-28",
+    "last_day": "2025-06-27",
+    "match_walkforward_0bps": true,
+    "acct0": -11.09,
+    "rand0": 1.8000000000000016,
+    "acct5": -20.320000000000004,
+    "spy_yahoo": 13.946363688756858
+   }
+  ]
+ }
+}

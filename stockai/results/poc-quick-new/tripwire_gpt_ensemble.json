@@ -1,0 +1,28 @@
+{
+  "top": 500,
+  "threshold": 0.05,
+  "adv_window": 63,
+  "overall": {
+    "mean": 0.02589114604013421,
+    "t": 3.958169137302237,
+    "days": 503
+  },
+  "max_year_mean": 0.030310385676665247,
+  "flagged": [],
+  "tripped": false,
+  "years": [
+    {
+      "year": 2022,
+      "mean": 0.021454299871186716,
+      "t": 2.330044983936799,
+      "days": 251
+    },
+    {
+      "year": 2023,
+      "mean": 0.030310385676665247,
+      "t": 3.2581482267968584,
+      "days": 252
+    }
+  ],
+  "scores": "runs/poc-quick-new/gpt/scores_ensemble.npy"
+}

@@ -1,0 +1,15 @@
+--store /home/bhoult/.local/share/correlation2/experiments/after_costs/group_a/stores/new_cut_2016-06-28 census holdout --name main-2026-10-19 --family clusters --start 2015-06-28 --costs 0,5,20
+
+Cluster lead-lag settings: top 500 NYSE stocks by dollar volume, 10 groups, offsets 1-5 days, distance correlation of raw daily returns, 252-day look-back refit every 42 days, alpha 0.4, links above the 90% quantile.
+Holdout 2015-06-29 .. 2016-06-27 (252 trading days), 1s
+169 of the run's 309 correlation periods aren't covered exactly by today's price data, so they are left out.
+952 of the run's stocks are no longer in today's data, so pairs with them are left out.
+Family clusters, rebalanced every 1 trading day(s): 6 fits (every 42 trading days, each on the 252 days before it), 54 links between groups in all; 537 stocks can be picked
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                           9722     -2.8%
+Buy and hold QQQ (Nasdaq-100)                        9457     -5.4%
+Buy and hold all 537 candidates                      9235     -7.6%
+Picks, no trading costs                              9043     -9.6%   random guessers: median 9131, 57.5% did at least as well (p = 0.575)
+Picks, 5 bps per trade                               8240    -17.6%   random guessers: median 8343, 59.4% did at least as well (p = 0.594)
+Picks, 20 bps per trade                              6230    -37.7%   random guessers: median 6359, 65.0% did at least as well (p = 0.650)

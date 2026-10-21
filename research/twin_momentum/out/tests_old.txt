@@ -1,0 +1,143 @@
+formations 2006-03-03 .. 2025-05-14 (231); last return day 2025-06-13
+strategies built
+
+== Long-short by strategy: mean % per 21-day hold (t), $1 long + $1 short ==
+
+-- P1 2006-03..2019
+                                      gross      t      net      t    long   short     sd   SR g   SR n  b_SPY   skew  turn  fund  cost    n
+twin                                 +0.123  +0.33   +0.034  +0.09  +0.181  +0.058   4.77  +0.09  +0.02  -0.46  -2.85  1.52  1.32   8.9  166
+plain                                -0.051  -0.08   -0.117  -0.19  +0.806  +0.858   7.87  -0.02  -0.05  -0.61  -2.01  1.31  0.00   6.6  166
+mkt                                  +0.046  +0.09   -0.028  -0.05  -0.022  -0.068   6.54  +0.02  -0.01  -0.42  -1.48  1.44  0.12   7.3  166
+mkt unscaled (diag)                  -0.092  -0.18   -0.159  -0.31  -0.224  -0.131   6.73  -0.05  -0.08  -0.37  -1.41  1.32  0.11   6.7  166
+twin unscaled (diag)                 +0.064  +0.16   -0.019  -0.05  +0.086  +0.022   5.11  +0.04  -0.01  -0.47  -2.53  1.37  1.41   8.3  166
+twin signal, unhedged (diag)         +0.001  +0.00   -0.075  -0.19  +0.879  +0.878   5.17  +0.00  -0.05  -0.50  -1.95  1.52  0.00   7.6  166
+plain signal, twin-hedged (diag)     -0.091  -0.28   -0.172  -0.53  +0.015  +0.106   4.20  -0.08  -0.14  -0.32  -2.11  1.31  1.47   8.1  166
+
+-- P3 2020..2025-05
+                                      gross      t      net      t    long   short     sd   SR g   SR n  b_SPY   skew  turn  fund  cost    n
+twin                                 +0.848  +1.27   +0.750  +1.12  +0.705  -0.143   5.40  +0.54  +0.48  -0.05  -0.07  1.58  1.85   9.7   65
+plain                                +1.885  +1.19   +1.818  +1.14  +2.639  +0.753  12.82  +0.51  +0.49  -0.67  -0.02  1.35  0.00   6.8   65
+mkt                                  +1.457  +1.21   +1.379  +1.14  +0.685  -0.772   9.72  +0.52  +0.49  -0.26  -0.28  1.54  0.16   7.9   65
+mkt unscaled (diag)                  +2.270  +1.52   +2.199  +1.48  +1.352  -0.918  12.00  +0.66  +0.63  -0.25  +0.13  1.38  0.16   7.1   65
+twin unscaled (diag)                 +1.457  +1.91   +1.362  +1.78  +1.362  -0.095   6.17  +0.82  +0.76  -0.06  +0.46  1.47  2.20   9.5   65
+twin signal, unhedged (diag)         +0.451  +0.49   +0.372  +0.41  +1.370  +0.920   7.39  +0.21  +0.17  -0.29  -0.28  1.58  0.00   7.9   65
+plain signal, twin-hedged (diag)     +1.390  +1.81   +1.301  +1.69  +1.420  +0.029   6.19  +0.78  +0.73  -0.11  +0.69  1.35  2.17   8.9   65
+
+-- all 2006-03..2025-05
+                                      gross      t      net      t    long   short     sd   SR g   SR n  b_SPY   skew  turn  fund  cost    n
+twin                                 +0.327  +1.00   +0.236  +0.72  +0.329  +0.002   4.95  +0.23  +0.16  -0.34  -1.83  1.54  1.47   9.2  231
+plain                                +0.494  +0.79   +0.427  +0.68  +1.322  +0.828   9.53  +0.18  +0.16  -0.61  -0.69  1.32  0.00   6.6  231
+mkt                                  +0.443  +0.89   +0.368  +0.74  +0.177  -0.266   7.58  +0.20  +0.17  -0.37  -0.74  1.47  0.13   7.5  231
+mkt unscaled (diag)                  +0.572  +1.01   +0.504  +0.89  +0.220  -0.353   8.59  +0.23  +0.20  -0.32  -0.16  1.34  0.12   6.8  231
+twin unscaled (diag)                 +0.456  +1.27   +0.369  +1.03  +0.445  -0.011   5.45  +0.29  +0.23  -0.35  -1.25  1.40  1.63   8.6  231
+twin signal, unhedged (diag)         +0.127  +0.33   +0.051  +0.13  +1.017  +0.890   5.87  +0.08  +0.03  -0.44  -1.08  1.54  0.00   7.7  231
+plain signal, twin-hedged (diag)     +0.326  +1.02   +0.243  +0.76  +0.410  +0.084   4.87  +0.23  +0.17  -0.25  -0.41  1.32  1.66   8.3  231
+
+== Sharpe of the twin book vs the baselines: paired circular block bootstrap (10,000 draws) ==
+-- P1 2006-03..2019
+  twin - plain gross, block 6: Sharpe diff +0.112, p 0.2802, 90% interval [-0.078, +0.427], n 166
+  twin - plain gross, block 1: Sharpe diff +0.112, p 0.2297, 90% interval [-0.099, +0.375], n 166
+  twin - plain gross, block 12: Sharpe diff +0.112, p 0.2823, 90% interval [-0.069, +0.422], n 166
+  twin - plain net, block 6: Sharpe diff +0.076, p 0.3439, 90% interval [-0.113, +0.374], n 166
+  twin - plain: mean diff gross +0.175 (t +0.52); picks shared long 0.51 / short 0.57; monthly correlation +0.88
+  twin - mkt gross, block 6: Sharpe diff +0.065, p 0.4135, 90% interval [-0.136, +0.385], n 166
+  twin - mkt net, block 6: Sharpe diff +0.039, p 0.4679, 90% interval [-0.162, +0.347], n 166
+  twin - mkt: mean diff gross +0.078 (t +0.30); picks shared long 0.68 / short 0.66; monthly correlation +0.88
+  twin - plain signal, twin-hedged (diag) gross, block 6: Sharpe diff +0.165, p 0.1331, 90% interval [-0.000, +0.403], n 166
+  twin - plain signal, twin-hedged (diag) net, block 6: Sharpe diff +0.166, p 0.1214, 90% interval [+0.001, +0.397], n 166
+  twin - plain signal, twin-hedged (diag): mean diff gross +0.214 (t +1.39); picks shared long 0.51 / short 0.57; monthly correlation +0.91
+  twin - twin signal, unhedged (diag) gross, block 6: Sharpe diff +0.089, p 0.2264, 90% interval [-0.007, +0.276], n 166
+  twin - twin signal, unhedged (diag) net, block 6: Sharpe diff +0.075, p 0.2500, 90% interval [-0.018, +0.248], n 166
+  twin - twin signal, unhedged (diag): mean diff gross +0.123 (t +1.17); picks shared long 1.00 / short 1.00; monthly correlation +0.97
+-- P3 2020..2025-05
+  twin - plain gross, block 6: Sharpe diff +0.034, p 0.4328, 90% interval [-0.434, +0.418], n 65
+  twin - plain gross, block 1: Sharpe diff +0.034, p 0.4547, 90% interval [-0.501, +0.556], n 65
+  twin - plain gross, block 12: Sharpe diff +0.034, p 0.4466, 90% interval [-0.468, +0.414], n 65
+  twin - plain net, block 6: Sharpe diff -0.010, p 0.5056, 90% interval [-0.481, +0.372], n 65
+  twin - plain: mean diff gross -1.038 (t -0.89); picks shared long 0.49 / short 0.48; monthly correlation +0.75
+  twin - mkt gross, block 6: Sharpe diff +0.025, p 0.4143, 90% interval [-0.408, +0.352], n 65
+  twin - mkt net, block 6: Sharpe diff -0.010, p 0.4789, 90% interval [-0.442, +0.314], n 65
+  twin - mkt: mean diff gross -0.610 (t -0.79); picks shared long 0.63 / short 0.58; monthly correlation +0.81
+  twin - plain signal, twin-hedged (diag) gross, block 6: Sharpe diff -0.234, p 0.8553, 90% interval [-0.589, +0.108], n 65
+  twin - plain signal, twin-hedged (diag) net, block 6: Sharpe diff -0.247, p 0.8681, 90% interval [-0.601, +0.096], n 65
+  twin - plain signal, twin-hedged (diag): mean diff gross -0.543 (t -1.22); picks shared long 0.49 / short 0.48; monthly correlation +0.82
+  twin - twin signal, unhedged (diag) gross, block 6: Sharpe diff +0.333, p 0.0120, 90% interval [+0.074, +0.569], n 65
+  twin - twin signal, unhedged (diag) net, block 6: Sharpe diff +0.307, p 0.0166, 90% interval [+0.048, +0.542], n 65
+  twin - twin signal, unhedged (diag): mean diff gross +0.397 (t +1.04); picks shared long 1.00 / short 1.00; monthly correlation +0.93
+-- all 2006-03..2025-05
+  twin - plain gross, block 6: Sharpe diff +0.049, p 0.3989, 90% interval [-0.158, +0.311], n 231
+  twin - plain gross, block 1: Sharpe diff +0.049, p 0.3947, 90% interval [-0.173, +0.310], n 231
+  twin - plain gross, block 12: Sharpe diff +0.049, p 0.4145, 90% interval [-0.152, +0.313], n 231
+  twin - plain net, block 6: Sharpe diff +0.009, p 0.5092, 90% interval [-0.197, +0.262], n 231
+  twin - plain: mean diff gross -0.167 (t -0.41); picks shared long 0.51 / short 0.55; monthly correlation +0.81
+  twin - mkt gross, block 6: Sharpe diff +0.026, p 0.4614, 90% interval [-0.171, +0.279], n 231
+  twin - mkt net, block 6: Sharpe diff -0.004, p 0.5454, 90% interval [-0.198, +0.240], n 231
+  twin - mkt: mean diff gross -0.116 (t -0.41); picks shared long 0.67 / short 0.64; monthly correlation +0.84
+  twin - plain signal, twin-hedged (diag) gross, block 6: Sharpe diff -0.003, p 0.5598, 90% interval [-0.171, +0.217], n 231
+  twin - plain signal, twin-hedged (diag) net, block 6: Sharpe diff -0.008, p 0.5756, 90% interval [-0.177, +0.211], n 231
+  twin - plain signal, twin-hedged (diag): mean diff gross +0.001 (t +0.01); picks shared long 0.51 / short 0.55; monthly correlation +0.86
+  twin - twin signal, unhedged (diag) gross, block 6: Sharpe diff +0.154, p 0.0724, 90% interval [+0.038, +0.324], n 231
+  twin - twin signal, unhedged (diag) net, block 6: Sharpe diff +0.135, p 0.0879, 90% interval [+0.022, +0.298], n 231
+  twin - twin signal, unhedged (diag): mean diff gross +0.200 (t +1.52); picks shared long 1.00 / short 1.00; monthly correlation +0.95
+
+== Worst holds, 2006-03..2025-05 (formation date; gross %; long leg, short leg) ==
+-- twin: 2009-03-05 -28.4 (L -7.0, S +21.4); 2009-04-03 -27.8 (L -7.8, S +20.0); 2008-12-02 -19.6 (L -0.3, S +19.3); 2020-05-08 -13.3 (L -3.3, S +10.0); 2020-11-05 -13.0 (L +1.0, S +14.0)
+   2009 (12 holds): sum -65.1%; formed Mar-May 2009: -58.4%; max drawdown (cumulative sum) 85.7% from 2008-12-02 to the hold formed 2009-09-02; worst 3 consecutive holds -58.4%
+-- plain: 2009-03-05 -44.6 (L +11.3, S +56.0); 2009-04-03 -35.7 (L +0.3, S +36.1); 2020-11-05 -31.8 (L +11.1, S +42.9); 2020-05-08 -29.1 (L +6.3, S +35.4); 2008-12-02 -28.4 (L +10.1, S +38.5)
+   2009 (12 holds): sum -74.7%; formed Mar-May 2009: -87.8%; max drawdown (cumulative sum) 133.2% from 2008-07-03 to the hold formed 2009-09-02; worst 3 consecutive holds -87.8%
+-- mkt: 2009-04-03 -31.0 (L -6.3, S +24.7); 2009-03-05 -30.4 (L -5.3, S +25.1); 2020-11-05 -27.7 (L +3.0, S +30.8); 2021-02-08 -24.5 (L -14.7, S +9.7); 2008-12-02 -22.8 (L +2.7, S +25.5)
+   2009 (12 holds): sum -61.9%; formed Mar-May 2009: -66.0%; max drawdown (cumulative sum) 120.0% from 2008-07-03 to the hold formed 2009-09-02; worst 3 consecutive holds -66.0%
+-- plain signal, twin-hedged (diag): 2009-04-03 -21.6 (L -4.3, S +17.3); 2008-12-02 -20.9 (L -1.0, S +19.9); 2009-03-05 -20.1 (L -6.3, S +13.8); 2020-08-07 -15.3 (L -5.4, S +9.9); 2020-05-08 -10.4 (L -1.0, S +9.4)
+   2009 (12 holds): sum -57.1%; formed Mar-May 2009: -44.9%; max drawdown (cumulative sum) 84.8% from 2008-07-03 to the hold formed 2010-07-06; worst 3 consecutive holds -44.9%
+-- twin signal, unhedged (diag): 2009-04-03 -26.9 (L +3.7, S +30.6); 2009-03-05 -25.3 (L +25.2, S +50.5); 2020-05-08 -22.4 (L +7.3, S +29.7); 2020-11-05 -21.1 (L +6.6, S +27.7); 2008-12-02 -20.7 (L +13.7, S +34.4)
+   2009 (12 holds): sum -67.3%; formed Mar-May 2009: -55.7%; max drawdown (cumulative sum) 90.4% from 2008-12-02 to the hold formed 2009-09-02; worst 3 consecutive holds -55.7%
+
+2009 holds, gross % (twin | plain | mkt):
+  2008-12-02   -19.6 |  -28.4 (L +10.1 S +38.5) |  -22.8   SPY +9.0
+  2009-01-02    +4.4 |  +10.7 (L -7.7 S -18.4) |   +2.1   SPY -9.9
+  2009-02-03    +6.0 |  +12.4 (L -15.0 S -27.4) |   +7.8   SPY -17.8
+  2009-03-05   -28.4 |  -44.6 (L +11.3 S +56.0) |  -30.4   SPY +22.5
+  2009-04-03   -27.8 |  -35.7 (L +0.3 S +36.1) |  -31.0   SPY +7.5
+  2009-05-05    -2.1 |   -7.4 (L +2.5 S +9.9) |   -4.6   SPY +4.4
+  2009-06-04    +2.6 |  +10.9 (L -3.4 S -14.4) |   +3.0   SPY -5.0
+  2009-07-06    -8.5 |  -18.3 (L +8.6 S +27.0) |   -6.3   SPY +12.1
+  2009-08-04    -7.2 |   -5.8 (L -1.4 S +4.4) |   -7.7   SPY -0.9
+  2009-09-02    -4.9 |   -6.3 (L +2.8 S +9.1) |   -2.8   SPY +2.7
+  2009-10-02    +0.3 |   +1.6 (L -1.0 S -2.6) |   +2.1   SPY +1.8
+  2009-11-02    +1.3 |   +6.5 (L +15.5 S +9.0) |   +6.3   SPY +6.6
+  2009-12-02    -0.6 |   +1.4 (L +4.1 S +2.7) |   -0.5   SPY +1.9
+  2010-01-04    +0.7 |   -3.1 (L -5.3 S -2.1) |   -4.7   SPY -3.1
+
+== By period: gross % per hold (t); Sharpe gross ==
+2006-03..2009  twin -0.87 (-0.8)  twin_net -0.97 (-0.8)  plain -1.41 (-0.8)  mkt -1.42 (-1.0)  d_plain +0.54 (+0.6)  SR twin -0.39 plain -0.39 mkt -0.49  n 46
+2010..2014     twin +0.67 (+2.1)  twin_net +0.58 (+1.8)  plain +0.76 (+1.3)  mkt +0.83 (+1.7)  d_plain -0.09 (-0.2)  SR twin +0.94 plain +0.59 mkt +0.75  n 60
+2015..2019     twin +0.34 (+0.8)  twin_net +0.26 (+0.6)  plain +0.18 (+0.3)  mkt +0.38 (+0.6)  d_plain +0.16 (+0.4)  SR twin +0.37 plain +0.11 mkt +0.26  n 60
+2020..2022     twin +0.35 (+0.3)  twin_net +0.24 (+0.2)  plain +2.32 (+0.9)  mkt +1.54 (+0.8)  d_plain -1.97 (-1.0)  SR twin +0.20 plain +0.52 mkt +0.44  n 36
+2023..2025-05  twin +1.47 (+1.8)  twin_net +1.38 (+1.7)  plain +1.35 (+0.8)  mkt +1.35 (+1.3)  d_plain +0.12 (+0.1)  SR twin +1.18 plain +0.52 mkt +0.81  n 29
+
+== By calendar year of formation: mean % per hold (twin gross, twin net, plain gross, mkt gross) ==
+2006  twin  -0.46  net  -0.55  plain  -1.63  mkt  -2.01  holds 10
+2007  twin  +2.43  net  +2.34  plain  +4.44  mkt  +3.58  holds 12
+2008  twin  +0.02  net  -0.07  plain  -2.26  mkt  -2.18  holds 12
+2009  twin  -5.42  net  -5.54  plain  -6.22  mkt  -5.16  holds 12
+2010  twin  +0.58  net  +0.49  plain  +0.80  mkt  +0.06  holds 12
+2011  twin  +0.95  net  +0.86  plain  -0.04  mkt  +1.32  holds 12
+2012  twin  +0.82  net  +0.74  plain  +0.52  mkt  +0.77  holds 12
+2013  twin  +0.42  net  +0.33  plain  +1.97  mkt  +1.47  holds 12
+2014  twin  +0.57  net  +0.49  plain  +0.54  mkt  +0.54  holds 12
+2015  twin  +1.47  net  +1.39  plain  +2.36  mkt  +2.47  holds 12
+2016  twin  -1.00  net  -1.09  plain  -2.63  mkt  -2.61  holds 12
+2017  twin  +1.32  net  +1.23  plain  +0.51  mkt  +1.00  holds 12
+2018  twin  +0.17  net  +0.08  plain  +0.00  mkt  +0.36  holds 12
+2019  twin  -0.24  net  -0.32  plain  +0.66  mkt  +0.70  holds 12
+2020  twin  +0.93  net  +0.83  plain  +2.74  mkt  +2.86  holds 12
+2021  twin  +0.41  net  +0.30  plain  -0.24  mkt  -0.72  holds 12
+2022  twin  -0.30  net  -0.40  plain  +4.46  mkt  +2.47  holds 12
+2023  twin  +0.30  net  +0.21  plain  -1.65  mkt  -0.41  holds 12
+2024  twin  +2.42  net  +2.34  plain  +3.32  mkt  +2.44  holds 12
+2025  twin  +1.98  net  +1.89  plain  +3.83  mkt  +3.00  holds 5
+
+== Tests ==
+Test 1 (2006-03..2019 twin book): gross +0.123%/hold t +0.33; net +0.034 t +0.09 -> FAIL
+Test 2 (Sharpe, gross): twin +0.090 vs plain -0.023; bootstrap p 0.2802 -> FAIL
+Test 3, old part (2020..2025-05, positive): gross +0.848 t +1.27 -> PASS

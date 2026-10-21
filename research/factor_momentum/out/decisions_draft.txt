@@ -1,0 +1,45 @@
+Decisions fixed 2026-10-21, after the coverage/code checks (out/checks_old.txt) and BEFORE any hold return, book
+return, baseline return or judge output was computed.
+
+1. Correlation matrix = cosine of each stock's return vector standardized by its own mean and sd (ddof 0) over its
+   finite days, missing days set to 0, rows scaled to unit norm (c2eval's convention): diagonal exactly 1,
+   eigenvalues sum to n. Log returns of export closes (gap day 2011-02-17 forward-filled), no bad-print filter.
+2. Eigenvectors from numpy.linalg.eigh, reordered by descending eigenvalue; components 2-21 kept.
+3. Factor daily returns in sample (t-251..t): w_k . simple daily return, missing return = 0 (a daily-rebalanced
+   constant-weight portfolio). 12-1 past return = sum of those over t-251..t-21 (231 days); 1-month = sum over
+   t-20..t; vol = sd over all 252 days x sqrt(252). Out of sample the hold is buy-and-hold from close t to close
+   t+21: return = sum_i W_i (P_i(t+21)/P_i(t) - 1). The in-sample and out-of-sample definitions differ
+   (daily-rebalanced vs buy-and-hold); immaterial for a sign and a vol scale.
+4. A stock that leaves the export or has a missing close during the hold keeps its last close: zero return from
+   there (forward-filled closes).
+5. Costs: 5 bps x sum |new weight - drifted old weight| at each formation; the first formation pays the build.
+6. The book (and every baseline) starts at the first formation with a universe (2004-12-31), so the first 2006 hold
+   pays real turnover.
+7. Universe: the judge-like liquid set needs 756 days of history, and the export holds only about 300 stocks before
+   2005, so the set has 298-302 stocks until 2007-11 and 500 from 2007-12-03. Test 1 keeps the plan's "2006-2019":
+   formations dated 2006-01-01..2019-12-31 (the first is 2006-02-01); 2006-02..2007-11 runs on the ~300-stock set
+   (the whole set, as it has fewer than 500). The 500-stock part 2007-12..2019 is reported beside it. (Same choice
+   as the loners experiment.)
+8. Baseline (a): plain 12-1 = ln(close[t-21]/close[t-252]) (stockai's momentum_scores, copied; checked identical),
+   decile long-short ($1/$1, round(10% n) per leg, equal weight) over the universe stocks with a finite score.
+9. Baseline (b): each universe stock's twin at the formation (c2eval.twins fund_row at rebal k = t); the twin's
+   12-1 = sum of the fund's daily store-close log returns over t-251..t-21, a move beyond +-50% or a missing day
+   counting 0. Stocks without a twin are dropped. Tie groups straddling a decile edge share the remaining slots
+   (fractional equal weights). (b) counts at a formation only if >= 80% of the universe has a twin and there are
+   >= 10 distinct twins: true from 2006-02-01 on (before that every twin is QQQ).
+10. Test 1: mean NET monthly (21-day hold) return of the book, formations 2006-01-01..2019-12-31, plain t of the
+    non-overlapping holds; pass t >= 2.5.
+11. Test 2: OLS of the book's NET hold returns on (a)'s and (b)'s NET hold returns, Test 1's formations; intercept
+    > 0 with plain OLS t >= 2. Newey-West (3 lags) and the gross version are reported as checks only.
+12. Test 3: "same sign" = the plan's direction (positive: factor momentum pays), net mean, formations 2020-01-01..
+    the last whose hold ends inside the old export; and the unseen holds (new export) formed on/after 2025-06-27
+    ending by 2026-10-19, book warmed up from 2025-01.
+13. Stability: eigenvectors of consecutive formations aligned on the union of their stocks (0 for absent stocks);
+    each component 2-21's best |cosine| among the previous formation's top 50, the index it matched, the |cos|
+    with the same index, and the subspace retention ||projection onto previous comps 2-21||. How often a sign is
+    "long" is NOT reported (the eigenvector sign is arbitrary).
+14. Beta: realized = OLS slope of the book's monthly gross return on SPY's buy-and-hold return over the same hold
+    (store close); ex-ante = sum_i W_i beta_i, beta_i from simple daily returns over t-251..t (pairwise finite).
+15. Judge scores: W_j(t) on days t..(next formation - 1), NaN for stocks outside the book and before the first
+    formation; raw weights. Graded rebalance=21, uniform and volatility-matched. Plain 12-1 on the same universe
+    is graded the same way for reference (daily signal, latest universe).

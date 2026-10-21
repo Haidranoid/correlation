@@ -1,0 +1,4 @@
+tripwire runs/poc/gpt_null/scores_seed0.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0012 (t 0.31, 753 days); largest year mean +0.0084; not tripped (<= 0.05)
+  2012: -0.0050 (t -0.94, 250 days)
+  2017: +0.0084 (t 1.18, 252 days)
+  2022: +0.0003 (t 0.04, 251 days)

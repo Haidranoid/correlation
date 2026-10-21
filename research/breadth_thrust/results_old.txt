@@ -1,0 +1,135 @@
+# Group breadth thrust, old export (8503 stocks x 5911 days, 2001-12-31..2025-06-27)
+refits: 232 (2006-03-03 .. 2025-06-13); group sizes 11-111, groups under 10 members: 0
+group-days: 145830; thrust condition true on 9986 (6.85%); thrusts 1740 on 965 dates
+
+## Thrusts per year
+year  thrusts  dates  groups/date(max)  mean y21 bps
+2006     47     36    4    +130.6
+2007     70     37    7     +21.0
+2008     98     52    8    -110.7
+2009    114     51   11     +46.4
+2010     99     43    8     -28.1
+2011    116     43   23      -2.7
+2012     99     56    8     +38.2
+2013     66     42    5     +23.4
+2014     91     51    7     +67.0
+2015     90     57    5     +45.1
+2016    101     51    7     +40.4
+2017     68     48    4     +12.0
+2018     77     54    6     -27.6
+2019    105     59    9     +19.4
+2020     95     44   12     +23.8
+2021     88     63    3    +154.1
+2022    101     49    9     +86.5
+2023     87     52    9     +49.8
+2024     79     51    5     +68.2
+2025     49     26    6     -12.7
+group-periods (30 groups x 21 days): 6960; with a thrust 1740 (25.0%); thrusts per group per year 3.00
+groups thrusting on the same date: 1: 605 dates, 2: 185 dates, 3: 85 dates, 4: 36 dates, 5: 26 dates, 6: 7 dates, 7: 7 dates, 8: 4 dates, 9: 4 dates, 10: 2 dates, 11: 2 dates, 12: 1 dates, 23: 1 dates
+
+## Thrusts per group (label = the most common twin fund among members; groups change each refit)
+123 labels; label  thrusts  group-periods  thrusts per group-period
+  IWM      328   1414  0.23
+  XLU       68    221  0.31
+  IYR       68    219  0.31
+  KRE       65    217  0.30
+  MDY       59    242  0.24
+  GDX       54    198  0.27
+  XLI       51    186  0.27
+  IYT       50    174  0.29
+  XRT       47    215  0.22
+  SPY       47    190  0.25
+  XLF       46    159  0.29
+  XHB       40    132  0.30
+  SMH       40    126  0.32
+  XLP       39    185  0.21
+  EWC       37    146  0.25
+  KIE       37    110  0.34
+  XME       27    108  0.25
+  XBI       27    135  0.20
+  EWZ       25    116  0.22
+  XLE       23     77  0.30
+
+## Test 1: 2006-2019, after-thrust 21-day market-relative return (pass: >= +50 bps, t >= 3)
+2006-2019: 1241 thrusts on 680 dates; mean +15.5 bps (se 11.9, t +1.30; t by 21-day block +1.31), 54% positive
+   (a) ordinary group-days -1.6 bps over 103217 group-days; thrust minus (a) +17.1 bps, t +1.43
+   (b) momentum-matched non-thrusts (78076 group-days): thrust minus (b) +22.9 bps, t +1.92  [regression with decile effects, both sides clustered by date: +22.9 bps, t +1.90]
+   thrusts by momentum decile (1 = lowest): 29 62 82 86 122 129 124 156 193 258; control means by decile (bps): -17 -13 -6 +1 +8 +13 +4 +2 -17 -30
+TEST 1: FAIL
+
+## Test 2: beats the baselines, difference t >= 2 (both (b), the plan's test, and (a), the TL;DR's)
+thrust - (b) +22.9 bps t +1.92; thrust - (a) +17.1 bps t +1.43
+TEST 2: FAIL
+
+## Test 3: 2020-2025-06, same sign as 2006-2019
+2020-2025-06: 495 thrusts on 281 dates; mean +68.1 bps (se 28.4, t +2.40; t by 21-day block +2.42), 56% positive
+   (a) ordinary group-days +17.8 bps over 40245 group-days; thrust minus (a) +50.3 bps, t +1.77
+   (b) momentum-matched non-thrusts (30306 group-days): thrust minus (b) +52.3 bps, t +1.84  [regression with decile effects, both sides clustered by date: +52.3 bps, t +1.82]
+   thrusts by momentum decile (1 = lowest): 12 35 39 38 32 53 65 51 70 100; control means by decile (bps): -56 -12 +6 +9 +25 +50 +62 +27 +26 -23
+TEST 3 (2020-2025-06 part): PASS (sign +1 then +1)
+
+## Reported only: with and without 2009 and 2020
+2006-2019 without 2009: 1127 thrusts on 629 dates; mean +12.4 bps (se 12.1, t +1.03; t by 21-day block +0.99), 54% positive
+   (a) ordinary group-days -2.4 bps over 95771 group-days; thrust minus (a) +14.8 bps, t +1.22
+   (b) momentum-matched non-thrusts (72990 group-days): thrust minus (b) +19.5 bps, t +1.61  [regression with decile effects, both sides clustered by date: +19.6 bps, t +1.61]
+   thrusts by momentum decile (1 = lowest): 24 54 70 84 109 118 111 144 176 237; control means by decile (bps): -22 -12 -6 +0 +7 +13 +2 +4 -14 -30
+2009 alone: 114 thrusts on 51 dates; mean +46.4 bps (se 49.7, t +0.93; t by 21-day block +1.66), 52% positive
+   (a) ordinary group-days +9.0 bps over 7446 group-days; thrust minus (a) +37.4 bps, t +0.75
+   (b) momentum-matched non-thrusts (5086 group-days): thrust minus (b) +51.9 bps, t +1.03  [regression with decile effects, both sides clustered by date: +49.8 bps, t +0.98]
+   thrusts by momentum decile (1 = lowest): 4 8 9 9 10 11 17 13 12 21; control means by decile (bps): +7 +5 -4 +4 +33 +18 -4 -17 -40 -21
+2020-2025-06 without 2020: 400 thrusts on 237 dates; mean +78.6 bps (se 30.9, t +2.54; t by 21-day block +2.34), 57% positive
+   (a) ordinary group-days +19.5 bps over 32750 group-days; thrust minus (a) +59.1 bps, t +1.91
+   (b) momentum-matched non-thrusts (24846 group-days): thrust minus (b) +70.1 bps, t +2.27  [regression with decile effects, both sides clustered by date: +70.4 bps, t +2.25]
+   thrusts by momentum decile (1 = lowest): 7 26 32 29 26 46 43 44 63 84; control means by decile (bps): -32 +6 +12 +24 +26 +55 +52 +20 +7 -52
+2020 alone: 95 thrusts on 44 dates; mean +23.8 bps (se 69.6, t +0.34; t by 21-day block +0.73), 48% positive
+   (a) ordinary group-days +10.4 bps over 7495 group-days; thrust minus (a) +13.4 bps, t +0.19
+   (b) momentum-matched non-thrusts (5460 group-days): thrust minus (b) -1.3 bps, t -0.02  [regression with decile effects, both sides clustered by date: -1.1 bps, t -0.02]
+   thrusts by momentum decile (1 = lowest): 4 10 7 9 6 9 19 8 7 16; control means by decile (bps): -158 -101 -22 -55 -10 +59 +80 +73 +122 +79
+2006-2025-06 all: 1736 thrusts on 961 dates; mean +30.5 bps (se 11.7, t +2.60; t by 21-day block +2.59), 54% positive
+   (a) ordinary group-days +3.9 bps over 143462 group-days; thrust minus (a) +26.6 bps, t +2.27
+   (b) momentum-matched non-thrusts (108382 group-days): thrust minus (b) +30.7 bps, t +2.62  [regression with decile effects, both sides clustered by date: +30.7 bps, t +2.58]
+   thrusts by momentum decile (1 = lowest): 58 80 122 126 157 175 186 219 260 353; control means by decile (bps): -30 -11 -3 +4 +9 +19 +19 +10 -3 -22
+2006-2025-06 without 2009 and 2020: 1527 thrusts on 866 dates; mean +29.7 bps (se 12.1, t +2.47; t by 21-day block +2.27), 55% positive
+   (a) ordinary group-days +3.2 bps over 128521 group-days; thrust minus (a) +26.5 bps, t +2.20
+   (b) momentum-matched non-thrusts (97836 group-days): thrust minus (b) +32.6 bps, t +2.70  [regression with decile effects, both sides clustered by date: +32.7 bps, t +2.68]
+   thrusts by momentum decile (1 = lowest): 41 65 110 110 140 157 156 190 236 322; control means by decile (bps): -20 -11 -2 +7 +9 +17 +17 +9 -4 -33
+
+## Reported only: by year (mean after-thrust return, bps; t clustered by date)
+  2006:   47 thrusts,  36 dates,  +130.6 bps, t +3.41
+  2007:   70 thrusts,  37 dates,   +21.0 bps, t +0.58
+  2008:   98 thrusts,  52 dates,  -110.7 bps, t -2.10
+  2009:  114 thrusts,  51 dates,   +46.4 bps, t +0.93
+  2010:   99 thrusts,  43 dates,   -28.1 bps, t -0.81
+  2011:  116 thrusts,  43 dates,    -2.7 bps, t -0.10
+  2012:   99 thrusts,  56 dates,   +38.2 bps, t +1.00
+  2013:   66 thrusts,  42 dates,   +23.4 bps, t +0.52
+  2014:   91 thrusts,  51 dates,   +67.0 bps, t +2.33
+  2015:   90 thrusts,  57 dates,   +45.1 bps, t +0.85
+  2016:  101 thrusts,  51 dates,   +40.4 bps, t +0.81
+  2017:   68 thrusts,  48 dates,   +12.0 bps, t +0.25
+  2018:   77 thrusts,  54 dates,   -27.6 bps, t -0.53
+  2019:  105 thrusts,  59 dates,   +19.4 bps, t +0.46
+  2020:   95 thrusts,  44 dates,   +23.8 bps, t +0.34
+  2021:   88 thrusts,  63 dates,  +154.1 bps, t +1.92
+  2022:  101 thrusts,  49 dates,   +86.5 bps, t +1.30
+  2023:   87 thrusts,  52 dates,   +49.8 bps, t +1.14
+  2024:   79 thrusts,  51 dates,   +68.2 bps, t +1.21
+  2025:   45 thrusts,  22 dates,   -12.7 bps, t -0.12
+
+## Money test: the judge, rebalance=1, walk-forward 2006-2025 (scores: 1 + member correlation, days d..d+20)
+decision days from 2006-06-28: 4779; with no scored stock 287, with 1-19 2 (the account holds cash for the missing picks), >= 20 4490; median scored 279
+uniform: years 18; beat random at p<0.1 (0 bps: 9, 5 bps: 9, 20 bps: 8) of 18; change over random +7.6 pts/yr (se 6.2, ahead 11/18); IC actual returns z +1.02; long-short 4.88 bps/day z +2.28, turnover 10%, costs 0.40 x c bps/day
+    0 bps: change over random +7.63 pts/yr (se 6.23, ahead 11/18)
+    5 bps: change over random +7.43 pts/yr (se 6.10, ahead 11/18)
+   20 bps: change over random +6.87 pts/yr (se 5.72, ahead 11/18)
+   per year (0 bps): -14.5 -24.1 +3.3 +7.6 +36.9 -15.6 +12.5 -9.3 +62.9 -34.7 +29.4 +28.6 +16.8 -6.4 +50.2 +2.0 +11.6 -19.8
+   picks / random median per year (0 bps): 2007 -32.1/-17.6; 2008 -43.2/-19.1; 2009 +31.1/+27.9; 2010 +22.8/+15.2; 2011 +33.0/-3.8; 2012 +11.1/+26.7; 2013 +36.0/+23.5; 2014 -0.4/+8.9; 2015 +53.6/-9.3; 2016 -9.6/+25.1; 2017 +43.8/+14.4; 2018 +32.2/+3.7; 2019 +9.3/-7.5; 2020 +61.3/+67.8; 2021 +38.0/-12.2; 2022 +9.3/+7.3; 2023 +14.4/+2.8; 2024 -12.6/+7.3
+volatility: years 18; beat random at p<0.1 (0 bps: 8, 5 bps: 8, 20 bps: 8) of 18; change over random +4.0 pts/yr (se 5.0, ahead 10/18); IC actual returns z +1.02; long-short 4.88 bps/day z +2.28, turnover 10%, costs 0.40 x c bps/day
+    0 bps: change over random +3.96 pts/yr (se 5.05, ahead 10/18)
+    5 bps: change over random +3.87 pts/yr (se 4.94, ahead 10/18)
+   20 bps: change over random +3.61 pts/yr (se 4.62, ahead 10/18)
+   per year (0 bps): -8.6 -15.9 -6.8 +8.4 +29.1 -11.6 +10.7 -8.0 +42.9 -30.9 +23.8 +11.6 +7.2 -23.0 +43.9 +3.8 +11.8 -17.2
+   picks / random median per year (0 bps): 2007 -32.1/-23.5; 2008 -43.2/-27.3; 2009 +31.1/+37.9; 2010 +22.8/+14.4; 2011 +33.0/+3.9; 2012 +11.1/+22.7; 2013 +36.0/+25.3; 2014 -0.4/+7.6; 2015 +53.6/+10.6; 2016 -9.6/+21.3; 2017 +43.8/+20.0; 2018 +32.2/+20.6; 2019 +9.3/+2.1; 2020 +61.3/+84.3; 2021 +38.0/-5.9; 2022 +9.3/+5.5; 2023 +14.4/+2.7; 2024 -12.6/+4.7
+
+FILE NAME NUMBER (uniform, 0 bps): +7.6
+first failure: test 1

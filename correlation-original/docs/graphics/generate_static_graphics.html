@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Static Graphics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .graphic {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: block;
+            margin: 10px auto;
+        }
+        .controls {
+            text-align: center;
+            margin: 15px 0;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .export-btn {
+            background: #27ae60;
+        }
+        .export-btn:hover {
+            background: #219a52;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Generate Static Graphics for Documentation</h1>
+    <p>Click the buttons below to generate and export graphics for the Analysis Method documentation.</p>
+
+    <!-- Correlation Formula Visualization -->
+    <div class="graphic">
+        <h3>1. Correlation Formula Visualization</h3>
+        <canvas id="formulaCanvas" width="600" height="300"></canvas>
+        <div class="controls">
+            <button onclick="drawCorrelationFormula()">Generate Formula</button>
+            <button class="export-btn" onclick="exportCanvas('formulaCanvas', 'correlation-formula.png')">Export PNG</button>
+        </div>
+    </div>
+
+    <!-- Statistical Significance Chart -->
+    <div class="graphic">
+        <h3>2. Statistical Significance Thresholds</h3>
+        <canvas id="significanceChart" width="700" height="400"></canvas>
+        <div class="controls">
+            <button onclick="drawSignificanceChart()">Generate Chart</button>
+            <button class="export-btn" onclick="exportCanvas('significanceChart', 'significance-thresholds.png')">Export PNG</button>
+        </div>
+    </div>
+
+    <!-- Time Window Diagram -->
+    <div class="graphic">
+        <h3>3. Time Window Analysis Diagram</h3>
+        <canvas id="timeWindowDiagram" width="800" height="400"></canvas>
+        <div class="controls">
+            <button onclick="drawTimeWindowDiagram()">Generate Diagram</button>
+            <button class="export-btn" onclick="exportCanvas('timeWindowDiagram', 'time-window-analysis.png')">Export PNG</button>
+        </div>
+    </div>
+
+    <!-- Data Flow Diagram -->
+    <div class="graphic">
+        <h3>4. Data Processing Flow</h3>
+        <canvas id="dataFlowDiagram" width="800" height="500"></canvas>
+        <div class="controls">
+            <button onclick="drawDataFlowDiagram()">Generate Flow</button>
+            <button class="export-btn" onclick="exportCanvas('dataFlowDiagram', 'data-processing-flow.png')">Export PNG</button>
+        </div>
+    </div>
+
+    <!-- Parallel Processing Architecture -->
+    <div class="graphic">
+        <h3>5. Parallel Processing Architecture</h3>
+        <canvas id="parallelArchitecture" width="700" height="400"></canvas>
+        <div class="controls">
+            <button onclick="drawParallelArchitecture()">Generate Architecture</button>
+            <button class="export-btn" onclick="exportCanvas('parallelArchitecture', 'parallel-architecture.png')">Export PNG</button>
+        </div>
+    </div>
+
+    <!-- Export All Button -->
+    <div class="controls" style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd;">
+        <button class="export-btn" onclick="generateAllGraphics()" style="font-size: 16px; padding: 15px 30px;">
+            📊 Generate All Graphics
+        </button>
+    </div>
+
+    <script>
+        // 1. Correlation Formula Visualization
+        function drawCorrelationFormula() {
+            const canvas = document.getElementById('formulaCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Pearson Correlation Coefficient Formula', canvas.width/2, 30);
+            
+            // Main formula
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('r = Σ[(xi - x̄)(yi - ȳ)] / √[Σ(xi - x̄)² × Σ(yi - ȳ)²]', canvas.width/2, 80);
+            
+            // Components explanation
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'left';
+            const explanations = [
+                'Where:',
+                '• xi, yi = individual data points for variables X and Y',
+                '• x̄, ȳ = sample means of variables X and Y', 
+                '• n = number of data points',
+                '',
+                'Range: -1 ≤ r ≤ 1',
+                '• r = 1: Perfect positive correlation',
+                '• r = 0: No linear correlation', 
+                '• r = -1: Perfect negative correlation'
+            ];
+            
+            explanations.forEach((text, index) => {
+                ctx.fillText(text, 50, 120 + index * 20);
+            });
+            
+            // Visual correlation examples
+            drawMiniCorrelationExamples(ctx);
+        }
+        
+        function drawMiniCorrelationExamples(ctx) {
+            const examples = [
+                { r: 1, x: 450, y: 140, color: '#27ae60' },
+                { r: 0, x: 520, y: 140, color: '#f39c12' },
+                { r: -1, x: 450, y: 220, color: '#e74c3c' }
+            ];
+            
+            examples.forEach(example => {
+                // Draw mini scatter plot
+                const size = 50;
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(example.x, example.y, size, size);
+                
+                // Generate points based on correlation
+                ctx.fillStyle = example.color;
+                for (let i = 0; i < 8; i++) {
+                    let x, y;
+                    if (example.r === 1) {
+                        x = i / 7;
+                        y = x;
+                    } else if (example.r === -1) {
+                        x = i / 7;
+                        y = 1 - x;
+                    } else {
+                        x = Math.random();
+                        y = Math.random();
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(example.x + x * size, example.y + (1-y) * size, 2, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`r = ${example.r}`, example.x + size/2, example.y + size + 15);
+            });
+        }
+
+        // 2. Statistical Significance Chart
+        function drawSignificanceChart() {
+            const canvas = document.getElementById('significanceChart');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Statistical Significance Criteria (Cohen\'s Guidelines)', canvas.width/2, 25);
+            
+            // Effect size bands
+            const bands = [
+                { min: 0, max: 0.1, color: '#bdc3c7', label: 'No Effect', save: false },
+                { min: 0.1, max: 0.3, color: '#f39c12', label: 'Small Effect', save: false },
+                { min: 0.3, max: 0.5, color: '#e67e22', label: 'Medium Effect', save: true },
+                { min: 0.5, max: 0.7, color: '#e74c3c', label: 'Large Effect', save: true },
+                { min: 0.7, max: 0.9, color: '#c0392b', label: 'Very Large Effect', save: true },
+                { min: 0.9, max: 1.0, color: '#8e44ad', label: 'Extremely Large', save: true }
+            ];
+            
+            const chartY = 60;
+            const chartHeight = 60;
+            const chartWidth = canvas.width - 100;
+            const chartX = 50;
+            
+            // Draw bands
+            bands.forEach(band => {
+                const x = chartX + band.min * chartWidth;
+                const width = (band.max - band.min) * chartWidth;
+                
+                ctx.fillStyle = band.color;
+                ctx.fillRect(x, chartY, width, chartHeight);
+                
+                // Add saved indicator
+                if (band.save) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('⭐', x + width/2, chartY + chartHeight/2 + 4);
+                }
+            });
+            
+            // Draw scale
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(chartX, chartY, chartWidth, chartHeight);
+            
+            // Add scale labels
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 10; i++) {
+                const x = chartX + (i/10) * chartWidth;
+                ctx.fillText((i/10).toFixed(1), x, chartY + chartHeight + 15);
+                
+                // Draw tick
+                ctx.beginPath();
+                ctx.moveTo(x, chartY + chartHeight);
+                ctx.lineTo(x, chartY + chartHeight + 5);
+                ctx.stroke();
+            }
+            
+            ctx.fillText('|Correlation Coefficient|', canvas.width/2, chartY + chartHeight + 35);
+            
+            // Draw legend
+            ctx.textAlign = 'left';
+            ctx.font = '14px Arial';
+            let legendY = 160;
+            
+            bands.forEach(band => {
+                const x = 50;
+                const y = legendY;
+                
+                // Color box
+                ctx.fillStyle = band.color;
+                ctx.fillRect(x, y, 20, 15);
+                
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText(`${band.label} (${band.min.toFixed(1)} - ${band.max.toFixed(1)})`, x + 30, y + 12);
+                
+                // Saved status
+                if (band.save) {
+                    ctx.fillStyle = '#27ae60';
+                    ctx.fillText('✓ Saved to Database', x + 250, y + 12);
+                }
+                
+                legendY += 25;
+            });
+            
+            // Additional criteria
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('Additional Significance Criteria:', 50, legendY + 20);
+            
+            ctx.font = '14px Arial';
+            const criteria = [
+                '• R² ≥ 0.09 (at least 9% variance explained)',
+                '• n ≥ 10 (minimum sample size for statistical validity)',
+                '• |r| ≥ 0.3 (moderate correlation or higher)'
+            ];
+            
+            criteria.forEach((criterion, index) => {
+                ctx.fillText(criterion, 50, legendY + 50 + index * 20);
+            });
+        }
+
+        // 3. Time Window Analysis Diagram
+        function drawTimeWindowDiagram() {
+            const canvas = document.getElementById('timeWindowDiagram');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Time Window and Offset Analysis', canvas.width/2, 25);
+            
+            // Draw timeline
+            const timelineY = 80;
+            const timelineWidth = canvas.width - 100;
+            const timelineX = 50;
+            const days = 30;
+            
+            // Timeline base
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(timelineX, timelineY);
+            ctx.lineTo(timelineX + timelineWidth, timelineY);
+            ctx.stroke();
+            
+            // Day markers
+            for (let i = 0; i <= days; i += 5) {
+                const x = timelineX + (i/days) * timelineWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, timelineY - 5);
+                ctx.lineTo(x, timelineY + 5);
+                ctx.stroke();
+                
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Day ${i}`, x, timelineY + 20);
+            }
+            
+            // Sample price data
+            const symbol1Data = generateSampleData(days, 100);
+            const symbol2Data = generateSampleData(days, 120);
+            
+            // Draw price series
+            drawTimeSeries(ctx, symbol1Data, '#e74c3c', 'Symbol 1', timelineX, 120, timelineWidth, 50);
+            drawTimeSeries(ctx, symbol2Data, '#3498db', 'Symbol 2', timelineX, 200, timelineWidth, 50);
+            
+            // Draw analysis windows
+            const windowStart = 10;
+            const window1Size = 7;
+            const window2Size = 7;
+            const offset = 3;
+            
+            // Window 1
+            const w1Start = timelineX + (windowStart/days) * timelineWidth;
+            const w1Width = (window1Size/days) * timelineWidth;
+            ctx.fillStyle = 'rgba(231, 76, 60, 0.3)';
+            ctx.fillRect(w1Start, 100, w1Width, 70);
+            
+            // Window 2 (with offset)
+            const w2Start = timelineX + ((windowStart + offset)/days) * timelineWidth;
+            const w2Width = (window2Size/days) * timelineWidth;
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+            ctx.fillRect(w2Start, 180, w2Width, 70);
+            
+            // Labels
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Window 1: ${window1Size} days`, w1Start + w1Width/2, 95);
+            ctx.fillText(`Window 2: ${window2Size} days (offset +${offset})`, w2Start + w2Width/2, 175);
+            
+            // Offset arrow
+            ctx.strokeStyle = '#f39c12';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(w1Start + w1Width/2, 170);
+            ctx.lineTo(w2Start + w2Width/2, 180);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Offset label
+            ctx.fillStyle = '#f39c12';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText(`Offset: +${offset} days`, (w1Start + w2Start + w2Width)/2, 160);
+            
+            // Legend and explanation
+            drawTimeWindowLegend(ctx);
+        }
+        
+        function generateSampleData(days, basePrice) {
+            const data = [basePrice];
+            for (let i = 1; i < days; i++) {
+                const change = (Math.random() - 0.5) * 0.03 * basePrice;
+                data.push(Math.max(basePrice * 0.8, data[i-1] + change));
+            }
+            return data;
+        }
+        
+        function drawTimeSeries(ctx, data, color, label, x, y, width, height) {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            data.forEach((price, index) => {
+                const px = x + (index / (data.length - 1)) * width;
+                const py = y + height - ((price - min) / range) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(px, py);
+                } else {
+                    ctx.lineTo(px, py);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Label
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(label, x, y - 5);
+        }
+        
+        function drawTimeWindowLegend(ctx) {
+            const legendItems = [
+                { color: 'rgba(231, 76, 60, 0.3)', label: 'Symbol 1 Analysis Window' },
+                { color: 'rgba(52, 152, 219, 0.3)', label: 'Symbol 2 Analysis Window' },
+                { color: '#f39c12', label: 'Offset (Predictive Relationship)' }
+            ];
+            
+            let legendY = 300;
+            
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Legend:', 50, legendY);
+            
+            legendY += 25;
+            legendItems.forEach(item => {
+                // Color box
+                ctx.fillStyle = item.color;
+                ctx.fillRect(50, legendY, 20, 15);
+                
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '12px Arial';
+                ctx.fillText(item.label, 80, legendY + 12);
+                
+                legendY += 25;
+            });
+        }
+
+        // 4. Data Processing Flow
+        function drawDataFlowDiagram() {
+            const canvas = document.getElementById('dataFlowDiagram');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Data Processing Workflow', canvas.width/2, 25);
+            
+            const steps = [
+                { name: 'Raw Stock\nPrice Data', x: 80, y: 60, width: 100, height: 60, color: '#3498db' },
+                { name: 'Calculate\n% Changes', x: 220, y: 60, width: 100, height: 60, color: '#e67e22' },
+                { name: 'Apply Time\nWindows', x: 360, y: 60, width: 100, height: 60, color: '#f39c12' },
+                { name: 'Data Point\nAlignment', x: 500, y: 60, width: 100, height: 60, color: '#9b59b6' },
+                { name: 'Pearson\nCorrelation', x: 640, y: 60, width: 100, height: 60, color: '#e74c3c' },
+                
+                { name: 'R-squared\nCalculation', x: 640, y: 180, width: 100, height: 60, color: '#27ae60' },
+                { name: 'Statistical\nSignificance', x: 500, y: 180, width: 100, height: 60, color: '#34495e' },
+                { name: 'Database\nStorage', x: 360, y: 180, width: 100, height: 60, color: '#2c3e50' },
+                { name: 'Results\nVisualization', x: 220, y: 180, width: 100, height: 60, color: '#16a085' }
+            ];
+            
+            // Draw steps
+            steps.forEach(step => {
+                // Draw box
+                ctx.fillStyle = step.color;
+                ctx.fillRect(step.x, step.y, step.width, step.height);
+                
+                // Draw border
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(step.x, step.y, step.width, step.height);
+                
+                // Draw text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                const lines = step.name.split('\n');
+                lines.forEach((line, index) => {
+                    ctx.fillText(line, step.x + step.width/2, step.y + step.height/2 + (index - lines.length/2 + 0.5) * 15);
+                });
+            });
+            
+            // Draw arrows
+            const arrows = [
+                [0, 1], [1, 2], [2, 3], [3, 4], // Top row
+                [4, 5], [5, 6], [6, 7], [7, 8]  // Down and across
+            ];
+            
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            
+            arrows.forEach(([from, to]) => {
+                const fromStep = steps[from];
+                const toStep = steps[to];
+                
+                let startX, startY, endX, endY;
+                
+                if (from < 4 && to < 5) {
+                    // Horizontal arrows
+                    startX = fromStep.x + fromStep.width;
+                    startY = fromStep.y + fromStep.height/2;
+                    endX = toStep.x;
+                    endY = toStep.y + toStep.height/2;
+                } else if (from === 4 && to === 5) {
+                    // Down arrow
+                    startX = fromStep.x + fromStep.width/2;
+                    startY = fromStep.y + fromStep.height;
+                    endX = toStep.x + toStep.width/2;
+                    endY = toStep.y;
+                } else {
+                    // Left arrows
+                    startX = fromStep.x;
+                    startY = fromStep.y + fromStep.height/2;
+                    endX = toStep.x + toStep.width;
+                    endY = toStep.y + toStep.height/2;
+                }
+                
+                // Draw arrow
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+                
+                // Draw arrowhead
+                const angle = Math.atan2(endY - startY, endX - startX);
+                const headLength = 10;
+                
+                ctx.beginPath();
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(endX - headLength * Math.cos(angle - Math.PI/6), endY - headLength * Math.sin(angle - Math.PI/6));
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(endX - headLength * Math.cos(angle + Math.PI/6), endY - headLength * Math.sin(angle + Math.PI/6));
+                ctx.stroke();
+            });
+            
+            // Add timing annotations
+            ctx.fillStyle = '#7f8c8d';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'center';
+            
+            const timings = [
+                { x: 130, y: 140, text: '~1ms per\nstock pair' },
+                { x: 270, y: 140, text: '~5ms per\nwindow' },
+                { x: 410, y: 140, text: '~2ms per\nalignment' },
+                { x: 550, y: 140, text: '~10μs with\ninline C' },
+                { x: 590, y: 270, text: '~1μs' },
+                { x: 450, y: 270, text: '~1ms per\nvalidation' }
+            ];
+            
+            timings.forEach(timing => {
+                const lines = timing.text.split('\n');
+                lines.forEach((line, index) => {
+                    ctx.fillText(line, timing.x, timing.y + index * 12);
+                });
+            });
+        }
+
+        // 5. Parallel Processing Architecture
+        function drawParallelArchitecture() {
+            const canvas = document.getElementById('parallelArchitecture');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Title
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Parallel Processing Architecture', canvas.width/2, 25);
+            
+            // Draw task queue
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '14px Arial';
+            ctx.fillText('Task Queue (Correlation Calculations)', canvas.width/2, 55);
+            
+            const queueY = 70;
+            const taskWidth = 30;
+            const taskHeight = 20;
+            const tasksCount = 16;
+            
+            for (let i = 0; i < tasksCount; i++) {
+                const x = 100 + i * (taskWidth + 5);
+                
+                // Task color based on status
+                let color;
+                if (i < 4) color = '#27ae60'; // Completed
+                else if (i < 8) color = '#f39c12'; // Processing
+                else color = '#ecf0f1'; // Pending
+                
+                ctx.fillStyle = color;
+                ctx.fillRect(x, queueY, taskWidth, taskHeight);
+                
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x, queueY, taskWidth, taskHeight);
+                
+                // Task ID
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '8px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(i+1, x + taskWidth/2, queueY + taskHeight/2 + 3);
+            }
+            
+            // Draw CPU cores
+            const coreY = 140;
+            const coreWidth = 80;
+            const coreHeight = 60;
+            const cores = [
+                { id: 1, x: 120, active: true },
+                { id: 2, x: 220, active: true },
+                { id: 3, x: 320, active: true },
+                { id: 4, x: 420, active: true },
+                { id: 5, x: 520, active: false },
+                { id: 6, x: 120, y: coreY + 80, active: false },
+                { id: 7, x: 220, y: coreY + 80, active: false },
+                { id: 8, x: 320, y: coreY + 80, active: false }
+            ];
+            
+            cores.forEach(core => {
+                const y = core.y || coreY;
+                
+                // Core box
+                ctx.fillStyle = core.active ? '#e74c3c' : '#3498db';
+                ctx.fillRect(core.x, y, coreWidth, coreHeight);
+                
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(core.x, y, coreWidth, coreHeight);
+                
+                // Core label
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Core ${core.id}`, core.x + coreWidth/2, y + coreHeight/2 - 5);
+                ctx.fillText(core.active ? 'ACTIVE' : 'IDLE', core.x + coreWidth/2, y + coreHeight/2 + 10);
+                
+                // Activity indicator
+                if (core.active) {
+                    ctx.fillStyle = '#f39c12';
+                    ctx.beginPath();
+                    ctx.arc(core.x + coreWidth - 10, y + 10, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            });
+            
+            // Draw arrows from queue to active cores
+            ctx.strokeStyle = '#27ae60';
+            ctx.lineWidth = 3;
+            
+            cores.filter(core => core.active).forEach((core, index) => {
+                const taskX = 100 + (index + 4) * (taskWidth + 5) + taskWidth/2;
+                const coreX = core.x + coreWidth/2;
+                const coreY = core.y || 140;
+                
+                // Draw curved arrow
+                ctx.beginPath();
+                ctx.moveTo(taskX, queueY + taskHeight);
+                ctx.quadraticCurveTo(taskX, queueY + 40, coreX, coreY);
+                ctx.stroke();
+                
+                // Arrowhead
+                ctx.beginPath();
+                ctx.moveTo(coreX, coreY);
+                ctx.lineTo(coreX - 5, coreY - 10);
+                ctx.lineTo(coreX + 5, coreY - 10);
+                ctx.closePath();
+                ctx.fillStyle = '#27ae60';
+                ctx.fill();
+            });
+            
+            // Performance metrics
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'left';
+            
+            const metrics = [
+                'Performance Metrics:',
+                '• 4 active cores utilized',
+                '• ~10,000-50,000 correlations/sec with inline C',
+                '• Linear speedup with additional cores',
+                '• Memory efficient: 50-80% reduction vs Ruby',
+                '• Automatic fallback to Ruby if C compilation fails'
+            ];
+            
+            metrics.forEach((metric, index) => {
+                const isBold = index === 0;
+                ctx.font = isBold ? 'bold 14px Arial' : '12px Arial';
+                ctx.fillText(metric, 50, 320 + index * 18);
+            });
+            
+            // Legend
+            const legendY = 350;
+            const legendItems = [
+                { color: '#27ae60', label: 'Completed Task' },
+                { color: '#f39c12', label: 'Processing Task' },
+                { color: '#ecf0f1', label: 'Pending Task' },
+                { color: '#e74c3c', label: 'Active CPU Core' },
+                { color: '#3498db', label: 'Idle CPU Core' }
+            ];
+            
+            ctx.font = '12px Arial';
+            legendItems.forEach((item, index) => {
+                const x = 450 + (index % 3) * 120;
+                const y = legendY + Math.floor(index / 3) * 20;
+                
+                // Color box
+                ctx.fillStyle = item.color;
+                ctx.fillRect(x, y, 15, 12);
+                
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText(item.label, x + 20, y + 10);
+            });
+        }
+
+        // Export functionality
+        function exportCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate all graphics
+        function generateAllGraphics() {
+            drawCorrelationFormula();
+            setTimeout(() => drawSignificanceChart(), 100);
+            setTimeout(() => drawTimeWindowDiagram(), 200);
+            setTimeout(() => drawDataFlowDiagram(), 300);
+            setTimeout(() => drawParallelArchitecture(), 400);
+            
+            alert('All graphics generated! You can now export them individually using the Export PNG buttons.');
+        }
+    </script>
+</body>
+</html>

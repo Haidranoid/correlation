@@ -1,0 +1,105 @@
+scores from rebalance 38 = 2006-03-03
+
+#### twin: /home/bhoult/.local/share/correlation2/experiments/twin_momentum/twin_momentum_old.npy; finite per day median 500, positive per day median 271
+
+== twin, uniform random accounts ==
+years 18; beat random at p<0.1 (0 bps: 4, 5 bps: 4, 20 bps: 4) of 18; change over random +1.4 pts/yr (se 2.5, ahead 13/18); IC actual returns z +1.14; long-short 0.16 bps/day z +1.02, turnover 36%, costs 0.07 x c bps/day
+ 0 bps: change over random +1.42 pts/yr (se 2.50, ahead 13/18); per year [9.71, -11.28, 0.57, -11.02, 4.03, -16.58, -4.03, 8.73, 5.65, -18.65, 2.29, 2.16, 4.05, 2.89, 12.01, 7.52, 24.57, 2.88]
+ 5 bps: change over random +1.41 pts/yr (se 2.49, ahead 13/18); per year [9.65, -11.24, 0.56, -10.96, 4.0, -16.5, -4.01, 8.69, 5.63, -18.56, 2.28, 2.15, 4.02, 2.88, 11.95, 7.48, 24.43, 2.87]
+20 bps: change over random +1.37 pts/yr (se 2.45, ahead 13/18); per year [9.48, -11.14, 0.54, -10.78, 3.92, -16.28, -3.97, 8.57, 5.54, -18.28, 2.25, 2.12, 3.95, 2.82, 11.75, 7.34, 24.03, 2.83]
+test year      SPY    picks  random-median  p
+2007-08   -15.1%    -5.6%   -15.3%  0.042  (candidates 301, LS +9.67 bps/day)
+2008-09   -28.0%   -28.6%   -17.4%  0.911  (candidates 299, LS -24.98 bps/day)
+2009-10   +17.5%   +29.8%   +29.3%  0.464  (candidates 865, LS -5.60 bps/day)
+2010-11   +19.7%   +11.8%   +22.8%  0.964  (candidates 917, LS +0.64 bps/day)
+2011-12    +6.3%    +3.7%    -0.3%  0.250  (candidates 993, LS +4.35 bps/day)
+2012-13   +23.7%   +11.9%   +28.5%  0.989  (candidates 1038, LS -3.36 bps/day)
+2013-14   +24.0%   +21.6%   +25.6%  0.756  (candidates 1039, LS +2.41 bps/day)
+2014-15    +9.2%   +15.2%    +6.4%  0.096  (candidates 1190, LS +2.29 bps/day)
+2015-16    -2.8%    -2.4%    -8.0%  0.195  (candidates 1259, LS +2.72 bps/day)
+2016-17   +23.3%    +9.0%   +27.6%  0.997  (candidates 1291, LS -8.96 bps/day)
+2017-18   +13.7%   +16.2%   +13.9%  0.382  (candidates 1395, LS +3.40 bps/day)
+2018-19   +10.4%    +4.9%    +2.8%  0.371  (candidates 1527, LS +3.29 bps/day)
+2019-20    +5.0%    -0.5%    -4.5%  0.323  (candidates 1614, LS +1.43 bps/day)
+2020-21   +44.3%   +73.2%   +70.3%  0.415  (candidates 1677, LS -9.94 bps/day)
+2021-22    -7.6%    -5.1%   -17.1%  0.064  (candidates 1838, LS +8.29 bps/day)
+2022-23   +14.1%   +15.5%    +8.0%  0.205  (candidates 1969, LS +5.35 bps/day)
+2023-24   +27.0%   +33.1%    +8.5%  0.008  (candidates 1968, LS +9.31 bps/day)
+2024-25   +13.6%   +11.1%    +8.2%  0.382  (candidates 2036, LS +2.59 bps/day)
+
+== twin, volatility random accounts ==
+years 18; beat random at p<0.1 (0 bps: 4, 5 bps: 4, 20 bps: 4) of 18; change over random +2.1 pts/yr (se 2.1, ahead 12/18); IC actual returns z +1.14; long-short 0.16 bps/day z +1.02, turnover 36%, costs 0.07 x c bps/day
+ 0 bps: change over random +2.10 pts/yr (se 2.12, ahead 12/18); per year [8.03, -7.34, -0.02, -10.16, 7.28, -13.88, -3.92, 10.28, 2.24, -10.93, 3.55, 0.28, 6.57, 1.7, 8.29, 7.56, 22.88, 5.4]
+ 5 bps: change over random +2.09 pts/yr (se 2.11, ahead 12/18); per year [7.99, -7.3, -0.02, -10.1, 7.24, -13.81, -3.9, 10.24, 2.23, -10.88, 3.53, 0.28, 6.53, 1.69, 8.24, 7.52, 22.75, 5.37]
+20 bps: change over random +2.06 pts/yr (se 2.07, ahead 12/18); per year [7.86, -7.2, -0.01, -9.93, 7.13, -13.61, -3.83, 10.1, 2.2, -10.72, 3.48, 0.28, 6.42, 1.67, 8.1, 7.42, 22.38, 5.3]
+test year      SPY    picks  random-median  p
+2007-08   -15.1%    -5.6%   -13.7%  0.076  (candidates 301, LS +9.67 bps/day)
+2008-09   -28.0%   -28.6%   -21.3%  0.844  (candidates 299, LS -24.98 bps/day)
+2009-10   +17.5%   +29.8%   +29.9%  0.501  (candidates 865, LS -5.60 bps/day)
+2010-11   +19.7%   +11.8%   +21.9%  0.954  (candidates 917, LS +0.64 bps/day)
+2011-12    +6.3%    +3.7%    -3.6%  0.095  (candidates 993, LS +4.35 bps/day)
+2012-13   +23.7%   +11.9%   +25.8%  0.984  (candidates 1038, LS -3.36 bps/day)
+2013-14   +24.0%   +21.6%   +25.5%  0.742  (candidates 1039, LS +2.41 bps/day)
+2014-15    +9.2%   +15.2%    +4.9%  0.038  (candidates 1190, LS +2.29 bps/day)
+2015-16    -2.8%    -2.4%    -4.6%  0.350  (candidates 1259, LS +2.72 bps/day)
+2016-17   +23.3%    +9.0%   +19.9%  0.977  (candidates 1291, LS -8.96 bps/day)
+2017-18   +13.7%   +16.2%   +12.7%  0.285  (candidates 1395, LS +3.40 bps/day)
+2018-19   +10.4%    +4.9%    +4.6%  0.481  (candidates 1527, LS +3.29 bps/day)
+2019-20    +5.0%    -0.5%    -7.0%  0.197  (candidates 1614, LS +1.43 bps/day)
+2020-21   +44.3%   +73.2%   +71.5%  0.438  (candidates 1677, LS -9.94 bps/day)
+2021-22    -7.6%    -5.1%   -13.3%  0.121  (candidates 1838, LS +8.29 bps/day)
+2022-23   +14.1%   +15.5%    +7.9%  0.151  (candidates 1969, LS +5.35 bps/day)
+2023-24   +27.0%   +33.1%   +10.2%  0.004  (candidates 1968, LS +9.31 bps/day)
+2024-25   +13.6%   +11.1%    +5.7%  0.281  (candidates 2036, LS +2.59 bps/day)
+
+#### plain: /home/bhoult/.local/share/correlation2/experiments/twin_momentum/plain_momentum_old.npy; finite per day median 500, positive per day median 358
+
+== plain, uniform random accounts ==
+years 18; beat random at p<0.1 (0 bps: 5, 5 bps: 5, 20 bps: 5) of 18; change over random +4.0 pts/yr (se 4.3, ahead 11/18); IC actual returns z +0.83; long-short 1.10 bps/day z +1.70, turnover 29%, costs 0.06 x c bps/day
+ 0 bps: change over random +3.98 pts/yr (se 4.26, ahead 11/18); per year [17.05, -18.1, 2.46, 0.24, -7.54, 17.39, -1.8, 5.49, -4.58, -30.06, 7.86, -2.13, 18.48, -14.38, 1.69, 6.09, 52.97, 20.57]
+ 5 bps: change over random +3.97 pts/yr (se 4.24, ahead 11/18); per year [16.98, -18.04, 2.44, 0.23, -7.51, 17.32, -1.79, 5.47, -4.56, -29.93, 7.82, -2.12, 18.41, -14.35, 1.68, 6.06, 52.76, 20.49]
+20 bps: change over random +3.91 pts/yr (se 4.19, ahead 11/18); per year [16.77, -17.87, 2.38, 0.22, -7.41, 17.12, -1.77, 5.42, -4.5, -29.54, 7.71, -2.09, 18.16, -14.26, 1.67, 5.97, 52.13, 20.25]
+test year      SPY    picks  random-median  p
+2007-08   -15.1%    +1.7%   -15.4%  0.001  (candidates 301, LS +21.61 bps/day)
+2008-09   -28.0%   -49.2%   -31.1%  1.000  (candidates 299, LS -37.44 bps/day)
+2009-10   +17.5%   +31.6%   +29.2%  0.387  (candidates 865, LS -8.79 bps/day)
+2010-11   +19.7%   +23.2%   +23.0%  0.486  (candidates 917, LS +1.64 bps/day)
+2011-12    +6.3%    -8.2%    -0.6%  0.886  (candidates 993, LS +5.32 bps/day)
+2012-13   +23.7%   +45.9%   +28.5%  0.009  (candidates 1038, LS +5.11 bps/day)
+2013-14   +24.0%   +23.9%   +25.7%  0.606  (candidates 1039, LS +3.13 bps/day)
+2014-15    +9.2%   +11.7%    +6.2%  0.211  (candidates 1190, LS +6.56 bps/day)
+2015-16    -2.8%   -12.6%    -8.0%  0.745  (candidates 1259, LS +3.69 bps/day)
+2016-17   +23.3%    -2.4%   +27.7%  1.000  (candidates 1291, LS -12.16 bps/day)
+2017-18   +13.7%   +21.7%   +13.8%  0.124  (candidates 1395, LS +3.26 bps/day)
+2018-19   +10.4%    +0.8%    +2.9%  0.610  (candidates 1527, LS +1.46 bps/day)
+2019-20    +5.0%   +13.9%    -4.6%  0.021  (candidates 1614, LS +5.93 bps/day)
+2020-21   +44.3%   +55.9%   +70.3%  0.852  (candidates 1677, LS -11.41 bps/day)
+2021-22    -7.6%   -14.9%   -16.6%  0.409  (candidates 1838, LS +15.39 bps/day)
+2022-23   +14.1%   +13.6%    +7.5%  0.253  (candidates 1969, LS +4.41 bps/day)
+2023-24   +27.0%   +62.2%    +9.2%  0.000  (candidates 1968, LS +12.06 bps/day)
+2024-25   +13.6%   +28.3%    +7.7%  0.024  (candidates 2036, LS -0.05 bps/day)
+
+== plain, volatility random accounts ==
+years 18; beat random at p<0.1 (0 bps: 6, 5 bps: 6, 20 bps: 6) of 18; change over random +4.0 pts/yr (se 5.3, ahead 11/18); IC actual returns z +0.83; long-short 1.10 bps/day z +1.70, turnover 29%, costs 0.06 x c bps/day
+ 0 bps: change over random +4.03 pts/yr (se 5.28, ahead 11/18); per year [17.86, -12.27, 1.52, 0.18, -0.01, 16.04, -3.94, 7.56, -0.38, -29.12, 2.78, 4.32, 21.44, -51.32, 18.24, -0.7, 55.71, 24.72]
+ 5 bps: change over random +4.02 pts/yr (se 5.26, ahead 11/18); per year [17.79, -12.23, 1.51, 0.18, -0.01, 15.98, -3.92, 7.53, -0.38, -28.99, 2.77, 4.3, 21.35, -51.17, 18.18, -0.69, 55.49, 24.62]
+20 bps: change over random +3.96 pts/yr (se 5.20, ahead 11/18); per year [17.58, -12.1, 1.49, 0.18, -0.01, 15.8, -3.88, 7.45, -0.38, -28.61, 2.73, 4.25, 21.08, -50.72, 17.98, -0.68, 54.83, 24.34]
+test year      SPY    picks  random-median  p
+2007-08   -15.1%    +1.7%   -16.2%  0.005  (candidates 301, LS +21.61 bps/day)
+2008-09   -28.0%   -49.2%   -36.9%  0.987  (candidates 299, LS -37.44 bps/day)
+2009-10   +17.5%   +31.6%   +30.1%  0.427  (candidates 865, LS -8.79 bps/day)
+2010-11   +19.7%   +23.2%   +23.0%  0.485  (candidates 917, LS +1.64 bps/day)
+2011-12    +6.3%    -8.2%    -8.1%  0.500  (candidates 993, LS +5.32 bps/day)
+2012-13   +23.7%   +45.9%   +29.9%  0.059  (candidates 1038, LS +5.11 bps/day)
+2013-14   +24.0%   +23.9%   +27.8%  0.684  (candidates 1039, LS +3.13 bps/day)
+2014-15    +9.2%   +11.7%    +4.1%  0.186  (candidates 1190, LS +6.56 bps/day)
+2015-16    -2.8%   -12.6%   -12.2%  0.518  (candidates 1259, LS +3.69 bps/day)
+2016-17   +23.3%    -2.4%   +26.7%  0.999  (candidates 1291, LS -12.16 bps/day)
+2017-18   +13.7%   +21.7%   +18.9%  0.392  (candidates 1395, LS +3.26 bps/day)
+2018-19   +10.4%    +0.8%    -3.5%  0.319  (candidates 1527, LS +1.46 bps/day)
+2019-20    +5.0%   +13.9%    -7.5%  0.008  (candidates 1614, LS +5.93 bps/day)
+2020-21   +44.3%   +55.9%  +107.2%  0.999  (candidates 1677, LS -11.41 bps/day)
+2021-22    -7.6%   -14.9%   -33.2%  0.017  (candidates 1838, LS +15.39 bps/day)
+2022-23   +14.1%   +13.6%   +14.3%  0.533  (candidates 1969, LS +4.41 bps/day)
+2023-24   +27.0%   +62.2%    +6.5%  0.000  (candidates 1968, LS +12.06 bps/day)
+2024-25   +13.6%   +28.3%    +3.6%  0.042  (candidates 2036, LS -0.05 bps/day)

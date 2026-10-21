@@ -1,0 +1,31 @@
+# Correlation-built portfolios: new export
+
+Bootstrap: paired circular blocks of 21 days, 10000 draws, seed 0. Net = after 5 bps a side on turnover. Excess over DGS3MO (CSV through 2026-10-15, carried forward).
+
+### unseen 2025-06-30..2026-10-19: 2025-06-30 .. 2026-10-19, 329 days, 16 rebalances
+
+| | Return (CAGR) | Volatility | Sharpe net | Sharpe gross | Max drawdown | One-way turnover per rebalance | Names > 0.1% | Beta to SPY (realized) | Beta (formation) |
+|---|---|---|---|---|---|---|---|---|---|
+| EW | +12.4% | 14.4% | 0.61 | 0.62 | -9.6% | 7.9% | 500 | 1.05 | 1.05 |
+| IV | +10.4% | 10.9% | 0.61 | 0.62 | -7.8% | 7.2% | 447 | 0.72 | 0.80 |
+| MV-LW | +10.2% | 7.9% | 0.78 | 0.81 | -7.2% | 19.6% | 72 | 0.17 | 0.29 |
+| MV-TW | +7.3% | 8.8% | 0.40 | 0.43 | -9.2% | 21.4% | 75 | 0.15 | 0.24 |
+| HRP | +7.0% | 9.5% | 0.34 | 0.37 | -7.5% | 17.4% | 307 | 0.44 | 0.56 |
+| SPY | +18.4% | 12.1% | 1.13 | | -9.1% | | | 1.00 | |
+
+Costs (5 bps a side) per year: EW 0.10%, IV 0.09%, MV-LW 0.24%, MV-TW 0.26%, HRP 0.21%. Mean Ledoit-Wolf intensity 0.21, mean sample correlation 0.19; stocks per rebalance 500..500; twins per rebalance 500 (funds 139).
+
+| A vs B | Volatility ratio A/B (95% interval) | p (two-sided) | Sharpe A − B, net (95% interval) | p (two-sided) | Sharpe A − B, gross | p (two-sided) |
+|---|---|---|---|---|---|---|
+| MV-LW vs IV | 0.730 (0.664–0.822) | 0.000 | +0.170 (-1.422 to +1.780) | 0.837 | +0.192 | 0.816 |
+| MV-LW vs EW | 0.551 (0.494–0.623) | 0.000 | +0.164 (-1.779 to +2.164) | 0.868 | +0.188 | 0.849 |
+| MV-LW vs MV-TW | 0.902 (0.855–0.949) | 0.000 | +0.379 (-0.175 to +0.981) | 0.197 | +0.380 | 0.197 |
+| MV-LW vs HRP | 0.837 (0.786–0.892) | 0.000 | +0.432 (-0.786 to +1.679) | 0.483 | +0.440 | 0.475 |
+| MV-TW vs IV | 0.809 (0.722–0.931) | 0.003 | -0.210 (-1.754 to +1.254) | 0.781 | -0.188 | 0.800 |
+| MV-TW vs EW | 0.611 (0.546–0.699) | 0.000 | -0.215 (-2.127 to +1.639) | 0.823 | -0.192 | 0.842 |
+| MV-TW vs HRP | 0.928 (0.861–1.003) | 0.054 | +0.053 (-1.020 to +1.063) | 0.918 | +0.060 | 0.906 |
+| HRP vs IV | 0.872 (0.825–0.940) | 0.001 | -0.263 (-0.917 to +0.396) | 0.427 | -0.248 | 0.451 |
+| HRP vs EW | 0.658 (0.613–0.712) | 0.000 | -0.268 (-1.491 to +0.997) | 0.667 | -0.252 | 0.686 |
+| IV vs EW | 0.755 (0.722–0.784) | 0.000 | -0.005 (-0.638 to +0.657) | 0.987 | -0.004 | 0.990 |
+
+Test 3 (unseen months, net): volatility ratio MV-LW/IV 0.730 (needs < 1) -> PASS; Sharpe MV-LW − IV +0.170 (reported; two-sided p 0.837)

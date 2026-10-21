@@ -1,0 +1,6 @@
+primary 2008-01..2025-06: 210 months, correlation +0.758
+2006-01..2025-06: 234 months, correlation +0.749
+all overlapping months before the unseen ones, 1994-02..2025-06: 377 months, correlation +0.586
+2008-01..2019-12: 144 months, correlation +0.773
+2020-01..2025-06: 66 months, correlation +0.725
+fidelity check (>= 0.5 over the primary window): PASS

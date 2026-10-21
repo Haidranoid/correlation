@@ -1,0 +1,79 @@
+first formation 2006-10-02; test-1 months 159 (first holding days 2006-10-03..2019-12-09)
+
+== Test 1: the loners book, 2006-01..2019-12 (net = after 5 bps per side) ==
+                                         months  %/month      t    %/yr  Sharpe alpha %/yr      t   beta
+loners net                                  159    0.256   1.47    3.07    0.40       2.11   1.20   0.19
+loners gross                                159    0.284   1.63    3.41    0.45       2.45   1.39   0.19
+sensitivity: 2008-03..2019 (>=500 stocks), net    142    0.337   1.79    4.05    0.52       2.83   1.51   0.19
+PASS test 1 (t >= 2.5 net and alpha > 0): False
+
+== Test 2: the 500 largest, 2006-01..2019-12 ==
+                                         months  %/month      t    %/yr  Sharpe alpha %/yr      t   beta
+loners500 net                               159    0.238   1.25    2.85    0.34       1.78   0.94   0.21
+loners500 gross                             159    0.266   1.41    3.20    0.39       2.12   1.12   0.21
+sensitivity: 2008-03..2019, net             142    0.317   1.54    3.81    0.45       2.44   1.20   0.21
+PASS test 2 (mean net > 0): True
+
+== Test 3: 2020-01..2025-06 ==
+                                         months  %/month      t    %/yr  Sharpe alpha %/yr      t   beta
+loners net                                   65   -0.172  -0.48   -2.06   -0.21      -2.24  -0.52  -0.04
+loners gross                                 65   -0.145  -0.41   -1.74   -0.18      -1.91  -0.45  -0.04
+loners500 net                                65    0.134   0.45    1.61    0.19       1.68   0.46   0.02
+PASS test 3, old export part (mean net > 0): False
+
+== By period, net ==
+-- loners
+                                         months  %/month      t    %/yr  Sharpe alpha %/yr      t   beta
+2006-01..2007-12                             15   -0.352  -0.81   -4.23   -0.73      -4.22  -0.78   0.01
+2008-01..2009-12                             24    0.527   0.59    6.32    0.42       7.64   1.22   0.28
+2010-01..2014-12                             60    0.404   2.21    4.85    0.99       4.05   1.86   0.07
+2015-01..2019-12                             60    0.151   0.72    1.81    0.32       1.69   0.67   0.03
+2020-01..2025-06                             65   -0.172  -0.48   -2.06   -0.21      -2.24  -0.52  -0.04
+All 2006-01..2025-06                        224    0.132   0.82    1.58    0.19       1.29   0.70   0.12
+                                         months  gross      t    %/yr  Sharpe alpha %/yr      t   beta
+2006-01..2007-12 gross                       15   -0.318  -0.74   -3.81   -0.66      -3.81  -0.71   0.01
+2008-01..2009-12 gross                       24    0.564   0.63    6.76    0.45       8.08   1.29   0.28
+2010-01..2014-12 gross                       60    0.433   2.36    5.19    1.06       4.40   2.02   0.07
+2015-01..2019-12 gross                       60    0.175   0.84    2.10    0.38       1.98   0.78   0.03
+2020-01..2025-06 gross                       65   -0.145  -0.41   -1.74   -0.18      -1.91  -0.45  -0.04
+All 2006-01..2025-06 gross                  224    0.160   0.99    1.92    0.23       1.63   0.89   0.12
+-- loners500
+                                         months  %/month      t    %/yr  Sharpe alpha %/yr      t   beta
+2006-01..2007-12                             15   -0.352  -0.81   -4.23   -0.73      -4.22  -0.78   0.01
+2008-01..2009-12                             24    0.504   0.52    6.05    0.37       7.53   1.20   0.31
+2010-01..2014-12                             60    0.501   2.31    6.01    1.03       5.01   1.95   0.09
+2015-01..2019-12                             60    0.015   0.07    0.18    0.03       0.16   0.06   0.01
+2020-01..2025-06                             65    0.134   0.45    1.61    0.19       1.68   0.46   0.02
+All 2006-01..2025-06                        224    0.208   1.30    2.49    0.30       2.12   1.21   0.15
+                                         months  gross      t    %/yr  Sharpe alpha %/yr      t   beta
+2006-01..2007-12 gross                       15   -0.318  -0.74   -3.81   -0.66      -3.81  -0.71   0.01
+2008-01..2009-12 gross                       24    0.541   0.56    6.49    0.40       7.97   1.27   0.31
+2010-01..2014-12 gross                       60    0.528   2.44    6.34    1.09       5.34   2.08   0.09
+2015-01..2019-12 gross                       60    0.041   0.19    0.49    0.08       0.46   0.17   0.01
+2020-01..2025-06 gross                       65    0.162   0.54    1.94    0.23       2.02   0.56   0.02
+All 2006-01..2025-06 gross                  224    0.236   1.48    2.83    0.34       2.46   1.40   0.15
+
+== The book: legs (means over test-1 months) ==
+loners: universe 1040, cells 9.00, stocks per leg 38.5, turnover 0.57 per month (cost 0.34%/yr)
+   c long 0.326 short 0.677; median dollar volume long $44.0M short $46.1M; volatility (daily) long 0.0219 short 0.0214; BAC ex-ante beta long 1.00 short 1.01
+loners500: universe 467, cells 9.00, stocks per leg 17.3, turnover 0.57 per month (cost 0.34%/yr)
+   c long 0.367 short 0.721; median dollar volume long $109.7M short $113.1M; volatility (daily) long 0.0207 short 0.0202; BAC ex-ante beta long 0.98 short 0.98
+
+== Cells (dollar-volume tercile x volatility tercile, 0 = low), gross long-short %/month (t), test-1 months ==
+  dv 0: vol 0: +0.132 (+0.61)  vol 1: +0.669 (+3.95)  vol 2: -0.065 (-0.16)
+  dv 1: vol 0: +0.311 (+1.43)  vol 1: +0.151 (+0.77)  vol 2: +0.704 (+1.67)
+  dv 2: vol 0: +0.271 (+1.49)  vol 1: +0.324 (+1.72)  vol 2: +0.062 (+0.16)
+
+== Loadings: monthly net loners book on the EW market - rf, low volatility and BAC (gross factors) ==
+-- 2006-01..2019-12: factor months 155 of 159; BAC mean +0.308%/month (t +1.75), low vol +0.104% (t +0.37); corr(loners, BAC) -0.01, corr(loners, low vol) -0.45
+   mkt + low vol          n 155: alpha  +2.65%/yr (t +1.50); mkt +0.15 (t +5.33); low vol -0.13 (t -2.47); R2 0.33
+   mkt + BAC              n 155: alpha  +1.57%/yr (t +0.88); mkt +0.21 (t +8.64); BAC +0.18 (t +2.50); R2 0.33
+   mkt + low vol + BAC    n 155: alpha  +1.85%/yr (t +1.06); mkt +0.16 (t +5.91); low vol -0.15 (t -2.92); BAC +0.20 (t +2.94); R2 0.37
+-- 2020-01..2025-06: factor months 65 of 65; BAC mean -0.180%/month (t -0.31), low vol -0.351% (t -0.61); corr(loners, BAC) +0.76, corr(loners, low vol) -0.00
+   mkt + low vol          n  65: alpha  -2.54%/yr (t -0.59); mkt -0.06 (t -0.98); low vol -0.05 (t -0.55); R2 0.02
+   mkt + BAC              n  65: alpha  -1.13%/yr (t -0.40); mkt -0.02 (t -0.48); BAC +0.46 (t +9.07); R2 0.57
+   mkt + low vol + BAC    n  65: alpha  -1.64%/yr (t -0.58); mkt -0.05 (t -1.21); low vol -0.09 (t -1.46); BAC +0.47 (t +9.23); R2 0.59
+-- All 2006-01..2025-06: factor months 220 of 224; BAC mean +0.164%/month (t +0.78), low vol -0.031% (t -0.12); corr(loners, BAC) +0.39, corr(loners, low vol) -0.26
+   mkt + low vol          n 220: alpha  +1.41%/yr (t +0.76); mkt +0.09 (t +3.26); low vol -0.07 (t -1.51); R2 0.11
+   mkt + BAC              n 220: alpha  +0.62%/yr (t +0.38); mkt +0.15 (t +7.01); BAC +0.36 (t +8.07); R2 0.31
+   mkt + low vol + BAC    n 220: alpha  +0.63%/yr (t +0.39); mkt +0.11 (t +4.55); low vol -0.11 (t -2.57); BAC +0.37 (t +8.39); R2 0.33

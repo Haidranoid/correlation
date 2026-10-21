@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation Analysis Method Visualizations</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .visualization {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .visualization h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: block;
+            margin: 10px auto;
+        }
+        .controls {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .controls input, .controls select {
+            margin: 0 10px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .controls button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .controls button:hover {
+            background: #2980b9;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        .info-box {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .metric {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        .export-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f1f2f6;
+            border-radius: 4px;
+        }
+        .export-controls button {
+            background: #27ae60;
+            margin: 0 5px;
+        }
+        .export-controls button:hover {
+            background: #219a52;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Stock Correlation Analysis Method - Visual Guide</h1>
+    <p>Interactive visualizations to understand the mathematical foundations and implementation of our correlation analysis platform.</p>
+
+    <!-- Correlation Coefficient Visualization -->
+    <div class="visualization">
+        <h3>1. Pearson Correlation Coefficient (r)</h3>
+        <p>Drag the data points to see how correlation coefficient changes. The formula measures linear relationships between two variables.</p>
+        
+        <div class="controls">
+            <button onclick="generateRandomData()">Random Data</button>
+            <button onclick="generatePerfectPositive()">Perfect Positive (r=1)</button>
+            <button onclick="generatePerfectNegative()">Perfect Negative (r=-1)</button>
+            <button onclick="generateNoCorrelation()">No Correlation (r≈0)</button>
+        </div>
+        
+        <canvas id="correlationCanvas" width="600" height="400"></canvas>
+        
+        <div class="info-box">
+            <div class="metric" id="correlationValue">r = 0.00</div>
+            <div class="metric" id="rSquaredValue">R² = 0.00</div>
+            <div class="metric" id="dataPoints">n = 20</div>
+            <div class="metric" id="significance">Not Significant</div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e74c3c;"></div>
+                <span>Data Points (draggable)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3498db;"></div>
+                <span>Best Fit Line</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Window Analysis -->
+    <div class="visualization">
+        <h3>2. Time Window and Offset Analysis</h3>
+        <p>Visualizes how different time windows and offsets affect correlation analysis between two stock price series.</p>
+        
+        <div class="controls">
+            <label>Window 1: <input type="range" id="window1" min="1" max="30" value="7" onchange="updateTimeAnalysis()"> <span id="window1Value">7</span> days</label>
+            <label>Window 2: <input type="range" id="window2" min="1" max="30" value="7" onchange="updateTimeAnalysis()"> <span id="window2Value">7</span> days</label>
+            <label>Offset: <input type="range" id="offset" min="-14" max="14" value="0" onchange="updateTimeAnalysis()"> <span id="offsetValue">0</span> days</label>
+        </div>
+        
+        <canvas id="timeWindowCanvas" width="800" height="500"></canvas>
+        
+        <div class="info-box">
+            <p><strong>Current Analysis:</strong></p>
+            <ul>
+                <li><strong>Symbol 1 Window:</strong> <span id="symbol1Analysis">7-day percentage changes</span></li>
+                <li><strong>Symbol 2 Window:</strong> <span id="symbol2Analysis">7-day percentage changes</span></li>
+                <li><strong>Offset:</strong> <span id="offsetAnalysis">Contemporaneous (same time)</span></li>
+                <li><strong>Interpretation:</strong> <span id="interpretationText">Direct relationship between current movements</span></li>
+            </ul>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e74c3c;"></div>
+                <span>Symbol 1 Price</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3498db;"></div>
+                <span>Symbol 2 Price</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f39c12; opacity: 0.7;"></div>
+                <span>Analysis Windows</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistical Significance -->
+    <div class="visualization">
+        <h3>3. Statistical Significance Criteria</h3>
+        <p>Interactive demonstration of Cohen's effect size guidelines and our significance thresholds.</p>
+        
+        <div class="controls">
+            <label>Correlation: <input type="range" id="corrSlider" min="-100" max="100" value="0" onchange="updateSignificance()"> <span id="corrSliderValue">0.00</span></label>
+            <label>Sample Size: <input type="range" id="sampleSlider" min="5" max="100" value="20" onchange="updateSignificance()"> <span id="sampleSliderValue">20</span></label>
+        </div>
+        
+        <canvas id="significanceCanvas" width="700" height="400"></canvas>
+        
+        <div class="info-box" id="significanceInfo">
+            <div class="metric" id="currentCorr">r = 0.00</div>
+            <div class="metric" id="currentRSquared">R² = 0.00</div>
+            <div class="metric" id="currentSample">n = 20</div>
+            <div class="metric" id="effectSize">No Effect</div>
+            <div class="metric" id="saveStatus">Not Saved</div>
+        </div>
+    </div>
+
+    <!-- Data Processing Workflow -->
+    <div class="visualization">
+        <h3>4. Data Processing Workflow</h3>
+        <p>Step-by-step visualization of how raw stock data is processed into correlation coefficients.</p>
+        
+        <div class="controls">
+            <button onclick="startWorkflowAnimation()">Start Animation</button>
+            <button onclick="resetWorkflow()">Reset</button>
+            <label>Speed: <input type="range" id="animationSpeed" min="1" max="10" value="5"> <span id="speedValue">5</span></label>
+        </div>
+        
+        <canvas id="workflowCanvas" width="800" height="600"></canvas>
+        
+        <div class="info-box" id="workflowStatus">
+            <p><strong>Current Step:</strong> <span id="currentStep">Ready to start</span></p>
+            <p><strong>Progress:</strong> <span id="progressText">0% complete</span></p>
+        </div>
+    </div>
+
+    <!-- Parallel Processing Architecture -->
+    <div class="visualization">
+        <h3>5. Parallel Processing Architecture</h3>
+        <p>Visualization of how correlation analysis is distributed across multiple CPU cores for maximum performance.</p>
+        
+        <div class="controls">
+            <label>CPU Cores: <select id="coreCount" onchange="updateParallelVisualization()">
+                <option value="4">4 cores</option>
+                <option value="8" selected>8 cores</option>
+                <option value="16">16 cores</option>
+            </select></label>
+            <label>Task Count: <input type="range" id="taskCount" min="10" max="100" value="32" onchange="updateParallelVisualization()"> <span id="taskCountValue">32</span></label>
+            <button onclick="startParallelAnimation()">Start Processing</button>
+        </div>
+        
+        <canvas id="parallelCanvas" width="800" height="500"></canvas>
+        
+        <div class="info-box">
+            <div class="metric" id="coreUtilization">Core Utilization: 0%</div>
+            <div class="metric" id="throughput">Throughput: 0 tasks/sec</div>
+            <div class="metric" id="speedup">Speedup: 1.0x</div>
+            <div class="metric" id="efficiency">Efficiency: 0%</div>
+        </div>
+    </div>
+
+    <!-- Export Controls -->
+    <div class="export-controls">
+        <h3>Export Visualizations</h3>
+        <p>Save these visualizations as PNG images for documentation:</p>
+        <button onclick="exportCanvas('correlationCanvas', 'correlation-coefficient.png')">Export Correlation</button>
+        <button onclick="exportCanvas('timeWindowCanvas', 'time-window-analysis.png')">Export Time Window</button>
+        <button onclick="exportCanvas('significanceCanvas', 'statistical-significance.png')">Export Significance</button>
+        <button onclick="exportCanvas('workflowCanvas', 'data-processing-workflow.png')">Export Workflow</button>
+        <button onclick="exportCanvas('parallelCanvas', 'parallel-processing.png')">Export Parallel</button>
+    </div>
+
+    <script src="correlation_visualizer.js"></script>
+</body>
+</html>

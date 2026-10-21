@@ -1,0 +1,39 @@
+# free timing report: new export
+rebalances 15: 2025-07-16 .. 2026-09-16; trades 943 (P1 729, P2 214); buys 493, sells 450
+priced (next-open): 1.0000
+priced (same-close): 1.0000
+trades touching a bad open: 0; executions at an open equal to the close: 0.0023
+liquid set per rebalance: median 2447, min 2283, max 2668
+P1 turnover (sum of trade sizes) per rebalance: 0.184; P2: 0.715
+S1: timable 0.973 (P1 0.966, P2 1.000); mean window day 1.87; executed before day 4: 0.621; day histogram [389, 85, 52, 44, 348]
+S2: timable 1.000 (P1 1.000, P2 1.000); mean window day 1.57; executed before day 4: 0.681; day histogram [480, 83, 48, 31, 301]
+sanity: mean over window days of (captured - random) = 0; always-favourable = day-0: ok
+
+## Test 4: the unseen months, S1, next-open, P1+P2 pooled, market-relative (pass: same sign as test 1)
++55.61 bps (se 45.17, t +1.23; 918 trades, 15 dates)
+
+## Also: per trade (bps; t), pooled, P1, P2, buys, sells
+| Signal | Execution | Measure | Pooled | P1 | P2 | Buys | Sells |
+|---|---|---|---|---|---|---|---|
+| S1 | next-open | market-relative | +55.61 (+1.2) | +2.60 (+0.2) | +68.53 (+1.2) | +79.67 (+1.5) | +31.94 (+0.6) |
+| S1 | next-open | raw | +53.86 (+1.1) | +4.79 (+0.3) | +65.82 (+1.1) | +77.62 (+1.4) | +30.48 (+0.5) |
+| S1 | same-close | market-relative | +28.90 (+0.6) | -3.30 (-0.2) | +36.75 (+0.6) | +50.72 (+0.9) | +7.43 (+0.1) |
+| S1 | same-close | raw | +25.87 (+0.5) | -1.21 (-0.1) | +32.47 (+0.5) | +47.47 (+0.8) | +4.62 (+0.1) |
+| S2 | next-open | market-relative | +25.77 (+0.5) | -14.53 (-0.5) | +36.11 (+0.6) | -10.06 (-0.2) | +61.51 (+0.9) |
+| S2 | next-open | raw | +17.95 (+0.3) | -21.68 (-0.7) | +28.12 (+0.4) | -23.33 (-0.4) | +59.13 (+0.8) |
+| S2 | same-close | market-relative | -0.11 (-0.0) | -10.26 (-0.2) | +2.50 (+0.0) | -23.97 (-0.4) | +23.70 (+0.3) |
+| S2 | same-close | raw | -6.61 (-0.1) | -15.85 (-0.4) | -4.24 (-0.1) | -30.91 (-0.5) | +17.64 (+0.2) |
+| day 0 | next-open | market-relative | +54.84 (+1.9) | -15.83 (-0.5) | +72.98 (+2.1) | -143.58 (-1.9) | +252.78 (+3.5) |
+| day 0 | next-open | raw | +56.35 (+2.0) | -15.52 (-0.4) | +74.79 (+2.2) | -194.94 (-2.2) | +307.05 (+3.7) |
+| day 0 | same-close | market-relative | +64.96 (+1.8) | -5.88 (-0.1) | +83.15 (+2.0) | -113.95 (-1.4) | +243.45 (+2.9) |
+| day 0 | same-close | raw | +66.45 (+1.8) | -4.68 (-0.1) | +84.71 (+2.0) | -147.51 (-1.5) | +279.91 (+2.8) |
+
+## Portfolio effect (points a year, annualized from the rebalances in the period; se)
+| Signal | Execution | P1 | P2 |
+|---|---|---|---|
+| S1 | next-open | +0.10 (se 0.32) | +5.65 (se 4.81) |
+| S1 | same-close | -0.03 (se 0.44) | +2.79 (se 5.39) |
+| S2 | next-open | -0.48 (se 0.66) | +2.41 (se 5.46) |
+| S2 | same-close | -0.35 (se 0.97) | -0.36 (se 6.27) |
+| day 0 | next-open | -0.34 (se 0.76) | +6.42 (se 3.07) |
+| day 0 | same-close | -0.10 (se 0.96) | +7.27 (se 3.76) |

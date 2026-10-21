@@ -1,0 +1,24 @@
+old: export rows 8503; store ticker == export ticker for 8503; differ 0
+  store kinds of export rows: {np.str_('stock'): np.int64(8503)}
+universe stock-days from 2005 with both closes: 6615175
+  store vs export close differ by > 0.1%: 0.00000
+  store vs export close differ by > 0.5%: 0.00000
+  store vs export close differ by > 1.0%: 0.00000
+  store vs export close differ by > 5.0%: 0.00000
+  universe stock-days with export close but no store close: 0
+  universe stock-days with store close but no export close: 8
+  export: universe stock-days with |daily log move| > 0.5: 468
+  store: universe stock-days with |daily log move| > 0.5: 484
+  share differing by > 0.5% by year: 2005: 0.0000, 2006: 0.0000, 2007: 0.0000, 2008: 0.0000, 2009: 0.0000, 2010: 0.0000, 2011: 0.0000, 2012: 0.0000, 2013: 0.0000, 2014: 0.0000, 2015: 0.0000, 2016: 0.0000, 2017: 0.0000, 2018: 0.0000, 2019: 0.0000, 2020: 0.0000, 2021: 0.0000, 2022: 0.0000, 2023: 0.0000, 2024: 0.0000, 2025: 0.0000
+universe: first block 2004-12-31; size median 1284, min 298, max 2284; 500 largest median 500
+  2004-12-31: universe 300, distinct twins 1
+  2007-01-03: universe 299, distinct twins 43
+  2009-01-02: universe 980, distinct twins 81
+  2011-01-03: universe 958, distinct twins 74
+  2013-01-04: universe 1029, distinct twins 95
+  2015-01-06: universe 1272, distinct twins 127
+  2017-01-05: universe 1369, distinct twins 153
+  2019-01-08: universe 1634, distinct twins 156
+  2021-01-07: universe 1753, distinct twins 177
+  2023-01-09: universe 2014, distinct twins 210
+  2025-01-13: universe 2248, distinct twins 226

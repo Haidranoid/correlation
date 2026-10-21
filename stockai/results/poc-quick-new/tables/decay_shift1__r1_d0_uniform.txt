@@ -1,0 +1,9 @@
+Walk-forward: each year treated as the future, predicted only from census windows that ended before it.
+holdout                    pairs       SPY       QQQ      picks random med  p (0 bps)    hit %     IC t  LS bps/d     LS t  ICret t  picks 5bp    p 5bp picks 20bp   p 20bp
+2022-06-28..2023-06-27      1969     14.1%     25.3%      -8.4%      -3.2%      0.778    48.7%    -0.97     -2.45    -0.49     1.76     -22.6%    0.781     -53.4%    0.796
+2023-06-28..2024-06-27      1968     27.0%     33.2%      11.3%       8.2%      0.374    52.8%     1.11      2.35     0.47     1.74      -9.7%    0.383     -51.8%    0.400
+Years where the picks beat random guessers at p < 0.1: 0 of 2 (chance alone: about 0.2)  [1s]
+Rank IC: t positive in 1 of 2 years; combined across years z = 0.10
+Long-short top/bottom 10%: mean -0.05 bps/day gross, positive in 1 of 2 years, combined z = -0.01; turnover 78% of the book per rebalance, so costs of c bps per side take about 3.13 x c bps/day
+Rank IC in actual returns: t positive in 2 of 2 years; combined across years z = 2.47
+Years where the picks beat random guessers at p < 0.1, by cost: 0 bps: 0 of 2; 5 bps: 0 of 2; 20 bps: 0 of 2

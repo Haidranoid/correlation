@@ -1,0 +1,180 @@
+data: forward-filled: SPY 2011-02-17
+data: forward-filled: XLB 2011-02-17
+data: forward-filled: XLE 2011-02-17
+data: forward-filled: XLF 2011-02-17
+data: forward-filled: XLI 2011-02-17
+data: forward-filled: XLK 2011-02-17
+data: forward-filled: XLP 2011-02-17
+data: forward-filled: XLU 2011-02-17
+data: forward-filled: XLV 2011-02-17
+data: forward-filled: XLY 2011-02-17
+formations 2007-07-11 .. 2025-06-20 (904 weeks); first complete state 2006-03-27, first forecast 2007-06-12; days without a forecast after it: ['2007-06-13', '2007-06-14', '2007-06-18', '2007-06-20', '2007-06-21', '2007-06-22', '2007-06-25', '2007-06-26', '2007-06-27', '2007-07-09']
+
+--- Test 1 (first forecast .. 2019): weeks formed 2007-07-11 .. 2019-12-30 ---
+                                               bps/wk      t     n
+analog gross                                    +4.43  +0.61   629
+analog net                                      +0.17  +0.02   629
+                                             turnover 2.13/wk, sd of net 182.2 bps, annualized net +0.09%, Sharpe +0.01
+momentum gross                                  -9.10  -1.16   629
+momentum net                                   -11.77  -1.50   629
+                                             turnover 1.33/wk, sd of net 196.5 bps, annualized net -6.12%, Sharpe -0.43
+reversal gross                                  +8.97  +1.23   629
+reversal net                                    +3.54  +0.49   629
+                                             turnover 2.71/wk, sd of net 183.0 bps, annualized net +1.84%, Sharpe +0.14
+analog - momentum (net, paired)                +11.94  +1.11   629
+analog - momentum (gross, paired)              +13.54  +1.25   629
+analog - reversal (net, paired)                 -3.37  -0.41   629
+analog - reversal (gross, paired)               -4.54  -0.56   629
+random (10,000): gross mean -0.01 bps/wk median (5-95%: -9.57..+9.62); net median -5.38 (5-95%: -14.94..+4.25)
+analog vs random: gross p = 0.2212, net p = 0.1675 (share of random strategies at least as good)
+momentum vs random: net p = 0.8686
+reversal vs random: net p = 0.0635
+
+--- Test 3 (2020 .. 2025-06): weeks formed 2020-01-07 .. 2025-06-20 ---
+                                               bps/wk      t     n
+analog gross                                    -5.21  -0.40   275
+analog net                                      -9.58  -0.73   275
+                                             turnover 2.18/wk, sd of net 217.2 bps, annualized net -4.98%, Sharpe -0.32
+momentum gross                                  -1.97  -0.13   275
+momentum net                                    -4.60  -0.31   275
+                                             turnover 1.32/wk, sd of net 243.0 bps, annualized net -2.39%, Sharpe -0.14
+reversal gross                                 -14.97  -1.00   275
+reversal net                                   -20.11  -1.35   275
+                                             turnover 2.57/wk, sd of net 247.4 bps, annualized net -10.46%, Sharpe -0.59
+analog - momentum (net, paired)                 -4.98  -0.24   275
+analog - momentum (gross, paired)               -3.25  -0.16   275
+analog - reversal (net, paired)                +10.53  +0.62   275
+analog - reversal (gross, paired)               +9.75  +0.57   275
+random (10,000): gross mean -0.01 bps/wk median (5-95%: -18.21..+18.08); net median -5.38 (5-95%: -23.61..+12.67)
+analog vs random: gross p = 0.6873, net p = 0.6540 (share of random strategies at least as good)
+momentum vs random: net p = 0.4717
+reversal vs random: net p = 0.9131
+
+--- All old-export weeks: weeks formed 2007-07-11 .. 2025-06-20 ---
+                                               bps/wk      t     n
+analog gross                                    +1.50  +0.23   904
+analog net                                      -2.79  -0.43   904
+                                             turnover 2.15/wk, sd of net 193.4 bps, annualized net -1.45%, Sharpe -0.10
+momentum gross                                  -6.93  -0.98   904
+momentum net                                    -9.59  -1.36   904
+                                             turnover 1.33/wk, sd of net 211.6 bps, annualized net -4.99%, Sharpe -0.33
+reversal gross                                  +1.69  +0.25   904
+reversal net                                    -3.65  -0.54   904
+                                             turnover 2.67/wk, sd of net 204.9 bps, annualized net -1.90%, Sharpe -0.13
+analog - momentum (net, paired)                 +6.80  +0.69   904
+analog - momentum (gross, paired)               +8.43  +0.86   904
+analog - reversal (net, paired)                 +0.86  +0.11   904
+analog - reversal (gross, paired)               -0.19  -0.02   904
+random (10,000): gross mean +0.00 bps/wk median (5-95%: -8.54..+8.73); net median -5.36 (5-95%: -13.93..+3.36)
+analog vs random: gross p = 0.3791, net p = 0.3089 (share of random strategies at least as good)
+momentum vs random: net p = 0.7913
+reversal vs random: net p = 0.3648
+
+--- Test 1 without 2008-09: weeks formed 2007-07-11 .. 2019-12-30 ---
+                                               bps/wk      t     n
+analog gross                                    +4.64  +0.79   528
+analog net                                      +0.23  +0.04   528
+                                             turnover 2.21/wk, sd of net 135.6 bps, annualized net +0.12%, Sharpe +0.01
+momentum gross                                  -6.25  -0.99   528
+momentum net                                    -8.94  -1.41   528
+                                             turnover 1.34/wk, sd of net 145.6 bps, annualized net -4.65%, Sharpe -0.44
+reversal gross                                  +3.62  +0.55   528
+reversal net                                    -1.80  -0.27   528
+                                             turnover 2.71/wk, sd of net 150.8 bps, annualized net -0.93%, Sharpe -0.09
+analog - momentum (net, paired)                 +9.17  +0.96   528
+analog - momentum (gross, paired)              +10.90  +1.15   528
+analog - reversal (net, paired)                 +2.03  +0.29   528
+analog - reversal (gross, paired)               +1.02  +0.14   528
+random (10,000): gross mean +0.01 bps/wk median (5-95%: -8.16..+8.25); net median -5.34 (5-95%: -13.53..+2.89)
+analog vs random: gross p = 0.1752, net p = 0.1296 (share of random strategies at least as good)
+momentum vs random: net p = 0.7614
+reversal vs random: net p = 0.2375
+
+--- Test 3 without 2020: weeks formed 2021-01-04 .. 2025-06-20 ---
+                                               bps/wk      t     n
+analog gross                                    +3.13  +0.23   225
+analog net                                      -1.27  -0.09   225
+                                             turnover 2.20/wk, sd of net 200.9 bps, annualized net -0.66%, Sharpe -0.05
+momentum gross                                  -5.46  -0.38   225
+momentum net                                    -8.02  -0.56   225
+                                             turnover 1.28/wk, sd of net 213.7 bps, annualized net -4.17%, Sharpe -0.27
+reversal gross                                 -15.41  -1.04   225
+reversal net                                   -20.55  -1.39   225
+                                             turnover 2.57/wk, sd of net 221.3 bps, annualized net -10.68%, Sharpe -0.67
+analog - momentum (net, paired)                 +6.76  +0.34   225
+analog - momentum (gross, paired)               +8.59  +0.44   225
+analog - reversal (net, paired)                +19.28  +1.02   225
+analog - reversal (gross, paired)              +18.54  +0.98   225
+random (10,000): gross mean -0.01 bps/wk median (5-95%: -19.29..+18.74); net median -5.37 (5-95%: -24.71..+13.33)
+analog vs random: gross p = 0.3876, net p = 0.3572 (share of random strategies at least as good)
+momentum vs random: net p = 0.5952
+reversal vs random: net p = 0.9040
+
+--- All without 2008-09 and 2020: weeks formed 2007-07-11 .. 2025-06-20 ---
+                                               bps/wk      t     n
+analog gross                                    +4.19  +0.73   753
+analog net                                      -0.22  -0.04   753
+                                             turnover 2.20/wk, sd of net 157.8 bps, annualized net -0.11%, Sharpe -0.01
+momentum gross                                  -6.02  -0.98   753
+momentum net                                    -8.66  -1.41   753
+                                             turnover 1.32/wk, sd of net 168.7 bps, annualized net -4.50%, Sharpe -0.37
+reversal gross                                  -2.06  -0.32   753
+reversal net                                    -7.40  -1.16   753
+                                             turnover 2.67/wk, sd of net 174.9 bps, annualized net -3.85%, Sharpe -0.31
+analog - momentum (net, paired)                 +8.45  +0.95   753
+analog - momentum (gross, paired)              +10.21  +1.15   753
+analog - reversal (net, paired)                 +7.18  +0.96   753
+analog - reversal (gross, paired)               +6.25  +0.83   753
+random (10,000): gross mean -0.04 bps/wk median (5-95%: -8.07..+7.93); net median -5.41 (5-95%: -13.43..+2.57)
+analog vs random: gross p = 0.1922, net p = 0.1442 (share of random strategies at least as good)
+momentum vs random: net p = 0.7469
+reversal vs random: net p = 0.6567
+
+=== Tests ===
+Test 1: analog net +0.17 bps/wk, t +0.02 (n 629) -> FAIL (needs t >= 2)
+Test 2: vs momentum t +1.11, vs reversal t -0.41 -> FAIL (needs t >= 1.5 against both)
+Test 3: 2020-2025-06 analog net -9.58 bps/wk, t -0.73 -> FAIL (needs positive)
+
+=== By period (bps/wk; t) ===
+period       weeks     analog net   momentum net   reversal net         an-mom         an-rev
+2007            25   +44.4 (+1.38)   -20.1 (-0.68)   +36.2 (+0.85)   +64.4 (+1.39)    +8.1 (+0.17)
+2008            50   +25.2 (+0.45)   -73.4 (-1.21)   +94.5 (+1.94)   +98.5 (+1.34)   -69.3 (-1.19)
+2009            51   -24.9 (-0.70)   +19.3 (+0.50)   -30.3 (-0.92)   -44.2 (-0.84)    +5.4 (+0.15)
+2010            50   +12.7 (+0.84)   -11.5 (-0.59)    -0.0 (-0.00)   +24.2 (+0.90)   +12.7 (+0.60)
+2011            50   +19.1 (+1.13)    +2.0 (+0.07)    -0.8 (-0.04)   +17.0 (+0.47)   +19.9 (+0.92)
+2012            50   -18.0 (-1.11)   +11.8 (+0.67)    -8.4 (-0.51)   -29.8 (-1.13)    -9.5 (-0.46)
+2013            51   -23.6 (-1.79)    +1.7 (+0.11)    +0.1 (+0.00)   -25.4 (-1.18)   -23.7 (-1.52)
+2014            50   -16.9 (-1.27)    +8.9 (+0.52)    +0.1 (+0.00)   -25.8 (-1.12)   -17.0 (-0.84)
+2015            51   -10.0 (-0.41)   -11.3 (-0.46)    -9.0 (-0.42)    +1.3 (+0.03)    -1.0 (-0.05)
+2016            50   -26.5 (-0.96)   -40.4 (-1.61)    -1.5 (-0.04)   +13.9 (+0.34)   -25.0 (-0.87)
+2017            50   +35.2 (+1.97)   -16.0 (-0.85)    -0.6 (-0.04)   +51.1 (+1.84)   +35.7 (+1.73)
+2018            50    +8.1 (+0.42)   -14.7 (-0.78)    -1.3 (-0.06)   +22.7 (+0.72)    +9.4 (+0.38)
+2019            51    +1.0 (+0.05)   -14.6 (-0.92)   -15.1 (-0.79)   +15.6 (+0.71)   +16.1 (+0.62)
+2020            50   -47.0 (-1.19)   +10.8 (+0.22)   -18.2 (-0.37)   -57.8 (-0.79)   -28.8 (-0.72)
+2021            51   -34.0 (-1.35)   +19.1 (+0.66)   -34.5 (-1.13)   -53.1 (-1.26)    +0.5 (+0.01)
+2022            50    +4.5 (+0.13)   -12.8 (-0.33)   -46.3 (-1.15)   +17.3 (+0.37)   +50.8 (+0.90)
+2023            50   -51.1 (-1.93)   -31.4 (-1.17)    -1.1 (-0.04)   -19.7 (-0.47)   -50.1 (-1.43)
+2024            50   +38.5 (+1.74)    +1.1 (+0.04)   -23.8 (-1.10)   +37.4 (+1.42)   +62.3 (+1.93)
+2025            24   +77.4 (+1.85)   -25.7 (-0.57)   +29.1 (+0.59)  +103.1 (+1.38)   +48.4 (+1.00)
+2007-2009      126    +8.7 (+0.32)   -25.3 (-0.86)   +32.4 (+1.28)   +34.0 (+0.90)   -23.7 (-0.81)
+2010-2014      251    -5.4 (-0.80)    +2.6 (+0.29)    -1.8 (-0.23)    -8.0 (-0.66)    -3.6 (-0.40)
+2015-2019      252    +1.5 (+0.15)   -19.3 (-2.07)    -5.5 (-0.53)   +20.8 (+1.38)    +7.0 (+0.64)
+2020-2025-06   275    -9.6 (-0.73)    -4.6 (-0.31)   -20.1 (-1.35)    -5.0 (-0.24)   +10.5 (+0.62)
+
+=== Diagnostics ===
+test 1: weekly rank IC of forecast vs next-week sector-minus-SPY return +0.0207 (t +1.25); rank corr of forecast with momentum -0.051, with reversal +0.215
+test 3: weekly rank IC of forecast vs next-week sector-minus-SPY return +0.0002 (t +0.01); rank corr of forecast with momentum -0.087, with reversal +0.172
+analog vs momentum: identical book 0.1% of weeks; shared names per week 1.85 of 6
+analog vs reversal: identical book 0.9% of weeks; shared names per week 2.61 of 6
+
+=== Story check (weekly formations, old export) ===
+weeks skipped because 20 random spaced sets of 50 could not be drawn from the pool: 0 (formed [] .. [])
+all: dispersion analogs 1.567% vs random 1.721% (ratio 0.911; analogs tighter in 81.1% of weeks; diff t -23.18)
+all: agreement (mean pairwise cosine) analogs +0.0050 vs random +0.0031 (analogs higher in 46.6% of weeks; diff t +3.65)
+all: share of analogs from the 63 days before t: 5.4% (random spaced sets: 3.6%)
+test 1: dispersion analogs 1.563% vs random 1.742% (ratio 0.897; analogs tighter in 83.9% of weeks; diff t -23.69)
+test 1: agreement (mean pairwise cosine) analogs +0.0053 vs random +0.0037 (analogs higher in 44.2% of weeks; diff t +2.49)
+test 1: share of analogs from the 63 days before t: 6.3% (random spaced sets: 4.5%)
+test 3: dispersion analogs 1.579% vs random 1.673% (ratio 0.943; analogs tighter in 74.5% of weeks; diff t -7.56)
+test 3: agreement (mean pairwise cosine) analogs +0.0044 vs random +0.0017 (analogs higher in 52.0% of weeks; diff t +2.99)
+test 3: share of analogs from the 63 days before t: 3.3% (random spaced sets: 1.4%)

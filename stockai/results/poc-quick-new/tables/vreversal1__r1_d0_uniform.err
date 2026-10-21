@@ -1,0 +1,2 @@
+fingerprint 8b5ac076267c83ab matches /home/bhoult/.local/share/correlation2/export/full/meta.json
+skipped 2006-06-28 .. 2007-06-28: only 0 stocks can be picked (history before the holdout too short?)

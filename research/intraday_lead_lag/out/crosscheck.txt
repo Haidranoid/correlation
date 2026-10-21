@@ -1,0 +1,2 @@
+5m: bars in both 2,387,108; closes agreeing to 1e-6 99.9686%; largest relative gap 1.69e-02
+1m: bars in both 3,779,400; closes agreeing to 1e-6 100.0000%; largest relative gap 0.00e+00

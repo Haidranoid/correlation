@@ -1,0 +1,2 @@
+U unseen: corr(G, -x5) +0.081; IC reversal +0.0190 (t +1.24); IC G +0.0019 (t +0.52); IC G after reversal +0.0009 (t +0.24); long side +0.7 bps/wk (t +0.10), short side +0.8 (t +0.13); 65 wk
+B unseen: corr(G, -x5) +0.113; IC reversal +0.0217 (t +1.09); IC G +0.0083 (t +1.24); IC G after reversal +0.0067 (t +1.02); long side +4.2 bps/wk (t +0.36), short side -28.3 (t -2.99); 65 wk

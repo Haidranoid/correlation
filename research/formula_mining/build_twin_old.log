@@ -1,0 +1,6 @@
+10:54:31 old twins rebalances 270
+10:55:13 twres5 (max_missing 1): finite share on the last day 0.73
+10:55:57 twres21 (max_missing 1): finite share on the last day 0.59
+10:56:37 twres63 (max_missing 3): finite share on the last day 0.59
+10:56:37 twcorr done
+exit 0

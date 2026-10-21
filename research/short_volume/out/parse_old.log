@@ -1,0 +1,99 @@
+[    0.0s] old N 8503 T 5911 duplicate normalized tickers 0
+[    0.7s] 2009-12-09 symbols 6603 matched 2329
+[    2.1s] 2010-12-07 symbols 6542 matched 2361
+[    3.6s] 2011-12-02 symbols 6416 matched 2383
+[    5.1s] 2012-12-03 symbols 6214 matched 2487
+[    6.6s] 2013-11-29 symbols 5898 matched 2469
+[    8.6s] 2014-11-26 symbols 7162 matched 2796
+[   10.4s] 2015-11-24 symbols 7292 matched 2935
+[   12.2s] 2016-11-21 symbols 7595 matched 3107
+[   14.0s] 2017-11-17 symbols 7640 matched 3281
+[   16.4s] 2018-11-15 symbols 7760 matched 3502
+[   20.0s] 2019-11-14 symbols 7931 matched 3738
+[   24.1s] 2020-11-11 symbols 8531 matched 4059
+[   28.9s] 2021-11-09 symbols 10151 matched 4846
+[   34.0s] 2022-11-07 symbols 9994 matched 5257
+[   39.1s] 2023-11-06 symbols 9702 matched 5629
+[   44.0s] 2024-11-04 symbols 10077 matched 6559
+export old: N 8503, T 5911; first FINRA day 2009-08-03 (export index 1910); duplicate normalized tickers 0
+days from 2009-08-03: 4001; facility sum used 4001, CNMS fallback 0, missing 0: []
+Date-field mismatches 0; files whose trailer count != records 3; files without a header row 1 (e.g. ['FNSQshvol20101122.txt']); first file with fractional volumes None
+files present by prefix and year (days with the file / days):
+  2009: days 106; FNSQ 106, FNQC 0, FNYX 106, FNRA 106, CNMS 0, FORF 5
+  2010: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 252, CNMS 0, FORF 12
+  2011: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 252, CNMS 0, FORF 12
+  2012: days 250; FNSQ 250, FNQC 0, FNYX 250, FNRA 250, CNMS 0, FORF 12
+  2013: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 21, CNMS 0, FORF 12
+  2014: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 226, CNMS 0, FORF 12
+  2015: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 20, CNMS 0, FORF 12
+  2016: days 252; FNSQ 252, FNQC 0, FNYX 252, FNRA 21, CNMS 0, FORF 12
+  2017: days 251; FNSQ 251, FNQC 0, FNYX 251, FNRA 251, CNMS 0, FORF 12
+  2018: days 251; FNSQ 251, FNQC 105, FNYX 251, FNRA 251, CNMS 105, FORF 12
+  2019: days 252; FNSQ 252, FNQC 252, FNYX 252, FNRA 252, CNMS 252, FORF 12
+  2020: days 253; FNSQ 253, FNQC 253, FNYX 253, FNRA 253, CNMS 253, FORF 12
+  2021: days 252; FNSQ 252, FNQC 252, FNYX 252, FNRA 252, CNMS 252, FORF 12
+  2022: days 251; FNSQ 251, FNQC 251, FNYX 251, FNRA 251, CNMS 251, FORF 12
+  2023: days 250; FNSQ 250, FNQC 250, FNYX 250, FNRA 250, CNMS 250, FORF 12
+  2024: days 252; FNSQ 252, FNQC 252, FNYX 252, FNRA 252, CNMS 252, FORF 12
+  2025: days 121; FNSQ 121, FNQC 121, FNYX 121, FNRA 121, CNMS 121, FORF 6
+symbol separators by year (count of symbol-days with ".", "/", " ", "-"):
+  2009: "." 4860
+  2010: "." 10746
+  2011: "." 10582
+  2012: "." 10140, "/" 802
+  2013: "." 9271, "/" 4880
+  2014: "/" 10906
+  2015: "/" 10829
+  2016: "/" 11274
+  2017: "/" 13095
+  2018: "/" 11952
+  2019: "/" 10799
+  2020: "/" 26016
+  2021: "/" 66805
+  2022: "/" 45484
+  2023: "/" 24741
+  2024: "/" 17984
+  2025: "/" 8567
+FINRA symbols matched to an export ticker, by year (symbol-days):
+  2009: 244139 of 701176 (34.8%)
+  2010: 588622 of 1647394 (35.7%)
+  2011: 595861 of 1627554 (36.6%)
+  2012: 606834 of 1597510 (38.0%)
+  2013: 646167 of 1632739 (39.6%)
+  2014: 690215 of 1803356 (38.3%)
+  2015: 726047 of 1838385 (39.5%)
+  2016: 758563 of 1864139 (40.7%)
+  2017: 804292 of 1911487 (42.1%)
+  2018: 855938 of 1941952 (44.1%)
+  2019: 915943 of 1973575 (46.4%)
+  2020: 994528 of 2111875 (47.1%)
+  2021: 1141385 of 2464645 (46.3%)
+  2022: 1284372 of 2516888 (51.0%)
+  2023: 1376851 of 2441520 (56.4%)
+  2024: 1558086 of 2503350 (62.2%)
+  2025: 857261 of 1260650 (68.0%)
+largest unmatched symbols by total volume, by year (top 15):
+  2009: FNM, ETFC, FAZ, CIT, SPY, FRE, XLF, QQQQ, UYG, EEM, SRS, SDS, UNG, EVFL, URE
+  2010: SPY, XLF, FAZ, QQQQ, YRCW, EEM, TZA, SDS, IWM, FAS, ABK, Q, MOT, ETFC, UNG
+  2011: SPY, XLF, IWM, EEM, SDS, LVLT, SLV, QQQ, ALU, FAS, TZA, YHOO, EWJ, TNA, EMC
+  2012: SPY, XLF, FB, VXX, EEM, TZA, QQQ, RIMM, IWM, ZNGA, ALU, CHK, CLWR, SDS, ARNA
+  2013: FB, SPY, EEM, XLF, BBRY, EWJ, ZNGA, VXX, RAD, JCP, IWM, ALU, EMC, QQQ, YHOO
+  2014: SPY, FB, EEM, ZNGA, RAD, IWM, TWTR, EWJ, XLF, VXX, QQQ, JCP, YHOO, TZA, DGAZ
+  2015: UWTI, SPY, UGAZ, EEM, VXX, EWJ, TVIX, FB, NUGT, IWM, RAD, TWTR, XLF, USO, QQQ
+  2016: SPY, CHK, UWTI, EEM, XLF, DUST, USO, TVIX, UVXY, GDX, VXX, TWTR, VRX, WLL, FB
+  2017: XLF, SPY, CHK, JNUG, RAD, EEM, VXX, UVXY, FTR, GDX, USO, DRYS, NUGT, VRX, QQQ
+  2018: SPY, HMNY, NVCN, EEM, CHK, XLF, QQQ, TWTR, TVIX, FB, UVXY, SQQQ, WFT, RAD, VXX
+  2019: CHK, SPY, EEM, TVIX, XLF, SQQQ, QQQ, GDX, ECA, DWT, AMLP, TQQQ, HYG, USO, SWN
+  2020: SQQQ, SPY, ZOM, SPXS, TQQQ, GNUS, NAKD, USO, CHK, QQQ, OAS, SRNE, SPXU, XLF, MRO
+  2021: NAKD, SQQQ, ZOM, CEI, UVXY, SPY, METX, WISH, XELA, PROG, BBIG, QQQ, TQQQ, XLF, IDEX
+  2022: TQQQ, SQQQ, XELA, SOXL, SPY, CEI, LABU, UVXY, QQQ, SH, HYG, PSQ, SOXS, SWN, BBIG
+  2023: SQQQ, TQQQ, NKLA, XELA, SOXL, BETS, FFIE, SOXS, SPY, BBBY, TTOO, IDEX, LABU, GOEV, QQQ
+  2024: SQQQ, FFIE, NKLA, SOXL, SOXS, TQQQ, TELL, SPY, GOEV, SPXS, HYG, FSR, QQQ, FXI, SVMH
+  2025: DMN, SOXL, TSLZ, TQQQ, SQQQ, SPXS, SOXS, NVDQ, SPY, HYG, MGOL, QQQ, XLF, IBIT, SVMH
+facility sum vs CNMS on 1736 days (2018-08-01..2025-06-27):
+  symbols: facility mean 9267, CNMS 9267, both 9267; identical to 0.01 shares (short and total) 100.0000% of symbols in both
+  total volume: facility / CNMS = 1.000000; short: 1.000000
+  days with the lowest identical share: 2018-08-01 7676/7676; 2018-08-02 7714/7714; 2018-08-03 7699/7699; 2018-08-06 7694/7694; 2018-08-07 7758/7758
+ORF (FORF) monthly samples: 191 files; records matching an export ticker: 11834
+  e.g. 2009-08-03 ACLO orf 200.0 fac 0; 2009-08-03 AEMD orf 115839.0 fac 0; 2009-08-03 APDN orf 2541239.0 fac 0; 2009-08-03 AZPN orf 7465.0 fac 0; 2009-08-03 BCLI orf 5042.0 fac 0; 2009-08-03 BKYI orf 237500.0 fac 0; 2009-08-03 BPTH orf 77924.0 fac 0; 2009-08-03 CCEL orf 30988.0 fac 0; 2009-08-03 COPY orf 25450.0 fac 0; 2009-08-03 CPHI orf 152088.0 fac 0; 2009-08-03 CREG orf 16766.0 fac 0; 2009-08-03 CSBR orf 4248.0 fac 0; 2009-08-03 DMAT orf 102500.0 fac 0; 2009-08-03 DRUG orf 6500.0 fac 0; 2009-08-03 DYAI orf 189645.0 fac 0
+

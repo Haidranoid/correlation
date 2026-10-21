@@ -1,0 +1,125 @@
+<% content_for :title, "Add New User - Admin" %>
+
+<div class="admin-content">
+  <div class="admin-header">
+    <div>
+      <h1>➕ Add New User</h1>
+      <p>Create a new user account</p>
+    </div>
+    <%= link_to admin_users_path, class: "btn btn-secondary" do %>
+      ← Back to Users
+    <% end %>
+  </div>
+
+  <div class="form-container">
+    <%= form_with model: [@user], url: admin_users_path, local: true do |f| %>
+      <% if @user.errors.any? %>
+        <div class="error-messages">
+          <h3><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h3>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Enter user's email address" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password %>
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: "Enter password (minimum 6 characters)" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, "Confirm Password" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm the password" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Create User", class: "btn btn-primary" %>
+        <%= link_to "Cancel", admin_users_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.form-container {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+  max-width: 500px;
+}
+
+.error-messages {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-messages h3 {
+  color: #ef4444;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-messages ul {
+  color: #ef4444;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.error-messages li {
+  margin-bottom: 0.25rem;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  color: var(--text-primary, #ffffff);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.field input[type="email"],
+.field input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-primary, #1a1b23);
+  color: var(--text-primary, #ffffff);
+  border: 1px solid var(--border-color, #3a3d4a);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.field input[type="email"]:focus,
+.field input[type="password"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.actions .btn {
+  flex: 1;
+  text-align: center;
+}
+</style>

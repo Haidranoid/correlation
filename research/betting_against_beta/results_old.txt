@@ -1,0 +1,92 @@
+Monthly returns (decimal series -> % a month). t = plain mean / se; t NW = Newey-West, 3 lags; alpha = intercept
+of monthly net returns on French Mkt-RF, SMB, HML, RMW, CMA, UMD (plain OLS t). French factors end 2026-08.
+June 2025 is a partial month on the old export (through 2025-06-27).
+
+== Test 1: BAB, 2008-03..2019-12, net of costs ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+BAB net                                      2008-03..2019-12  142    0.250   0.91   0.99   3.00  11.3   0.27         0.211   1.10  -0.00  142
+BAB gross                                    2008-03..2019-12  142    0.264   0.97   1.05   3.17  11.3   0.28         0.225   1.17  -0.00  142
+PASS test 1 (t >= 2 and FF5+UMD alpha > 0): False
+
+== Test 2: BAB on the 500 largest, 2008-03..2019-12, net ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+BAB500 net                                   2008-03..2019-12  142    0.295   0.99   1.04   3.54  12.3   0.29         0.227   1.05  -0.01  142
+BAB500 gross                                 2008-03..2019-12  142    0.312   1.05   1.10   3.74  12.3   0.31         0.244   1.12  -0.01  142
+PASS test 2 (mean net excess return with test 1's sign): True  (alpha sign same)
+
+== Test 3: BAB, 2020-01..2025-06, net (store closes as they are; dividend-corrected below) ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+BAB net                                      2020-01..2025-06   66   -0.570  -1.28  -1.35  -6.84  12.6  -0.54        -0.959  -2.75  -0.00   66
+BAB gross                                    2020-01..2025-06   66   -0.554  -1.24  -1.32  -6.65  12.6  -0.53        -0.944  -2.71  -0.00   66
+BAB net, dividend-corrected                  2020-01..2025-06   66   -0.469  -1.05  -1.11  -5.63  12.5  -0.45        -0.859  -2.47   0.00   66
+BAB500 net                                   2020-01..2025-06   66   -0.836  -1.35  -1.48 -10.04  17.5  -0.57        -1.295  -2.81  -0.09   66
+BAB500 net, dividend-corrected               2020-01..2025-06   66   -0.743  -1.20  -1.33  -8.91  17.4  -0.51        -1.202  -2.61  -0.09   66
+PASS test 3 (mean net excess return with test 1's sign): False; dividend-corrected: False
+
+== By period, net (rows from 2022-07 also dividend-corrected) ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+BAB 2008-03..2009                            2008-03..2009-12   22   -1.012  -0.91  -1.13 -12.15  18.0  -0.67         0.699   1.21   0.25   22
+BAB 2010-2014                                2010-01..2014-12   60    0.522   1.65   1.77   6.26   8.5   0.74         0.550   2.15  -0.17   60
+BAB 2015-2019                                2015-01..2019-12   60    0.441   1.14   1.30   5.29  10.3   0.51         0.298   1.27  -0.10   60
+BAB 2020-2025-06                             2020-01..2025-06   66   -0.570  -1.28  -1.35  -6.84  12.6  -0.54        -0.959  -2.75  -0.00   66
+BAB 2020-2025-06, div-corrected              2020-01..2025-06   66   -0.469  -1.05  -1.11  -5.63  12.5  -0.45        -0.859  -2.47   0.00   66
+BAB 2022-07..2025-06                         2022-07..2025-06   36   -0.604  -1.09  -1.15  -7.25  11.5  -0.63        -0.938  -2.69  -0.08   36
+BAB 2022-07..2025-06, div-corrected          2022-07..2025-06   36   -0.420  -0.76  -0.80  -5.04  11.5  -0.44        -0.759  -2.18  -0.08   36
+BAB all 2008-03..2025-06                     2008-03..2025-06  208   -0.010  -0.04  -0.05  -0.12  11.7  -0.01        -0.130  -0.73  -0.02  208
+BAB all 2008-03..2025-06, div-corrected      2008-03..2025-06  208    0.022   0.09   0.10   0.26  11.7   0.02        -0.098  -0.55  -0.02  208
+BAB500 2008-03..2009                         2008-03..2009-12   22   -0.731  -0.71  -0.88  -8.78  16.7  -0.53         0.763   1.21   0.21   22
+BAB500 2010-2014                             2010-01..2014-12   60    0.563   1.47   1.51   6.76  10.3   0.66         0.573   1.89  -0.21   60
+BAB500 2015-2019                             2015-01..2019-12   60    0.404   0.89   0.92   4.84  12.2   0.40         0.225   0.77  -0.10   60
+BAB500 2020-2025-06                          2020-01..2025-06   66   -0.836  -1.35  -1.48 -10.04  17.5  -0.57        -1.295  -2.81  -0.09   66
+BAB500 2020-2025-06, div-corrected           2020-01..2025-06   66   -0.743  -1.20  -1.33  -8.91  17.4  -0.51        -1.202  -2.61  -0.09   66
+BAB500 2022-07..2025-06                      2022-07..2025-06   36   -1.313  -1.59  -1.79 -15.76  17.2  -0.92        -1.518  -2.79  -0.17   36
+BAB500 2022-07..2025-06, div-corrected       2022-07..2025-06   36   -1.142  -1.38  -1.57 -13.70  17.2  -0.80        -1.357  -2.49  -0.17   36
+BAB500 all 2008-03..2025-06                  2008-03..2025-06  208   -0.064  -0.22  -0.23  -0.77  14.2  -0.05        -0.210  -0.97  -0.06  208
+BAB500 all 2008-03..2025-06, div-corrected   2008-03..2025-06  208   -0.034  -0.12  -0.13  -0.41  14.2  -0.03        -0.181  -0.84  -0.05  208
+
+== Novy-Marx & Velikov's checks: unlevered ($1 long / $1 short) low-beta third minus high-beta third, net ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+EW thirds 2008-03..2019                      2008-03..2019-12  142   -0.185  -0.43  -0.46  -2.22  17.8  -0.13         0.231   1.13  -0.49  142
+EW thirds 2020-2025-06                       2020-01..2025-06   66   -0.696  -0.99  -1.02  -8.35  19.8  -0.42        -0.653  -1.84  -0.52   66
+EW thirds all 2008-03..2025-06               2008-03..2025-06  208   -0.347  -0.94  -1.00  -4.17  18.4  -0.23        -0.031  -0.17  -0.51  208
+EW thirds 2020-2025-06, div-corrected        2020-01..2025-06   66   -0.623  -0.88  -0.91  -7.48  19.8  -0.38        -0.580  -1.63  -0.52   66
+EW thirds 2008-03..2019 gross                2008-03..2019-12  142   -0.168  -0.39  -0.42  -2.02  17.8  -0.11         0.248   1.22  -0.49  142
+DV-weighted thirds 2008-03..2019             2008-03..2019-12  142    0.066   0.15   0.14   0.79  18.7   0.04         0.362   1.61  -0.54  142
+DV-weighted thirds 2020-2025-06              2020-01..2025-06   66   -1.847  -1.90  -1.99 -22.17  27.3  -0.81        -1.720  -2.79  -0.71   66
+DV-weighted thirds all 2008-03..2025-06      2008-03..2025-06  208   -0.541  -1.23  -1.19  -6.49  21.9  -0.30        -0.184  -0.68  -0.65  208
+DV-weighted thirds 2020-2025-06, div-corrected 2020-01..2025-06   66   -1.774  -1.83  -1.92 -21.29  27.2  -0.78        -1.648  -2.68  -0.71   66
+DV-weighted thirds 2008-03..2019 gross       2008-03..2019-12  142    0.086   0.19   0.18   1.03  18.7   0.06         0.382   1.70  -0.54  142
+rank-weighted, unlevered 2008-03..2019       2008-03..2019-12  142   -0.211  -0.47  -0.50  -2.53  18.5  -0.14         0.213   1.03  -0.51  142
+rank-weighted, unlevered 2020-2025-06        2020-01..2025-06   66   -0.727  -1.01  -1.04  -8.72  20.3  -0.43        -0.694  -1.91  -0.53   66
+rank-weighted, unlevered all 2008-03..2025-06 2008-03..2025-06  208   -0.375  -0.98  -1.03  -4.50  19.0  -0.24        -0.059  -0.32  -0.52  208
+rank-weighted, unlevered 2020-2025-06, div-corrected 2020-01..2025-06   66   -0.653  -0.90  -0.94  -7.84  20.3  -0.39        -0.620  -1.71  -0.53   66
+rank-weighted, unlevered 2008-03..2019 gross 2008-03..2019-12  142   -0.196  -0.44  -0.46  -2.35  18.5  -0.13         0.228   1.10  -0.51  142
+
+== Leverage cost: break-even borrowing spread over the T-bill on the levered low-beta leg (net BAB) ==
+  2008-03..2019: mean leverage of the long leg 1.20 (borrowed 0.20 per $1 of capital); break-even spread +15.35% a year; spread at which t falls to 2: nan%; break-even if the whole long leg is borrowed +2.51%
+  2020-2025-06: mean leverage of the long leg 1.19 (borrowed 0.19 per $1 of capital); break-even spread -35.46% a year; spread at which t falls to 2: nan%; break-even if the whole long leg is borrowed -5.73%
+  2020-2025-06, div-corrected: mean leverage of the long leg 1.19 (borrowed 0.19 per $1 of capital); break-even spread -29.21% a year; spread at which t falls to 2: nan%; break-even if the whole long leg is borrowed -4.72%
+  all 2008-03..2025-06: mean leverage of the long leg 1.19 (borrowed 0.19 per $1 of capital); break-even spread -0.64% a year; spread at which t falls to 2: nan%; break-even if the whole long leg is borrowed -0.10%
+  all 2008-03..2025-06, div-corrected: mean leverage of the long leg 1.19 (borrowed 0.19 per $1 of capital); break-even spread +1.33% a year; spread at which t falls to 2: nan%; break-even if the whole long leg is borrowed +0.22%
+
+== AQR's US BAB (CRSP universe), same months, and its post-publication record ==
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+AQR BAB_US 2008-03..2019-12                  2008-03..2019-12  142    0.458   2.01   1.95   5.49   9.4   0.58         0.435   2.00   0.06  142
+AQR BAB_US 2020-01..2025-06                  2020-01..2025-06   66    0.144   0.38   0.42   1.73  10.7   0.16        -0.122  -0.33   0.08   66
+AQR BAB_US 2013-01..2025-12 (live)           2013-01..2025-12  156    0.504   2.55   2.69   6.05   8.6   0.71         0.361   1.94   0.05  156
+AQR BAB_US 1931-01..2012-03 (FP sample)      1931-01..2012-03  975    0.677   6.34   5.58   8.12  11.5   0.70         0.197   1.57   0.11  585
+AQR BAB_US 2013-01..2026-08 (all live)       2013-01..2026-08  164    0.489   2.50   2.63   5.87   8.7   0.67         0.388   2.13   0.01  164
+
+== Book facts (formations 2008-02..2025-05) ==
+  bab        names per leg   719/  719; ex-ante leg betas 0.84/1.42; leverage 1.19/0.72; turnover per month 0.28; cost 0.17% a year
+  bab500     names per leg   249/  249; ex-ante leg betas 0.83/1.40; leverage 1.22/0.72; turnover per month 0.34; cost 0.21% a year
+  nmv_ew     names per leg   480/  479; ex-ante leg betas 0.85/1.40; leverage 1.00/1.00; turnover per month 0.35; cost 0.21% a year
+  nmv_dv     names per leg   480/  479; ex-ante leg betas 0.85/1.41; leverage 1.00/1.00; turnover per month 0.40; cost 0.24% a year
+  bab_unlev  names per leg   719/  719; ex-ante leg betas 0.84/1.42; leverage 1.00/1.00; turnover per month 0.30; cost 0.19% a year
+  BAB net: worst month -19.73% (2009-04), best 7.42% (2015-07)
+  bab        gross correlation with AQR BAB_US over 2008-03..2025-06: 0.673
+  bab500     gross correlation with AQR BAB_US over 2008-03..2025-06: 0.590
+  nmv_ew     gross correlation with AQR BAB_US over 2008-03..2025-06: 0.486
+  nmv_dv     gross correlation with AQR BAB_US over 2008-03..2025-06: 0.414
+
+VERDICT CHAIN: test 1 False, test 2 True, test 3 False

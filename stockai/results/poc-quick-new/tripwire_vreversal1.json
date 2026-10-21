@@ -1,0 +1,28 @@
+{
+  "top": 500,
+  "threshold": 0.05,
+  "adv_window": 63,
+  "overall": {
+    "mean": 0.021230158407581027,
+    "t": 3.069456631775391,
+    "days": 503
+  },
+  "max_year_mean": 0.027996595247328553,
+  "flagged": [],
+  "tripped": false,
+  "years": [
+    {
+      "year": 2022,
+      "mean": 0.0144367636521373,
+      "t": 1.3604566266976486,
+      "days": 251
+    },
+    {
+      "year": 2023,
+      "mean": 0.027996595247328553,
+      "t": 3.151921868353729,
+      "days": 252
+    }
+  ],
+  "scores": "runs/poc-quick-new/baselines/vreversal1.npy"
+}

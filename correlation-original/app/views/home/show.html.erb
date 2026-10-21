@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @symbol %> - Stock Analysis</title>
+  <%= stylesheet_link_tag "dark_theme", "data-turbo-track": "reload" %>
+  <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.30/dist/uPlot.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1><%= link_to "Stock Correlation Analysis", root_path, style: "color: var(--text-primary); text-decoration: none;" %></h1>
+      <p>Detailed analysis for <%= @symbol %></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Stock Header -->
+    <section class="stock-header">
+      <div class="stock-symbol">
+        <%= @symbol %>
+        <% if @stock_info %>
+          <span class="stock-name">(<%= @stock_info.name %>)</span>
+        <% end %>
+      </div>
+      <% if @stock_info&.description %>
+        <div class="stock-description">
+          <%= @stock_info.description %>
+        </div>
+      <% end %>
+      <div class="stock-meta">
+        <span><strong>Market:</strong> <%= @stock_stats[:market] || 'N/A' %></span>
+        <span><strong>Country:</strong> <%= @stock_stats[:country] || 'N/A' %></span>
+        <span><strong>Records:</strong> <%= number_with_delimiter(@stock_stats[:total_records]) %></span>
+        <span><strong>Date Range:</strong> <%= @stock_stats[:date_range][:start] %> to <%= @stock_stats[:date_range][:end] %></span>
+      </div>
+    </section>
+
+    <!-- Stock Information Table (if available) -->
+    <% if @stock_info %>
+    <section class="detail-card" style="margin-bottom: 2rem;">
+      <h3>Company Information</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Company Name:</span>
+          <span class="info-value"><%= @stock_info.name %></span>
+        </div>
+        <% if @stock_info.sector %>
+        <div class="info-item">
+          <span class="info-label">Sector:</span>
+          <span class="info-value"><%= @stock_info.sector %></span>
+        </div>
+        <% end %>
+        <% if @stock_info.industry %>
+        <div class="info-item">
+          <span class="info-label">Industry:</span>
+          <span class="info-value"><%= @stock_info.industry %></span>
+        </div>
+        <% end %>
+        <% if @stock_info.market_cap %>
+        <div class="info-item">
+          <span class="info-label">Market Cap:</span>
+          <span class="info-value">$<%= @stock_info.market_cap_formatted %></span>
+        </div>
+        <% end %>
+        <% if @stock_info.exchange %>
+        <div class="info-item">
+          <span class="info-label">Exchange:</span>
+          <span class="info-value"><%= @stock_info.exchange %></span>
+        </div>
+        <% end %>
+        <% if @stock_info.employees %>
+        <div class="info-item">
+          <span class="info-label">Employees:</span>
+          <span class="info-value"><%= @stock_info.employees_formatted %></span>
+        </div>
+        <% end %>
+        <% if @stock_info.founded %>
+        <div class="info-item">
+          <span class="info-label">Founded:</span>
+          <span class="info-value"><%= @stock_info.founded %> (<%= @stock_info.age %> years ago)</span>
+        </div>
+        <% end %>
+        <% if @stock_info.website %>
+        <div class="info-item">
+          <span class="info-label">Website:</span>
+          <span class="info-value">
+            <a href="<%= @stock_info.website %>" target="_blank" rel="noopener" 
+               style="color: var(--accent-primary); text-decoration: none;">
+              <%= @stock_info.website %>
+            </a>
+          </span>
+        </div>
+        <% end %>
+      </div>
+    </section>
+    <% end %>
+
+    <!-- Statistics Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Price Range</h3>
+        <div class="stat-value">$<%= @stock_stats[:price_range][:min]&.round(2) || 'N/A' %></div>
+        <p>Minimum price recorded</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Maximum Price</h3>
+        <div class="stat-value">$<%= @stock_stats[:price_range][:max]&.round(2) || 'N/A' %></div>
+        <p>Highest price recorded</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Latest Price</h3>
+        <div class="stat-value">$<%= @stock_stats[:price_range][:current]&.round(2) || 'N/A' %></div>
+        <p>Most recent closing price</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Correlations Found</h3>
+        <div class="stat-value"><%= @stock_stats[:correlations_as_symbol1] + @stock_stats[:correlations_as_symbol2] %></div>
+        <p>Total correlation analyses</p>
+      </div>
+    </section>
+
+    <!-- Detail Grid -->
+    <section class="detail-grid">
+      <!-- Recent Prices Chart -->
+      <div class="detail-card">
+        <div class="chart-header">
+          <h3>Recent Prices (Last 30 Days)</h3>
+          <button id="reset-recent-chart" class="reset-chart-btn" style="display: none;">Reset Zoom</button>
+        </div>
+        <div id="recent-prices-chart" class="chart-container" style="height: 200px;"></div>
+      </div>
+
+      <!-- Top Correlations -->
+      <div class="detail-card">
+        <h3>Top Correlations</h3>
+        <% if @top_correlations.any? %>
+          <table class="correlation-table">
+            <thead>
+              <tr>
+                <th>With Symbol</th>
+                <th>Correlation</th>
+                <th>R²</th>
+                <th>Window</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @top_correlations.each do |correlation| %>
+                <tr>
+                  <td>
+                    <%= link_to(
+                      correlation.symbol1 == @symbol ? correlation.symbol2 : correlation.symbol1,
+                      stock_detail_path(correlation.symbol1 == @symbol ? correlation.symbol2 : correlation.symbol1),
+                      style: "color: var(--accent-primary); text-decoration: none;"
+                    ) %>
+                  </td>
+                  <td class="<%= correlation.correlation_coefficient > 0 ? 'correlation-positive' : 'correlation-negative' %>">
+                    <%= correlation.correlation_coefficient.round(4) %>
+                  </td>
+                  <td><%= correlation.r_squared.round(4) %></td>
+                  <td><%= correlation.window1_days %>d / <%= correlation.window2_days %>d</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p style="color: var(--text-muted);">No correlation data available for this symbol</p>
+        <% end %>
+      </div>
+    </section>
+
+    <!-- Price History Chart -->
+    <section class="detail-card" style="margin-top: 2rem;">
+      <div class="chart-header">
+        <h3>Price History</h3>
+        <button id="reset-price-chart" class="reset-chart-btn" style="display: none;">Reset Zoom</button>
+      </div>
+      <div class="chart-info" style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+        Data range: <%= @stock_stats[:date_range][:start] %> to <%= @stock_stats[:date_range][:end] %>
+        (<%= number_with_delimiter(@stock_stats[:total_records]) %> data points)
+      </div>
+      <div id="price-chart" class="chart-container" style="height: 300px;"></div>
+    </section>
+
+    <!-- Navigation -->
+    <section style="margin-top: 2rem; text-align: center;">
+      <%= link_to "← Back to Dashboard", root_path, 
+          style: "color: var(--accent-primary); text-decoration: none; font-weight: 600; 
+                 background: var(--bg-secondary); padding: 0.75rem 1.5rem; border-radius: 8px;
+                 border: 1px solid var(--border-color); display: inline-block;
+                 transition: all 0.2s ease;",
+          data: { turbo: false } %>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/uplot@1.6.30/dist/uPlot.iife.min.js"></script>
+  
+  <script>
+    // Add hover effects for links
+    document.addEventListener('DOMContentLoaded', function() {
+      const links = document.querySelectorAll('a[style*="var(--accent-primary)"]');
+      links.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-1px)';
+          this.style.boxShadow = 'var(--shadow)';
+        });
+        link.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = 'none';
+        });
+      });
+
+      // Initialize charts
+      const symbol = '<%= @symbol %>';
+      initPriceChart(symbol);
+      initRecentPricesChart(symbol);
+    });
+
+    // Handle Turbo navigation
+    document.addEventListener('turbo:load', function() {
+      // Small delay to ensure DOM is fully rendered
+      setTimeout(() => {
+        const symbol = '<%= @symbol %>';
+        // Initialize charts with slight delay between them
+        initRecentPricesChart(symbol);
+        setTimeout(() => {
+          initPriceChart(symbol);
+        }, 100);
+      }, 50);
+    });
+
+    function initPriceChart(symbol) {
+      // Clear container first
+      const container = document.getElementById('price-chart');
+      container.innerHTML = '';
+      
+      fetch(`/api/price_data/${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+          createPriceChart(data);
+        })
+        .catch(error => {
+          console.error('Error loading price data:', error);
+          container.innerHTML = 
+            '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">Error loading price data</p>';
+        });
+    }
+
+    function createPriceChart(data) {
+      const container = document.getElementById('price-chart');
+      
+      // Force container reset
+      container.style.display = 'block';
+      container.style.width = '100%';
+      container.style.height = '300px';
+      container.style.overflow = 'hidden';
+      
+      // Wait for next frame to ensure layout is updated
+      requestAnimationFrame(() => {
+        const containerRect = container.getBoundingClientRect();
+        
+        // Prepare data for uPlot (timestamps and prices)
+        const timestamps = data.data.map(d => d[0]);
+        const prices = data.data.map(d => d[1]);
+        const chartData = [timestamps, prices];
+
+        const opts = {
+          width: Math.floor(containerRect.width) || 400,
+          height: 300,
+        padding: [20, 20, 40, 60],
+        scales: {
+          x: {
+            time: true,
+            auto: true,
+          },
+          y: {
+            auto: true,
+          },
+        },
+        axes: [
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b",
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+          },
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b", 
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+            values: (u, vals) => vals.map(v => '$' + v.toFixed(2)),
+          },
+        ],
+        legend: {
+          show: true,
+          live: true,
+        },
+        cursor: {
+          show: true,
+          x: true,
+          y: true,
+          drag: {
+            x: true,
+            y: false,
+            setScale: true,
+            dist: 10,
+          },
+        },
+        series: [
+          {
+            label: "Date",
+          },
+          {
+            label: `${data.symbol} Price`,
+            stroke: "white",
+            width: 2,
+            value: (u, v) => v == null ? "-" : "$" + v.toFixed(2),
+          },
+        ],
+        hooks: {
+          setScale: [
+            (u, key) => {
+              if (key === 'x') {
+                const defaultMin = timestamps[0];
+                const defaultMax = timestamps[timestamps.length - 1];
+                const currentMin = u.scales.x.min;
+                const currentMax = u.scales.x.max;
+                const isZoomed = Math.abs(currentMin - defaultMin) > 1 || Math.abs(currentMax - defaultMax) > 1;
+                document.getElementById('reset-price-chart').style.display = isZoomed ? 'block' : 'none';
+              }
+            }
+          ]
+        },
+      };
+
+      const priceChart = new uPlot(opts, chartData, container);
+
+      // Reset zoom button handler
+      document.getElementById('reset-price-chart').addEventListener('click', () => {
+        priceChart.setScale('x', {
+          min: timestamps[0],
+          max: timestamps[timestamps.length - 1]
+        });
+        document.getElementById('reset-price-chart').style.display = 'none';
+      });
+
+      // ResizeObserver for responsive chart
+      if (window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const rect = entry.contentRect;
+            if (priceChart && rect.width > 0) {
+              priceChart.setSize({
+                width: Math.floor(rect.width),
+                height: 300
+              });
+            }
+          }
+        });
+        resizeObserver.observe(container);
+      }
+      });
+    }
+
+    function initRecentPricesChart(symbol) {
+      // Clear container first
+      const container = document.getElementById('recent-prices-chart');
+      container.innerHTML = '';
+      
+      fetch(`/api/recent_price_data/${symbol}`)
+        .then(response => response.json())
+        .then(data => {
+          createRecentPricesChart(data);
+        })
+        .catch(error => {
+          console.error('Error loading recent price data:', error);
+          container.innerHTML = 
+            '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">Error loading recent price data</p>';
+        });
+    }
+
+    function createRecentPricesChart(data) {
+      const container = document.getElementById('recent-prices-chart');
+      
+      // Ensure container is properly sized
+      container.style.width = '100%';
+      container.style.height = '200px';
+      
+      // Get fresh container dimensions
+      const containerRect = container.getBoundingClientRect();
+      
+      // Prepare data for uPlot (timestamps and prices)
+      const timestamps = data.data.map(d => d[0]);
+      const prices = data.data.map(d => d[1]);
+      const chartData = [timestamps, prices];
+
+      const opts = {
+        width: Math.floor(containerRect.width),
+        height: 200,
+        padding: [15, 15, 30, 50],
+        scales: {
+          x: {
+            time: true,
+            auto: true,
+          },
+          y: {
+            auto: true,
+          },
+        },
+        axes: [
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b",
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+          },
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b",
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+            values: (u, vals) => vals.map(v => '$' + v.toFixed(2)),
+          },
+        ],
+        legend: {
+          show: true,
+          live: true,
+        },
+        cursor: {
+          show: true,
+          x: true,
+          y: true,
+          drag: {
+            x: true,
+            y: false,
+            setScale: true,
+            dist: 10,
+          },
+        },
+        series: [
+          {
+            label: "Date",
+          },
+          {
+            label: `${data.symbol} Recent Price`,
+            stroke: "white",
+            width: 2,
+            value: (u, v) => v == null ? "-" : "$" + v.toFixed(2),
+          },
+        ],
+        hooks: {
+          setScale: [
+            (u, key) => {
+              if (key === 'x') {
+                const defaultMin = timestamps[0];
+                const defaultMax = timestamps[timestamps.length - 1];
+                const currentMin = u.scales.x.min;
+                const currentMax = u.scales.x.max;
+                const isZoomed = Math.abs(currentMin - defaultMin) > 1 || Math.abs(currentMax - defaultMax) > 1;
+                document.getElementById('reset-recent-chart').style.display = isZoomed ? 'block' : 'none';
+              }
+            }
+          ]
+        },
+      };
+
+      const recentChart = new uPlot(opts, chartData, container);
+
+      // Reset zoom button handler
+      document.getElementById('reset-recent-chart').addEventListener('click', () => {
+        recentChart.setScale('x', {
+          min: timestamps[0],
+          max: timestamps[timestamps.length - 1]
+        });
+        document.getElementById('reset-recent-chart').style.display = 'none';
+      });
+
+      // ResizeObserver for responsive chart
+      if (window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const rect = entry.contentRect;
+            if (recentChart && rect.width > 0) {
+              recentChart.setSize({
+                width: Math.floor(rect.width),
+                height: 200
+              });
+            }
+          }
+        });
+        resizeObserver.observe(container);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+new: universe stocks with an investment-company-like SEC name or on the closed-end fund/BDC list: 107
+ticker   months  long  c med  SEC name
+CCEP        241   177  0.416  COCA-COLA EUROPACIFIC PARTNERS plc
+BIP         180   115  0.361  Brookfield Infrastructure Partners L.P.
+VRTS        159   111  0.353  VIRTUS INVESTMENT PARTNERS, INC.
+ARCC        188    82  0.492  ARES CAPITAL CORP
+ARLP        139    72  0.393  ALLIANCE RESOURCE PARTNERS LP
+APAM        119    61  0.428  Artisan Partners Asset Management Inc.
+MFIC        136    59  0.367  MidCap Financial Investment Corp
+MAIN        168    58  0.479  Main Street Capital CORP
+STRA        194    51  0.427  Strategic Education, Inc.
+OXLC         83    47  0.419  Oxford Lane Capital Corp.
+COLD         61    40  0.474  AMERICOLD REALTY TRUST
+FSK         106    39  0.495  FS KKR Capital Corp
+BEP          85    35  0.511  Brookfield Renewable Partners L.P.
+SPH          72    33  0.393  SUBURBAN PROPANE PARTNERS LP
+SGRY         75    33  0.448  Surgery Partners, Inc.
+ABR          97    32  0.502  ARBOR REALTY TRUST INC
+MPT         132    23  0.659  MEDICAL PROPERTIES TRUST INC
+HTGC        118    23  0.574  Hercules Capital, Inc.
+SVC         200    19  0.555  Service Properties Trust
+NTRS        241    18  0.609  NORTHERN TRUST CORP
+AHT          54    17  0.396  ASHFORD HOSPITALITY TRUST INC
+BXMT        151    17  0.665  BLACKSTONE MORTGAGE TRUST, INC.
+PJT          78    17  0.543  PJT Partners Inc.
+ROAD         50    17  0.542  Construction Partners, Inc.
+AHRT         19    17  0.417  AH Realty Trust, Inc.
+PSEC         45    14  0.511  PROSPECT CAPITAL CORP
+CQP         161    13  0.522  Cheniere Energy Partners, L.P.
+PMT         162    13  0.586  PennyMac Mortgage Investment Trust
+RWT         205    12  0.518  REDWOOD TRUST INC
+LADR        108    12  0.631  Ladder Capital Corp
+LXP         215    10  0.630  LXP Industrial Trust
+STWD        162    10  0.691  STARWOOD PROPERTY TRUST, INC.
+HR          128    10  0.685  Healthcare Realty Trust Inc
+CIM         183     9  0.714  CHIMERA INVESTMENT CORP
+ILPT         19     9  0.531  Industrial Logistics Properties Trust
+FBRT         13     9  0.517  Franklin BSP Realty Trust, Inc.
+NMM          58     8  0.457  Navios Maritime Partners L.P.
+TRTX          8     7  0.527  TPG RE Finance Trust, Inc.
+USAC         18     6  0.508  USA Compression Partners, LP
+SLRC         10     5  0.362  SLR Investment Corp.
+GBDC         79     5  0.597  GOLUB CAPITAL BDC, Inc.
+GSBD         64     5  0.586  Goldman Sachs BDC, Inc.
+TRIN         24     5  0.559  Trinity Capital Inc.
+DKL           5     5  0.409  Delek Logistics Partners, LP
+EPD         215     4  0.723  ENTERPRISE PRODUCTS PARTNERS L.P.
+FR          197     4  0.775  FIRST INDUSTRIAL REALTY TRUST INC
+NRP          33     4  0.405  NATURAL RESOURCE PARTNERS LP
+NGL          68     4  0.512  NGL Energy Partners LP
+IRT         101     4  0.694  INDEPENDENCE REALTY TRUST, INC.
+KREF         45     4  0.633  KKR Real Estate Finance Trust Inc.
+ECC          28     4  0.597  Eagle Point Credit Co
+DLR         215     3  0.646  DIGITAL REALTY TRUST, INC.
+NMFC         27     3  0.625  New Mountain Finance Corp
+ADAM        109     2  0.628  ADAMAS TRUST, INC.
+CLDT         26     2  0.553  Chatham Lodging Trust
+UAN          17     2  0.583  CVR PARTNERS, LP
+FPI          10     2  0.534  Farmland Partners Inc.
+PFLT         30     2  0.646  PennantPark Floating Rate Capital Ltd.
+ITIC         11     2  0.489  INVESTORS TITLE CO
+MSB           8     1  0.311  MESABI TRUST
+AGNC        177     1  0.805  AGNC Investment Corp.
+CHCT          9     1  0.485  Community Healthcare Trust Inc
+PWP          25     1  0.576  Perella Weinberg Partners
+MTG         209     0  0.759  MGIC INVESTMENT CORP
+PNW         241     0  0.787  PINNACLE WEST CAPITAL CORP
+AKR         204     0  0.754  ACADIA REALTY TRUST
+BDN         175     0  0.709  BRANDYWINE REALTY TRUST
+CPT         215     0  0.818  CAMDEN PROPERTY TRUST
+DHC         146     0  0.720  DIVERSIFIED HEALTHCARE TRUST
+ELS         215     0  0.754  EQUITY LIFESTYLE PROPERTIES INC
+ESS         215     0  0.826  ESSEX PROPERTY TRUST, INC.
+FRT         215     0  0.823  FEDERAL REALTY INVESTMENT TRUST
+O           215     0  0.775  REALTY INCOME CORP
+OHI         215     0  0.717  OMEGA HEALTHCARE INVESTORS INC
+PBT           7     0  0.615  PERMIAN BASIN ROYALTY TRUST
+SHO         204     0  0.703  Sunstone Hotel Investors, Inc.
+SJT          20     0  0.590  SAN JUAN BASIN ROYALTY TRUST
+VNO         215     0  0.790  VORNADO REALTY TRUST
+BBDC         13     0  0.485  Barings BDC, Inc.
+PEB         158     0  0.709  Pebblebrook Hotel Trust
+PDM         156     0  0.767  Piedmont Realty Trust, Inc.
+NHI         154     0  0.745  NATIONAL HEALTH INVESTORS INC
+KRG         145     0  0.773  KITE REALTY GROUP TRUST
+PNFP        140     0  0.773  Pinnacle Financial Partners, Inc.
+AAT         141     0  0.724  American Assets Trust, Inc.
+RLJ         141     0  0.720  RLJ Lodging Trust
+MMLP          7     0  0.554  MARTIN MIDSTREAM PARTNERS L.P.
+WES         119     0  0.667  Western Midstream Partners, LP
+RITM        117     0  0.652  Rithm Capital Corp.
+ESRT        112     0  0.656  Empire State Realty Trust, Inc.
+FCPT         87     0  0.694  Four Corners Property Trust, Inc.
+NXRT         44     0  0.643  NexPoint Residential Trust, Inc.
+UHT           5     0  0.626  UNIVERSAL HEALTH REALTY INCOME TRUST
+TSLX         75     0  0.651  Sixth Street Specialty Lending, Inc.
+MITT          2     0  0.739  TPG Mortgage Investment Trust, Inc.
+GPMT          2     0  0.771  Granite Point Mortgage Trust Inc.
+GRBK         67     0  0.692  Green Brick Partners, Inc.
+RC           51     0  0.605  Ready Capital Corp
+EPRT         56     0  0.689  ESSENTIAL PROPERTIES REALTY TRUST, INC.
+SBR           7     0  0.742  SABINE ROYALTY TRUST
+KRP          31     0  0.656  Kimbell Royalty Partners, LP
+OBDC         43     0  0.622  Blue Owl Capital Corp
+CSWC         36     0  0.609  CAPITAL SOUTHWEST CORP
+CGBD         11     0  0.674  Carlyle Secured Lending, Inc.
+IDR          11     0  0.555  Idaho Strategic Resources, Inc.
+CTBI          2     0  0.801  COMMUNITY TRUST BANCORP INC /KY/
+PSTL          1     0  0.589  Postal Realty Trust, Inc.

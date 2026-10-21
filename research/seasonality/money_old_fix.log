@@ -1,0 +1,9 @@
+saved /home/bhoult/.local/share/correlation2/experiments/seasonality/scores/season_old_fix.npy; scored days 4571 (2007-04-30..2025-06-27), point-in-time asserts passed on 4571 days
+SUMMARY years 18; beat random at p<0.1 (0 bps: 3, 5 bps: 3, 20 bps: 3) of 18; change over random +1.8 pts/yr (se 4.5, ahead 10/18); IC actual returns z +0.97; long-short -0.04 bps/day z -0.27, turnover 4%, costs 0.16 x c bps/day
+CHANGE OVER RANDOM (uniform, 0 bps): +1.78 pts/yr; per year [4.02, 12.07, 10.55, 2.44, -10.3, 6.32, 12.2, 0.68, -17.96, -24.4, -0.4, -11.3, 41.8, 18.65, -23.99, -9.37, -18.92, 39.85]; ahead 10/18; se 4.53
+CHANGE OVER RANDOM (uniform, 5 bps): +1.73 pts/yr; per year [3.92, 11.87, 10.41, 2.37, -10.19, 6.22, 12.03, 0.65, -17.77, -24.11, -0.41, -11.17, 41.3, 18.39, -23.71, -9.27, -18.7, 39.38]; ahead 10/18; se 4.47
+CHANGE OVER RANDOM (uniform, 20 bps): +1.61 pts/yr; per year [3.61, 11.37, 9.99, 2.19, -9.89, 5.92, 11.54, 0.57, -17.22, -23.33, -0.44, -10.82, 39.83, 17.67, -22.9, -8.96, -18.06, 37.97]; ahead 10/18; se 4.31
+SUMMARY years 18; beat random at p<0.1 (0 bps: 4, 5 bps: 4, 20 bps: 4) of 18; change over random +2.4 pts/yr (se 3.9, ahead 9/18); IC actual returns z +0.97; long-short -0.04 bps/day z -0.27, turnover 4%, costs 0.16 x c bps/day
+CHANGE OVER RANDOM (volatility, 0 bps): +2.43 pts/yr; per year [7.0, 14.81, 5.36, 3.25, -3.49, 5.09, 8.71, 5.42, -10.73, -25.96, -4.26, -7.25, 37.8, -6.09, -4.97, -8.13, -14.69, 41.77]; ahead 9/18; se 3.93
+CHANGE OVER RANDOM (volatility, 5 bps): +2.40 pts/yr; per year [6.92, 14.65, 5.3, 3.21, -3.45, 5.03, 8.61, 5.36, -10.61, -25.65, -4.21, -7.16, 37.35, -6.02, -4.91, -8.02, -14.52, 41.28]; ahead 9/18; se 3.88
+CHANGE OVER RANDOM (volatility, 20 bps): +2.32 pts/yr; per year [6.69, 14.16, 5.14, 3.11, -3.32, 4.86, 8.31, 5.18, -10.24, -24.75, -4.06, -6.92, 36.06, -5.82, -4.73, -7.72, -14.01, 39.82]; ahead 9/18; se 3.75

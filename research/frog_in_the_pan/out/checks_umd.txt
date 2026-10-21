@@ -1,0 +1,16 @@
+plain all test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.29 (t 34.3), n 167; mean MOM -0.39%, mean UMD +0.12% per period
+plain big test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.23 (t 34.2), n 167; mean MOM -0.22%, mean UMD +0.12% per period
+plain all test3 2020-2025-06      : corr(MOM, UMD) +0.94, slope 1.10 (t 22.7), n 66; mean MOM +0.44%, mean UMD +0.20% per period
+plain big test3 2020-2025-06      : corr(MOM, UMD) +0.91, slope 1.24 (t 17.6), n 66; mean MOM +0.71%, mean UMD +0.20% per period
+plain all post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.90, slope 0.94 (t 12.0), n 36; mean MOM +0.86%, mean UMD +0.39% per period
+plain big post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.87, slope 1.20 (t 10.5), n 36; mean MOM +1.02%, mean UMD +0.39% per period
+plain all all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.21 (t 40.0), n 233; mean MOM -0.15%, mean UMD +0.14% per period
+plain big all 2006-2025-06        : corr(MOM, UMD) +0.92, slope 1.23 (t 36.8), n 233; mean MOM +0.04%, mean UMD +0.14% per period
+divfix all test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.29 (t 34.3), n 167; mean MOM -0.39%, mean UMD +0.12% per period
+divfix big test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.23 (t 34.2), n 167; mean MOM -0.22%, mean UMD +0.12% per period
+divfix all test3 2020-2025-06      : corr(MOM, UMD) +0.94, slope 1.10 (t 22.3), n 66; mean MOM +0.44%, mean UMD +0.20% per period
+divfix big test3 2020-2025-06      : corr(MOM, UMD) +0.92, slope 1.24 (t 18.2), n 66; mean MOM +0.64%, mean UMD +0.20% per period
+divfix all post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.89, slope 0.94 (t 11.5), n 36; mean MOM +0.86%, mean UMD +0.39% per period
+divfix big post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.89, slope 1.20 (t 11.5), n 36; mean MOM +0.90%, mean UMD +0.39% per period
+divfix all all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.21 (t 39.8), n 233; mean MOM -0.15%, mean UMD +0.14% per period
+divfix big all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.23 (t 37.5), n 233; mean MOM +0.03%, mean UMD +0.14% per period

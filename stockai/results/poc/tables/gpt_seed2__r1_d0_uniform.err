@@ -1,0 +1,5 @@
+fingerprint 8b5ac076267c83ab matches /home/bhoult/.local/share/correlation2/export/full/meta.json
+skipped 2006-06-28 .. 2007-06-28: only 0 stocks can be picked (history before the holdout too short?)
+skipped 2007-06-28 .. 2008-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2008-06-28 .. 2009-06-28: no candidate has a finite score on the holdout's rebalance days
+skipped 2009-06-28 .. 2010-06-28: no candidate has a finite score on the holdout's rebalance days

@@ -1,0 +1,5 @@
+[    0.4s] scores: first day 2009-01-02 last 2025-06-27 median names per scored day 1382
+[    0.5s] judge uniform
+  years 17; beat random at p<0.1 (0 bps: 6, 5 bps: 6, 20 bps: 6) of 17; change over random -1.4 pts/yr (se 4.4, ahead 7/17); IC actual returns z +0.44; long-short 4.03 bps/day z +0.80, turnover 86%, costs 0.16 x c bps/day
+[    1.7s] judge volatility
+  years 17; beat random at p<0.1 (0 bps: 2, 5 bps: 2, 20 bps: 2) of 17; change over random -3.7 pts/yr (se 3.8, ahead 8/17); IC actual returns z +0.44; long-short 4.03 bps/day z +0.80, turnover 86%, costs 0.16 x c bps/day

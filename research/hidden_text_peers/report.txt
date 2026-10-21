@@ -1,0 +1,39 @@
+Peers per firm at the formation days, by calendar year (universe firms with a current-year filing). Columns: formations | firms | text peers (top 50 of all filings above the cutoff), mean / median | mapped text peers with both filings dated | of them in the universe | with a correlation | firms with >= 3 hidden (share) | among those: peers mean, hidden mean / median | mean correlation, hidden / visible peers
+2007 | 12 | 258 | 21.1 / 9 | 6.1 | 2.0 | 2.0 | 30 (11%) | 7.4, 3.5 / 3 | 0.23 / 0.39
+2008 | 12 | 685 | 20.5 / 11 | 6.1 | 3.3 | 3.3 | 171 (25%) | 8.8, 4.2 / 4 | 0.18 / 0.37
+2009 | 12 | 613 | 23.5 / 16 | 7.5 | 3.6 | 3.6 | 169 (28%) | 8.6, 4.1 / 4 | 0.19 / 0.43
+2010 | 12 | 617 | 26.7 / 24 | 9.2 | 4.3 | 4.3 | 226 (37%) | 8.6, 4.1 / 4 | 0.13 / 0.35
+2011 | 12 | 665 | 27.3 / 28 | 9.9 | 4.8 | 4.8 | 266 (40%) | 9.2, 4.4 / 4 | 0.11 / 0.31
+2012 | 12 | 706 | 26.6 / 24 | 10.1 | 4.8 | 4.8 | 274 (39%) | 9.4, 4.5 / 4 | 0.12 / 0.34
+2013 | 12 | 733 | 26.7 / 24 | 10.9 | 5.1 | 5.1 | 307 (42%) | 9.8, 4.7 / 4 | 0.11 / 0.30
+2014 | 12 | 821 | 26.9 / 25 | 11.4 | 5.7 | 5.7 | 365 (44%) | 10.8, 5.2 / 5 | 0.11 / 0.30
+2015 | 12 | 863 | 25.6 / 22 | 11.0 | 5.4 | 5.4 | 357 (41%) | 10.9, 5.2 / 5 | 0.17 / 0.37
+2016 | 12 | 886 | 24.2 / 18 | 10.8 | 5.2 | 5.2 | 344 (39%) | 11.0, 5.3 / 5 | 0.17 / 0.39
+2017 | 12 | 960 | 22.3 / 13 | 10.6 | 5.2 | 5.2 | 362 (38%) | 11.3, 5.4 / 5 | 0.18 / 0.40
+2018 | 12 | 1058 | 20.9 / 11 | 10.8 | 5.2 | 5.2 | 404 (38%) | 11.4, 5.5 / 5 | 0.19 / 0.39
+2019 | 12 | 1120 | 19.1 / 8 | 10.4 | 4.9 | 4.9 | 405 (36%) | 11.2, 5.4 / 5 | 0.21 / 0.41
+2020 | 12 | 1171 | 16.7 / 5 | 9.5 | 4.4 | 4.4 | 366 (31%) | 11.2, 5.4 / 5 | 0.16 / 0.42
+2021 | 12 | 1259 | 13.6 / 2 | 8.0 | 3.5 | 3.5 | 315 (25%) | 11.1, 5.3 / 5 | 0.21 / 0.43
+2022 | 5 | 1317 | 11.8 / 1 | 7.0 | 3.0 | 3.0 | 271 (21%) | 11.3, 5.4 / 4 | 0.26 / 0.46
+all | 185 | 841 | 21.6 / 11 | 9.6 | 4.6 | 4.6 | 290 (35%) | 10.5, 5.0 / 5 | 0.17 / 0.38
+every day (not just formations): 1123773 firm-days; mean correlation hidden 0.166, visible 0.377; firm-days where the hidden mean is below 0: 20.4%
+
+Example text peers on 2016-07-01 (fiscal year 2015 text; top-2% cutoff 0.218). Each peer: ticker, similarity, 252-day correlation of market-relative returns, H = hidden / V = visible. Peers outside the ticker map (delisted, merged, private) are counted but not listed; peers outside the liquid universe are marked (out).
+  AAPL (in universe; 8 text peers, 2 unmapped): LOGI 0.23 +0.11 H; ADBE 0.23 +0.15 V; MSFT 0.23 +0.36 V; CRM 0.23 +0.11 H; PANW 0.22 +0.09 H; INTU 0.22 +0.26 V
+  MSFT (in universe; 50 text peers, 31 unmapped): ADBE 0.31 +0.32 V; HPQ 0.28 -0.00 H; NTAP 0.27 -0.00 H; ORCL 0.27 +0.31 V; IBM 0.26 +0.18 V; HPE 0.26 (out); FFIV 0.25 +0.13 V; ACIW 0.25 +0.15 V; NSIT 0.25 (out); PRGS 0.25 +0.08 H; CIEN 0.25 +0.04 H; NOW 0.24 +0.11 V; CRM 0.24 +0.22 V; OTEX 0.24 +0.11 H; MSTR 0.24 +0.01 H; STRD 0.24 (out); STRF 0.24 (out); STRK 0.24 (out); INTU 0.24 +0.37 V; GDDY 0.24 (out); LOGI 0.24 +0.10 H; TRMB 0.24 +0.01 H
+  INTC (in universe; 50 text peers, 25 unmapped): WDC 0.26 +0.05 H; AMBA 0.26 -0.05 H; PRSO 0.26 (out); MX 0.26 (out); QCOM 0.25 +0.19 V; NVDA 0.25 (out); LSCC 0.25 +0.06 H; SLAB 0.24 +0.29 V; ORCL 0.24 +0.30 V; MSFT 0.24 +0.34 V; AMKR 0.23 +0.09 H; FLEX 0.23 +0.09 H; ADBE 0.23 +0.11 H; TER 0.23 +0.25 V; GSIT 0.23 (out); MXL 0.23 +0.14 V; SMCI 0.23 (out); HPQ 0.23 +0.14 V; PXLW 0.22 (out); VUZI 0.22 (out); SYNA 0.22 +0.06 H; NTAP 0.22 +0.18 V; EQIX 0.22 +0.09 H; FFIV 0.22 +0.16 V; HPE 0.22 (out)
+  JPM (in universe; 50 text peers, 17 unmapped): USB 0.41 +0.74 V; NTRS 0.40 +0.70 V; NTRSO 0.40 (out); COF 0.36 +0.46 H; KEY 0.36 +0.70 V; ALLY 0.36 (out); MTB 0.36 +0.66 V; FITB 0.34 +0.71 V; UMBF 0.34 +0.41 H; UMBFO 0.34 (out); FNB 0.34 +0.54 V; AXP 0.34 +0.15 H; FNLC 0.33 (out); FBP 0.33 (out); RF 0.33 +0.72 V; BANF 0.33 (out); BANFP 0.33 (out); TFC 0.33 +0.72 V; WTFC 0.33 +0.51 H; WTFCN 0.33 (out); STT 0.32 +0.53 V; BOKF 0.32 +0.39 H; BOH 0.32 +0.52 H; PB 0.32 +0.50 H; SSB 0.32 +0.43 H; IBOC 0.32 (out); CBU 0.32 +0.48 H; FCCO 0.32 (out); CBSH 0.32 +0.61 V; HTH 0.31 +0.36 H; FCF 0.31 (out); ISTR 0.31 (out); OFG 0.31 (out); BKU 0.31 +0.52 H; SCHW 0.31 +0.54 V; MVBF 0.31 (out); CFG 0.31 (out)
+  XOM: no FY2015 filing with >= 1,000 Item 1 words in the corpus
+  CVX (in universe; 14 text peers, 6 unmapped): MUR 0.26 +0.38 V; IMO 0.25 +0.53 V; ET 0.25 +0.22 H; KOS 0.24 +0.32 V; EOG 0.23 +0.59 V; WMB 0.23 +0.01 H; GEL 0.22 +0.13 H; MPLX 0.22 +0.09 H
+  PFE: no FY2015 filing with >= 1,000 Item 1 words in the corpus
+  MRK (in universe; 50 text peers, 35 unmapped): LLY 0.30 +0.44 V; GILD 0.25 +0.30 V; ABBV 0.25 +0.20 V; INCY 0.24 +0.15 V; BMRN 0.24 +0.13 H; VXRT 0.24 (out); NERV 0.24 (out); TRAW 0.24 (out); BIIB 0.23 +0.23 V; ALNY 0.23 +0.11 H; EBS 0.23 +0.08 H; ENTA 0.23 +0.04 H; RARE 0.23 (out); INSM 0.23 +0.15 H; LCTX 0.22 (out)
+  UNH (in universe; 50 text peers, 32 unmapped): MOH 0.35 +0.42 V; CNC 0.33 +0.53 V; THC 0.31 +0.17 H; DVA 0.29 +0.42 V; CYH 0.29 +0.17 H; ASTH 0.29 (out); DGX 0.27 +0.40 V; EHC 0.27 +0.28 V; HCA 0.27 +0.39 V; SGRY 0.26 (out); ADUS 0.26 (out); ACHC 0.26 +0.22 H; TRU 0.26 (out); TDOC 0.26 (out); EVH 0.26 (out); HQY 0.26 (out); ALL 0.26 +0.20 H; AXP 0.26 +0.25 H
+  HD (in universe; 2 text peers, 0 unmapped): LOW 0.26 +0.74 V; UPS 0.23 +0.39 H
+  F (in universe; 5 text peers, 3 unmapped): GM 0.26 +0.62 V; TSLA 0.23 -0.03 H
+  BA (in universe; 3 text peers, 1 unmapped): LMT 0.27 +0.36 V; WWD 0.22 +0.17 H
+  NKE (in universe; 5 text peers, 1 unmapped): COLM 0.25 +0.19 H; CROX 0.22 +0.02 H; TPR 0.22 +0.23 V; VFC 0.22 +0.41 V
+  DAL (in universe; 12 text peers, 7 unmapped): UAL 0.32 +0.69 V; SKYW 0.30 +0.33 H; LUV 0.29 +0.66 V; ALGT 0.26 +0.41 H; JBLU 0.26 +0.59 V
+  KO: no FY2015 filing with >= 1,000 Item 1 words in the corpus
+  WMT: no FY2015 filing with >= 1,000 Item 1 words in the corpus
+  SBUX (in universe; 3 text peers, 3 unmapped): 
+  GS (in universe; 42 text peers, 23 unmapped): MS 0.34 +0.73 V; WTFC 0.28 +0.36 V; WTFCN 0.28 (out); ICE 0.27 +0.16 H; BANF 0.27 (out); BANFP 0.27 (out); AXP 0.26 +0.10 H; NTGR 0.24 -0.00 H; CLX 0.24 -0.05 H; TRU 0.24 (out); BGC 0.24 (out); OSBC 0.23 (out); NTRS 0.23 +0.64 V; NTRSO 0.23 (out); USB 0.23 +0.59 V; WRLD 0.23 -0.03 H; MET 0.23 +0.48 V; ESNT 0.23 (out); AIG 0.23 +0.39 V; SPNT 0.22 (out); HAL 0.22 -0.05 H; HTH 0.22 +0.35 V

@@ -1,0 +1,7 @@
+11:21:16 new rev5: 19,097,678 finite values; first day with a value 256
+11:21:17 new mom12_1: 17,311,038 finite values; first day with a value 252
+11:22:03 new twin5: 16,732,583 finite values; first day with a value 252
+11:22:03 new: market-wide gap days (fewer than half the usual closes): ['2011-02-17']
+11:22:14   rows 9000..9508 done 11s
+11:22:14 new vol: 18,396,920 finite values; first day with a value 120
+11:22:14 new corr: 14,256,161 finite values; first day with a value 1003

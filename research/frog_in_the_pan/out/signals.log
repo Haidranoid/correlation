@@ -1,0 +1,42 @@
+[    0.4s] old plain rows 0..1000
+[    0.7s] old plain rows 1000..2000
+[    1.1s] old plain rows 2000..3000
+[    1.4s] old plain rows 3000..4000
+[    1.8s] old plain rows 4000..5000
+[    2.1s] old plain rows 5000..6000
+[    2.4s] old plain rows 6000..7000
+[    2.8s] old plain rows 7000..8000
+[    2.9s] old plain rows 8000..8503
+[    3.0s] old plain: finite PRET stock-days 16773145; daily returns with |log r| > 0.5 dropped as bad prints: 10343 of 19015606 (0.05439%)
+[    0.4s] old divfix rows 0..1000
+[    0.8s] old divfix rows 1000..2000
+[    1.2s] old divfix rows 2000..3000
+[    1.6s] old divfix rows 3000..4000
+[    1.9s] old divfix rows 4000..5000
+[    2.3s] old divfix rows 5000..6000
+[    2.7s] old divfix rows 6000..7000
+[    3.1s] old divfix rows 7000..8000
+[    3.2s] old divfix rows 8000..8503
+[    3.3s] old divfix: finite PRET stock-days 16773145; daily returns with |log r| > 0.5 dropped as bad prints: 10343 of 19015606 (0.05439%)
+[    0.4s] new plain rows 0..1000
+[    0.8s] new plain rows 1000..2000
+[    1.2s] new plain rows 2000..3000
+[    1.6s] new plain rows 3000..4000
+[    2.0s] new plain rows 4000..5000
+[    2.4s] new plain rows 5000..6000
+[    2.8s] new plain rows 6000..7000
+[    3.2s] new plain rows 7000..8000
+[    3.5s] new plain rows 8000..9000
+[    3.7s] new plain rows 9000..9508
+[    3.8s] new plain: finite PRET stock-days 17131770; daily returns with |log r| > 0.5 dropped as bad prints: 10430 of 19435717 (0.05366%)
+[    0.5s] new divfix rows 0..1000
+[    1.0s] new divfix rows 1000..2000
+[    1.4s] new divfix rows 2000..3000
+[    1.9s] new divfix rows 3000..4000
+[    2.3s] new divfix rows 4000..5000
+[    2.7s] new divfix rows 5000..6000
+[    3.2s] new divfix rows 6000..7000
+[    3.6s] new divfix rows 7000..8000
+[    4.0s] new divfix rows 8000..9000
+[    4.2s] new divfix rows 9000..9508
+[    4.3s] new divfix: finite PRET stock-days 17131770; daily returns with |log r| > 0.5 dropped as bad prints: 10428 of 19435717 (0.05365%)

@@ -1,0 +1,87 @@
+# Theme joiners: new export (17 refits, 2025-06-13 .. 2026-10-15)
+Units: coefficients are bps of 21-day market-relative log return per bottom-to-top move of the percentile.
+
+### What J looks like, the unseen months (16 refits; no outcome used)
+  stocks with J per refit: mean 1496, min 1490
+  mean cross-sectional correlation of pct(J) with pct(own 63-day return) +0.133, with pct(own 12-1) +0.010
+  mean J: hot-group members +0.048, cold-group members -0.130, others +0.047
+  mean change in corr with H +0.004, with C -0.025
+
+## Test 3, the unseen months (refits from 2025-06-30 with a full 21-day outcome): same sign
+### the unseen months: 15 refits 2025-07-16 .. 2026-09-16
+  J coefficient, no controls:   -34.3 bps (se 178.8, t -0.19, 15 refits)
+  J coefficient, with controls: -59.8 bps (se 130.1, t -0.46, 15 refits)  (positive in 47% of refits)
+  full model, every coefficient (bps per 21 days; percentiles: bottom -> top): intercept -69.6 (t -0.60); pJ -59.8 (t -0.46); p63 +118.6 (t +1.20); p12-1 +57.3 (t +0.46); hot +263.3 (t +1.06); cold -32.9 (t -0.17)
+  reported only, beta-adjusted J: no controls +61.9 bps (se 149.7, t +0.41, 15 refits); with controls +8.5 bps (se 106.1, t +0.08, 15 refits)
+  book (residualized J, top minus bottom decile, 21 days): gross -106.7 bps (se 98.0, t -1.09, 15 refits); mean cost 15.2 bps; net -121.9 bps (se 98.2, t -1.24, 15 refits) (positive in 33%)
+    legs (simple 21-day return): long +66.3 bps, short +172.9 bps; net a year (x12) -1463 bps
+
+### By year (refit year): J coefficient no controls / with controls; book net (bps per 21 days)
+| Year | Refits | No controls | t | With controls | t | Book net | t |
+|---|---|---|---|---|---|---|---|
+| 2025 | 7 | -69.0 | -0.38 | +14.1 | +0.09 | +8.5 | +0.06 |
+| 2026 | 9 | +46.7 | +0.17 | -63.2 | -0.32 | -168.1 | -1.31 |
+
+## Hot and cold groups, and the top 10 joiners
+### 2026-01-14 (refit k=276)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | NEM, FCX, B, AEM | GDX | 28 | +19.8% |
+| Hot | GOOGL, AMD, MU, INTC | SMH | 45 | +11.5% |
+| Hot | UPS, MMM, CRH, PH | IJH | 63 | +10.2% |
+| Cold | OKLO, IONQ, QBTS, RGTI | DAPP | 53 | -27.9% |
+| Cold | TSLA, MSFT, PLTR, META | FDN | 46 | -19.0% |
+| Cold | CRM, NOW, ADBE, INTU | WCLD | 65 | -12.3% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| ALSN | +0.60 | +0.30 | -0.30 | UPS, MMM, CRH (hot) | +23.5% |
+| GH | +0.57 | +0.26 | -0.31 | HIMS, NU, TEM | +51.3% |
+| H | +0.54 | -0.01 | -0.55 | BKNG, DIS, SBUX | +9.2% |
+| CHWY | +0.53 | +0.15 | -0.38 | IBM, ISRG, BSX | -21.6% |
+| EIX | +0.52 | +0.06 | -0.46 | NEE, AMT, MCK | +5.6% |
+| RL | +0.52 | -0.01 | -0.53 | NKE, TGT, LULU | +9.4% |
+| RMD | +0.50 | +0.16 | -0.33 | IBM, ISRG, BSX | -7.8% |
+| CROX | +0.49 | +0.15 | -0.35 | NKE, TGT, LULU | -4.3% |
+| BUD | +0.49 | +0.07 | -0.41 | PG, PEP, KO | +9.5% |
+| MAR | +0.48 | -0.17 | -0.66 | BKNG, DIS, SBUX | +13.8% |
+
+### 2026-07-17 (refit k=282)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | CRM, NOW, IBM, ADBE | WCLD | 72 | +15.3% |
+| Hot | TSLA, AAPL, CSCO, QCOM | TAN | 38 | +10.9% |
+| Hot | MU, AMD, INTC, LRCX | SOXX | 58 | +10.2% |
+| Cold | NEM, FCX, B, AEM | GDX | 31 | -35.5% |
+| Cold | ASTS, IONQ, OKLO, QBTS | ARKQ | 42 | -34.1% |
+| Cold | RKLB, RTX, LMT, CME | SHLD | 37 | -23.8% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| ADM | +0.57 | +0.34 | -0.23 | UNH, LIN, SBUX | +20.0% |
+| CRC | +0.56 | +0.28 | -0.28 | XOM, CVX, COP | -25.9% |
+| GLNG | +0.54 | +0.32 | -0.21 | XOM, CVX, COP | -9.5% |
+| XOM | +0.54 | +0.26 | -0.27 | XOM, CVX, COP | -5.5% |
+| CLH | +0.53 | +0.10 | -0.43 | MCK, ZTS, COR | +2.2% |
+| WTW | +0.52 | +0.15 | -0.37 | BRK-B, V, MA | -3.2% |
+| PRIM | +0.51 | +0.17 | -0.34 | NVDA, AVGO, SNDK | -63.2% |
+| PBA | +0.49 | +0.23 | -0.27 | LNG, EQT, WMB | +14.7% |
+| BG | +0.49 | +0.21 | -0.29 | XOM, CVX, COP | -5.6% |
+| TMDX | +0.48 | -0.02 | -0.50 | MCK, ZTS, COR | -41.2% |
+
+## The judge on the unseen months (holdout from 2025-06-30, rebalance=21)
+  uniform: 0 bps: picks +15.0%, random median +19.7%, p 0.629; 5 bps: picks +13.4%, random median +18.0%, p 0.629; 20 bps: picks +8.6%, random median +13.2%, p 0.629
+    change over random (0 bps): -4.7; ls -3.60 bps/day (t -0.81); IC ret t -0.32
+    benchmark: {'final_value': 12464.913791349307, 'label': 'Buy and hold SPY (S&P 500)', 'return_pct': 24.649137913493057, 'ticker': 'SPY'}
+  volatility: 0 bps: picks +15.0%, random median +20.4%, p 0.669; 5 bps: picks +13.4%, random median +18.7%, p 0.669; 20 bps: picks +8.6%, random median +13.7%, p 0.669
+    change over random (0 bps): -5.3; ls -3.60 bps/day (t -0.81); IC ret t -0.32
+    benchmark: {'final_value': 12464.913791349307, 'label': 'Buy and hold SPY (S&P 500)', 'return_pct': 24.649137913493057, 'ticker': 'SPY'}
+
+## Correction (added after the run, no recomputation): the by-year table above included the 2025-06-13 refit, which is before the unseen months. Restricted to the unseen months, from the saved per-refit results:
+### By year (refit year): J coefficient no controls / with controls; book net (bps per 21 days)
+| Year | Refits | No controls | t | With controls | t | Book net | t |
+|---|---|---|---|---|---|---|---|
+| 2025 | 6 | -156.0 | -0.83 | -54.8 | -0.33 | -52.6 | -0.32 |
+| 2026 | 9 | +46.7 | +0.17 | -63.2 | -0.32 | -168.1 | -1.31 |

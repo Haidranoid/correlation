@@ -1,0 +1,6 @@
+[    0.0s] build new
+[   25.7s] universe done
+[   26.4s] store close vs export close: both finite 3257836 differ 0
+[   26.6s] legs done; stock overnights valid 2956076 stale 208456 fund overnights valid 1365419
+[   26.8s] signal done; finite S 953276
+[   27.5s] saved

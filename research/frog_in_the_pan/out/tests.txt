@@ -1,0 +1,206 @@
+# Frog in the pan: tests on the old export (periods by end day)
+
+## Construction check: checks_signals.txt
+plain: 300 random stock-days (finite in the loop or the panel): NaN mismatches 0; max |PRET diff| 1.11e-07; max |ID diff| 8.29e-09
+divfix: 300 random stock-days (finite in the loop or the panel): NaN mismatches 0; max |PRET diff| 1.96e-07; max |ID diff| 7.35e-09
+mean ID by cell over formations 2005-12..2019-12 (rows = PRET fifth 1 low .. 5 high; cols = ID third low, mid, high); mean PRET (log) in brackets:
+  fifth 1: -0.092 (-0.416)  -0.032 (-0.306)  +0.024 (-0.267)
+  fifth 2: -0.075 (-0.049)  -0.022 (-0.051)  +0.032 (-0.052)
+  fifth 3: -0.093 (+0.074)  -0.039 (+0.069)  +0.016 (+0.064)
+  fifth 4: -0.113 (+0.188)  -0.059 (+0.183)  -0.004 (+0.180)
+  fifth 5: -0.137 (+0.444)  -0.078 (+0.417)  -0.019 (+0.403)
+names per cell: median 70, min 19
+
+## Construction check: checks_umd.txt
+plain all test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.29 (t 34.3), n 167; mean MOM -0.39%, mean UMD +0.12% per period
+plain big test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.23 (t 34.2), n 167; mean MOM -0.22%, mean UMD +0.12% per period
+plain all test3 2020-2025-06      : corr(MOM, UMD) +0.94, slope 1.10 (t 22.7), n 66; mean MOM +0.44%, mean UMD +0.20% per period
+plain big test3 2020-2025-06      : corr(MOM, UMD) +0.91, slope 1.24 (t 17.6), n 66; mean MOM +0.71%, mean UMD +0.20% per period
+plain all post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.90, slope 0.94 (t 12.0), n 36; mean MOM +0.86%, mean UMD +0.39% per period
+plain big post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.87, slope 1.20 (t 10.5), n 36; mean MOM +1.02%, mean UMD +0.39% per period
+plain all all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.21 (t 40.0), n 233; mean MOM -0.15%, mean UMD +0.14% per period
+plain big all 2006-2025-06        : corr(MOM, UMD) +0.92, slope 1.23 (t 36.8), n 233; mean MOM +0.04%, mean UMD +0.14% per period
+divfix all test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.29 (t 34.3), n 167; mean MOM -0.39%, mean UMD +0.12% per period
+divfix big test1 2006-2019         : corr(MOM, UMD) +0.94, slope 1.23 (t 34.2), n 167; mean MOM -0.22%, mean UMD +0.12% per period
+divfix all test3 2020-2025-06      : corr(MOM, UMD) +0.94, slope 1.10 (t 22.3), n 66; mean MOM +0.44%, mean UMD +0.20% per period
+divfix big test3 2020-2025-06      : corr(MOM, UMD) +0.92, slope 1.24 (t 18.2), n 66; mean MOM +0.64%, mean UMD +0.20% per period
+divfix all post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.89, slope 0.94 (t 11.5), n 36; mean MOM +0.86%, mean UMD +0.39% per period
+divfix big post 2022-07 .. 2025-06 : corr(MOM, UMD) +0.89, slope 1.20 (t 11.5), n 36; mean MOM +0.90%, mean UMD +0.39% per period
+divfix all all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.21 (t 39.8), n 233; mean MOM -0.15%, mean UMD +0.14% per period
+divfix big all 2006-2025-06        : corr(MOM, UMD) +0.93, slope 1.23 (t 37.5), n 233; mean MOM +0.03%, mean UMD +0.14% per period
+
+## The plan's tests (all = the liquid set; divfix)
+Test 1, FIP net, 2006-2019: -0.71 (t -1.05, n 167) -> FAIL (t >= 2)
+Test 2, FIP - DIP net, 2006-2019: -0.48 (t -1.30, n 167) -> FAIL (positive, t >= 2)
+Test 3 (first half), FIP net, 2020-2025-06, divfix: +0.69 (t +0.59, n 66) -> same sign (positive)
+Test 3 (first half), FIP net, 2020-2025-06, plain: +0.67 (t +0.57, n 66) -> same sign (positive)
+
+## Books, the liquid set (divfix)
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| test1 2006-2019 | FIP | -0.63 | -0.71 (t -1.05) | -1.20 (t -4.41) (n 167) | -0.63 (t -1.09) | -4.09 (t -1.05) | 167 |
+| test1 2006-2019 | DIP | -0.13 | -0.23 (t -0.50) | -0.25 (t -1.09) (n 167) | -0.26 (t -0.62) | -1.42 (t -0.54) | 167 |
+| test1 2006-2019 | FIP-DIP | -0.50 | -0.48 (t -1.30) | -0.95 (t -3.42) (n 167) | -0.37 (t -1.42) | -2.67 (t -1.62) | 167 |
+| test1 2006-2019 | MOM | -0.39 | -0.44 (t -0.83) | -0.67 (t -3.47) (n 167) | -0.43 (t -0.90) | -2.64 (t -0.85) | 167 |
+| test3 2020-2025-06 | FIP | +0.77 | +0.69 (t +0.59) | +0.61 (t +1.17) (n 66) | +0.48 (t +0.50) | +2.36 (t +0.43) | 66 |
+| test3 2020-2025-06 | DIP | +0.17 | +0.08 (t +0.09) | +0.22 (t +0.62) (n 66) | +0.36 (t +0.82) | +1.61 (t +0.65) | 66 |
+| test3 2020-2025-06 | FIP-DIP | +0.59 | +0.61 (t +0.81) | +0.39 (t +0.72) (n 66) | +0.11 (t +0.17) | +0.75 (t +0.22) | 66 |
+| test3 2020-2025-06 | MOM | +0.44 | +0.38 (t +0.41) | +0.32 (t +0.95) (n 66) | +0.45 (t +0.70) | +2.21 (t +0.58) | 66 |
+| post 2022-07 .. 2025-06 | FIP | +1.61 | +1.55 (t +1.44) | +1.09 (t +1.61) (n 36) | +1.52 (t +2.09) | +9.93 (t +3.14) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +0.31 | +0.22 (t +0.32) | +0.18 (t +0.47) (n 36) | +0.38 (t +0.79) | +3.98 (t +1.64) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | +1.30 | +1.33 (t +1.69) | +0.92 (t +1.31) (n 36) | +1.14 (t +2.63) | +5.94 (t +3.91) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +0.86 | +0.81 (t +1.02) | +0.38 (t +0.99) (n 36) | +0.91 (t +1.72) | +6.83 (t +2.79) | 36 |
+| all 2006-2025-06 | FIP | -0.23 | -0.31 (t -0.53) | -0.65 (t -2.48) (n 233) | -0.32 (t -0.64) | -2.26 (t -0.70) | 233 |
+| all 2006-2025-06 | DIP | -0.04 | -0.14 (t -0.35) | -0.10 (t -0.53) (n 233) | -0.09 (t -0.26) | -0.56 (t -0.28) | 233 |
+| all 2006-2025-06 | FIP-DIP | -0.19 | -0.17 (t -0.50) | -0.54 (t -2.08) (n 233) | -0.23 (t -0.89) | -1.70 (t -1.10) | 233 |
+| all 2006-2025-06 | MOM | -0.15 | -0.21 (t -0.45) | -0.37 (t -2.09) (n 233) | -0.18 (t -0.46) | -1.26 (t -0.51) | 233 |
+
+## Books, the 500 largest (divfix)
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| test1 2006-2019 | FIP | -0.36 | -0.44 (t -0.65) | -0.96 (t -3.30) (n 167) | -0.49 (t -0.99) | -2.68 (t -0.95) | 167 |
+| test1 2006-2019 | DIP | +0.05 | -0.05 (t -0.12) | -0.06 (t -0.26) (n 167) | -0.29 (t -0.76) | -1.33 (t -0.61) | 167 |
+| test1 2006-2019 | FIP-DIP | -0.40 | -0.38 (t -0.86) | -0.90 (t -2.59) (n 167) | -0.20 (t -0.71) | -1.36 (t -0.88) | 167 |
+| test1 2006-2019 | MOM | -0.22 | -0.27 (t -0.54) | -0.49 (t -2.70) (n 167) | -0.37 (t -0.90) | -1.87 (t -0.79) | 167 |
+| test3 2020-2025-06 | FIP | +0.68 | +0.60 (t +0.47) | +0.37 (t +0.64) (n 66) | +0.55 (t +0.58) | +3.19 (t +0.63) | 66 |
+| test3 2020-2025-06 | DIP | +0.77 | +0.68 (t +0.61) | +0.77 (t +1.42) (n 66) | +0.69 (t +1.00) | +2.27 (t +0.62) | 66 |
+| test3 2020-2025-06 | FIP-DIP | -0.10 | -0.08 (t -0.09) | -0.40 (t -0.58) (n 66) | -0.14 (t -0.29) | +0.92 (t +0.46) | 66 |
+| test3 2020-2025-06 | MOM | +0.64 | +0.59 (t +0.54) | +0.52 (t +1.21) (n 66) | +0.62 (t +0.78) | +2.66 (t +0.63) | 66 |
+| post 2022-07 .. 2025-06 | FIP | +1.09 | +1.02 (t +0.82) | +0.31 (t +0.47) (n 36) | +1.04 (t +0.91) | +7.21 (t +1.23) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +1.10 | +1.01 (t +0.85) | +0.56 (t +0.69) (n 36) | +0.99 (t +1.19) | +5.95 (t +1.60) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | -0.01 | +0.01 (t +0.01) | -0.25 (t -0.27) (n 36) | +0.05 (t +0.06) | +1.26 (t +0.41) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +0.90 | +0.85 (t +0.83) | +0.19 (t +0.36) (n 36) | +0.92 (t +1.08) | +6.25 (t +1.48) | 36 |
+| all 2006-2025-06 | FIP | -0.06 | -0.14 (t -0.24) | -0.57 (t -2.13) (n 233) | -0.20 (t -0.44) | -1.02 (t -0.41) | 233 |
+| all 2006-2025-06 | DIP | +0.25 | +0.16 (t +0.36) | +0.21 (t +0.92) (n 233) | -0.01 (t -0.03) | -0.31 (t -0.16) | 233 |
+| all 2006-2025-06 | FIP-DIP | -0.32 | -0.30 (t -0.73) | -0.78 (t -2.42) (n 233) | -0.18 (t -0.77) | -0.71 (t -0.57) | 233 |
+| all 2006-2025-06 | MOM | +0.03 | -0.03 (t -0.06) | -0.19 (t -1.09) (n 233) | -0.09 (t -0.23) | -0.59 (t -0.28) | 233 |
+
+## Post-2022-07 periods with and without the dividend correction
+### divfix, all
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| post 2022-07 .. 2025-06 | FIP | +1.61 | +1.55 (t +1.44) | +1.09 (t +1.61) (n 36) | +1.52 (t +2.09) | +9.93 (t +3.14) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +0.31 | +0.22 (t +0.32) | +0.18 (t +0.47) (n 36) | +0.38 (t +0.79) | +3.98 (t +1.64) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | +1.30 | +1.33 (t +1.69) | +0.92 (t +1.31) (n 36) | +1.14 (t +2.63) | +5.94 (t +3.91) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +0.86 | +0.81 (t +1.02) | +0.38 (t +0.99) (n 36) | +0.91 (t +1.72) | +6.83 (t +2.79) | 36 |
+| test3 2020-2025-06 | FIP | +0.77 | +0.69 (t +0.59) | +0.61 (t +1.17) (n 66) | +0.48 (t +0.50) | +2.36 (t +0.43) | 66 |
+| test3 2020-2025-06 | DIP | +0.17 | +0.08 (t +0.09) | +0.22 (t +0.62) (n 66) | +0.36 (t +0.82) | +1.61 (t +0.65) | 66 |
+| test3 2020-2025-06 | FIP-DIP | +0.59 | +0.61 (t +0.81) | +0.39 (t +0.72) (n 66) | +0.11 (t +0.17) | +0.75 (t +0.22) | 66 |
+| test3 2020-2025-06 | MOM | +0.44 | +0.38 (t +0.41) | +0.32 (t +0.95) (n 66) | +0.45 (t +0.70) | +2.21 (t +0.58) | 66 |
+
+### divfix, big
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| post 2022-07 .. 2025-06 | FIP | +1.09 | +1.02 (t +0.82) | +0.31 (t +0.47) (n 36) | +1.04 (t +0.91) | +7.21 (t +1.23) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +1.10 | +1.01 (t +0.85) | +0.56 (t +0.69) (n 36) | +0.99 (t +1.19) | +5.95 (t +1.60) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | -0.01 | +0.01 (t +0.01) | -0.25 (t -0.27) (n 36) | +0.05 (t +0.06) | +1.26 (t +0.41) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +0.90 | +0.85 (t +0.83) | +0.19 (t +0.36) (n 36) | +0.92 (t +1.08) | +6.25 (t +1.48) | 36 |
+| test3 2020-2025-06 | FIP | +0.68 | +0.60 (t +0.47) | +0.37 (t +0.64) (n 66) | +0.55 (t +0.58) | +3.19 (t +0.63) | 66 |
+| test3 2020-2025-06 | DIP | +0.77 | +0.68 (t +0.61) | +0.77 (t +1.42) (n 66) | +0.69 (t +1.00) | +2.27 (t +0.62) | 66 |
+| test3 2020-2025-06 | FIP-DIP | -0.10 | -0.08 (t -0.09) | -0.40 (t -0.58) (n 66) | -0.14 (t -0.29) | +0.92 (t +0.46) | 66 |
+| test3 2020-2025-06 | MOM | +0.64 | +0.59 (t +0.54) | +0.52 (t +1.21) (n 66) | +0.62 (t +0.78) | +2.66 (t +0.63) | 66 |
+
+### plain, all
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| post 2022-07 .. 2025-06 | FIP | +1.58 | +1.51 (t +1.42) | +1.12 (t +1.69) (n 36) | +1.53 (t +2.04) | +9.82 (t +3.00) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +0.31 | +0.22 (t +0.33) | +0.13 (t +0.37) (n 36) | +0.43 (t +0.85) | +4.14 (t +1.68) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | +1.26 | +1.29 (t +1.69) | +0.99 (t +1.44) (n 36) | +1.10 (t +2.54) | +5.68 (t +3.70) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +0.86 | +0.80 (t +1.02) | +0.36 (t +0.95) (n 36) | +0.92 (t +1.69) | +6.81 (t +2.71) | 36 |
+| test3 2020-2025-06 | FIP | +0.75 | +0.67 (t +0.57) | +0.59 (t +1.13) (n 66) | +0.48 (t +0.50) | +2.30 (t +0.42) | 66 |
+| test3 2020-2025-06 | DIP | +0.17 | +0.08 (t +0.10) | +0.21 (t +0.58) (n 66) | +0.39 (t +0.87) | +1.69 (t +0.68) | 66 |
+| test3 2020-2025-06 | FIP-DIP | +0.57 | +0.59 (t +0.79) | +0.38 (t +0.71) (n 66) | +0.09 (t +0.14) | +0.60 (t +0.18) | 66 |
+| test3 2020-2025-06 | MOM | +0.44 | +0.38 (t +0.41) | +0.31 (t +0.93) (n 66) | +0.46 (t +0.70) | +2.20 (t +0.58) | 66 |
+
+### plain, big
+| Window | Book | 21-day gross | 21-day net | FF5+UMD alpha, net | 6-month hold, net (NW t) | 6-month cumulative, event time, gross (NW t) | periods |
+|---|---|---|---|---|---|---|---|
+| post 2022-07 .. 2025-06 | FIP | +1.19 | +1.12 (t +0.90) | +0.43 (t +0.64) (n 36) | +1.07 (t +0.92) | +7.22 (t +1.20) | 36 |
+| post 2022-07 .. 2025-06 | DIP | +1.30 | +1.21 (t +0.99) | +0.58 (t +0.64) (n 36) | +1.05 (t +1.22) | +6.12 (t +1.63) | 36 |
+| post 2022-07 .. 2025-06 | FIP-DIP | -0.11 | -0.09 (t -0.08) | -0.15 (t -0.15) (n 36) | +0.03 (t +0.04) | +1.10 (t +0.35) | 36 |
+| post 2022-07 .. 2025-06 | MOM | +1.02 | +0.97 (t +0.93) | +0.25 (t +0.44) (n 36) | +0.96 (t +1.10) | +6.36 (t +1.46) | 36 |
+| test3 2020-2025-06 | FIP | +0.73 | +0.65 (t +0.52) | +0.42 (t +0.72) (n 66) | +0.58 (t +0.59) | +3.19 (t +0.62) | 66 |
+| test3 2020-2025-06 | DIP | +0.88 | +0.79 (t +0.70) | +0.83 (t +1.43) (n 66) | +0.73 (t +1.03) | +2.36 (t +0.64) | 66 |
+| test3 2020-2025-06 | FIP-DIP | -0.15 | -0.13 (t -0.15) | -0.41 (t -0.57) (n 66) | -0.15 (t -0.31) | +0.83 (t +0.41) | 66 |
+| test3 2020-2025-06 | MOM | +0.71 | +0.65 (t +0.60) | +0.55 (t +1.25) (n 66) | +0.64 (t +0.80) | +2.72 (t +0.63) | 66 |
+
+## The 5 x 3 grid
+Market-relative cell returns, 21-day hold, % per period, periods ending 2006-01-01..2019-12-31 (all):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | +0.37 (t +0.82) | +0.26 (t +0.81) | +0.09 (t +0.34) | +0.28 (t +1.01) |
+| 2 | -0.07 (t -0.63) | +0.14 (t +1.32) | -0.00 (t -0.01) | -0.07 (t -0.56) |
+| 3 | -0.03 (t -0.23) | -0.06 (t -0.64) | -0.04 (t -0.36) | +0.01 (t +0.07) |
+| 4 | -0.17 (t -0.97) | -0.03 (t -0.21) | -0.03 (t -0.22) | -0.14 (t -0.91) |
+| 5 (winners) | -0.26 (t -0.99) | -0.14 (t -0.62) | -0.04 (t -0.16) | -0.22 (t -1.03) |
+
+Market-relative cell returns, 6-month overlapping hold, % per period, periods ending 2006-01-01..2019-12-31 (all):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | +0.23 (t +0.58) | +0.13 (t +0.47) | +0.06 (t +0.24) | +0.17 (t +0.83) |
+| 2 | +0.14 (t +1.64) | +0.10 (t +1.84) | +0.10 (t +1.77) | +0.04 (t +0.45) |
+| 3 | +0.04 (t +0.39) | +0.03 (t +0.33) | +0.06 (t +0.73) | -0.01 (t -0.16) |
+| 4 | -0.14 (t -0.98) | -0.01 (t -0.11) | +0.00 (t +0.03) | -0.14 (t -1.22) |
+| 5 (winners) | -0.38 (t -1.73) | -0.25 (t -1.25) | -0.17 (t -0.91) | -0.20 (t -1.32) |
+
+Market-relative cell returns, 21-day hold, % per period, periods ending 2020-01-01..2025-06-27 (all):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | -0.35 (t -0.46) | +0.04 (t +0.07) | -0.12 (t -0.27) | -0.23 (t -0.51) |
+| 2 | -0.07 (t -0.31) | -0.09 (t -0.45) | -0.24 (t -1.25) | +0.18 (t +0.65) |
+| 3 | -0.04 (t -0.17) | +0.16 (t +0.82) | +0.02 (t +0.08) | -0.06 (t -0.19) |
+| 4 | -0.10 (t -0.27) | -0.02 (t -0.07) | -0.06 (t -0.22) | -0.04 (t -0.14) |
+| 5 (winners) | +0.41 (t +0.85) | +0.41 (t +0.96) | +0.05 (t +0.10) | +0.36 (t +0.85) |
+
+Market-relative cell returns, 6-month overlapping hold, % per period, periods ending 2020-01-01..2025-06-27 (all):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | -0.09 (t -0.15) | -0.16 (t -0.40) | -0.14 (t -0.46) | +0.05 (t +0.14) |
+| 2 | -0.11 (t -0.49) | -0.07 (t -0.46) | -0.25 (t -1.72) | +0.13 (t +0.60) |
+| 3 | +0.01 (t +0.03) | +0.09 (t +0.67) | -0.16 (t -1.23) | +0.17 (t +0.88) |
+| 4 | +0.01 (t +0.03) | +0.09 (t +0.53) | -0.04 (t -0.25) | +0.05 (t +0.19) |
+| 5 (winners) | +0.41 (t +1.02) | +0.36 (t +1.21) | +0.25 (t +0.82) | +0.16 (t +0.43) |
+
+Market-relative cell returns, 21-day hold, % per period, periods ending 2006-01-01..2019-12-31 (big):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | +0.11 (t +0.24) | +0.20 (t +0.63) | -0.03 (t -0.12) | +0.13 (t +0.41) |
+| 2 | -0.10 (t -0.73) | +0.19 (t +1.45) | +0.04 (t +0.29) | -0.14 (t -0.82) |
+| 3 | +0.06 (t +0.49) | +0.06 (t +0.55) | -0.03 (t -0.24) | +0.09 (t +0.55) |
+| 4 | -0.12 (t -0.69) | +0.06 (t +0.40) | -0.06 (t -0.39) | -0.06 (t -0.34) |
+| 5 (winners) | -0.25 (t -0.88) | -0.14 (t -0.59) | +0.02 (t +0.09) | -0.27 (t -1.05) |
+
+Market-relative cell returns, 6-month overlapping hold, % per period, periods ending 2006-01-01..2019-12-31 (big):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | +0.12 (t +0.35) | +0.07 (t +0.31) | +0.07 (t +0.30) | +0.05 (t +0.22) |
+| 2 | +0.21 (t +2.03) | +0.12 (t +1.63) | +0.17 (t +2.14) | +0.04 (t +0.39) |
+| 3 | +0.06 (t +0.60) | +0.04 (t +0.59) | +0.06 (t +0.72) | +0.00 (t +0.05) |
+| 4 | -0.05 (t -0.39) | -0.02 (t -0.13) | -0.06 (t -0.50) | +0.00 (t +0.02) |
+| 5 (winners) | -0.35 (t -1.66) | -0.23 (t -1.20) | -0.19 (t -1.09) | -0.16 (t -0.97) |
+
+Market-relative cell returns, 21-day hold, % per period, periods ending 2020-01-01..2025-06-27 (big):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | -0.13 (t -0.16) | -0.18 (t -0.29) | -0.08 (t -0.16) | -0.05 (t -0.09) |
+| 2 | -0.16 (t -0.66) | -0.19 (t -0.73) | -0.15 (t -0.56) | -0.02 (t -0.06) |
+| 3 | -0.08 (t -0.31) | +0.15 (t +0.73) | -0.23 (t -0.90) | +0.15 (t +0.42) |
+| 4 | -0.17 (t -0.45) | -0.21 (t -0.67) | -0.12 (t -0.32) | -0.05 (t -0.10) |
+| 5 (winners) | +0.55 (t +0.96) | +0.29 (t +0.50) | +0.70 (t +0.93) | -0.14 (t -0.21) |
+
+Market-relative cell returns, 6-month overlapping hold, % per period, periods ending 2020-01-01..2025-06-27 (big):
+| PRET fifth | ID low (continuous) | ID mid | ID high (discrete) | low - high |
+|---|---|---|---|---|
+| 1 (losers) | -0.09 (t -0.14) | -0.07 (t -0.14) | -0.10 (t -0.32) | +0.01 (t +0.04) |
+| 2 | -0.01 (t -0.09) | -0.11 (t -0.57) | -0.34 (t -3.62) | +0.33 (t +2.48) |
+| 3 | -0.17 (t -0.70) | -0.09 (t -0.58) | -0.22 (t -1.78) | +0.05 (t +0.21) |
+| 4 | -0.01 (t -0.06) | -0.13 (t -0.85) | -0.04 (t -0.22) | +0.03 (t +0.11) |
+| 5 (winners) | +0.49 (t +1.23) | +0.59 (t +1.39) | +0.62 (t +1.34) | -0.13 (t -0.41) |
+
+## Book sizes and turnover (divfix, all; 2006-2025-06)
+all FIP: long names mean 89 (min 20), turnover per period 21-day 1.53, 6-month 0.53 (of 4 = both legs fully replaced)
+all DIP: long names mean 88 (min 19), turnover per period 21-day 1.91, 6-month 0.56 (of 4 = both legs fully replaced)
+all MOM: long names mean 266 (min 59), turnover per period 21-day 1.09, 6-month 0.43 (of 4 = both legs fully replaced)
+big FIP: long names mean 33 (min 20), turnover per period 21-day 1.59, 6-month 0.53 (of 4 = both legs fully replaced)
+big DIP: long names mean 32 (min 19), turnover per period 21-day 1.98, 6-month 0.56 (of 4 = both legs fully replaced)
+big MOM: long names mean 96 (min 59), turnover per period 21-day 1.12, 6-month 0.43 (of 4 = both legs fully replaced)

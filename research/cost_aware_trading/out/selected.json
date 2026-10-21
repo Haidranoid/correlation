@@ -1,0 +1,99 @@
+{
+ "lgbm_s4": {
+  "selected": {
+   "family": "switch",
+   "params": {
+    "h": 1,
+    "m": 0.0
+   },
+   "label": "switch h=1 m=0"
+  },
+  "family_best": {
+   "buffer": {
+    "params": {
+     "K": 50
+    },
+    "label": "buffer K=50"
+   },
+   "switch": {
+    "params": {
+     "h": 1,
+     "m": 0.0
+    },
+    "label": "switch h=1 m=0"
+   },
+   "confident": {
+    "params": {
+     "h": 1,
+     "c": 1
+    },
+    "label": "confident h=1 c=1"
+   }
+  }
+ },
+ "reversal": {
+  "selected": {
+   "family": "switch",
+   "params": {
+    "h": 4,
+    "m": 0.0
+   },
+   "label": "switch h=4 m=0"
+  },
+  "family_best": {
+   "buffer": {
+    "params": {
+     "K": 50
+    },
+    "label": "buffer K=50"
+   },
+   "switch": {
+    "params": {
+     "h": 4,
+     "m": 0.0
+    },
+    "label": "switch h=4 m=0"
+   },
+   "confident": {
+    "params": {
+     "h": 2,
+     "c": 2
+    },
+    "label": "confident h=2 c=2"
+   }
+  }
+ },
+ "lgbm_daily": {
+  "selected": {
+   "family": "switch",
+   "params": {
+    "h": 5,
+    "m": 0.0
+   },
+   "label": "switch h=5 m=0"
+  },
+  "family_best": {
+   "buffer": {
+    "params": {
+     "K": 100
+    },
+    "label": "buffer K=100"
+   },
+   "switch": {
+    "params": {
+     "h": 5,
+     "m": 0.0
+    },
+    "label": "switch h=5 m=0"
+   },
+   "confident": {
+    "params": {
+     "h": 1,
+     "c": 1
+    },
+    "label": "confident h=1 c=1"
+   }
+  }
+ },
+ "note": "written 2026-10-21 from the selection-year runs, before any test-year number; read by test.py"
+}

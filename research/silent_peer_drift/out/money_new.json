@@ -1,0 +1,165 @@
+{
+ "judge": {
+  "uniform": {
+   "change": 2.6983989144613076,
+   "se": NaN,
+   "ahead": 1,
+   "years": 1,
+   "per_year": [
+    2.7
+   ],
+   "change_5": 2.6610325854139028,
+   "change_20": 2.553204220177241,
+   "report": {
+    "strategy": [
+     {
+      "cost_bps": 0.0,
+      "final": 11270.96255970809,
+      "final_pct": 12.709625597080908,
+      "p": 0.398,
+      "random_median": 11001.12266826196,
+      "random_median_pct": 10.0112266826196
+     },
+     {
+      "cost_bps": 5.0,
+      "final": 11119.752391744907,
+      "final_pct": 11.197523917449082,
+      "p": 0.398,
+      "random_median": 10853.649133203518,
+      "random_median_pct": 8.53649133203518
+     },
+     {
+      "cost_bps": 20.0,
+      "final": 10678.094969616706,
+      "final_pct": 6.780949696167071,
+      "p": 0.398,
+      "random_median": 10422.774547598983,
+      "random_median_pct": 4.22774547598983
+     }
+    ],
+    "ls_bps_per_day": 2.8563268551920604,
+    "ls_t": 0.1552009081142143,
+    "ic_ret_t": 0.39575411368048485,
+    "benchmarks": [
+     {
+      "final_value": 12464.913791349307,
+      "label": "Buy and hold SPY (S&P 500)",
+      "return_pct": 24.649137913493057,
+      "ticker": "SPY"
+     },
+     {
+      "final_value": 13106.605669746914,
+      "label": "Buy and hold QQQ (Nasdaq-100)",
+      "return_pct": 31.066056697469136,
+      "ticker": "QQQ"
+     },
+     {
+      "final_value": 12066.06248842616,
+      "label": "Buy and hold all 2155 candidates",
+      "return_pct": 20.66062488426159,
+      "ticker": null
+     }
+    ],
+    "pairs": 557
+   }
+  },
+  "volatility": {
+   "change": -9.133661247849936,
+   "se": NaN,
+   "ahead": 0,
+   "years": 1,
+   "per_year": [
+    -9.13
+   ],
+   "change_5": -9.011750014777874,
+   "change_20": -8.654723932413688,
+   "report": {
+    "strategy": [
+     {
+      "cost_bps": 0.0,
+      "final": 11270.96255970809,
+      "final_pct": 12.709625597080908,
+      "p": 0.731,
+      "random_median": 12184.328684493084,
+      "random_median_pct": 21.843286844930844
+     },
+     {
+      "cost_bps": 5.0,
+      "final": 11119.752391744907,
+      "final_pct": 11.197523917449082,
+      "p": 0.731,
+      "random_median": 12020.927393222695,
+      "random_median_pct": 20.209273932226957
+     },
+     {
+      "cost_bps": 20.0,
+      "final": 10678.094969616706,
+      "final_pct": 6.780949696167071,
+      "p": 0.731,
+      "random_median": 11543.567362858075,
+      "random_median_pct": 15.435673628580759
+     }
+    ],
+    "ls_bps_per_day": 2.8563268551920604,
+    "ls_t": 0.1552009081142143,
+    "ic_ret_t": 0.39575411368048485,
+    "benchmarks": [
+     {
+      "final_value": 12464.913791349307,
+      "label": "Buy and hold SPY (S&P 500)",
+      "return_pct": 24.649137913493057,
+      "ticker": "SPY"
+     },
+     {
+      "final_value": 13106.605669746914,
+      "label": "Buy and hold QQQ (Nasdaq-100)",
+      "return_pct": 31.066056697469136,
+      "ticker": "QQQ"
+     },
+     {
+      "final_value": 12066.06248842616,
+      "label": "Buy and hold all 2155 candidates",
+      "return_pct": 20.66062488426159,
+      "ticker": null
+     }
+    ],
+    "pairs": 557
+   }
+  }
+ },
+ "long_short": {
+  "per_trade": {
+   "2025-06-30": {
+    "n": 780,
+    "gross_bps": -44.247612383971884,
+    "t": -0.8728441652213345
+   },
+   "all": {
+    "n": 780,
+    "gross_bps": -44.247612383971884,
+    "t": -0.8728441652213345,
+    "t_month": -0.6591874800400135,
+    "long_bps": -118.13584924922041,
+    "long_t": -1.5788657973223372,
+    "short_bps": 1.6829132349664169,
+    "short_t": 0.026371799949545117,
+    "years_net_pos": 0,
+    "n_years": 1
+   }
+  },
+  "calendar": {
+   "all years": {
+    "gross_pct_yr": 6.058215134101649,
+    "net_pct_yr": 3.1624761026137627,
+    "sharpe": 0.2667333817033341,
+    "t": 0.30477198922583165
+   },
+   "2025-26": {
+    "gross_pct_yr": 6.058215134101649,
+    "net_pct_yr": 3.1624761026137627,
+    "sharpe": 0.2667333817033341,
+    "t": 0.30477198922583165
+   }
+  }
+ }
+}

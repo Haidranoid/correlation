@@ -1,0 +1,73 @@
+
+Formation ending 2008-07-03 (k=66), universe 1004 stocks; top 20 pairs:
+ # pair               SSD   sigma  2 sigma opens converged
+ 1 BRK-A/BRK-B     0.0105  0.0063   0.0126     9         9
+ 2 LBTYA/LBTYK     0.0481  0.0114   0.0228     0         0
+ 3 CCL/CUK         0.0640  0.0093   0.0186     4         3
+ 4 DUK/XEL         0.0915  0.0182   0.0364     4         3
+ 5 AEP/EVRG        0.1290  0.0216   0.0432     1         0
+ 6 COP/CVX         0.1418  0.0235   0.0470     2         1
+ 7 DUK/IDA         0.1490  0.0243   0.0486     4         3
+ 8 EQR/UDR         0.1510  0.0225   0.0451     5         4
+ 9 D/PPL           0.1613  0.0227   0.0454     1         0
+10 AEE/VZ          0.1710  0.0244   0.0488     4         3
+11 AEP/LNT         0.1781  0.0256   0.0511     2         1
+12 EVRG/KMB        0.1795  0.0264   0.0529     2         2
+13 EG/RNR          0.1909  0.0225   0.0450     4         3
+14 SWK/TGT         0.2002  0.0273   0.0545     3         3
+15 CL/KO           0.2021  0.0267   0.0535     1         0
+16 E/TTE           0.2057  0.0250   0.0499     1         0
+17 AEP/KMB         0.2082  0.0286   0.0572     2         1
+18 ITW/SYY         0.2128  0.0290   0.0581     1         0
+19 EVRG/LNT        0.2143  0.0256   0.0512     3         2
+20 NJR/UGI         0.2149  0.0290   0.0580     1         0
+
+Formation ending 2015-07-08 (k=150), universe 1300 stocks; top 20 pairs:
+ # pair               SSD   sigma  2 sigma opens converged
+ 1 ENR/EPC         0.0086  0.0058   0.0116     1         0
+ 2 LBTYA/LBTYK     0.0489  0.0139   0.0279     1         1
+ 3 ES/WEC          0.0525  0.0135   0.0270     2         1
+ 4 CNP/OGE         0.0577  0.0151   0.0302     1         0
+ 5 ES/IDA          0.0693  0.0158   0.0316     1         0
+ 6 CBSH/COF        0.0704  0.0160   0.0320     1         0
+ 7 IDA/WEC         0.0711  0.0168   0.0336     1         0
+ 8 ATO/WTRG        0.0727  0.0170   0.0340     1         0
+ 9 AEP/LNT         0.0746  0.0136   0.0273     1         1
+10 FRT/SPG         0.0766  0.0174   0.0349     3         2
+11 ATO/NEE         0.0775  0.0162   0.0325     1         0
+12 FITB/RF         0.0783  0.0151   0.0303     3         2
+13 BMO/CM          0.0786  0.0176   0.0351     2         1
+14 ARI/TWO         0.0815  0.0160   0.0321     1         0
+15 AFG/EG          0.0839  0.0177   0.0354     1         0
+16 LNT/POR         0.0900  0.0141   0.0282     2         1
+17 AEE/LNT         0.0928  0.0192   0.0384     2         1
+18 EQR/REG         0.0929  0.0184   0.0368     2         1
+19 BXP/KRC         0.0931  0.0187   0.0374     3         2
+20 NEE/WTRG        0.0936  0.0180   0.0359     2         1
+
+Formation ending 2022-07-11 (k=234), universe 2023 stocks; top 20 pairs:
+ # pair               SSD   sigma  2 sigma opens converged
+ 1 PAA/PAGP        0.0632  0.0138   0.0275     1         1
+ 2 AVB/UDR         0.0657  0.0154   0.0307     1         1
+ 3 AVB/EQR         0.0811  0.0147   0.0293     0         0
+ 4 AEE/FTS         0.0830  0.0181   0.0362     1         0
+ 5 DUK/WEC         0.0922  0.0188   0.0375     1         1
+ 6 GSBD/OBDC       0.1016  0.0192   0.0384     3         2
+ 7 AGNC/NLY        0.1056  0.0173   0.0347     2         2
+ 8 BKH/DTE         0.1126  0.0201   0.0401     2         1
+ 9 CMS/ETR         0.1149  0.0212   0.0424     1         1
+10 CPT/MAA         0.1159  0.0178   0.0355     1         0
+11 ATO/OGS         0.1187  0.0217   0.0434     2         1
+12 CHTR/LBRDK      0.1206  0.0205   0.0410     0         0
+13 D/DTE           0.1237  0.0222   0.0443     1         0
+14 FCPT/NNN        0.1352  0.0228   0.0455     2         1
+15 EFSC/FRME       0.1408  0.0230   0.0459     1         0
+16 D/FTS           0.1417  0.0206   0.0411     2         1
+17 BDN/DEI         0.1441  0.0225   0.0449     0         0
+18 ES/EVRG         0.1441  0.0192   0.0384     2         2
+19 BCE/BIP         0.1444  0.0237   0.0473     2         1
+20 AEE/DUK         0.1483  0.0163   0.0327     1         0
+
+All formations: mean 2-sigma trigger 0.0404 (GGR top 20: 0.0528); median SSD of pair 1 0.0228, of pair 20 0.1461
+Stocks appearing in more than one pair: mean 10.5 repeats per formation
+Most frequent stocks in the top 20 (formations x pairs): XEL 401, CMS 339, WEC 286, DUK 254, AEP 251, DTE 239, ED 234, LNT 230, PNW 217, AEE 215, EVRG 201, SO 180, ES 172, BRK-B 155, BRK-A 146, POR 119, D 109, AVB 98, ATO 92, WFC 91, IDA 89, UDR 89, PCG 88, EQR 79, ETR 76

@@ -1,0 +1,20 @@
+== The unseen months: return months 2025-07..2026-10 (October partial, through 2026-10-19), new export ==
+French factors and AQR end 2026-08, so alphas and AQR use 2025-07..2026-08.
+                                                    months    n mean%/mo      t   t NW   %/yr   sd% Sharpe FF5+UMD a%/mo      t  b_mkt  n_a
+BAB net                                      2025-07..2026-10   16   -0.359  -0.29  -0.37  -4.31  17.5  -0.25         0.260   0.22  -0.24   14
+BAB net, div-corrected                       2025-07..2026-10   16   -0.105  -0.08  -0.11  -1.26  17.4  -0.07         0.485   0.41  -0.24   14
+BAB500 net                                   2025-07..2026-10   16   -0.470  -0.23  -0.30  -5.64  28.4  -0.20         0.604   0.35  -0.29   14
+BAB500 net, div-corrected                    2025-07..2026-10   16   -0.215  -0.10  -0.14  -2.58  28.4  -0.09         0.827   0.48  -0.29   14
+EW thirds net                                2025-07..2026-10   16   -0.766  -0.53  -0.63  -9.19  20.1  -0.46         0.546   0.49  -0.82   14
+EW thirds net, div-corrected                 2025-07..2026-10   16   -0.599  -0.41  -0.49  -7.19  20.1  -0.36         0.696   0.63  -0.82   14
+DV-weighted thirds net                       2025-07..2026-10   16   -1.653  -0.63  -0.85 -19.84  36.4  -0.55        -0.075  -0.05  -0.91   14
+DV-weighted thirds net, div-corrected        2025-07..2026-10   16   -1.489  -0.57  -0.77 -17.87  36.3  -0.49         0.077   0.05  -0.91   14
+rank-weighted, unlevered net                 2025-07..2026-10   16   -0.904  -0.58  -0.69 -10.85  21.5  -0.51         0.629   0.53  -0.92   14
+rank-weighted, unlevered net, div-corrected  2025-07..2026-10   16   -0.741  -0.48  -0.56  -8.89  21.5  -0.41         0.772   0.66  -0.93   14
+BAB gross                                    2025-07..2026-10   16   -0.345  -0.27  -0.36  -4.14  17.4  -0.24         0.272   0.23  -0.23   14
+AQR BAB_US, same months                      2025-07..2026-08   14    0.043   0.05   0.06   0.52  10.8   0.05         0.221   0.32  -0.08   14
+BAB net cumulative over the unseen months: -7.39% (div-corrected -3.52%)
+same sign as test 1 (positive): False (div-corrected False)
+  break-even spread: -13.71% a year (leverage 1.31)
+  break-even spread, div-corrected: -4.00% a year (leverage 1.31)
+check: new-export BAB vs old-export BAB, gross, shared months 2008-03..2025-05: correlation 0.9987, mean difference +0.049% a year

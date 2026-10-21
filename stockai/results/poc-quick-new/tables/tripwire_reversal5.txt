@@ -1,0 +1,3 @@
+tripwire runs/poc-quick-new/baselines/reversal5.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0157 (t 1.88, 503 days); largest year mean +0.0221; not tripped (<= 0.05)
+  2022: +0.0221 (t 1.65, 251 days)
+  2023: +0.0094 (t 0.93, 252 days)

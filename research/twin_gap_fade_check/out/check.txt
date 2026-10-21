@@ -1,0 +1,129 @@
+Intraday-bar check of the twin gap fade. bps a day of a $1 long / $1 short book (t).
+
+price scale: 2850 symbols with store and Yahoo closes on 204321 symbol-days; symbols with a dividend or split ex-date in 2026-06-01..2026-10-19: 1707
+  k on segments with no later event: median 1.000000, share with |k-1| > 1e-4: 0.071%
+  k on segments before an event: median 1.000000, share with |k-1| > 1e-4: 0.8% (the store is dividend-adjusted if this is large)
+  symbol-days whose close disagrees with the segment k by more than 0.1%: 27 of 204321
+
+===== 5m window: 58 days, 2026-07-29..2026-10-19 =====
+UTC offsets of the bars on window days: {'-04:00': np.int64(165516)}; symbol-days with bars outside 09:30-16:00: 0, with a 16:00 bar: 0
+store days with SPY bars that are not full sessions (dropped): []
+
+--- 5m, all book ---
+coverage: positions 27578; with bars for stock and twin 27568 (100.0%); in the common set 22782 (82.6%); with bars but dropped for an ex-date 1322, for a close disagreement 49, for an intraday scale break (D13) 2, for a missing entry bar 3414
+check: (a) on all positions vs daily_new.tsv on the 58 window days: max |gross diff| 4.9e-07, max |headline diff| 4.8e-07 (the tsv has 6 decimals)
+(a) on all positions (the book as tested): gross +75.33 (+14.06), headline +48.80 (+9.08); on positions with bars: gross +75.30 (+14.01)
+
+5m all: entry times on the common set: 58 days, 22782 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +73.96 (+13.32) | +47.50 (+8.54) | 1.00 |  | +73.94 (+13.33) | +28.3 | -45.7
+(b) Yahoo's first-bar open | +63.78 (+11.35) | +37.32 (+6.62) | 0.86 | -10.18 (-8.21) | +63.77 (+11.35) | +24.4 | -39.4
+(c) 9:35 | +16.20 (+3.18) | -10.26 (-2.01) | 0.22 | -57.76 (-18.56) | +16.18 (+3.15) | +0.2 | -16.1
+(d) 9:45 | +8.77 (+2.31) | -17.69 (-4.64) | 0.12 | -65.19 (-17.50) | +8.75 (+2.28) | -0.4 | -9.2
+(e) 10:00 | +9.05 (+2.64) | -17.41 (-5.06) | 0.12 | -64.91 (-15.57) | +9.03 (+2.61) | -0.5 | -9.6
+post hoc: each entry time on its own position set (only its own bars required): entry | positions | gross (t) | share of (a) on that set
+(b) Yahoo's first-bar open | 26196 | +66.88 (+12.33) | 0.86
+(c) 9:35 | 24492 | +17.06 (+3.38) | 0.22
+(d) 9:45 | 24636 | +10.11 (+2.72) | 0.13
+(e) 10:00 | 24788 | +8.36 (+2.39) | 0.11
+stocks without bars on some position day: 3 (e.g. ['IA', 'NXH', 'VMRK']); twins: 0 []
+
+--- 5m, 500 book ---
+coverage: positions 5800; with bars for stock and twin 5800 (100.0%); in the common set 5159 (88.9%); with bars but dropped for an ex-date 270, for a close disagreement 3, for an intraday scale break (D13) 0, for a missing entry bar 369
+check: (a) on all positions vs daily_new.tsv on the 58 window days: max |gross diff| 4.9e-07, max |headline diff| 4.7e-07 (the tsv has 6 decimals)
+(a) on all positions (the book as tested): gross +71.85 (+9.99), headline +43.94 (+6.12); on positions with bars: gross +71.85 (+9.99)
+
+5m 500: entry times on the common set: 58 days, 5159 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +73.71 (+10.16) | +45.84 (+6.33) | 1.00 |  | +73.18 (+10.10) | +35.0 | -38.8
+(b) Yahoo's first-bar open | +67.89 (+9.21) | +40.02 (+5.44) | 0.92 | -5.82 (-4.64) | +67.36 (+9.15) | +32.9 | -35.0
+(c) 9:35 | +28.03 (+4.03) | +0.17 (+0.02) | 0.38 | -45.68 (-9.91) | +27.50 (+3.96) | +11.4 | -16.6
+(d) 9:45 | +14.78 (+2.58) | -13.09 (-2.29) | 0.20 | -58.94 (-9.55) | +14.24 (+2.50) | +5.1 | -9.6
+(e) 10:00 | +16.76 (+3.29) | -11.10 (-2.18) | 0.23 | -56.95 (-8.79) | +16.23 (+3.21) | +6.4 | -10.4
+post hoc: each entry time on its own position set (only its own bars required): entry | positions | gross (t) | share of (a) on that set
+(b) Yahoo's first-bar open | 5528 | +68.00 (+9.12) | 0.92
+(c) 9:35 | 5361 | +28.12 (+4.01) | 0.38
+(d) 9:45 | 5351 | +14.93 (+2.58) | 0.20
+(e) 10:00 | 5352 | +14.72 (+2.93) | 0.20
+
+===== 1m window: 20 days, 2026-09-22..2026-10-19 =====
+UTC offsets of the bars on window days: {'-04:00': np.int64(50919)}; symbol-days with bars outside 09:30-16:00: 0, with a 16:00 bar: 0
+store days with SPY bars that are not full sessions (dropped): []
+
+--- 1m, all book ---
+coverage: positions 9576; with bars for stock and twin 9576 (100.0%); in the common set 3942 (41.2%); with bars but dropped for an ex-date 395, for a close disagreement 7, for an intraday scale break (D13) 9, for a missing entry bar 5223
+check: (a) on all positions vs daily_new.tsv on the 20 window days: max |gross diff| 4.9e-07, max |headline diff| 4.8e-07 (the tsv has 6 decimals)
+(a) on all positions (the book as tested): gross +74.55 (+11.04), headline +47.84 (+7.16); on positions with bars: gross +74.55 (+11.04)
+
+1m all: entry times on the common set: 20 days, 3942 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +67.22 (+5.74) | +40.58 (+3.48) | 1.00 |  | +67.07 (+5.82) | +26.3 | -40.9
+(b) Yahoo's first-bar open | +56.28 (+4.96) | +29.64 (+2.62) | 0.84 | -10.94 (-3.20) | +56.13 (+5.02) | +21.2 | -35.1
+9:31 | +17.68 (+1.93) | -8.96 (-0.98) | 0.26 | -49.54 (-10.71) | +17.53 (+1.94) | +2.8 | -14.9
+(c) 9:35 | +20.77 (+2.47) | -5.87 (-0.70) | 0.31 | -46.45 (-6.38) | +20.62 (+2.47) | +3.3 | -17.5
+(d) 9:45 | +11.97 (+1.46) | -14.67 (-1.79) | 0.18 | -55.25 (-6.01) | +11.82 (+1.45) | +0.7 | -11.2
+(e) 10:00 | +13.82 (+2.03) | -12.82 (-1.87) | 0.21 | -53.40 (-4.93) | +13.67 (+2.00) | +5.9 | -7.9
+post hoc: each entry time on its own position set (only its own bars required): entry | positions | gross (t) | share of (a) on that set
+(b) Yahoo's first-bar open | 9165 | +65.52 (+8.92) | 0.84
+9:31 | 5759 | +17.60 (+2.22) | 0.24
+(c) 9:35 | 6440 | +21.49 (+3.22) | 0.30
+(d) 9:45 | 6642 | +12.94 (+1.99) | 0.19
+(e) 10:00 | 6861 | +15.36 (+2.60) | 0.21
+stocks without bars on some position day: 0 (e.g. []); twins: 0 []
+
+--- 1m, 500 book ---
+coverage: positions 2000; with bars for stock and twin 2000 (100.0%); in the common set 1190 (59.5%); with bars but dropped for an ex-date 73, for a close disagreement 0, for an intraday scale break (D13) 3, for a missing entry bar 734
+check: (a) on all positions vs daily_new.tsv on the 20 window days: max |gross diff| 4.9e-07, max |headline diff| 4.7e-07 (the tsv has 6 decimals)
+(a) on all positions (the book as tested): gross +71.57 (+6.73), headline +43.42 (+4.10); on positions with bars: gross +71.57 (+6.73)
+
+1m 500: entry times on the common set: 20 days, 1190 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +66.53 (+4.78) | +38.51 (+2.77) | 1.00 |  | +65.65 (+4.74) | +40.7 | -25.8
+(b) Yahoo's first-bar open | +58.71 (+4.36) | +30.69 (+2.29) | 0.88 | -7.82 (-1.83) | +57.82 (+4.31) | +38.2 | -20.5
+9:31 | +29.17 (+2.52) | +1.15 (+0.10) | 0.44 | -37.36 (-6.71) | +28.29 (+2.46) | +18.8 | -10.3
+(c) 9:35 | +39.17 (+3.33) | +11.15 (+0.95) | 0.59 | -27.36 (-3.11) | +38.28 (+3.26) | +21.9 | -17.2
+(d) 9:45 | +29.02 (+3.01) | +1.00 (+0.10) | 0.44 | -37.51 (-3.45) | +28.13 (+2.92) | +15.1 | -13.9
+(e) 10:00 | +31.96 (+3.36) | +3.95 (+0.42) | 0.48 | -34.57 (-2.72) | +31.07 (+3.24) | +18.8 | -13.1
+post hoc: each entry time on its own position set (only its own bars required): entry | positions | gross (t) | share of (a) on that set
+(b) Yahoo's first-bar open | 1924 | +65.30 (+6.36) | 0.90
+9:31 | 1439 | +26.04 (+2.38) | 0.39
+(c) 9:35 | 1606 | +40.46 (+3.69) | 0.57
+(d) 9:45 | 1611 | +31.08 (+3.97) | 0.45
+(e) 10:00 | 1638 | +30.41 (+3.47) | 0.44
+
+===== variant: the signal recomputed from Yahoo's first-bar open (5-minute bars) =====
+ranked rows on the 5-minute window 137869; with a usable first-bar open for stock and twin 134226 (97.4%)
+variant positions 26846; also in the main book on the same side 23705 (88.3%)
+
+--- variant on the 5m window: positions 26846, with bars 26846, common set 23204 (86.4%) ---
+
+5m variant: entry times (share and minus (a) against the MAIN book's (a), same days): 58 days, 23204 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +59.49 (+10.25) | +33.08 (+5.69) | 0.80 | -14.47 (-11.13) | +59.48 (+10.24) | +21.3 | -38.2
+(b) Yahoo's first-bar open | +72.56 (+12.69) | +46.16 (+8.05) | 0.98 | -1.40 (-1.00) | +72.55 (+12.67) | +28.8 | -43.7
+(c) 9:35 | +15.29 (+3.00) | -11.11 (-2.17) | 0.21 | -58.67 (-18.90) | +15.28 (+2.97) | -0.1 | -15.4
+(d) 9:45 | +8.65 (+2.29) | -17.75 (-4.69) | 0.12 | -65.31 (-17.31) | +8.63 (+2.27) | -0.4 | -9.1
+(e) 10:00 | +8.98 (+2.56) | -17.42 (-4.94) | 0.12 | -64.98 (-15.36) | +8.96 (+2.53) | -0.7 | -9.7
+
+--- variant on the 1m window: positions 9402, with bars 9402, common set 3987 (42.4%) ---
+
+1m variant: entry times (share and minus (a) against the MAIN book's (a), same days): 20 days, 3987 positions in the common set
+entry | gross bps/day (t) | net (t) | share of (a) kept | minus (a), gross (t) | exit at Yahoo last bar: gross (t) | long leg | short leg
+(a) store open | +49.64 (+4.12) | +22.99 (+1.92) | 0.74 | -17.58 (-5.40) | +49.34 (+4.16) | +14.0 | -35.6
+(b) Yahoo's first-bar open | +59.78 (+5.23) | +33.14 (+2.92) | 0.89 | -7.44 (-2.01) | +59.49 (+5.27) | +19.9 | -39.9
+9:31 | +12.72 (+1.29) | -13.92 (-1.42) | 0.19 | -54.50 (-9.74) | +12.43 (+1.28) | -2.7 | -15.4
+(c) 9:35 | +15.65 (+1.87) | -10.99 (-1.32) | 0.23 | -51.57 (-6.94) | +15.36 (+1.85) | -1.6 | -17.3
+(d) 9:45 | +7.65 (+1.01) | -18.99 (-2.51) | 0.11 | -59.57 (-6.37) | +7.36 (+0.97) | -4.3 | -12.0
+(e) 10:00 | +10.24 (+1.60) | -16.41 (-2.57) | 0.15 | -56.98 (-5.15) | +9.94 (+1.56) | +2.3 | -7.9
+
+===== open agreement: store open vs Yahoo daily open vs Yahoo first-bar open (5-minute window, all-stocks book position stock-days, each once) =====
+group | stock-days (k = 1) | store vs Yahoo daily: > 1 cent, > 0.5% | store vs first bar: > 1 cent, > 0.5% | Yahoo daily vs first bar: > 1 cent, > 0.5%
+all | 27522 (20550) | 3.4%, 1.4% | 20.0%, 6.0% | 17.2%, 4.8%
+exchange nasdaq | 10368 (8546) | 2.4%, 1.1% | 35.0%, 11.0% | 33.6%, 10.3%
+exchange nyse | 16913 (11788) | 4.2%, 1.5% | 9.5%, 3.0% | 5.6%, 1.5%
+exchange nysemkt | 241 (216) | 0.5%, 0.0% | 5.1%, 2.9% | 4.6%, 2.9%
+dollar volume 100 most traded | 1301 (956) | 2.1%, 0.3% | 40.1%, 3.2% | 38.4%, 2.9%
+dollar volume 101-500 | 5041 (3635) | 2.8%, 0.4% | 22.2%, 3.5% | 19.8%, 3.0%
+dollar volume rest | 21180 (15959) | 3.7%, 1.6% | 18.3%, 6.8% | 15.4%, 5.4%
+
+VERDICT (5-minute window, all stocks, gross): entry at 9:35 keeps 0.22 of entry (a)'s spread; 9:35 gross +16.20 bps/day, t +3.18 -> Opening-print effect

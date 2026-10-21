@@ -1,0 +1,20 @@
+old 2007-06-28: analog account    -4.1% (judge    -4.1%), random-sector median   -11.4% (5-95%: -30.4..+12.7), p = 0.294
+old 2008-06-30: analog account   -58.1% (judge   -58.1%), random-sector median   -25.3% (5-95%: -48.7..+12.6), p = 0.995
+old 2009-06-29: analog account   +32.0% (judge   +32.0%), random-sector median   +21.1% (5-95%: -0.4..+47.4), p = 0.237
+old 2010-06-28: analog account    +4.4% (judge    +4.4%), random-sector median   +23.6% (5-95%: +5.2..+47.4), p = 0.955
+old 2011-06-28: analog account   -10.0% (judge   -10.0%), random-sector median    -1.8% (5-95%: -20.0..+19.8), p = 0.769
+old 2012-06-28: analog account   +20.4% (judge   +20.4%), random-sector median   +27.1% (5-95%: +7.6..+48.2), p = 0.716
+old 2013-06-28: analog account   +23.8% (judge   +23.8%), random-sector median   +27.3% (5-95%: +12.9..+42.9), p = 0.640
+old 2014-06-30: analog account   -10.3% (judge   -10.3%), random-sector median    +6.0% (5-95%: -12.1..+27.1), p = 0.931
+old 2015-06-29: analog account   -19.7% (judge   -19.7%), random-sector median    -3.3% (5-95%: -24.1..+24.5), p = 0.893
+old 2016-06-28: analog account   +23.5% (judge   +23.5%), random-sector median   +22.1% (5-95%: +0.6..+49.0), p = 0.450
+old 2017-06-28: analog account   +17.0% (judge   +17.0%), random-sector median   +13.0% (5-95%: -8.6..+40.5), p = 0.402
+old 2018-06-28: analog account    +8.7% (judge    +8.7%), random-sector median    +5.9% (5-95%: -13.2..+30.3), p = 0.419
+old 2019-06-28: analog account   -10.2% (judge   -10.2%), random-sector median    -8.3% (5-95%: -47.6..+24.0), p = 0.538
+old 2020-06-29: analog account   +28.3% (judge   +28.3%), random-sector median   +49.6% (5-95%: +17.4..+90.2), p = 0.851
+old 2021-06-28: analog account   -13.7% (judge   -13.7%), random-sector median    +1.4% (5-95%: -27.4..+39.8), p = 0.779
+old 2022-06-28: analog account   +27.6% (judge   +27.6%), random-sector median   +10.9% (5-95%: -16.1..+46.4), p = 0.183
+old 2023-06-28: analog account   -10.7% (judge   -10.7%), random-sector median   +12.8% (5-95%: -10.3..+41.4), p = 0.953
+old 2024-06-28: analog account   +22.2% (judge   +22.2%), random-sector median    +0.2% (5-95%: -28.2..+36.0), p = 0.143
+old walk-forward: analog minus random-sector median -5.55 pts/yr (se 3.50), ahead 7/18; p < 0.1 in 0 of 18 years
+new 2025-06-30: analog account   +65.9% (judge   +65.9%), random-sector median   +23.8% (5-95%: -14.4..+79.1), p = 0.096

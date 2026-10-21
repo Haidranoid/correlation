@@ -1,0 +1,45 @@
+== old: export 2001-12-31..2025-06-27 T=5911
+SPY [(9673, 'nyse', 'etf', 5116)]
+XLB [(11280, 'nyse', 'etf', 5116)]
+XLE [(11282, 'nyse', 'etf', 5116)]
+XLF [(11283, 'nyse', 'etf', 5116)]
+XLI [(11285, 'nyse', 'etf', 5116)]
+XLK [(11286, 'nyse', 'etf', 5116)]
+XLP [(11288, 'nyse', 'etf', 5116)]
+XLU [(11291, 'nyse', 'etf', 5116)]
+XLV [(11292, 'nyse', 'etf', 5116)]
+XLY [(11293, 'nyse', 'etf', 5116)]
+SPY: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.145
+XLB: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.141
+XLE: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.201
+XLF: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.167
+XLI: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.127
+XLK: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.139
+XLP: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.094
+XLU: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.128
+XLV: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.121
+XLY: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.127
+days with any of the 10 missing: 795 ['2001-12-31', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-07', '2002-01-08', '2002-01-09', '2002-01-10', '2002-01-11', '2002-01-14', '2002-01-15', '2002-01-16', '2002-01-17', '2002-01-18', '2002-01-22', '2002-01-23', '2002-01-24', '2002-01-25', '2002-01-28', '2002-01-29', '2002-01-30', '2002-01-31', '2002-02-01', '2002-02-04', '2002-02-05', '2002-02-06', '2002-02-07', '2002-02-08', '2002-02-11', '2002-02-12']
+== new: export 2001-12-31..2026-10-19 T=6240
+SPY [(11074, 'nyse', 'etf', 5445)]
+XLB [(12991, 'nyse', 'etf', 5445)]
+XLE [(12996, 'nyse', 'etf', 5445)]
+XLF [(13000, 'nyse', 'etf', 5445)]
+XLI [(13004, 'nyse', 'etf', 5445)]
+XLK [(13007, 'nyse', 'etf', 5445)]
+XLP [(13012, 'nyse', 'etf', 5445)]
+XLU [(13019, 'nyse', 'etf', 5445)]
+XLV [(13022, 'nyse', 'etf', 5445)]
+XLY [(13025, 'nyse', 'etf', 5445)]
+SPY: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.145
+XLB: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.141
+XLE: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.201
+XLF: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.167
+XLI: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.127
+XLK: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.139
+XLP: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.094
+XLU: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.128
+XLV: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.121
+XLY: first 2005-02-25, missing after first: 1 ['2011-02-17']; |move|>25%: []; max |move| 0.127
+days with any of the 10 missing: 795 ['2001-12-31', '2002-01-02', '2002-01-03', '2002-01-04', '2002-01-07', '2002-01-08', '2002-01-09', '2002-01-10', '2002-01-11', '2002-01-14', '2002-01-15', '2002-01-16', '2002-01-17', '2002-01-18', '2002-01-22', '2002-01-23', '2002-01-24', '2002-01-25', '2002-01-28', '2002-01-29', '2002-01-30', '2002-01-31', '2002-02-01', '2002-02-04', '2002-02-05', '2002-02-06', '2002-02-07', '2002-02-08', '2002-02-11', '2002-02-12']
+old days == new days[:len(old)]: True

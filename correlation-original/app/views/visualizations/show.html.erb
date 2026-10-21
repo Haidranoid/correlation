@@ -1,0 +1,343 @@
+<% content_for :title, "#{@title} - Visualizations" %>
+
+<div class="visualization-page">
+  <div class="viz-nav">
+    <%= link_to visualizations_path, class: "back-link" do %>
+      ← Back to Visualizations
+    <% end %>
+    <h1><%= @title %></h1>
+  </div>
+
+  <div class="viz-container">
+    <% if @type == 'interactive' %>
+      <!-- Interactive Correlation Visualizer -->
+      <div class="viz-frame">
+        <%= @file_content.html_safe %>
+      </div>
+      
+      <!-- Include the JavaScript -->
+      <% if @js_content %>
+        <script>
+          <%= @js_content.html_safe %>
+          
+          // Function to initialize all visualizations
+          function initializeAllVisualizations() {
+            // Small delay to ensure DOM elements are ready
+            setTimeout(function() {
+              if (typeof initializeCorrelationVisualization === 'function') {
+                try { initializeCorrelationVisualization(); } catch(e) { console.log('Correlation viz init:', e); }
+              }
+              if (typeof initializeTimeWindowVisualization === 'function') {
+                try { initializeTimeWindowVisualization(); } catch(e) { console.log('Time window viz init:', e); }
+              }
+              if (typeof initializeStatisticalSignificance === 'function') {
+                try { initializeStatisticalSignificance(); } catch(e) { console.log('Statistical viz init:', e); }
+              }
+              if (typeof initializeDataWorkflow === 'function') {
+                try { initializeDataWorkflow(); } catch(e) { console.log('Workflow viz init:', e); }
+              }
+              if (typeof initializeParallelProcessing === 'function') {
+                try { initializeParallelProcessing(); } catch(e) { console.log('Parallel viz init:', e); }
+              }
+            }, 200);
+          }
+          
+          // Initialize on various events to catch all scenarios
+          document.addEventListener('DOMContentLoaded', initializeAllVisualizations);
+          document.addEventListener('turbo:load', initializeAllVisualizations);
+          
+          // Initialize immediately if DOM is already ready
+          if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initializeAllVisualizations();
+          }
+        </script>
+      <% end %>
+      
+    <% elsif @type == 'static' %>
+      <!-- Static Graphics Generator -->
+      <div class="viz-frame">
+        <%= @file_content.html_safe %>
+      </div>
+      
+      <script>
+        // Function to initialize all static graphics
+        function initializeStaticGraphics() {
+          setTimeout(function() {
+            // Generate all graphics with default content when page loads
+            if (typeof drawCorrelationFormula === 'function') {
+              try { drawCorrelationFormula(); } catch(e) { console.log('Formula draw error:', e); }
+            }
+            if (typeof drawSignificanceChart === 'function') {
+              try { drawSignificanceChart(); } catch(e) { console.log('Significance chart error:', e); }
+            }
+            if (typeof drawTimeWindowDiagram === 'function') {
+              try { drawTimeWindowDiagram(); } catch(e) { console.log('Time window error:', e); }
+            }
+            if (typeof drawDataFlowDiagram === 'function') {
+              try { drawDataFlowDiagram(); } catch(e) { console.log('Data flow error:', e); }
+            }
+            if (typeof drawParallelArchitecture === 'function') {
+              try { drawParallelArchitecture(); } catch(e) { console.log('Parallel arch error:', e); }
+            }
+          }, 300);
+        }
+        
+        // Initialize on various events
+        document.addEventListener('DOMContentLoaded', initializeStaticGraphics);
+        document.addEventListener('turbo:load', initializeStaticGraphics);
+        
+        // Initialize immediately if DOM is already ready
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          initializeStaticGraphics();
+        }
+      </script>
+      
+    <% end %>
+  </div>
+</div>
+
+<style>
+.visualization-page {
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.viz-nav {
+  background: var(--bg-secondary, #2a2d3a);
+  border-bottom: 1px solid var(--border-color, #3a3d4a);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.back-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #764ba2;
+}
+
+.viz-nav h1 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.viz-container {
+  flex: 1;
+  overflow: hidden;
+  background: var(--bg-primary, #1a1b23);
+}
+
+.viz-frame {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Visualization content styling */
+.viz-frame {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 2rem;
+  color: var(--text-primary, #ffffff);
+  line-height: 1.6;
+}
+
+.viz-frame .visualization {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 1rem 0;
+  border: 1px solid var(--border-color, #3a3d4a);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.viz-frame .visualization h3 {
+  margin-top: 0;
+  color: var(--text-primary, #ffffff);
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.viz-frame canvas {
+  border: 1px solid var(--border-color, #3a3d4a);
+  border-radius: 0.5rem;
+  display: block;
+  margin: 1rem auto;
+  background: var(--bg-primary, #1a1b23);
+  max-width: 100%;
+  height: auto;
+}
+
+.viz-frame .controls {
+  text-align: center;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.viz-frame .controls input, 
+.viz-frame .controls select {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-primary, #1a1b23);
+  color: var(--text-primary, #ffffff);
+  border: 1px solid var(--border-color, #3a3d4a);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.viz-frame .controls input:focus,
+.viz-frame .controls select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.viz-frame .controls button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.viz-frame .controls button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.viz-frame .controls label {
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .viz-frame {
+    padding: 1rem;
+  }
+  
+  .viz-frame .visualization {
+    padding: 1.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .viz-frame .controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .viz-frame .controls input,
+  .viz-frame .controls select,
+  .viz-frame .controls button {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .viz-nav {
+    padding: 0.75rem 1rem;
+  }
+  
+  .viz-nav h1 {
+    font-size: 1.125rem;
+  }
+  
+  .back-link {
+    font-size: 0.875rem;
+  }
+}
+
+/* Full-screen mode for visualizations */
+.viz-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: var(--bg-primary, #1a1b23);
+}
+
+.viz-container.fullscreen .viz-nav {
+  display: none;
+}
+</style>
+
+<script>
+// Handle full-screen functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Add keyboard shortcut for full-screen (F11 or Esc)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F11') {
+      e.preventDefault();
+      toggleFullscreen();
+    } else if (e.key === 'Escape') {
+      exitFullscreen();
+    }
+  });
+  
+  function toggleFullscreen() {
+    const container = document.querySelector('.viz-container');
+    container.classList.toggle('fullscreen');
+  }
+  
+  function exitFullscreen() {
+    const container = document.querySelector('.viz-container');
+    container.classList.remove('fullscreen');
+  }
+  
+  // Add fullscreen button to visualization if needed
+  const nav = document.querySelector('.viz-nav');
+  if (nav) {
+    const fullscreenBtn = document.createElement('button');
+    fullscreenBtn.innerHTML = '⛶';
+    fullscreenBtn.title = 'Toggle Fullscreen (F11)';
+    fullscreenBtn.className = 'fullscreen-btn';
+    fullscreenBtn.onclick = toggleFullscreen;
+    
+    // Add some styling
+    fullscreenBtn.style.cssText = `
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.25rem;
+      color: var(--text-primary, #ffffff);
+      padding: 0.5rem;
+      cursor: pointer;
+      margin-left: auto;
+      transition: all 0.2s ease;
+    `;
+    
+    fullscreenBtn.addEventListener('mouseenter', function() {
+      this.style.background = 'rgba(255, 255, 255, 0.2)';
+    });
+    
+    fullscreenBtn.addEventListener('mouseleave', function() {
+      this.style.background = 'rgba(255, 255, 255, 0.1)';
+    });
+    
+    nav.appendChild(fullscreenBtn);
+  }
+});
+</script>

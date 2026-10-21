@@ -1,0 +1,19 @@
+1. 2009-01-02 on: max |float32 pairwise - direct float64| over 300 pairs 1.84e-07; count mismatches 0
+1. 2009-01-02 intra: max |float32 pairwise - direct float64| over 298 pairs 2.15e-07; count mismatches 0
+1. 2009-01-02 whole: max |float32 pairwise - direct float64| over 300 pairs 2.48e-07; count mismatches 0
+1. 2017-04-06 on: max |float32 pairwise - direct float64| over 300 pairs 2.85e-07; count mismatches 0
+1. 2017-04-06 intra: max |float32 pairwise - direct float64| over 300 pairs 3.41e-07; count mismatches 0
+1. 2017-04-06 whole: max |float32 pairwise - direct float64| over 300 pairs 3.69e-07; count mismatches 0
+1. 2025-06-13 on: max |float32 pairwise - direct float64| over 300 pairs 2.58e-07; count mismatches 0
+1. 2025-06-13 intra: max |float32 pairwise - direct float64| over 300 pairs 2.49e-07; count mismatches 0
+1. 2025-06-13 whole: max |float32 pairwise - direct float64| over 299 pairs 3.89e-07; count mismatches 0
+2. 2014-07-08: brute-force top-20 peer sets differing from the saved ones: 0 of 60
+3. 2012-06-29 on: peers identical True; residual max diff 3.61e-09; same NaN pattern True
+3. 2012-06-29 intra: peers identical True; residual max diff 3.70e-09; same NaN pattern True
+3. 2012-06-29 whole: peers identical True; residual max diff 3.63e-09; same NaN pattern True
+3. 2018-03-15 on: peers identical True; residual max diff 3.69e-09; same NaN pattern True
+3. 2018-03-15 intra: peers identical True; residual max diff 6.78e-09; same NaN pattern True
+3. 2018-03-15 whole: peers identical True; residual max diff 3.65e-09; same NaN pattern True
+3. 2024-11-20 on: peers identical True; residual max diff 7.43e-09; same NaN pattern True
+3. 2024-11-20 intra: peers identical True; residual max diff 7.45e-09; same NaN pattern True
+3. 2024-11-20 whole: peers identical True; residual max diff 1.25e-08; same NaN pattern True

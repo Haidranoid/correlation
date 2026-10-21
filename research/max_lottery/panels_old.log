@@ -1,0 +1,18 @@
+[    0.0s] build old
+[    0.0s] N 8503 T 5911
+[   21.6s] universe built; sizes median 1284
+[   23.1s] daily MAX saved; finite 18537094
+[   23.1s] French FF3 days on the export 5911 last 2025-06-27 ; Yahoo SPY days 5910
+[   24.3s] formations 270 complete 245
+[   24.3s] IVOL check: max abs diff 1.3877787807814457e-17
+[   24.3s] 2004-12-31 universe 300 MAX 300 IVOL 300 beta 300
+[   24.3s] 2007-01-03 universe 299 MAX 299 IVOL 299 beta 299
+[   24.3s] 2009-01-02 universe 980 MAX 980 IVOL 980 beta 980
+[   24.3s] 2011-01-03 universe 958 MAX 958 IVOL 958 beta 958
+[   24.3s] 2013-01-04 universe 1029 MAX 1029 IVOL 1029 beta 1029
+[   24.3s] 2015-01-06 universe 1272 MAX 1272 IVOL 1272 beta 1272
+[   24.3s] 2017-01-05 universe 1369 MAX 1369 IVOL 1369 beta 1369
+[   24.3s] 2019-01-08 universe 1634 MAX 1634 IVOL 1634 beta 1634
+[   24.3s] 2021-01-07 universe 1753 MAX 1753 IVOL 1753 beta 1753
+[   24.3s] 2023-01-09 universe 2014 MAX 2014 IVOL 2014 beta 2014
+[   24.3s] 2025-01-13 universe 2248 MAX 2248 IVOL 2248 beta 2248

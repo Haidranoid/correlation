@@ -1,0 +1,36 @@
+[    0.0s] new N 9508 T 6240
+[    0.0s] SPY closes 5445 first 2005-02-25
+[    1.3s] rows 0..1000
+[    2.5s] rows 1000..2000
+[    3.7s] rows 2000..3000
+[    5.0s] rows 3000..4000
+[    6.2s] rows 4000..5000
+[    7.4s] rows 5000..6000
+[    8.6s] rows 6000..7000
+[    9.9s] rows 7000..8000
+[   11.1s] rows 8000..9000
+[   11.6s] rows 9000..9508
+[   11.7s] first day with any beta 2008-02-22
+[   39.5s]   calendar 2004-12-31: universe 286, with beta 0
+[   39.5s]   calendar 2005-12-30: universe 285, with beta 0
+[   39.5s]   calendar 2007-01-03: universe 285, with beta 0
+[   39.5s]   calendar 2008-01-03: universe 929, with beta 0
+[   39.5s]   calendar 2009-01-02: universe 929, with beta 922
+[   39.5s]   calendar 2010-01-04: universe 831, with beta 827
+[   39.5s]   calendar 2011-01-03: universe 910, with beta 905
+[   39.5s]   calendar 2012-01-03: universe 982, with beta 982
+[   39.5s]   calendar 2013-01-04: universe 973, with beta 967
+[   39.5s]   calendar 2014-01-06: universe 1073, with beta 1065
+[   39.5s]   calendar 2015-01-06: universe 1199, with beta 1187
+[   39.5s]   calendar 2016-01-06: universe 1249, with beta 1241
+[   39.5s]   calendar 2017-01-05: universe 1293, with beta 1277
+[   39.5s]   calendar 2018-01-05: universe 1415, with beta 1404
+[   39.5s]   calendar 2019-01-08: universe 1533, with beta 1531
+[   39.5s]   calendar 2020-01-08: universe 1567, with beta 1551
+[   39.5s]   calendar 2021-01-07: universe 1644, with beta 1626
+[   39.5s]   calendar 2022-01-06: universe 1876, with beta 1858
+[   39.5s]   calendar 2023-01-09: universe 1883, with beta 1862
+[   39.5s]   calendar 2024-01-10: universe 1946, with beta 1913
+[   39.5s]   calendar 2025-01-13: universe 2109, with beta 2102
+[   39.5s]   calendar 2026-01-14: universe 2276, with beta 2266
+[   39.9s] saved /home/bhoult/.local/share/correlation2/experiments/betting_against_beta/panels_new.npz

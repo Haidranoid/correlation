@@ -1,0 +1,244 @@
+<% content_for :title, "User Management - Admin" %>
+
+<div class="admin-content">
+  <div class="admin-header">
+    <h1>👥 User Management</h1>
+    <p>Manage user accounts and permissions</p>
+    <%= link_to new_admin_user_path, class: "btn btn-primary" do %>
+      ➕ Add New User
+    <% end %>
+  </div>
+
+  <div class="users-table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Created</th>
+          <th>Last Sign In</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td>
+              <div class="user-info">
+                <span class="user-email"><%= user.email %></span>
+                <% if user == current_user %>
+                  <span class="current-user-badge">You</span>
+                <% end %>
+              </div>
+            </td>
+            <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+            <td>
+              <%= user.last_sign_in_at ? user.last_sign_in_at.strftime("%b %d, %Y at %I:%M %p") : "Never" %>
+            </td>
+            <td>
+              <% if user.admin? %>
+                <span class="role-badge admin">Admin</span>
+              <% else %>
+                <span class="role-badge user">User</span>
+              <% end %>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <%= link_to edit_admin_user_path(user), class: "btn btn-secondary btn-sm" do %>
+                  ✏️ Edit
+                <% end %>
+                <% unless user == current_user %>
+                  <%= link_to admin_user_path(user), method: :delete, 
+                      class: "btn btn-danger btn-sm",
+                      data: { 
+                        turbo_method: :delete,
+                        turbo_confirm: "Are you sure you want to delete #{user.email}? This action cannot be undone." 
+                      } do %>
+                    🗑️ Delete
+                  <% end %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+.admin-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color, #3a3d4a);
+}
+
+.admin-header h1 {
+  color: var(--text-primary, #ffffff);
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-header p {
+  color: var(--text-secondary, #94a3b8);
+  margin: 0.5rem 0 0 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary, #2a2d3a);
+  color: var(--text-primary, #ffffff);
+  border: 1px solid var(--border-color, #3a3d4a);
+}
+
+.btn-secondary:hover {
+  background: var(--border-color, #3a3d4a);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.users-table-container {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+  overflow: hidden;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th,
+.users-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color, #3a3d4a);
+}
+
+.users-table th {
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--text-primary, #ffffff);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.users-table td {
+  color: var(--text-secondary, #94a3b8);
+}
+
+.users-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-email {
+  color: var(--text-primary, #ffffff);
+  font-weight: 500;
+}
+
+.current-user-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role-badge.admin {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.role-badge.user {
+  background: var(--bg-primary, #1a1b23);
+  color: var(--text-secondary, #94a3b8);
+  border: 1px solid var(--border-color, #3a3d4a);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .users-table-container {
+    overflow-x: auto;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+</style>

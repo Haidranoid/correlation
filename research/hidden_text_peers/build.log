@@ -1,0 +1,19 @@
+[   22.2s] universe ready; median size 1284
+[   23.4s] returns ready
+[   23.5s] FY2005: 6238 mapped text pairs -> 8149 row pairs (6059 unordered); days 2007-01-03..2007-05-31 (103); firm-days so far 1648
+[   23.7s] FY2006: 6661 mapped text pairs -> 8789 row pairs (6387 unordered); days 2007-06-01..2008-05-30 (252); firm-days so far 23283
+[   24.0s] FY2007: 8336 mapped text pairs -> 10832 row pairs (7954 unordered); days 2008-06-02..2009-05-29 (251); firm-days so far 67169
+[   24.3s] FY2008: 10901 mapped text pairs -> 13780 row pairs (10387 unordered); days 2009-06-01..2010-05-28 (252); firm-days so far 113316
+[   24.7s] FY2009: 12797 mapped text pairs -> 16443 row pairs (12671 unordered); days 2010-06-01..2011-05-31 (253); firm-days so far 178337
+[   25.1s] FY2010: 13737 mapped text pairs -> 16981 row pairs (13202 unordered); days 2011-06-01..2012-05-31 (253); firm-days so far 245483
+[   25.5s] FY2011: 15266 mapped text pairs -> 19393 row pairs (15122 unordered); days 2012-06-01..2013-05-31 (250); firm-days so far 315289
+[   26.0s] FY2012: 17068 mapped text pairs -> 22061 row pairs (17009 unordered); days 2013-06-03..2014-05-30 (251); firm-days so far 402114
+[   26.5s] FY2013: 18055 mapped text pairs -> 22857 row pairs (17567 unordered); days 2014-06-02..2015-05-29 (251); firm-days so far 493333
+[   27.0s] FY2014: 18475 mapped text pairs -> 23135 row pairs (17640 unordered); days 2015-06-01..2016-05-31 (253); firm-days so far 582261
+[   27.6s] FY2015: 20036 mapped text pairs -> 24646 row pairs (18633 unordered); days 2016-06-01..2017-05-31 (252); firm-days so far 667313
+[   28.2s] FY2016: 21568 mapped text pairs -> 26522 row pairs (19924 unordered); days 2017-06-01..2018-05-31 (252); firm-days so far 764419
+[   28.8s] FY2017: 22998 mapped text pairs -> 28916 row pairs (21783 unordered); days 2018-06-01..2019-05-31 (251); firm-days so far 867834
+[   29.4s] FY2018: 23041 mapped text pairs -> 28390 row pairs (21216 unordered); days 2019-06-03..2020-05-29 (251); firm-days so far 966819
+[   30.0s] FY2019: 24125 mapped text pairs -> 28811 row pairs (21567 unordered); days 2020-06-01..2021-05-28 (252); firm-days so far 1056858
+[   30.5s] FY2020: 22199 mapped text pairs -> 25844 row pairs (19598 unordered); days 2021-06-01..2022-05-31 (253); firm-days so far 1123773
+[   30.8s] panel: 1123773 firm-days, 3880 days; median firms a day 321

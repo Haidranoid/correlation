@@ -1,0 +1,16 @@
+
+== new, all: 2025-06-30..2026-10-19, 329 days ==
+headline book: +82.2 % a year (252 x mean daily); random books median -62.1 (5-95%: -66.6..-57.5); change over random +144.3 points; share of random books at or above the headline: 0.000
+random books: median gross -0.04 bps/day, median netted twin cost 4.58 bps/day (headline book 5.92)
+  2025 (129 days): head    +77.1, random median    -61.2, change  +138.3; compounded: head    +48.1%, random median   -27.0%, change   +75.1
+  2026 (200 days): head    +85.5, random median    -62.5, change  +148.0; compounded: head    +96.4%, random median   -39.2%, change  +135.5
+per-year mean change +143.2 points (se 4.8), ahead in 2 of 2; judge-style compounded per year: +105.3 (se 30.2)
+
+== new, 500: 2025-06-30..2026-10-19, 329 days ==
+headline book: +34.4 % a year (252 x mean daily); random books median -67.3 (5-95%: -75.5..-59.1); change over random +101.7 points; share of random books at or above the headline: 0.000
+random books: median gross -0.03 bps/day, median netted twin cost 6.67 bps/day (headline book 7.47)
+  2025 (129 days): head    +20.7, random median    -66.4, change   +87.2; compounded: head    +11.0%, random median   -28.9%, change   +39.9
+  2026 (200 days): head    +43.1, random median    -67.7, change  +110.9; compounded: head    +40.1%, random median   -41.7%, change   +81.8
+per-year mean change +99.0 points (se 11.8), ahead in 2 of 2; judge-style compounded per year: +60.8 (se 20.9)
+
+done in 18s

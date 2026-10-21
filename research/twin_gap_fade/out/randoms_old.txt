@@ -1,0 +1,48 @@
+
+== old, all: 2008-01-02..2025-06-27, 4398 days ==
+headline book: +88.4 % a year (252 x mean daily); random books median -60.3 (5-95%: -61.9..-58.7); change over random +148.8 points; share of random books at or above the headline: 0.000
+random books: median gross -0.00 bps/day, median netted twin cost 3.93 bps/day (headline book 5.61)
+  2008 (253 days): head   +400.0, random median    -62.2, change  +462.3; compounded: head  +5103.5%, random median   -46.8%, change +5150.3
+  2009 (252 days): head   +256.6, random median    -59.6, change  +316.2; compounded: head  +1172.3%, random median   -45.0%, change +1217.3
+  2010 (252 days): head    +78.6, random median    -58.9, change  +137.5; compounded: head   +118.8%, random median   -44.6%, change  +163.4
+  2011 (250 days): head   +100.8, random median    -58.5, change  +159.3; compounded: head   +170.5%, random median   -44.1%, change  +214.6
+  2012 (250 days): head    +66.3, random median    -58.6, change  +124.9; compounded: head    +92.5%, random median   -44.1%, change  +136.7
+  2013 (252 days): head    +57.9, random median    -59.1, change  +117.0; compounded: head    +78.1%, random median   -44.7%, change  +122.8
+  2014 (252 days): head    +67.6, random median    -59.3, change  +126.9; compounded: head    +96.2%, random median   -44.8%, change  +140.9
+  2015 (252 days): head    +80.2, random median    -60.0, change  +140.3; compounded: head   +121.6%, random median   -45.2%, change  +166.8
+  2016 (252 days): head    +68.0, random median    -60.3, change  +128.3; compounded: head    +96.9%, random median   -45.3%, change  +142.3
+  2017 (251 days): head    +23.3, random median    -61.2, change   +84.6; compounded: head    +26.0%, random median   -45.7%, change   +71.7
+  2018 (251 days): head    +26.2, random median    -60.0, change   +86.2; compounded: head    +29.6%, random median   -45.0%, change   +74.6
+  2019 (252 days): head    +20.1, random median    -60.0, change   +80.1; compounded: head    +22.1%, random median   -45.2%, change   +67.3
+  2020 (253 days): head   +115.0, random median    -62.6, change  +177.6; compounded: head   +211.2%, random median   -46.8%, change  +258.0
+  2021 (252 days): head    +57.1, random median    -62.5, change  +119.6; compounded: head    +76.5%, random median   -46.5%, change  +123.0
+  2022 (251 days): head    +50.2, random median    -60.7, change  +110.9; compounded: head    +64.4%, random median   -45.4%, change  +109.8
+  2023 (250 days): head    +17.2, random median    -60.1, change   +77.3; compounded: head    +18.2%, random median   -45.0%, change   +63.2
+  2024 (252 days): head    +16.0, random median    -60.4, change   +76.4; compounded: head    +17.0%, random median   -45.4%, change   +62.4
+  2025 (121 days): head    +87.7, random median    -60.8, change  +148.5; compounded: head    +51.8%, random median   -25.4%, change   +77.2
+per-year mean change +148.5 points (se 22.5), ahead in 18 of 18; judge-style compounded per year: +464.6 (se 282.5)
+
+== old, 500: 2008-01-02..2025-06-27, 4398 days ==
+headline book: +72.6 % a year (252 x mean daily); random books median -63.5 (5-95%: -65.5..-61.6); change over random +136.1 points; share of random books at or above the headline: 0.000
+random books: median gross +0.03 bps/day, median netted twin cost 5.22 bps/day (headline book 6.39)
+  2008 (253 days): head   +402.2, random median    -62.2, change  +464.4; compounded: head  +5214.3%, random median   -46.8%, change +5261.1
+  2009 (252 days): head   +232.8, random median    -62.4, change  +295.2; compounded: head   +904.4%, random median   -46.6%, change  +951.0
+  2010 (252 days): head    +81.0, random median    -60.9, change  +141.9; compounded: head   +123.9%, random median   -45.7%, change  +169.6
+  2011 (250 days): head    +68.7, random median    -61.5, change  +130.2; compounded: head    +97.0%, random median   -45.7%, change  +142.8
+  2012 (250 days): head    +57.3, random median    -60.9, change  +118.1; compounded: head    +76.1%, random median   -45.4%, change  +121.5
+  2013 (252 days): head    +49.3, random median    -61.7, change  +111.0; compounded: head    +63.5%, random median   -46.1%, change  +109.6
+  2014 (252 days): head    +54.2, random median    -62.3, change  +116.5; compounded: head    +71.5%, random median   -46.5%, change  +118.0
+  2015 (252 days): head    +70.3, random median    -62.6, change  +132.9; compounded: head   +100.6%, random median   -46.6%, change  +147.1
+  2016 (252 days): head    +45.2, random median    -63.2, change  +108.4; compounded: head    +56.8%, random median   -46.9%, change  +103.7
+  2017 (251 days): head     +3.1, random median    -64.5, change   +67.6; compounded: head     +3.0%, random median   -47.5%, change   +50.5
+  2018 (251 days): head    +11.7, random median    -63.1, change   +74.9; compounded: head    +12.1%, random median   -46.8%, change   +58.9
+  2019 (252 days): head     +7.2, random median    -63.3, change   +70.5; compounded: head     +7.3%, random median   -47.0%, change   +54.2
+  2020 (253 days): head    +78.6, random median    -66.5, change  +145.1; compounded: head   +116.7%, random median   -48.8%, change  +165.6
+  2021 (252 days): head    +24.6, random median    -66.8, change   +91.4; compounded: head    +27.4%, random median   -48.8%, change   +76.2
+  2022 (251 days): head    +42.1, random median    -65.6, change  +107.6; compounded: head    +51.4%, random median   -48.1%, change   +99.5
+  2023 (250 days): head    +12.4, random median    -64.9, change   +77.3; compounded: head    +12.0%, random median   -47.6%, change   +59.6
+  2024 (252 days): head     +1.8, random median    -65.9, change   +67.7; compounded: head     +1.4%, random median   -48.4%, change   +49.8
+  2025 (121 days): head    +50.2, random median    -65.7, change  +115.9; compounded: head    +26.6%, random median   -27.1%, change   +53.8
+per-year mean change +135.4 points (se 22.8), ahead in 18 of 18; judge-style compounded per year: +432.9 (se 288.1)
+
+done in 128s

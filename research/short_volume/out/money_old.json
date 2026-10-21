@@ -1,0 +1,934 @@
+{
+ "d0|uniform": {
+  "change": {
+   "change": 6.021771313488481,
+   "per_year": [
+    8.17,
+    17.09,
+    6.36,
+    -3.15,
+    12.6,
+    -6.02,
+    9.51,
+    4.31,
+    5.1,
+    6.26
+   ],
+   "ahead": 8,
+   "years": 10,
+   "se": 2.1491012694405964
+  },
+  "at_cost": [
+   6.021771313488481,
+   5.75165555177893,
+   5.026479322037498
+  ],
+  "years": [
+   {
+    "start": "2015-06-28",
+    "end": "2016-06-28",
+    "picks": 16.981974412425128,
+    "random": 8.81532897570052,
+    "p": 0.103,
+    "spy": -2.7841769864391575,
+    "ic_ret_t": 1.0816591055539284,
+    "ls_bps_per_day": 4.2601914618776116,
+    "ls_t": 2.142520743187448,
+    "candidates": 1259,
+    "first_day": "2015-06-29"
+   },
+   {
+    "start": "2016-06-28",
+    "end": "2017-06-28",
+    "picks": 45.02433441437337,
+    "random": 27.933181721941946,
+    "p": 0.012,
+    "spy": 23.337058773606522,
+    "ic_ret_t": 3.013939500072493,
+    "ls_bps_per_day": 5.776922448233179,
+    "ls_t": 3.9091940840096955,
+    "candidates": 1291,
+    "first_day": "2016-06-28"
+   },
+   {
+    "start": "2017-06-28",
+    "end": "2018-06-28",
+    "picks": 20.140142596421295,
+    "random": 13.78332570604368,
+    "p": 0.186,
+    "spy": 13.71350853351052,
+    "ic_ret_t": 2.237951448096162,
+    "ls_bps_per_day": 1.861409751202383,
+    "ls_t": 1.312574519946432,
+    "candidates": 1395,
+    "first_day": "2017-06-28"
+   },
+   {
+    "start": "2018-06-28",
+    "end": "2019-06-28",
+    "picks": -0.2711322928408255,
+    "random": 2.882332851221614,
+    "p": 0.693,
+    "spy": 10.356790335111942,
+    "ic_ret_t": 0.6762188356392324,
+    "ls_bps_per_day": 1.9571099951157236,
+    "ls_t": 1.2071472153056788,
+    "candidates": 1527,
+    "first_day": "2018-06-28"
+   },
+   {
+    "start": "2019-06-28",
+    "end": "2020-06-28",
+    "picks": 8.064737014198787,
+    "random": -4.538788730401699,
+    "p": 0.116,
+    "spy": 4.989000191887705,
+    "ic_ret_t": 0.7482796457003509,
+    "ls_bps_per_day": 4.711807535796928,
+    "ls_t": 1.7858183912435337,
+    "candidates": 1614,
+    "first_day": "2019-06-28"
+   },
+   {
+    "start": "2020-06-28",
+    "end": "2021-06-28",
+    "picks": 65.28627001288719,
+    "random": 71.30296371886473,
+    "p": 0.655,
+    "spy": 44.30243816258652,
+    "ic_ret_t": 0.33241573945742414,
+    "ls_bps_per_day": -0.030151366386612408,
+    "ls_t": -0.01596176950640538,
+    "candidates": 1677,
+    "first_day": "2020-06-29"
+   },
+   {
+    "start": "2021-06-28",
+    "end": "2022-06-28",
+    "picks": -7.15078777362409,
+    "random": -16.658779928667265,
+    "p": 0.119,
+    "spy": -7.612516714326634,
+    "ic_ret_t": 2.0240338022203685,
+    "ls_bps_per_day": 0.28074411187007253,
+    "ls_t": 0.154215132782527,
+    "candidates": 1838,
+    "first_day": "2021-06-28"
+   },
+   {
+    "start": "2022-06-28",
+    "end": "2023-06-28",
+    "picks": 11.810100084667674,
+    "random": 7.503622893513007,
+    "p": 0.316,
+    "spy": 14.078919880511421,
+    "ic_ret_t": 0.7738437740713743,
+    "ls_bps_per_day": -0.683614255716424,
+    "ls_t": -0.2944556880737784,
+    "candidates": 1969,
+    "first_day": "2022-06-28"
+   },
+   {
+    "start": "2023-06-28",
+    "end": "2024-06-28",
+    "picks": 14.132929155499463,
+    "random": 9.034689694150465,
+    "p": 0.276,
+    "spy": 27.01733795304426,
+    "ic_ret_t": 1.5586037301596003,
+    "ls_bps_per_day": 2.8461612324727703,
+    "ls_t": 1.6343202733729139,
+    "candidates": 1968,
+    "first_day": "2023-06-28"
+   },
+   {
+    "start": "2024-06-28",
+    "end": "2025-06-28",
+    "picks": 13.3229993878351,
+    "random": 7.0659769745912815,
+    "p": 0.287,
+    "spy": 13.6102834560889,
+    "ic_ret_t": 1.9110727055449936,
+    "ls_bps_per_day": 3.4801495547927956,
+    "ls_t": 1.8914387215654695,
+    "candidates": 2036,
+    "first_day": "2024-06-28"
+   }
+  ],
+  "picks_mean": 18.734156701184308,
+  "random_mean": 12.712385387695827,
+  "summary_line": "years 10; beat random at p<0.1 (0 bps: 1, 5 bps: 1, 20 bps: 1) of 10; change over random +6.0 pts/yr (se 2.1, ahead 8/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day",
+  "summary": {
+   "beat_random_p_lt_0_1": [
+    {
+     "cost_bps": 0.0,
+     "years": 1
+    },
+    {
+     "cost_bps": 5.0,
+     "years": 1
+    },
+    {
+     "cost_bps": 20.0,
+     "years": 1
+    }
+   ],
+   "ic_ret_t_positive_years": 10,
+   "ic_ret_z": 4.540404047173839,
+   "ic_t_positive_years": 10,
+   "ic_z": 5.087072296437065,
+   "ls_bps_per_day_mean": 2.4460730469258425,
+   "ls_cost_bps_per_day_per_bps": 0.5378943967412263,
+   "ls_positive_years": 8,
+   "ls_turnover_mean": 0.6723679959265328,
+   "ls_z": 4.340798974338836,
+   "years": 10
+  },
+  "skipped": [
+   {
+    "end": "2007-06-28",
+    "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+    "start": "2006-06-28"
+   },
+   {
+    "end": "2008-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2007-06-28"
+   },
+   {
+    "end": "2009-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2008-06-28"
+   },
+   {
+    "end": "2010-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2009-06-28"
+   },
+   {
+    "end": "2011-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2010-06-28"
+   },
+   {
+    "end": "2012-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2011-06-28"
+   },
+   {
+    "end": "2013-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2012-06-28"
+   },
+   {
+    "end": "2014-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2013-06-28"
+   },
+   {
+    "end": "2015-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2014-06-28"
+   }
+  ]
+ },
+ "d0|volatility": {
+  "change": {
+   "change": 6.5481710982310215,
+   "per_year": [
+    9.15,
+    16.37,
+    6.39,
+    -2.87,
+    14.39,
+    -7.53,
+    8.57,
+    7.34,
+    4.97,
+    8.7
+   ],
+   "ahead": 8,
+   "years": 10,
+   "se": 2.269604068325562
+  },
+  "at_cost": [
+   6.5481710982310215,
+   6.303182461682908,
+   5.6239249738852575
+  ],
+  "years": [
+   {
+    "start": "2015-06-28",
+    "end": "2016-06-28",
+    "picks": 16.981974412425128,
+    "random": 7.831964496603527,
+    "p": 0.056,
+    "spy": -2.7841769864391575,
+    "ic_ret_t": 1.0816591055539284,
+    "ls_bps_per_day": 4.2601914618776116,
+    "ls_t": 2.142520743187448,
+    "candidates": 1259,
+    "first_day": "2015-06-29"
+   },
+   {
+    "start": "2016-06-28",
+    "end": "2017-06-28",
+    "picks": 45.02433441437337,
+    "random": 28.65339277836383,
+    "p": 0.02,
+    "spy": 23.337058773606522,
+    "ic_ret_t": 3.013939500072493,
+    "ls_bps_per_day": 5.776922448233179,
+    "ls_t": 3.9091940840096955,
+    "candidates": 1291,
+    "first_day": "2016-06-28"
+   },
+   {
+    "start": "2017-06-28",
+    "end": "2018-06-28",
+    "picks": 20.140142596421295,
+    "random": 13.749924569168325,
+    "p": 0.18,
+    "spy": 13.71350853351052,
+    "ic_ret_t": 2.237951448096162,
+    "ls_bps_per_day": 1.861409751202383,
+    "ls_t": 1.312574519946432,
+    "candidates": 1395,
+    "first_day": "2017-06-28"
+   },
+   {
+    "start": "2018-06-28",
+    "end": "2019-06-28",
+    "picks": -0.2711322928408255,
+    "random": 2.599182049254223,
+    "p": 0.687,
+    "spy": 10.356790335111942,
+    "ic_ret_t": 0.6762188356392324,
+    "ls_bps_per_day": 1.9571099951157236,
+    "ls_t": 1.2071472153056788,
+    "candidates": 1527,
+    "first_day": "2018-06-28"
+   },
+   {
+    "start": "2019-06-28",
+    "end": "2020-06-28",
+    "picks": 8.064737014198787,
+    "random": -6.325987882224926,
+    "p": 0.055,
+    "spy": 4.989000191887705,
+    "ic_ret_t": 0.7482796457003509,
+    "ls_bps_per_day": 4.711807535796928,
+    "ls_t": 1.7858183912435337,
+    "candidates": 1614,
+    "first_day": "2019-06-28"
+   },
+   {
+    "start": "2020-06-28",
+    "end": "2021-06-28",
+    "picks": 65.28627001288719,
+    "random": 72.81858286225673,
+    "p": 0.703,
+    "spy": 44.30243816258652,
+    "ic_ret_t": 0.33241573945742414,
+    "ls_bps_per_day": -0.030151366386612408,
+    "ls_t": -0.01596176950640538,
+    "candidates": 1677,
+    "first_day": "2020-06-29"
+   },
+   {
+    "start": "2021-06-28",
+    "end": "2022-06-28",
+    "picks": -7.15078777362409,
+    "random": -15.724869280075293,
+    "p": 0.129,
+    "spy": -7.612516714326634,
+    "ic_ret_t": 2.0240338022203685,
+    "ls_bps_per_day": 0.28074411187007253,
+    "ls_t": 0.154215132782527,
+    "candidates": 1838,
+    "first_day": "2021-06-28"
+   },
+   {
+    "start": "2022-06-28",
+    "end": "2023-06-28",
+    "picks": 11.810100084667674,
+    "random": 4.47458970570469,
+    "p": 0.206,
+    "spy": 14.078919880511421,
+    "ic_ret_t": 0.7738437740713743,
+    "ls_bps_per_day": -0.683614255716424,
+    "ls_t": -0.2944556880737784,
+    "candidates": 1969,
+    "first_day": "2022-06-28"
+   },
+   {
+    "start": "2023-06-28",
+    "end": "2024-06-28",
+    "picks": 14.132929155499463,
+    "random": 9.161169026546423,
+    "p": 0.254,
+    "spy": 27.01733795304426,
+    "ic_ret_t": 1.5586037301596003,
+    "ls_bps_per_day": 2.8461612324727703,
+    "ls_t": 1.6343202733729139,
+    "candidates": 1968,
+    "first_day": "2023-06-28"
+   },
+   {
+    "start": "2024-06-28",
+    "end": "2025-06-28",
+    "picks": 13.3229993878351,
+    "random": 4.621907703935335,
+    "p": 0.197,
+    "spy": 13.6102834560889,
+    "ic_ret_t": 1.9110727055449936,
+    "ls_bps_per_day": 3.4801495547927956,
+    "ls_t": 1.8914387215654695,
+    "candidates": 2036,
+    "first_day": "2024-06-28"
+   }
+  ],
+  "picks_mean": 18.734156701184308,
+  "random_mean": 12.185985602953286,
+  "summary_line": "years 10; beat random at p<0.1 (0 bps: 3, 5 bps: 3, 20 bps: 3) of 10; change over random +6.5 pts/yr (se 2.3, ahead 8/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day",
+  "summary": {
+   "beat_random_p_lt_0_1": [
+    {
+     "cost_bps": 0.0,
+     "years": 3
+    },
+    {
+     "cost_bps": 5.0,
+     "years": 3
+    },
+    {
+     "cost_bps": 20.0,
+     "years": 3
+    }
+   ],
+   "ic_ret_t_positive_years": 10,
+   "ic_ret_z": 4.540404047173839,
+   "ic_t_positive_years": 10,
+   "ic_z": 5.087072296437065,
+   "ls_bps_per_day_mean": 2.4460730469258425,
+   "ls_cost_bps_per_day_per_bps": 0.5378943967412263,
+   "ls_positive_years": 8,
+   "ls_turnover_mean": 0.6723679959265328,
+   "ls_z": 4.340798974338836,
+   "years": 10
+  },
+  "skipped": [
+   {
+    "end": "2007-06-28",
+    "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+    "start": "2006-06-28"
+   },
+   {
+    "end": "2008-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2007-06-28"
+   },
+   {
+    "end": "2009-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2008-06-28"
+   },
+   {
+    "end": "2010-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2009-06-28"
+   },
+   {
+    "end": "2011-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2010-06-28"
+   },
+   {
+    "end": "2012-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2011-06-28"
+   },
+   {
+    "end": "2013-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2012-06-28"
+   },
+   {
+    "end": "2014-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2013-06-28"
+   },
+   {
+    "end": "2015-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2014-06-28"
+   }
+  ]
+ },
+ "d1|uniform": {
+  "change": {
+   "change": 6.224149310120556,
+   "per_year": [
+    8.18,
+    10.62,
+    6.37,
+    -5.75,
+    9.83,
+    4.88,
+    11.88,
+    4.55,
+    5.49,
+    6.2
+   ],
+   "ahead": 9,
+   "years": 10,
+   "se": 1.5510779942170612
+  },
+  "at_cost": [
+   6.224149310120556,
+   5.953651371846807,
+   5.203272456985719
+  ],
+  "years": [
+   {
+    "start": "2015-06-28",
+    "end": "2016-06-28",
+    "picks": 17.973132574582863,
+    "random": 9.792415567599821,
+    "p": 0.078,
+    "spy": -2.7841769864391575,
+    "ic_ret_t": 1.0816591055539284,
+    "ls_bps_per_day": 4.2601914618776116,
+    "ls_t": 2.142520743187448,
+    "candidates": 1259,
+    "first_day": "2015-06-29"
+   },
+   {
+    "start": "2016-06-28",
+    "end": "2017-06-28",
+    "picks": 35.53900397237491,
+    "random": 24.92003125706843,
+    "p": 0.099,
+    "spy": 23.337058773606522,
+    "ic_ret_t": 3.013939500072493,
+    "ls_bps_per_day": 5.776922448233179,
+    "ls_t": 3.9091940840096955,
+    "candidates": 1291,
+    "first_day": "2016-06-28"
+   },
+   {
+    "start": "2017-06-28",
+    "end": "2018-06-28",
+    "picks": 18.89972593490743,
+    "random": 12.533214407759473,
+    "p": 0.19,
+    "spy": 13.71350853351052,
+    "ic_ret_t": 2.237951448096162,
+    "ls_bps_per_day": 1.861409751202383,
+    "ls_t": 1.312574519946432,
+    "candidates": 1395,
+    "first_day": "2017-06-28"
+   },
+   {
+    "start": "2018-06-28",
+    "end": "2019-06-28",
+    "picks": -3.3271841079387965,
+    "random": 2.419683623366753,
+    "p": 0.81,
+    "spy": 10.356790335111942,
+    "ic_ret_t": 0.6762188356392324,
+    "ls_bps_per_day": 1.9571099951157236,
+    "ls_t": 1.2071472153056788,
+    "candidates": 1527,
+    "first_day": "2018-06-28"
+   },
+   {
+    "start": "2019-06-28",
+    "end": "2020-06-28",
+    "picks": 3.4261158590212837,
+    "random": -6.4011312570893875,
+    "p": 0.177,
+    "spy": 4.989000191887705,
+    "ic_ret_t": 0.7482796457003509,
+    "ls_bps_per_day": 4.711807535796928,
+    "ls_t": 1.7858183912435337,
+    "candidates": 1614,
+    "first_day": "2019-06-28"
+   },
+   {
+    "start": "2020-06-28",
+    "end": "2021-06-28",
+    "picks": 72.43980261324927,
+    "random": 67.56397325853992,
+    "p": 0.361,
+    "spy": 44.30243816258652,
+    "ic_ret_t": 0.33241573945742414,
+    "ls_bps_per_day": -0.030151366386612408,
+    "ls_t": -0.01596176950640538,
+    "candidates": 1677,
+    "first_day": "2020-06-29"
+   },
+   {
+    "start": "2021-06-28",
+    "end": "2022-06-28",
+    "picks": -4.103467626631996,
+    "random": -15.97881273336672,
+    "p": 0.065,
+    "spy": -7.612516714326634,
+    "ic_ret_t": 2.0240338022203685,
+    "ls_bps_per_day": 0.28074411187007253,
+    "ls_t": 0.154215132782527,
+    "candidates": 1838,
+    "first_day": "2021-06-28"
+   },
+   {
+    "start": "2022-06-28",
+    "end": "2023-06-28",
+    "picks": 13.88242350203579,
+    "random": 9.327427694330769,
+    "p": 0.315,
+    "spy": 14.078919880511421,
+    "ic_ret_t": 0.7738437740713743,
+    "ls_bps_per_day": -0.683614255716424,
+    "ls_t": -0.2944556880737784,
+    "candidates": 1969,
+    "first_day": "2022-06-28"
+   },
+   {
+    "start": "2023-06-28",
+    "end": "2024-06-28",
+    "picks": 14.102982404117315,
+    "random": 8.609957447539628,
+    "p": 0.273,
+    "spy": 27.01733795304426,
+    "ic_ret_t": 1.5586037301596003,
+    "ls_bps_per_day": 2.8461612324727703,
+    "ls_t": 1.6343202733729139,
+    "candidates": 1968,
+    "first_day": "2023-06-28"
+   },
+   {
+    "start": "2024-06-28",
+    "end": "2025-06-28",
+    "picks": 13.364155822611256,
+    "random": 7.168438581375081,
+    "p": 0.284,
+    "spy": 13.6102834560889,
+    "ic_ret_t": 1.9110727055449936,
+    "ls_bps_per_day": 3.4801495547927956,
+    "ls_t": 1.8914387215654695,
+    "candidates": 2036,
+    "first_day": "2024-06-28"
+   }
+  ],
+  "picks_mean": 18.21966909483293,
+  "random_mean": 11.995519784712375,
+  "summary_line": "years 10; beat random at p<0.1 (0 bps: 3, 5 bps: 2, 20 bps: 2) of 10; change over random +6.2 pts/yr (se 1.6, ahead 9/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day",
+  "summary": {
+   "beat_random_p_lt_0_1": [
+    {
+     "cost_bps": 0.0,
+     "years": 3
+    },
+    {
+     "cost_bps": 5.0,
+     "years": 2
+    },
+    {
+     "cost_bps": 20.0,
+     "years": 2
+    }
+   ],
+   "ic_ret_t_positive_years": 10,
+   "ic_ret_z": 4.540404047173839,
+   "ic_t_positive_years": 10,
+   "ic_z": 5.087072296437065,
+   "ls_bps_per_day_mean": 2.4460730469258425,
+   "ls_cost_bps_per_day_per_bps": 0.5378943967412263,
+   "ls_positive_years": 8,
+   "ls_turnover_mean": 0.6723679959265328,
+   "ls_z": 4.340798974338836,
+   "years": 10
+  },
+  "skipped": [
+   {
+    "end": "2007-06-28",
+    "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+    "start": "2006-06-28"
+   },
+   {
+    "end": "2008-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2007-06-28"
+   },
+   {
+    "end": "2009-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2008-06-28"
+   },
+   {
+    "end": "2010-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2009-06-28"
+   },
+   {
+    "end": "2011-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2010-06-28"
+   },
+   {
+    "end": "2012-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2011-06-28"
+   },
+   {
+    "end": "2013-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2012-06-28"
+   },
+   {
+    "end": "2014-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2013-06-28"
+   },
+   {
+    "end": "2015-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2014-06-28"
+   }
+  ]
+ },
+ "d1|volatility": {
+  "change": {
+   "change": 6.140265213384358,
+   "per_year": [
+    6.94,
+    8.25,
+    6.74,
+    -6.02,
+    12.29,
+    1.93,
+    12.06,
+    5.72,
+    5.75,
+    7.75
+   ],
+   "ahead": 9,
+   "years": 10,
+   "se": 1.6560691633867786
+  },
+  "at_cost": [
+   6.140265213384358,
+   5.90848338844114,
+   5.26293525085724
+  ],
+  "years": [
+   {
+    "start": "2015-06-28",
+    "end": "2016-06-28",
+    "picks": 17.973132574582863,
+    "random": 11.03764232883404,
+    "p": 0.108,
+    "spy": -2.7841769864391575,
+    "ic_ret_t": 1.0816591055539284,
+    "ls_bps_per_day": 4.2601914618776116,
+    "ls_t": 2.142520743187448,
+    "candidates": 1259,
+    "first_day": "2015-06-29"
+   },
+   {
+    "start": "2016-06-28",
+    "end": "2017-06-28",
+    "picks": 35.53900397237491,
+    "random": 27.28782143358186,
+    "p": 0.139,
+    "spy": 23.337058773606522,
+    "ic_ret_t": 3.013939500072493,
+    "ls_bps_per_day": 5.776922448233179,
+    "ls_t": 3.9091940840096955,
+    "candidates": 1291,
+    "first_day": "2016-06-28"
+   },
+   {
+    "start": "2017-06-28",
+    "end": "2018-06-28",
+    "picks": 18.89972593490743,
+    "random": 12.162851885330683,
+    "p": 0.152,
+    "spy": 13.71350853351052,
+    "ic_ret_t": 2.237951448096162,
+    "ls_bps_per_day": 1.861409751202383,
+    "ls_t": 1.312574519946432,
+    "candidates": 1395,
+    "first_day": "2017-06-28"
+   },
+   {
+    "start": "2018-06-28",
+    "end": "2019-06-28",
+    "picks": -3.3271841079387965,
+    "random": 2.6947574363432203,
+    "p": 0.805,
+    "spy": 10.356790335111942,
+    "ic_ret_t": 0.6762188356392324,
+    "ls_bps_per_day": 1.9571099951157236,
+    "ls_t": 1.2071472153056788,
+    "candidates": 1527,
+    "first_day": "2018-06-28"
+   },
+   {
+    "start": "2019-06-28",
+    "end": "2020-06-28",
+    "picks": 3.4261158590212837,
+    "random": -8.860725576791351,
+    "p": 0.092,
+    "spy": 4.989000191887705,
+    "ic_ret_t": 0.7482796457003509,
+    "ls_bps_per_day": 4.711807535796928,
+    "ls_t": 1.7858183912435337,
+    "candidates": 1614,
+    "first_day": "2019-06-28"
+   },
+   {
+    "start": "2020-06-28",
+    "end": "2021-06-28",
+    "picks": 72.43980261324927,
+    "random": 70.5104977211623,
+    "p": 0.441,
+    "spy": 44.30243816258652,
+    "ic_ret_t": 0.33241573945742414,
+    "ls_bps_per_day": -0.030151366386612408,
+    "ls_t": -0.01596176950640538,
+    "candidates": 1677,
+    "first_day": "2020-06-29"
+   },
+   {
+    "start": "2021-06-28",
+    "end": "2022-06-28",
+    "picks": -4.103467626631996,
+    "random": -16.161791276246383,
+    "p": 0.045,
+    "spy": -7.612516714326634,
+    "ic_ret_t": 2.0240338022203685,
+    "ls_bps_per_day": 0.28074411187007253,
+    "ls_t": 0.154215132782527,
+    "candidates": 1838,
+    "first_day": "2021-06-28"
+   },
+   {
+    "start": "2022-06-28",
+    "end": "2023-06-28",
+    "picks": 13.88242350203579,
+    "random": 8.158014021612647,
+    "p": 0.264,
+    "spy": 14.078919880511421,
+    "ic_ret_t": 0.7738437740713743,
+    "ls_bps_per_day": -0.683614255716424,
+    "ls_t": -0.2944556880737784,
+    "candidates": 1969,
+    "first_day": "2022-06-28"
+   },
+   {
+    "start": "2023-06-28",
+    "end": "2024-06-28",
+    "picks": 14.102982404117315,
+    "random": 8.354931702887125,
+    "p": 0.245,
+    "spy": 27.01733795304426,
+    "ic_ret_t": 1.5586037301596003,
+    "ls_bps_per_day": 2.8461612324727703,
+    "ls_t": 1.6343202733729139,
+    "candidates": 1968,
+    "first_day": "2023-06-28"
+   },
+   {
+    "start": "2024-06-28",
+    "end": "2025-06-28",
+    "picks": 13.364155822611256,
+    "random": 5.610039137771605,
+    "p": 0.238,
+    "spy": 13.6102834560889,
+    "ic_ret_t": 1.9110727055449936,
+    "ls_bps_per_day": 3.4801495547927956,
+    "ls_t": 1.8914387215654695,
+    "candidates": 2036,
+    "first_day": "2024-06-28"
+   }
+  ],
+  "picks_mean": 18.21966909483293,
+  "random_mean": 12.079403881448576,
+  "summary_line": "years 10; beat random at p<0.1 (0 bps: 2, 5 bps: 2, 20 bps: 2) of 10; change over random +6.1 pts/yr (se 1.7, ahead 9/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day",
+  "summary": {
+   "beat_random_p_lt_0_1": [
+    {
+     "cost_bps": 0.0,
+     "years": 2
+    },
+    {
+     "cost_bps": 5.0,
+     "years": 2
+    },
+    {
+     "cost_bps": 20.0,
+     "years": 2
+    }
+   ],
+   "ic_ret_t_positive_years": 10,
+   "ic_ret_z": 4.540404047173839,
+   "ic_t_positive_years": 10,
+   "ic_z": 5.087072296437065,
+   "ls_bps_per_day_mean": 2.4460730469258425,
+   "ls_cost_bps_per_day_per_bps": 0.5378943967412263,
+   "ls_positive_years": 8,
+   "ls_turnover_mean": 0.6723679959265328,
+   "ls_z": 4.340798974338836,
+   "years": 10
+  },
+  "skipped": [
+   {
+    "end": "2007-06-28",
+    "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+    "start": "2006-06-28"
+   },
+   {
+    "end": "2008-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2007-06-28"
+   },
+   {
+    "end": "2009-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2008-06-28"
+   },
+   {
+    "end": "2010-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2009-06-28"
+   },
+   {
+    "end": "2011-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2010-06-28"
+   },
+   {
+    "end": "2012-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2011-06-28"
+   },
+   {
+    "end": "2013-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2012-06-28"
+   },
+   {
+    "end": "2014-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2013-06-28"
+   },
+   {
+    "end": "2015-06-28",
+    "reason": "no candidate has a finite score on the holdout's rebalance days",
+    "start": "2014-06-28"
+   }
+  ]
+ }
+}

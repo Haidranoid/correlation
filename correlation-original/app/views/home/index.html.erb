@@ -1,0 +1,454 @@
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/uplot@1.6.30/dist/uPlot.min.css">
+<% end %>
+
+<div class="dashboard-content">
+  <main class="container">
+    <!-- Statistics Dashboard -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Stock Symbols</h3>
+        <div class="stat-value"><%= number_with_delimiter(@stats[:total_stocks]) %></div>
+        <p>Unique symbols in database</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Total Records</h3>
+        <div class="stat-value"><%= number_with_delimiter(@stats[:total_records]) %></div>
+        <p>Historical price data points</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Correlations Analyzed</h3>
+        <div class="stat-value"><%= number_with_delimiter(@stats[:total_correlations]) %></div>
+        <p>Statistical relationships computed</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Date Coverage</h3>
+        <div class="stat-value">
+          <%= @stats[:date_range][:start]&.year || 'N/A' %> - <%= @stats[:date_range][:end]&.year || 'N/A' %>
+        </div>
+        <p>Years of historical data</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Global Markets</h3>
+        <div class="stat-value"><%= @stats[:countries] %></div>
+        <p>Countries represented</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Exchanges</h3>
+        <div class="stat-value"><%= @stats[:markets] %></div>
+        <p>Different market exchanges</p>
+      </div>
+    </section>
+
+    <!-- Strongest Correlation Highlight -->
+    <% if @stats[:strongest_correlation] %>
+    <section class="stat-card" style="margin-bottom: 1.5rem;">
+      <h3>Top Correlation</h3>
+      <div class="stat-value" style="font-size: 1.2rem;">
+        <%= @stats[:strongest_correlation].symbol1 %> ↔ <%= @stats[:strongest_correlation].symbol2 %>
+      </div>
+      <p><%= @stats[:strongest_correlation].correlation_coefficient.round(3) %> | R²: <%= @stats[:strongest_correlation].r_squared.round(3) %></p>
+    </section>
+    <% end %>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+      <h2>Historical Overview</h2>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Stocks Listed Over Time</h3>
+            <button id="reset-stocks-chart" class="reset-chart-btn" style="display: none;">Reset Zoom</button>
+          </div>
+          <div id="stocks-chart" class="chart-container"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Correlations by Date Offset</h3>
+            <button id="reset-correlations-chart" class="reset-chart-btn" style="display: none;">Reset Zoom</button>
+          </div>
+          <div id="correlations-chart" class="chart-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stock Symbols Table -->
+    <section class="table-section">
+      <h2>Stock Database</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Click any row for details
+      </p>
+      
+      <table id="stocks-table" class="display">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Market</th>
+            <th>Country</th>
+            <th>Records</th>
+            <th>Date Range</th>
+            <th>Price Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="6" class="loading">Loading stock data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://unpkg.com/uplot@1.6.30/dist/uPlot.iife.min.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      var table = $('#stocks-table').DataTable({
+        "ajax": {
+          "url": "/api/stocks",
+          "dataSrc": "data"
+        },
+        "columns": [
+          { 
+            "data": "symbol",
+            "render": function(data) {
+              return '<span class="symbol-cell">' + data + '</span>';
+            }
+          },
+          { "data": "market" },
+          { "data": "country" },
+          { 
+            "data": "records",
+            "render": function(data) {
+              return new Intl.NumberFormat().format(data);
+            }
+          },
+          { "data": "date_range" },
+          { "data": "price_range" }
+        ],
+        "pageLength": 25,
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        "order": [[3, "desc"]],
+        "responsive": true,
+        "scrollX": true,
+        "autoWidth": false,
+        "language": {
+          "search": "Search symbols:",
+          "lengthMenu": "Show _MENU_ symbols per page",
+          "info": "Showing _START_ to _END_ of _TOTAL_ symbols",
+          "infoEmpty": "No symbols found",
+          "infoFiltered": "(filtered from _MAX_ total symbols)",
+          "loadingRecords": "Loading...",
+          "processing": "Processing...",
+          "zeroRecords": "No matching symbols found"
+        }
+      });
+
+      // Row click handler
+      $('#stocks-table tbody').on('click', 'tr', function() {
+        var data = table.row(this).data();
+        if (data) {
+          window.location.href = '/stocks/' + data.symbol;
+        }
+      });
+
+      // Add hover effect for better UX
+      $('#stocks-table tbody').on('mouseenter', 'tr', function() {
+        $(this).css('cursor', 'pointer');
+      });
+
+      // Store charts for resize handling
+      let stocksChart, correlationsChart, chartData;
+
+      // Initialize Charts
+      fetch('/api/chart_data')
+        .then(response => response.json())
+        .then(data => {
+          chartData = data; // Store data for recreation
+          const charts = initCharts(data);
+          stocksChart = charts.stocksChart;
+          correlationsChart = charts.correlationsChart;
+          
+          // Set up ResizeObserver for proper chart resizing
+          setupChartResizeObservers();
+        })
+        .catch(error => {
+          console.error('Error loading chart data:', error);
+        });
+
+      // Setup ResizeObserver for charts (proper way to handle chart resizing)
+      function setupChartResizeObservers() {
+        if (!window.ResizeObserver) {
+          // Fallback to window resize for older browsers
+          let resizeTimeout;
+          $(window).resize(function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+              table.columns.adjust().responsive.recalc();
+              if (stocksChart && correlationsChart) {
+                resizeChartsProper();
+              }
+            }, 100);
+          });
+          return;
+        }
+
+        // ResizeObserver for stocks chart
+        const stocksObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const rect = entry.contentRect;
+            if (stocksChart && rect.width > 0) {
+              stocksChart.setSize({
+                width: Math.max(300, rect.width - 40),
+                height: 240
+              });
+            }
+          }
+        });
+
+        // ResizeObserver for correlations chart  
+        const correlationsObserver = new ResizeObserver(entries => {
+          for (let entry of entries) {
+            const rect = entry.contentRect;
+            if (correlationsChart && rect.width > 0) {
+              correlationsChart.setSize({
+                width: Math.max(300, rect.width - 40),
+                height: 240
+              });
+            }
+          }
+        });
+
+        // Observe the chart containers
+        stocksObserver.observe(document.getElementById('stocks-chart'));
+        correlationsObserver.observe(document.getElementById('correlations-chart'));
+      }
+
+      // Fallback resize function for older browsers
+      function resizeChartsProper() {
+        function getChartWidth(containerId) {
+          const container = document.getElementById(containerId);
+          const rect = container.getBoundingClientRect();
+          return Math.max(300, rect.width - 40);
+        }
+
+        if (stocksChart && correlationsChart) {
+          stocksChart.setSize({
+            width: getChartWidth('stocks-chart'),
+            height: 240
+          });
+          
+          correlationsChart.setSize({
+            width: getChartWidth('correlations-chart'),
+            height: 240
+          });
+        }
+      }
+
+      // Handle window resize for table only
+      let resizeTimeout;
+      $(window).resize(function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+          table.columns.adjust().responsive.recalc();
+        }, 100);
+      });
+    });
+
+    // Handle Turbo navigation
+    document.addEventListener('turbo:load', function() {
+      // Only initialize if not already initialized
+      if (!$.fn.DataTable.isDataTable('#stocks-table')) {
+        // Re-trigger the initialization
+        $(document).trigger('ready');
+      }
+    });
+
+    function initCharts(data) {
+      // Prepare data for uPlot
+      const stocksData = [
+        data.stocks.map(d => d[0]), // years
+        data.stocks.map(d => d[1])  // stock counts
+      ];
+
+      const correlationsData = [
+        data.correlations.map(d => d[0]), // offset days
+        data.correlations.map(d => d[1])  // correlation counts
+      ];
+
+      // Function to get responsive chart width
+      function getChartWidth(containerId) {
+        const container = document.getElementById(containerId);
+        return Math.max(300, container.offsetWidth - 40); // Min 300px, minus padding
+      }
+
+      // Chart options
+      const chartOptions = {
+        height: 240,
+        padding: [20, 20, 40, 20],
+        scales: {
+          x: {
+            time: false,
+            auto: true,
+          },
+          y: {
+            auto: true,
+          },
+        },
+        axes: [
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b",
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+            values: (u, vals) => vals.map(v => Math.round(v).toString()), // Format values as integers
+          },
+          {
+            stroke: "white",
+            grid: {
+              stroke: "#64748b",
+              width: 1,
+            },
+            ticks: {
+              stroke: "white",
+              width: 1,
+            },
+            font: "12px Arial",
+            labelGap: 6,
+          },
+        ],
+        legend: {
+          show: true,
+          live: true,
+        },
+        cursor: {
+          show: true,
+          x: true,
+          y: true,
+          drag: {
+            x: true,
+            y: false,
+            setScale: true,
+            dist: 10,
+          },
+        },
+        series: [
+          {},
+          {
+            stroke: "white",
+            fill: "rgba(255, 255, 255, 0.1)",
+            width: 2,
+          },
+        ],
+      };
+
+      // Create stocks chart
+      const stocksChart = new uPlot({
+        ...chartOptions,
+        width: getChartWidth('stocks-chart'),
+        series: [
+          {
+            label: "Year",
+          },
+          {
+            label: "Stocks Listed",
+            stroke: "white",
+            fill: "rgba(255, 255, 255, 0.1)",
+            width: 2,
+            value: (u, v) => v == null ? "-" : Math.round(v).toString(),
+          },
+        ],
+        hooks: {
+          setScale: [
+            (u, key) => {
+              // Show reset button when zoomed
+              if (key === 'x') {
+                const defaultMin = stocksData[0][0];
+                const defaultMax = stocksData[0][stocksData[0].length - 1];
+                const currentMin = u.scales.x.min;
+                const currentMax = u.scales.x.max;
+                const isZoomed = Math.abs(currentMin - defaultMin) > 1 || Math.abs(currentMax - defaultMax) > 1;
+                document.getElementById('reset-stocks-chart').style.display = isZoomed ? 'block' : 'none';
+              }
+            }
+          ]
+        },
+      }, stocksData, document.getElementById('stocks-chart'));
+
+      // Create correlations chart
+      const correlationsChart = new uPlot({
+        ...chartOptions,
+        width: getChartWidth('correlations-chart'),
+        series: [
+          {
+            label: "Offset Days",
+          },
+          {
+            label: "Correlations Count",
+            stroke: "white",
+            fill: "rgba(255, 255, 255, 0.1)",
+            width: 2,
+            value: (u, v) => v == null ? "-" : Math.round(v).toString(),
+          },
+        ],
+        hooks: {
+          setScale: [
+            (u, key) => {
+              // Show reset button when zoomed
+              if (key === 'x') {
+                const defaultMin = correlationsData[0][0];
+                const defaultMax = correlationsData[0][correlationsData[0].length - 1];
+                const currentMin = u.scales.x.min;
+                const currentMax = u.scales.x.max;
+                const isZoomed = Math.abs(currentMin - defaultMin) > 1 || Math.abs(currentMax - defaultMax) > 1;
+                document.getElementById('reset-correlations-chart').style.display = isZoomed ? 'block' : 'none';
+              }
+            }
+          ]
+        },
+      }, correlationsData, document.getElementById('correlations-chart'));
+
+      // Reset zoom button handlers
+      document.getElementById('reset-stocks-chart').addEventListener('click', () => {
+        stocksChart.setScale('x', {
+          min: stocksData[0][0],
+          max: stocksData[0][stocksData[0].length - 1]
+        });
+        document.getElementById('reset-stocks-chart').style.display = 'none';
+      });
+
+      document.getElementById('reset-correlations-chart').addEventListener('click', () => {
+        correlationsChart.setScale('x', {
+          min: correlationsData[0][0],
+          max: correlationsData[0][correlationsData[0].length - 1]
+        });
+        document.getElementById('reset-correlations-chart').style.display = 'none';
+      });
+
+      // Return chart instances for external resize handling
+      return {
+        stocksChart: stocksChart,
+        correlationsChart: correlationsChart
+      };
+    }
+
+    // This function is no longer needed with ResizeObserver implementation
+  </script>

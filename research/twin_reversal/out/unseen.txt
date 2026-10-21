@@ -1,0 +1,81 @@
+new export 2001-12-31..2026-10-19, 9508 stocks; gap days filled: ['2011-02-17'] (stocks), ['2011-02-17'] (funds)
+unseen holds: 15, formed 2025-07-16 .. 2026-09-16, returns through 2026-10-15; ranked set [500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500]
+
+                                   mean %/mo      t   n   sum %
+twin gross                            -0.391  -0.35  15   -5.87
+twin net                              -0.603  -0.54  15   -9.05
+twin (1 day late) gross               -0.256  -0.25  15   -3.84
+twin (1 day late) net                 -0.468  -0.46  15   -7.02
+plain gross                           -1.004  -0.45  15  -15.06
+plain net                             -1.179  -0.53  15  -17.68
+plain (1 day late) gross              -1.896  -0.98  15  -28.44
+plain (1 day late) net                -2.070  -1.07  15  -31.05
+mkt gross                             -1.068  -0.63  15  -16.01
+mkt net                               -1.251  -0.73  15  -18.76
+mkt (1 day late) gross                -1.282  -0.73  15  -19.23
+mkt (1 day late) net                  -1.465  -0.83  15  -21.97
+mkt_scaled (diag) gross               -0.357  -0.25  15   -5.36
+mkt_scaled (diag) net                 -0.549  -0.38  15   -8.23
+mkt_scaled (diag) (1 day late) gross    +0.108  +0.08  15   +1.63
+mkt_scaled (diag) (1 day late) net    -0.083  -0.06  15   -1.24
+twin - plain gross                    +0.613  +0.43  15
+twin - plain net                      +0.575  +0.40  15
+twin - mkt gross                      +0.676  +0.72  15
+twin - mkt net                        +0.647  +0.69  15
+
+by month (twin gross, net; plain gross; mkt gross), %:
+  2025-07-16   -1.88  -2.10   -3.42   -0.51
+  2025-08-14   -3.26  -3.46   -5.47   -2.98
+  2025-09-15   -0.03  -0.24   -0.20   -0.94
+  2025-10-14   +4.92  +4.71  +13.49  +14.90
+  2025-11-12   +0.04  -0.17   -1.17   -0.97
+  2025-12-12   -2.38  -2.60   -6.09   -6.04
+  2026-01-14   -7.56  -7.78   -9.99  -11.34
+  2026-02-13   +3.03  +2.83   +4.98   +5.74
+  2026-03-17   +0.74  +0.53   -1.17   -0.82
+  2026-04-16  -10.18 -10.39  -19.72  -12.55
+  2026-05-15   +4.77  +4.58   -4.34   -0.66
+  2026-06-16   -0.71  -0.93   +2.90   -1.47
+  2026-07-17   +3.52  +3.30  +11.92   +3.51
+  2026-08-17   +3.65  +3.43   +9.36   +2.48
+  2026-09-16   -0.54  -0.76   -6.14   -4.38
+
+== judge, unseen months, uniform random accounts ==
+0 bps: picks +38.9% vs random median +18.9% = +20.01 pts, p 0.111 | 5 bps: picks +36.9% vs random median +17.2% = +19.72 pts, p 0.111 | 20 bps: picks +31.0% vs random median +12.1% = +18.88 pts, p 0.111
+long-short 5.61 bps/day t +0.82; IC actual returns t +0.13; SPY +24.6%, QQQ +31.1%, None +20.7%
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+Family scores, rebalanced every 21 trading day(s): 612 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 60.3% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0781, t = +2.83
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0030, t = +0.13
+Long-short top/bottom 10%: 5.61 bps/day gross, Sharpe 0.71, t = 0.82, book turnover 90% per rebalance
+Random guessers (uniform): 302.6 names bought on average (295..305; the picks bought 305); mean volatility decile of buys 4.49 (picks 4.72), of holdings 4.49 (picks 4.83)
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             13890     38.9%   random guessers: median 11889, 11.1% did at least as well (p = 0.111)
+Picks, 5 bps per trade                              13688     36.9%   random guessers: median 11716, 11.1% did at least as well (p = 0.111)
+Picks, 20 bps per trade                             13098     31.0%   random guessers: median 11210, 11.1% did at least as well (p = 0.111)
+
+
+== judge, unseen months, volatility random accounts ==
+0 bps: picks +38.9% vs random median +19.3% = +19.57 pts, p 0.118 | 5 bps: picks +36.9% vs random median +17.6% = +19.29 pts, p 0.118 | 20 bps: picks +31.0% vs random median +12.5% = +18.46 pts, p 0.118
+long-short 5.61 bps/day t +0.82; IC actual returns t +0.13; SPY +24.6%, QQQ +31.1%, None +20.7%
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+Family scores, rebalanced every 21 trading day(s): 612 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 60.3% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0781, t = +2.83
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0030, t = +0.13
+Long-short top/bottom 10%: 5.61 bps/day gross, Sharpe 0.71, t = 0.82, book turnover 90% per rebalance
+Random guessers (volatility): 305.0 names bought on average (305..305; the picks bought 305); mean volatility decile of buys 4.72 (picks 4.72), of holdings 4.68 (picks 4.83); 0 buys unmatched
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             13890     38.9%   random guessers: median 11933, 11.8% did at least as well (p = 0.118)
+Picks, 5 bps per trade                              13688     36.9%   random guessers: median 11759, 11.8% did at least as well (p = 0.118)
+Picks, 20 bps per trade                             13098     31.0%   random guessers: median 11251, 11.8% did at least as well (p = 0.118)
+

@@ -1,0 +1,47 @@
+export old: N 8503 T 5911, 2001-12-31..2025-06-27; gap days filled ['2011-02-17']
+first formation with a 500-stock universe: k 59 = 2007-12-03
+first formation where baseline (b) counts (>= 80% of the 500 with a twin, >= 10 distinct twins): k 59 = 2007-12-03
+coverage, first formations:
+  59	2007-12-03	976	500	500	1.000	79	1
+  60	2008-01-03	981	500	500	1.000	80	1
+  61	2008-02-04	993	500	500	1.000	85	1
+  62	2008-03-05	994	500	500	1.000	86	1
+  63	2008-04-04	1001	500	500	1.000	83	1
+  64	2008-05-05	1005	500	500	1.000	87	1
+  65	2008-06-04	1002	500	500	1.000	83	1
+  66	2008-07-03	1005	500	500	1.000	84	1
+  67	2008-08-04	1002	500	500	1.000	83	1
+  68	2008-09-03	1000	500	500	1.000	85	1
+  69	2008-10-02	999	500	500	1.000	79	1
+  70	2008-10-31	996	500	500	1.000	74	1
+  71	2008-12-02	986	500	500	1.000	72	1
+  72	2009-01-02	980	500	500	1.000	68	1
+  73	2009-02-03	972	500	500	1.000	74	1
+  74	2009-03-05	954	500	500	1.000	76	1
+  75	2009-04-03	928	500	500	1.000	69	1
+  76	2009-05-05	894	500	500	1.000	71	1
+  77	2009-06-04	884	500	500	1.000	68	1
+over all formations: universe 855-2301; big 500-500; eigen n 498-500 (mean 500.0); twin frac 1.00-1.00; distinct twins 56-137; (b) invalid at 0 formations
+
+== eigen checks ==
+k 59 2007-12-03: n 500; lam1/n 0.348; top-21 shares [0.348, 0.04, 0.023, 0.021, 0.017]...; comp 1 one-signed share 0.998; max |corr| between in-sample factor returns 0.019; var*G^2/lam min/max 9.852e-01/1.016e+00 (ratio 1.03); book gross 2.000, sum of B = W: 3.5e-18; net exposure +0.051
+k 109 2012-02-02: n 500; lam1/n 0.558; top-21 shares [0.558, 0.03, 0.022, 0.016, 0.011]...; comp 1 one-signed share 1.000; max |corr| between in-sample factor returns 0.020; var*G^2/lam min/max 9.919e-01/1.022e+00 (ratio 1.03); book gross 2.000, sum of B = W: 3.5e-18; net exposure +0.108
+k 159 2016-04-07: n 500; lam1/n 0.384; top-21 shares [0.384, 0.053, 0.04, 0.023, 0.017]...; comp 1 one-signed share 1.000; max |corr| between in-sample factor returns 0.010; var*G^2/lam min/max 9.808e-01/1.003e+00 (ratio 1.02); book gross 2.000, sum of B = W: 5.2e-18; net exposure +0.137
+k 209 2020-06-09: n 500; lam1/n 0.530; top-21 shares [0.53, 0.063, 0.032, 0.027, 0.016]...; comp 1 one-signed share 1.000; max |corr| between in-sample factor returns 0.058; var*G^2/lam min/max 8.993e-01/1.058e+00 (ratio 1.18); book gross 2.000, sum of B = W: 5.2e-18; net exposure +0.108
+k 267 2025-04-14: n 500; lam1/n 0.296; top-21 shares [0.296, 0.082, 0.031, 0.03, 0.021]...; comp 1 one-signed share 0.992; max |corr| between in-sample factor returns 0.018; var*G^2/lam min/max 9.768e-01/1.016e+00 (ratio 1.04); book gross 2.000, sum of B = W: 6.9e-18; net exposure +0.139
+
+== sign invariance (flip component 2 and rebuild) ==
+max |W - W(flipped)| = 0.00e+00; in-sample f matches formation(): 0.00e+00
+
+== 12-1 copy vs stockai momentum_scores (gap-filled closes) ==
+max abs diff 0.00e+00; cells finite in only one: 0
+
+== decile weights ==
+random scores: long 1.000 (49 names), short -1.000 (49), top names are the largest: True
+tied groups (25 x 20): long 1.000 over 60 names (weights [np.float64(0.01), np.float64(0.02)]), short -1.000 over 60
+uneven ties: long 1.000 over 70 names, short -1.000 over 100
+
+== hold return by hand ==
+  A 2014-08-06: by hand +0.04188; code +0.04188
+  AA 2014-08-06: by hand +0.05124; code +0.05124
+  AAP 2014-08-06: by hand +0.12013; code +0.12013

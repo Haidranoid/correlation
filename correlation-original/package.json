@@ -1,0 +1,30 @@
+{
+  "name": "stock-correlation-analysis-platform",
+  "version": "1.0.0",
+  "description": "Automated screenshot generation for Stock Correlation Analysis Platform",
+  "main": "scripts/generate_screenshots.js",
+  "scripts": {
+    "screenshots": "node scripts/generate_screenshots.js",
+    "screenshots:install": "npm install puppeteer",
+    "screenshots:help": "echo 'Usage: npm run screenshots (make sure Rails server is running first)'"
+  },
+  "keywords": [
+    "stock-analysis",
+    "correlation",
+    "rails",
+    "screenshots",
+    "automation"
+  ],
+  "dependencies": {
+    "puppeteer": "^24.11.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhoult/correlation.git"
+  },
+  "author": "Stock Correlation Analysis Platform",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -1,0 +1,267 @@
+# Phantom portfolios: the 16 unseen months on the new export (through 2026-10-19), run once
+
+=== Test 1: is there structure? ===
+refits: 273 (2004-01-16 .. 2026-10-01), 50 clusters each
+clusters with >= 8 members per refit: mean 46.4; kept (beat the shifted-dates null at p < 0.01): mean 23.5 per refit (51% of clusters), min 0, max 47
+mean pairwise residual correlation: kept clusters 0.164 (median 0.151); other clusters 0.092; null clusters median 0.077, null 99th percentile 0.115
+kept cluster size: median 28, 10th-90th pct 21-36; stocks in kept clusters per refit: 659 of ~1,500
+kept clusters per refit by year: 2004:1 2005:1 2006:15 2007:17 2008:25 2009:24 2010:19 2011:19 2012:21 2013:20 2014:19 2015:22 2016:28 2017:26 2018:26 2019:25 2020:39 2021:35 2022:37 2023:31 2024:27 2025:30 2026:37
+stability, one refit to the next (21 days apart), adjusted Rand index on common stocks: phantom clusters 0.120 (members of kept clusters only: 0.266); the groups map refit on the same schedule 0.571
+overlap with the groups map: adjusted Rand index phantom vs groups (same refit) 0.021; modal-group share of a kept cluster mean 0.26
+  (chance modal-group share for random baskets of the same sizes: 0.16)
+kept clusters whose residual moves track a label fund (|r| >= 0.3 over the 126 days, fund taken relative to the market): 29%
+  most common labels (share of kept clusters): +ITB 1.7%, +JETS 1.1%, +EEM 1.0%, -UUP 1.0%, +XRT 1.0%, +TAN 1.0%, +GDX 0.9%, +HYG 0.8%, +VNQ 0.8%, +KRE 0.8%, +XLE 0.7%, +XLU 0.7%, +MJ 0.7%, +URA 0.7%, +XLB 0.6%
+kept clusters with a strong price-style tilt (|mean z| >= 0.75 of the universe): mom 2%, rev 5%, vol 5%, beta 7%, size 5%, price 5%; any 18%
+  share of kept clusters tracking a style fund at |r| >= 0.3: value (IWD-IWF) 1%, small value (IWN-IWO) 0%, momentum (MTUM-SPY) 0%, quality (QUAL-SPY) 2%, min vol (USMV-SPY) 1%, value (VLUE-SPY) 1%
+Test 1 kill rule (fixed before results: fail if < 5 kept clusters per refit on average, or mean ARI < 0.05): pass
+
+=== Test 2: do they light up when they should? ===
+unwind or squeeze events (after the 5-day cool-down): 55 on 5723 days with clusters (2004-01-16..2026-10-19): 2.4 a year (33 unwinds, 22 squeezes); any |z| >= 3 move of a kept cluster: 18.6 a year
+  events by year: 2007:3 2008:9 2009:1 2010:1 2011:4 2012:1 2014:2 2015:1 2016:3 2017:1 2018:1 2020:20 2022:2 2023:1 2024:2 2025:3
+  months with 3 or more events: 2007-08: 3, 2008-09: 4, 2008-10: 5, 2011-08: 4, 2016-11: 3, 2020-03: 15, 2020-11: 3
+- Aug 2007 quant meltdown (2007-08-01..2007-08-14, 9 trading days): 0 unwind/squeeze events (expected at the average rate 0.1); 5 cluster-days with |z| >= 3 (expected 0.7); kept-cluster days with |z| >= 2: 17
+    2007-08-01 big move z -3.5 move -147 bps, vol 1.64x, 29 members [BPOP AFG EVV VVR PHK] style beta-1.8 vol-1.2 size-1.1; group purity 0.28 (not an event: with its trend)
+    2007-08-06 big move z -4.1 move -177 bps, vol 1.99x, 29 members [BPOP AFG EVV VVR PHK] style beta-1.8 vol-1.2 size-1.1; group purity 0.28 (not an event: with its trend)
+    2007-08-08 big move z +3.4 move +158 bps, vol 1.30x, 29 members [BPOP AFG EVV VVR PHK] style beta-1.8 vol-1.2 size-1.1; group purity 0.28 (not an event: volume 1.30x)
+    2007-08-10 big move z -3.1 move -122 bps, vol 1.98x, 30 members [NOV LMT MTG SRE RDN] group purity 0.17 (not an event: with its trend, breadth 57%)
+    2007-08-10 big move z -3.9 move -158 bps, vol 2.01x, 31 members [LEN HRB ROP SOHU SFL] style beta-1.1 size-0.9 vol-0.8; group purity 0.26 (not an event: with its trend)
+    at the 2-sigma sensitivity threshold: 2 events in the window (expected 0.2)
+- 2009 momentum crash (2009-03-09..2009-05-29, 57 trading days): 0 unwind/squeeze events (expected at the average rate 0.5); 2 cluster-days with |z| >= 3 (expected 4.2); kept-cluster days with |z| >= 2: 9
+    2009-03-12 big move z +4.1 move +571 bps, vol 1.31x, 38 members [AMAT BEN AMP SRE PGR] group purity 0.16 (not an event: volume 1.31x, with its trend, breadth 55%, one member with news)
+    2009-05-08 big move z +4.7 move +652 bps, vol 1.09x, 23 members [ORCL HD AEP EMN IPI] group purity 0.26 (not an event: volume 1.09x, breadth 43%, one member with news)
+    at the 2-sigma sensitivity threshold: 0 events in the window (expected 1.2)
+- late Jan 2021 de-grossing (2021-01-20..2021-02-05, 12 trading days): 0 unwind/squeeze events (expected at the average rate 0.1); 2 cluster-days with |z| >= 3 (expected 0.9); kept-cluster days with |z| >= 2: 20
+    2021-01-27 big move z +3.1 move +260 bps, vol 1.81x, 25 members [VZ MRNA NOW TGT DG] +XRT r=+0.44; style beta-0.7 mom+0.7 size+0.5; group purity 0.24 (not an event: with its trend, breadth 52%, one member with news)
+    2021-02-02 big move z +3.3 move +234 bps, vol 1.00x, 26 members [JPM BAC DUK USB PNC] +XLF r=+0.35; group purity 0.42 (not an event: volume 1.00x)
+    at the 2-sigma sensitivity threshold: 0 events in the window (expected 0.3)
+- summer 2025 quant wobble (MSCI: 2025-06-01..07-25) (2025-06-02..2025-07-31, 41 trading days): 0 unwind/squeeze events (expected at the average rate 0.4); 3 cluster-days with |z| >= 3 (expected 3.0); kept-cluster days with |z| >= 2: 14
+    2025-06-17 big move z -3.7 move -616 bps, vol 1.63x, 19 members [SMCI NEE FSLR ENPH CSGP] +TAN r=+0.74; style mom-0.7 vol+0.6 price-0.5; group purity 0.42 (not an event: with its trend)
+    2025-07-02 big move z -5.1 move -353 bps, vol 0.97x, 27 members [UNH XOM CVX ELV HCA] +XLV r=+0.30; style beta-0.7 price+0.6 size+0.5; group purity 0.22 (not an event: volume 0.97x)
+    2025-07-23 big move z +3.2 move +222 bps, vol 1.15x, 31 members [TSM NVO SE MRNA ECL] +EEM r=+0.37; style price-0.6; group purity 0.35 (not an event: volume 1.15x, with its trend)
+    at the 2-sigma sensitivity threshold: 0 events in the window (expected 0.9)
+
+=== Test 5 (part 2): the 16 unseen months 2025-06-30..2026-10-19 ===
+period 2025-06-30..2026-10-20: events U (unwinds+squeezes) 1 (1 unwinds), N (same-size cluster moves, volume < 1.5x) 26, N-strict (all other unwind rules hold) 7, G (same-size group moves) 30, G-strict (group days meeting every unwind rule) 4
+Bounce = the member's residual over the next h days, signed so that a reversal is positive; C = the basket's event-day move without the member (Wardlaw: the member's own event-day return is not in it), in the event's direction; O = the member's own event-day residual (its own residual reversal, Da-Liu-Schaumburg). b = fraction of the basket's move that comes back beyond the member's own reversal. t from SEs clustered by month.
+  h = 1 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.025 (-242896875410707.91)          +0.244 (+3911816277374962.50)          +39.5            38      1
+    N         -0.025 (-2.42)          +0.005 (+4.62)          -17.7           713     26
+    G         +0.045 (+0.71)          +0.003 (+0.91)          +43.0          2188     30
+    U-N: -0.000 (t -0.02)
+    U-G: -0.070 (t -1.11)
+  h = 5 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.893 (-1822167065457862.25)          +0.446 (+1680120917144680.00)          -80.6            38      1
+    N         -0.045 (-1.79)          -0.008 (-1.93)          +14.7           713     26
+    G         +0.141 (+0.81)          -0.011 (-1.69)          +55.4          2188     30
+    U-N: -0.848 (t -33.72)
+    U-G: -1.034 (t -5.92)
+  h = 10 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -1.211 (-1253382502804774.00)          +0.760 (+2093765258522923.25)          -81.2            38      1
+    N         -0.074 (-3.95)          -0.015 (-5.49)           -4.8           713     26
+    G         +0.188 (+0.83)          -0.012 (-1.24)          +63.6          2188     30
+    U-N: -1.137 (t -60.51)
+    U-G: -1.399 (t -6.17)
+  h = 20 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -1.375 (-1601549171327799.50)          +0.609 (+1781822671647106.75)         -138.0            38      1
+    N         -0.019 (-0.54)          -0.051 (-11.43)          +14.3           651     24
+    G         +0.116 (+0.66)          -0.057 (-7.75)           -3.9          2188     30
+    U-N: -1.356 (t -38.18)
+    U-G: -1.491 (t -8.47)
+  strict controls, h = 5:
+    U vs N-strict vs G-strict
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.893 (-1844502636926623.25)          +0.446 (+2007146059576187.25)          -80.6            38      1
+    N-strict  -0.124 (-0.81)          +0.047 (+0.31)          -33.4           216      7
+    G-strict  +0.205 (+2.41)          +0.443 (+5.12)         +482.6           232      4
+    U-N-strict: -0.769 (t -5.01)
+    U-G-strict: -1.098 (t -12.90)
+  U and N in the same units as G (returns before the group is removed), h = 5:
+    
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -1.252 (-643158649497592.38)          +0.787 (+856373159794865.38)         +225.3            38      1
+    N         -0.027 (-1.18)          -0.011 (-2.42)          +20.4           713     26
+    G         +0.141 (+0.81)          -0.011 (-1.69)          +55.4          2188     30
+    U-N: -1.225 (t -53.19)
+    U-G: -1.393 (t -7.97)
+  from 2025-06-30, h = 1, from the event close
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.025 (-241056875362156.12)          +0.244 (+3882183363702751.00)          +39.5            38      1
+    N         -0.025 (-2.40)          +0.005 (+4.59)          -17.7           713     26
+    U-N: -0.000 (t -0.02)
+  from 2025-06-30, h = 1, from the next open
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.006 (+175060448141834.59)          +0.039 (+4252933704857701.00)           +8.1            38      1
+    N         -0.019 (-1.80)          -0.003 (-2.96)          -18.2           713     26
+    U-N: +0.026 (t +2.40)
+  from 2025-06-30, h = 5, from the event close
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.893 (-1808363728205200.00)          +0.446 (+1667393612341388.75)          -80.6            38      1
+    N         -0.045 (-1.77)          -0.008 (-1.91)          +14.7           713     26
+    U-N: -0.848 (t -33.47)
+  from 2025-06-30, h = 5, from the next open
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.862 (-2980597861384345.50)          +0.241 (+1926429143287910.50)         -112.0            38      1
+    N         -0.039 (-1.46)          -0.016 (-3.02)          +14.2           713     26
+    U-N: -0.823 (t -30.59)
+  basket level, h = 5, U: bounce per unit of the basket move +nan (t +nan), 1 events, mean basket bounce +nan bps
+  basket level, h = 5, N: bounce per unit of the basket move -0.042 (t -1.18), 26 events, mean basket bounce +27.1 bps
+  basket level, h = 5, G: bounce per unit of the basket move +0.095 (t +0.59), 30 events, mean basket bounce +40.8 bps
+  same-day market on U events: mean -151 bps, |market| > 2%: 0% of events
+  robustness, FOMC and CPI days dropped (0 of 1 U events were on one):
+    h = 5
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.893 (-1822167065457862.25)          +0.446 (+1680120917144680.00)          -80.6            38      1
+    N         -0.045 (-1.79)          -0.008 (-1.93)          +14.7           713     26
+    G         +0.141 (+0.81)          -0.011 (-1.69)          +55.4          2188     30
+    U-N: -0.848 (t -33.72)
+    U-G: -1.034 (t -5.92)
+  sensitivity, events at 2 sigma instead of 3 (5 events), h = 5:
+    U2 vs N2 vs G
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U2        -0.085 (-0.33)          -0.228 (-2.38)         -134.7           140      5
+    N2        -0.046 (-1.21)          -0.010 (-1.97)           +5.3          3497    132
+    G         +0.141 (+0.81)          -0.011 (-1.70)          +55.4          2188     30
+    U2-N2: -0.039 (t -0.14)
+    U2-G: -0.226 (t -0.85)
+kill rule (h = 5; fixed before results: U's bounce fraction exceeds N's and G's, each difference with t >= 2.0): b_U -0.893 (t -1822167065457862.25); U-N t -33.72; U-G t -5.92 -> FAIL
+
+=== Test 5 (combined): 2020-01..2026-10 on the new export ===
+period 2020-01-01..2026-10-20: events U (unwinds+squeezes) 28 (21 unwinds), N (same-size cluster moves, volume < 1.5x) 100, N-strict (all other unwind rules hold) 28, G (same-size group moves) 324, G-strict (group days meeting every unwind rule) 102
+Bounce = the member's residual over the next h days, signed so that a reversal is positive; C = the basket's event-day move without the member (Wardlaw: the member's own event-day return is not in it), in the event's direction; O = the member's own event-day residual (its own residual reversal, Da-Liu-Schaumburg). b = fraction of the basket's move that comes back beyond the member's own reversal. t from SEs clustered by month.
+  h = 1 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.297 (-1.87)          -0.117 (-7.27)          -93.3           812     28
+    N         -0.009 (-0.80)          +0.005 (+0.75)           +1.9          2581    100
+    G         +0.037 (+0.57)          -0.014 (-0.78)          +10.3         24034    324
+    U-N: -0.288 (t -1.81)
+    U-G: -0.334 (t -1.56)
+  h = 5 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.015 (+0.59)          -0.025 (-1.01)          -14.4           812     28
+    N         -0.027 (-0.83)          -0.007 (-0.65)          +11.6          2581    100
+    G         -0.050 (-0.94)          -0.022 (-0.91)          -27.4         24035    324
+    U-N: +0.042 (t +1.01)
+    U-G: +0.065 (t +1.04)
+  h = 10 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.073 (-0.46)          -0.098 (-1.71)           -3.2           812     28
+    N         -0.029 (-0.64)          -0.009 (-0.71)          +23.2          2581    100
+    G         -0.167 (-1.60)          -0.088 (-1.47)         -144.0         24035    324
+    U-N: -0.044 (t -0.27)
+    U-G: +0.094 (t +0.59)
+  h = 20 days (primary: U vs N vs G; G in returns before the group is removed)
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.102 (-0.61)          -0.136 (-2.04)          -60.9           812     28
+    N         +0.026 (+0.43)          -0.044 (-2.80)          +44.6          2519     98
+    G         -0.297 (-1.53)          -0.153 (-1.90)         -334.5         24035    324
+    U-N: -0.128 (t -0.71)
+    U-G: +0.196 (t +0.87)
+  strict controls, h = 5:
+    U vs N-strict vs G-strict
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.015 (+0.58)          -0.025 (-1.01)          -14.4           812     28
+    N-strict  -0.095 (-0.72)          +0.102 (+1.53)           +2.6           738     28
+    G-strict  +0.047 (+0.38)          +0.145 (+3.05)         +303.6          7718    102
+    U-N-strict: +0.110 (t +0.83)
+    U-G-strict: -0.033 (t -0.23)
+  U and N in the same units as G (returns before the group is removed), h = 5:
+    
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.375 (+4.63)          -0.109 (-2.32)         +184.9           812     28
+    N         -0.012 (-0.26)          -0.013 (-1.19)          +12.6          2581    100
+    G         -0.050 (-0.94)          -0.022 (-0.91)          -27.4         24035    324
+    U-N: +0.387 (t +4.06)
+    U-G: +0.425 (t +3.62)
+  from 2020-01-01, h = 1, from the event close
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.297 (-1.87)          -0.117 (-7.25)          -93.3           812     28
+    N         -0.009 (-0.80)          +0.005 (+0.75)           +1.9          2581    100
+    U-N: -0.288 (t -1.80)
+  from 2020-01-01, h = 1, from the next open
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         -0.242 (-2.17)          +0.070 (+4.39)          -33.5           812     28
+    N         -0.005 (-0.41)          -0.002 (-0.29)           -0.8          2581    100
+    U-N: -0.238 (t -2.10)
+  from 2020-01-01, h = 5, from the event close
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.015 (+0.59)          -0.025 (-1.01)          -14.4           812     28
+    N         -0.027 (-0.83)          -0.007 (-0.65)          +11.6          2581    100
+    U-N: +0.042 (t +1.01)
+  from 2020-01-01, h = 5, from the next open
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.069 (+1.52)          +0.163 (+5.81)          +45.4           812     28
+    N         -0.023 (-0.70)          -0.013 (-1.28)           +8.9          2581    100
+    U-N: +0.092 (t +1.64)
+  basket level, h = 5, U: bounce per unit of the basket move -0.021 (t -0.42), 28 events, mean basket bounce -18.4 bps
+  basket level, h = 5, N: bounce per unit of the basket move -0.036 (t -1.05), 100 events, mean basket bounce +5.4 bps
+  basket level, h = 5, G: bounce per unit of the basket move -0.086 (t -1.14), 324 events, mean basket bounce -35.3 bps
+  same-day market on U events: mean +294 bps, |market| > 2%: 82% of events
+  post-hoc split, U events with same-day |market| <= 2% (5 events) vs all N and G, h = 5
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.072 (+0.33)          +0.129 (+0.88)          +38.3           149      5
+    N         -0.027 (-0.83)          -0.007 (-0.65)          +11.6          2581    100
+    G         -0.050 (-0.94)          -0.022 (-0.91)          -27.4         24035    324
+    U-N: +0.100 (t +0.44)
+    U-G: +0.122 (t +0.53)
+  post-hoc split, U events with same-day |market| > 2% (23 events) vs all N and G, h = 5
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.011 (+0.44)          -0.028 (-1.22)          -26.3           663     23
+    N         -0.027 (-0.83)          -0.007 (-0.65)          +11.6          2581    100
+    G         -0.050 (-0.94)          -0.022 (-0.91)          -27.4         24035    324
+    U-N: +0.038 (t +0.93)
+    U-G: +0.061 (t +0.98)
+  robustness, FOMC and CPI days dropped (1 of 28 U events were on one):
+    h = 5
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U         +0.022 (+0.95)          -0.029 (-1.13)          -10.8           789     27
+    N         -0.025 (-0.72)          -0.009 (-1.10)          +11.9          2386     93
+    G         -0.053 (-0.83)          -0.023 (-0.94)          -33.7         21340    285
+    U-N: +0.047 (t +1.11)
+    U-G: +0.075 (t +1.05)
+  sensitivity, events at 2 sigma instead of 3 (62 events), h = 5:
+    U2 vs N2 vs G
+    type      bounce fraction b (t)    own-move coef g (t)   mean bounce bps   members  events
+    U2        -0.029 (-1.20)          -0.007 (-0.32)          -29.9          1728     62
+    N2        +0.009 (+0.30)          -0.001 (-0.06)          +10.0         17591    663
+    G         -0.050 (-0.94)          -0.022 (-0.91)          -27.4         24035    324
+    U2-N2: -0.038 (t -0.97)
+    U2-G: +0.021 (t +0.36)
+kill rule (h = 5; fixed before results: U's bounce fraction exceeds N's and G's, each difference with t >= 2.0): b_U +0.015 (t +0.59); U-N t +1.01; U-G t +1.04 -> FAIL
+
+=== Money test (the plan's rule), the 16 unseen months ===
+trades: 38 stock trades from 1 events on 1 days; random pool: 4171 member-days of kept clusters that moved >= 2 sigma that day without unwinding/squeezing
+  event days whose pool was empty and took the nearest day within 5: 1
+  per year, mean 5-day hedged return per stock trade (bps; hedged with the group and the market):
+    year         trades   gross   after 5 bps/side  after 10   random median   p(random >= picks)
+    2025-26       38    +15.0      +5.0           -5.0       -139.6        0.000
+  all years: 38 trades, mean +15.0 bps gross (se 60.2 by trade, nan by event; event-weighted mean +15.0), after 5 bps per side +5.0, after 10 bps per side -5.0; random guessers median -139.6, p(random >= picks) = 0.000
+  charging 5 bps per side on the hedge legs too (mean hedge notional 1.48): after costs -9.8 bps per trade
+  unwinds (bought) 38 trades mean +15.0 bps; squeezes (shorted) 0 trades mean +nan bps
+  from 2008, entered at the next open instead of the event close: 38 trades, mean -29.2 bps (same trades from the close: +15.0)
+  post-hoc, random guessers drawing whole clusters (same number of baskets on the same days): median -139.6 bps, 5th-95th pct -139.6..-139.6, p(random >= picks) = 0.000
+pass rule (fixed: beats random guessers at p < 0.05 after 5 bps per side, positive after costs in >= 2/3 of years): p = 0.000; positive after costs in 1 of 1 years (1 years had trades) -> PASS
+
+=== Judge on the 16 unseen months (start 2025-06-30, no walk-forward) ===
+    2025-06-30..2100-01-01: days with >= 2 stocks scored (long-short days) 5, with both sides 0
+scores file /home/bhoult/.local/share/correlation2/experiments/phantom_portfolios/scores_new.npy: 7909 stock-days scored on 146 days; days with both an unwind and a squeeze side: 37; max stocks scored on a day 327
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+Family scores, rebalanced every 1 trading day(s): 37 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 52.0% of 100 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.1422, t = +2.20
+Rank correlation of prediction vs actual return (IC in returns): mean +0.1386, t = +1.73
+Long-short top/bottom 10%: -115.62 bps/day gross, Sharpe -35.01, t = -4.93, book turnover 0% per rebalance
+Random guessers (uniform): 20.0 names bought on average (20..20; the picks bought 20); mean volatility decile of buys 4.52 (picks 3.60), of holdings 4.52 (picks 3.64)
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             10265      2.7%   random guessers: median 10170, 21.4% did at least as well (p = 0.214)
+Picks, 5 bps per trade                              10255      2.6%   random guessers: median 10160, 21.4% did at least as well (p = 0.214)
+Picks, 20 bps per trade                             10225      2.2%   random guessers: median 10129, 21.3% did at least as well (p = 0.213)
+
+change over random +0.96 pts

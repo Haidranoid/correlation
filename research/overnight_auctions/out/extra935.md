@@ -1,0 +1,10 @@
+# Overnight auctions: exit at 9:35 instead of the open (unseen months, Yahoo 5-minute bars)
+
+Window exit days 2026-07-29..2026-10-19 (58); account positions 1160, with a 09:35 bar 1037, in the common set 1009 (87%); drops {'no_bar': 64, 'close_disagrees': 0, 'event': 4, 'exit_invalid': 59}. Symbol map: 2453 of 2453 Yahoo symbols equal the export ticker (dots as dashes).
+
+| Exit | Account, bps a day (t) | Ranked set, bps a day | Account minus ranked (t) | Share of the open exit kept | Share kept, excess | Minus the open exit (t) |
+|---|---|---|---|---|---|---|
+| opening auction (store open) | +10.3 (+0.82) | +9.5 | +0.7 (+0.08) | 1.00 | 1.00 |  |
+| 09:35 | -10.3 (-0.77) | +5.5 | -15.8 (-1.59) | -1.01 | -21.61 | -20.6 (-3.51) |
+| 09:45 | -3.9 (-0.28) | +2.1 | -6.0 (-0.60) | -0.38 | -8.12 | -14.1 (-1.80) |
+| 10:00 | -10.8 (-0.72) | -1.5 | -9.3 (-0.84) | -1.05 | -12.62 | -21.0 (-2.33) |

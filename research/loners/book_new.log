@@ -1,0 +1,7 @@
+new: loaded 1s
+/home/bhoult/programming/correlation2/research/loners/book.py:152: RuntimeWarning: Mean of empty slice
+  ('betaL', float(np.nanmean(beta_bac[k][longs]))), ('betaH', float(np.nanmean(beta_bac[k][shorts]))),
+new loners: 241 formations (first 2006-10-02), mean turnover 0.55  1s
+new loners500: 241 formations (first 2006-10-02), mean turnover 0.56  1s
+new bac: 237 formations (first 2007-02-02), mean turnover 0.40  1s
+new lowvol: 237 formations (first 2007-02-02), mean turnover 0.37  1s

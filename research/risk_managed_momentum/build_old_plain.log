@@ -1,0 +1,5 @@
+[   21.1s] universe ready; sizes median 1284
+[   21.5s] prices ready plain
+[   21.6s] old plain all: WML months 246 first 2005-01 last 2025-06; RMOM first 2005-08; names per leg mean 127 (min 29, max 226); ranked mean 1277; turnover WML 1.24 RMOM 0.83
+[   21.6s] old plain big: WML months 246 first 2005-01 last 2025-06; RMOM first 2005-08; names per leg mean 47 (min 29, max 50); ranked mean 471; turnover WML 1.26 RMOM 0.77
+[   21.6s] saved /home/bhoult/.local/share/correlation2/experiments/risk_managed_momentum/series_old_plain.npz

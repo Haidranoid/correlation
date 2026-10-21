@@ -1,0 +1,26 @@
+UNSEEN periods: 17, 2025-06-27..2026-10-19; lengths 12, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 2
+  PTH book (the plan)                    raw    n 17 mean -0.522 (-0.66; NW -0.79) total -9.26%  alpha -0.367 (-0.85; NW -1.31), n=14 mkt -0.51 umd +0.47
+  PTH book (the plan)                    divfix n 17 mean -0.488 (-0.62; NW -0.74) total -8.74%  alpha -0.329 (-0.75; NW -1.12), n=14 mkt -0.50 umd +0.47
+                                         long - market -0.190 (-0.59; NW -0.65); market - short -0.300 (-0.64; NW -0.79)
+  PTH, one-week skip                     raw    n 17 mean -0.472 (-0.62; NW -0.73) total -8.45%  alpha -0.329 (-0.77; NW -1.03), n=14 mkt -0.39 umd +0.43
+  PTH, one-week skip                     divfix n 17 mean -0.441 (-0.58; NW -0.69) total -7.95%  alpha -0.296 (-0.68; NW -0.89), n=14 mkt -0.38 umd +0.42
+                                         long - market -0.130 (-0.42; NW -0.47); market - short -0.311 (-0.67; NW -0.83)
+  12-1 momentum (baseline)               raw    n 17 mean -0.366 (-0.49; NW -0.66) total -6.78%  alpha -0.885 (-1.26; NW -3.81), n=14 mkt -0.17 umd +0.40
+  12-1 momentum (baseline)               divfix n 17 mean -0.428 (-0.57; NW -0.78) total -7.77%  alpha -0.966 (-1.39; NW -4.28), n=14 mkt -0.16 umd +0.40
+                                         long - market +0.039 (+0.08; NW +0.12); market - short -0.373 (-1.08; NW -1.34)
+  GH's JT: 6-month return, no skip       raw    n 17 mean +0.303 (+0.41; NW +0.49) total +4.48%  alpha -0.717 (-1.00; NW -3.10), n=14 mkt -0.23 umd +0.65
+  GH's JT: 6-month return, no skip       divfix n 17 mean +0.250 (+0.34; NW +0.41) total +3.56%  alpha -0.786 (-1.10; NW -3.44), n=14 mkt -0.22 umd +0.65
+                                         long - market +0.324 (+0.75; NW +1.01); market - short +0.010 (+0.03; NW +0.03)
+  PTH, 500 largest                       raw    n 17 mean +0.229 (+0.26; NW +0.32) total +2.89%  alpha -0.075 (-0.11; NW -0.24), n=14 mkt -0.33 umd +0.58
+  PTH, 500 largest                       divfix n 17 mean +0.258 (+0.29; NW +0.36) total +3.42%  alpha -0.038 (-0.06; NW -0.12), n=14 mkt -0.34 umd +0.57
+                                         long - market +0.077 (+0.22; NW +0.25); market - short +0.184 (+0.33; NW +0.43)
+  PTH skip, 500 largest                  raw    n 17 mean +0.211 (+0.22; NW +0.26) total +2.44%  alpha +0.026 (+0.03; NW +0.08), n=14 mkt -0.10 umd +0.56
+  PTH skip, 500 largest                  divfix n 17 mean +0.237 (+0.25; NW +0.30) total +2.90%  alpha +0.054 (+0.07; NW +0.16), n=14 mkt -0.10 umd +0.56
+                                         long - market +0.100 (+0.27; NW +0.28); market - short +0.143 (+0.25; NW +0.31)
+  12-1 momentum, 500 largest             raw    n 17 mean -0.025 (-0.02; NW -0.03) total -2.49%  alpha -2.105 (-1.54; NW -3.09), n=14 mkt +0.39 umd +0.52
+  12-1 momentum, 500 largest             divfix n 17 mean -0.099 (-0.08; NW -0.14) total -3.70%  alpha -2.179 (-1.59; NW -3.20), n=14 mkt +0.40 umd +0.51
+                                         long - market +0.130 (+0.16; NW +0.27); market - short -0.123 (-0.28; NW -0.44)
+  test-2 regression in the unseen periods (raw): intercept -0.400% (t -0.52) slope +0.333 n 17
+  test-2 regression in the unseen periods (divfix): intercept -0.344% (t -0.44) slope +0.337 n 17
+  per period (raw): 2025-07-16 PTH -4.33 mom -1.84; 2025-08-14 PTH -1.55 mom -0.22; 2025-09-15 PTH -2.53 mom +1.12; 2025-10-14 PTH -2.39 mom +1.24; 2025-11-12 PTH +2.41 mom -0.30; 2025-12-12 PTH -4.41 mom -3.25; 2026-01-14 PTH +0.36 mom +0.19; 2026-02-13 PTH +9.08 mom +2.01; 2026-03-17 PTH -0.40 mom +1.38; 2026-04-16 PTH -0.72 mom +2.84; 2026-05-15 PTH +1.92 mom +3.69; 2026-06-16 PTH -2.12 mom -1.77; 2026-07-17 PTH -3.03 mom -8.42; 2026-08-17 PTH -3.26 mom +3.70; 2026-09-16 PTH +0.07 mom -3.78; 2026-10-15 PTH +0.53 mom -3.11; 2026-10-19 PTH +1.50 mom +0.28
+CHECK old vs new export, PTH net on 245 shared periods: corr 0.9991, mean old -0.243 new -0.261

@@ -1,0 +1,558 @@
+{
+ "HEADLINE w=30, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w30.npy",
+  "rebalance": 21,
+  "change": -3.1768188828592123,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -3.18
+  ],
+  "change_0bps": -3.1768188828592123,
+  "picks_mean_pct_0bps": 15.780088439595485,
+  "random_mean_pct_0bps": 18.956907322454697,
+  "p_0bps": [
+   0.588
+  ],
+  "change_5bps": -3.163259732754998,
+  "picks_mean_pct_5bps": 14.39197881062011,
+  "random_mean_pct_5bps": 17.555238543375108,
+  "p_5bps": [
+   0.589
+  ],
+  "change_20bps": -3.1008795550148562,
+  "picks_mean_pct_20bps": 10.320285071901992,
+  "random_mean_pct_20bps": 13.421164626916848,
+  "p_20bps": [
+   0.59
+  ],
+  "line": "change over random -3.2 pts; picks 15.8% vs median random 19.0%; IC actual t -1.34; long-short -5.18 bps/day t -1.00; p (share of random at least as good) 0.588; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.3388639913476608,
+  "ls_bps_per_day": -5.177568360453562,
+  "ls_t": -1.0002801665298777,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=30, rebalance 30": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w30.npy",
+  "rebalance": 30,
+  "change": -12.09032679970785,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -12.09
+  ],
+  "change_0bps": -12.09032679970785,
+  "picks_mean_pct_0bps": 6.849124426486863,
+  "random_mean_pct_0bps": 18.939451226194713,
+  "p_0bps": [
+   0.845
+  ],
+  "change_5bps": -12.012450250210318,
+  "picks_mean_pct_5bps": 5.825041028327971,
+  "random_mean_pct_5bps": 17.837491278538288,
+  "p_5bps": [
+   0.845
+  ],
+  "change_20bps": -11.759257197019068,
+  "picks_mean_pct_20bps": 2.805899301029613,
+  "random_mean_pct_20bps": 14.565156498048681,
+  "p_20bps": [
+   0.847
+  ],
+  "line": "change over random -12.1 pts; picks 6.8% vs median random 18.9%; IC actual t -0.59; long-short 0.12 bps/day t +0.03; p (share of random at least as good) 0.845; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -0.5909659816934145,
+  "ls_bps_per_day": 0.1173733219955907,
+  "ls_t": 0.02615974944811729,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=7, rebalance 5": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w7.npy",
+  "rebalance": 5,
+  "change": -8.02055914895736,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -8.02
+  ],
+  "change_0bps": -8.02055914895736,
+  "picks_mean_pct_0bps": 9.300330783538513,
+  "random_mean_pct_0bps": 17.320889932495874,
+  "p_0bps": [
+   0.737
+  ],
+  "change_5bps": -7.70848542402176,
+  "picks_mean_pct_5bps": 4.714074086252151,
+  "random_mean_pct_5bps": 12.422559510273912,
+  "p_5bps": [
+   0.738
+  ],
+  "change_20bps": -6.819957061250081,
+  "picks_mean_pct_20bps": -7.938150343491667,
+  "random_mean_pct_20bps": -1.1181932822415863,
+  "p_20bps": [
+   0.74
+  ],
+  "line": "change over random -8.0 pts; picks 9.3% vs median random 17.3%; IC actual t +0.91; long-short 3.16 bps/day t +0.73; p (share of random at least as good) 0.737; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": 0.911628638269705,
+  "ls_bps_per_day": 3.1565195266744865,
+  "ls_t": 0.7348656857588042,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=14, rebalance 10": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w14.npy",
+  "rebalance": 10,
+  "change": 12.211233308509328,
+  "se": NaN,
+  "ahead": 1,
+  "years": 1,
+  "per_year": [
+   12.21
+  ],
+  "change_0bps": 12.211233308509328,
+  "picks_mean_pct_0bps": 31.623196892420392,
+  "random_mean_pct_0bps": 19.411963583911064,
+  "p_0bps": [
+   0.19
+  ],
+  "change_5bps": 11.914279429024322,
+  "picks_mean_pct_5bps": 28.6007598769346,
+  "random_mean_pct_5bps": 16.686480447910277,
+  "p_5bps": [
+   0.19
+  ],
+  "change_20bps": 11.022041846875808,
+  "picks_mean_pct_20bps": 19.931374935189595,
+  "random_mean_pct_20bps": 8.909333088313787,
+  "p_20bps": [
+   0.193
+  ],
+  "line": "change over random +12.2 pts; picks 31.6% vs median random 19.4%; IC actual t +0.64; long-short 5.11 bps/day t +1.25; p (share of random at least as good) 0.190; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": 0.6372138273776751,
+  "ls_bps_per_day": 5.107839327943716,
+  "ls_t": 1.251329957368482,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=21, rebalance 15": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w21.npy",
+  "rebalance": 15,
+  "change": 4.393470049873162,
+  "se": NaN,
+  "ahead": 1,
+  "years": 1,
+  "per_year": [
+   4.39
+  ],
+  "change_0bps": 4.393470049873162,
+  "picks_mean_pct_0bps": 23.1382306044029,
+  "random_mean_pct_0bps": 18.744760554529737,
+  "p_0bps": [
+   0.372
+  ],
+  "change_5bps": 4.2956082656935735,
+  "picks_mean_pct_5bps": 20.999293185626566,
+  "random_mean_pct_5bps": 16.703684919932993,
+  "p_5bps": [
+   0.372
+  ],
+  "change_20bps": 4.0137465556801875,
+  "picks_mean_pct_20bps": 14.792899804163762,
+  "random_mean_pct_20bps": 10.779153248483574,
+  "p_20bps": [
+   0.373
+  ],
+  "line": "change over random +4.4 pts; picks 23.1% vs median random 18.7%; IC actual t -0.03; long-short -2.28 bps/day t -0.42; p (share of random at least as good) 0.372; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -0.028093174535488874,
+  "ls_bps_per_day": -2.2757784886793657,
+  "ls_t": -0.42239860066420887,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=40, rebalance 28": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w40.npy",
+  "rebalance": 28,
+  "change": -25.89108184457021,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -25.89
+  ],
+  "change_0bps": -25.89108184457021,
+  "picks_mean_pct_0bps": -5.982629654477334,
+  "random_mean_pct_0bps": 19.908452190092873,
+  "p_0bps": [
+   0.984
+  ],
+  "change_5bps": -25.645596350978582,
+  "picks_mean_pct_5bps": -6.933097732405802,
+  "random_mean_pct_5bps": 18.71249861857278,
+  "p_5bps": [
+   0.985
+  ],
+  "change_20bps": -24.921797049443228,
+  "picks_mean_pct_20bps": -9.732074385136114,
+  "random_mean_pct_20bps": 15.189722664307116,
+  "p_20bps": [
+   0.985
+  ],
+  "line": "change over random -25.9 pts; picks -6.0% vs median random 19.9%; IC actual t -1.63; long-short -11.03 bps/day t -2.17; p (share of random at least as good) 0.984; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.627680519356659,
+  "ls_bps_per_day": -11.03028396055812,
+  "ls_t": -2.1714640679337553,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=60, rebalance 42": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w60.npy",
+  "rebalance": 42,
+  "change": -29.81271879370838,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -29.81
+  ],
+  "change_0bps": -29.81271879370838,
+  "picks_mean_pct_0bps": -11.609377133638866,
+  "random_mean_pct_0bps": 18.203341660069515,
+  "p_0bps": [
+   0.996
+  ],
+  "change_5bps": -29.605213935368404,
+  "picks_mean_pct_5bps": -12.236684598438552,
+  "random_mean_pct_5bps": 17.36852933692985,
+  "p_5bps": [
+   0.996
+  ],
+  "change_20bps": -28.994598926123103,
+  "picks_mean_pct_20bps": -14.095427317517405,
+  "random_mean_pct_20bps": 14.899171608605698,
+  "p_20bps": [
+   0.996
+  ],
+  "line": "change over random -29.8 pts; picks -11.6% vs median random 18.2%; IC actual t -1.96; long-short -10.86 bps/day t -2.11; p (share of random at least as good) 0.996; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.9592917529870404,
+  "ls_bps_per_day": -10.863903626090003,
+  "ls_t": -2.112637970317485,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=90, rebalance 63": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w90.npy",
+  "rebalance": 63,
+  "change": -21.208959304722775,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -21.21
+  ],
+  "change_0bps": -21.208959304722775,
+  "picks_mean_pct_0bps": -2.3021601284007875,
+  "random_mean_pct_0bps": 18.906799176321986,
+  "p_0bps": [
+   0.948
+  ],
+  "change_5bps": -21.09382046729534,
+  "picks_mean_pct_5bps": -2.8381887425787844,
+  "random_mean_pct_5bps": 18.255631724716558,
+  "p_5bps": [
+   0.948
+  ],
+  "change_20bps": -20.75150384325987,
+  "picks_mean_pct_20bps": -4.431715522342239,
+  "random_mean_pct_20bps": 16.319788320917628,
+  "p_20bps": [
+   0.948
+  ],
+  "line": "change over random -21.2 pts; picks -2.3% vs median random 18.9%; IC actual t -1.13; long-short -7.98 bps/day t -1.63; p (share of random at least as good) 0.948; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.1268811530558505,
+  "ls_bps_per_day": -7.982442587141004,
+  "ls_t": -1.6254524544612305,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "w=180, rebalance 126": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_w180.npy",
+  "rebalance": 126,
+  "change": 0.1016444506914489,
+  "se": NaN,
+  "ahead": 1,
+  "years": 1,
+  "per_year": [
+   0.1
+  ],
+  "change_0bps": 0.1016444506914489,
+  "picks_mean_pct_0bps": 19.59627989833834,
+  "random_mean_pct_0bps": 19.494635447646893,
+  "p_0bps": [
+   0.495
+  ],
+  "change_5bps": 0.10058172745652882,
+  "picks_mean_pct_5bps": 19.343473425630698,
+  "random_mean_pct_5bps": 19.24289169817417,
+  "p_5bps": [
+   0.495
+  ],
+  "change_20bps": 0.07759040896351266,
+  "picks_mean_pct_20bps": 18.58714341596157,
+  "random_mean_pct_20bps": 18.509553006998058,
+  "p_20bps": [
+   0.495
+  ],
+  "line": "change over random +0.1 pts; picks 19.6% vs median random 19.5%; IC actual t +1.70; long-short 5.36 bps/day t +1.39; p (share of random at least as good) 0.495; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": 1.697765409367621,
+  "ls_bps_per_day": 5.357828909757907,
+  "ls_t": 1.3926063801922517,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "all 8 windows summed, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/unseen_aligned_wall.npy",
+  "rebalance": 21,
+  "change": -3.798124942697754,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -3.8
+  ],
+  "change_0bps": -3.798124942697754,
+  "picks_mean_pct_0bps": 16.024520478768768,
+  "random_mean_pct_0bps": 19.82264542146652,
+  "p_0bps": [
+   0.603
+  ],
+  "change_5bps": -3.767202002750089,
+  "picks_mean_pct_5bps": 14.894806016315144,
+  "random_mean_pct_5bps": 18.662008019065233,
+  "p_5bps": [
+   0.604
+  ],
+  "change_20bps": -3.6806922122513335,
+  "picks_mean_pct_20bps": 11.567047938236886,
+  "random_mean_pct_20bps": 15.24774015048822,
+  "p_20bps": [
+   0.604
+  ],
+  "line": "change over random -3.8 pts; picks 16.0% vs median random 19.8%; IC actual t -0.61; long-short -2.52 bps/day t -0.46; p (share of random at least as good) 0.603; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -0.6142626685476762,
+  "ls_bps_per_day": -2.5248231987158456,
+  "ls_t": -0.4574908201166805,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control seed 1, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/control_universe_s1.npy",
+  "rebalance": 21,
+  "change": -20.423107081982074,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -20.42
+  ],
+  "change_0bps": -20.423107081982074,
+  "picks_mean_pct_0bps": -2.044735326093128,
+  "random_mean_pct_0bps": 18.378371755888946,
+  "p_0bps": [
+   0.959
+  ],
+  "change_5bps": -20.133402556784198,
+  "picks_mean_pct_5bps": -3.513551382451374,
+  "random_mean_pct_5bps": 16.619851174332823,
+  "p_5bps": [
+   0.959
+  ],
+  "change_20bps": -19.2971653681137,
+  "picks_mean_pct_20bps": -7.7972069446871295,
+  "random_mean_pct_20bps": 11.49995842342657,
+  "p_20bps": [
+   0.96
+  ],
+  "line": "change over random -20.4 pts; picks -2.0% vs median random 18.4%; IC actual t -1.97; long-short -2.63 bps/day t -1.50; p (share of random at least as good) 0.959; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.9698849348122285,
+  "ls_bps_per_day": -2.630813277903057,
+  "ls_t": -1.5003999616031558,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control seed 2, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/control_universe_s2.npy",
+  "rebalance": 21,
+  "change": -2.188629807056941,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -2.19
+  ],
+  "change_0bps": -2.188629807056941,
+  "picks_mean_pct_0bps": 16.829894985344286,
+  "random_mean_pct_0bps": 19.018524792401227,
+  "p_0bps": [
+   0.564
+  ],
+  "change_5bps": -2.1629028028206108,
+  "picks_mean_pct_5bps": 15.083024264986733,
+  "random_mean_pct_5bps": 17.245927067807344,
+  "p_5bps": [
+   0.564
+  ],
+  "change_20bps": -2.1081840267263683,
+  "picks_mean_pct_20bps": 9.988034888616815,
+  "random_mean_pct_20bps": 12.096218915343183,
+  "p_20bps": [
+   0.564
+  ],
+  "line": "change over random -2.2 pts; picks 16.8% vs median random 19.0%; IC actual t -0.39; long-short -0.46 bps/day t -0.23; p (share of random at least as good) 0.564; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -0.3901168870474747,
+  "ls_bps_per_day": -0.4635378718376166,
+  "ls_t": -0.23448677528198014,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control seed 3, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/control_universe_s3.npy",
+  "rebalance": 21,
+  "change": 11.64487827742915,
+  "se": NaN,
+  "ahead": 1,
+  "years": 1,
+  "per_year": [
+   11.64
+  ],
+  "change_0bps": 11.64487827742915,
+  "picks_mean_pct_0bps": 30.748038143825408,
+  "random_mean_pct_0bps": 19.103159866396258,
+  "p_0bps": [
+   0.206
+  ],
+  "change_5bps": 11.450014057025015,
+  "picks_mean_pct_5bps": 28.816819497399383,
+  "random_mean_pct_5bps": 17.366805440374367,
+  "p_5bps": [
+   0.206
+  ],
+  "change_20bps": 10.925802344794434,
+  "picks_mean_pct_20bps": 23.18221657860913,
+  "random_mean_pct_20bps": 12.256414233814695,
+  "p_20bps": [
+   0.206
+  ],
+  "line": "change over random +11.6 pts; picks 30.7% vs median random 19.1%; IC actual t +1.56; long-short 0.93 bps/day t +0.44; p (share of random at least as good) 0.206; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": 1.5597229300359878,
+  "ls_bps_per_day": 0.933017014037995,
+  "ls_t": 0.4429586650975598,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control seed 4, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/control_universe_s4.npy",
+  "rebalance": 21,
+  "change": -23.576394904794196,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -23.58
+  ],
+  "change_0bps": -23.576394904794196,
+  "picks_mean_pct_0bps": -4.796422181499982,
+  "random_mean_pct_0bps": 18.779972723294215,
+  "p_0bps": [
+   0.958
+  ],
+  "change_5bps": -23.25676632875461,
+  "picks_mean_pct_5bps": -6.177387120776034,
+  "random_mean_pct_5bps": 17.079379207978572,
+  "p_5bps": [
+   0.958
+  ],
+  "change_20bps": -22.3219552102346,
+  "picks_mean_pct_20bps": -10.208564229484473,
+  "random_mean_pct_20bps": 12.113390980750127,
+  "p_20bps": [
+   0.959
+  ],
+  "line": "change over random -23.6 pts; picks -4.8% vs median random 18.8%; IC actual t -1.80; long-short -1.74 bps/day t -0.57; p (share of random at least as good) 0.958; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.7950522109746347,
+  "ls_bps_per_day": -1.7433802996362966,
+  "ls_t": -0.5743926109814131,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control seed 5, rebalance 21": {
+  "file": "/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/control_universe_s5.npy",
+  "rebalance": 21,
+  "change": -1.6190142454912007,
+  "se": NaN,
+  "ahead": 0,
+  "years": 1,
+  "per_year": [
+   -1.62
+  ],
+  "change_0bps": -1.6190142454912007,
+  "picks_mean_pct_0bps": 17.519978336001273,
+  "random_mean_pct_0bps": 19.138992581492474,
+  "p_0bps": [
+   0.545
+  ],
+  "change_5bps": -1.6264840172058008,
+  "picks_mean_pct_5bps": 15.766295165501742,
+  "random_mean_pct_5bps": 17.392779182707542,
+  "p_5bps": [
+   0.545
+  ],
+  "change_20bps": -1.586388866199906,
+  "picks_mean_pct_20bps": 10.651154068735513,
+  "random_mean_pct_20bps": 12.23754293493542,
+  "p_20bps": [
+   0.546
+  ],
+  "line": "change over random -1.6 pts; picks 17.5% vs median random 19.1%; IC actual t -1.87; long-short -0.88 bps/day t -0.39; p (share of random at least as good) 0.545; SPY 24.6%, all candidates 20.7%",
+  "ic_ret_t": -1.87492404683685,
+  "ls_bps_per_day": -0.8788810954207465,
+  "ls_t": -0.3936813255037102,
+  "spy_pct": 24.649137913493057,
+  "hold_all_pct": 20.66062488426159,
+  "days": 329,
+  "candidates": 2155
+ },
+ "universe control mean change": -7.232453552379053
+}

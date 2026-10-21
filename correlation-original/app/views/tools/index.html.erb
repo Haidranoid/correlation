@@ -1,0 +1,198 @@
+<div class="content-wrapper">
+  <div class="page-header">
+    <h1>🛠️ Tools</h1>
+    <p class="page-description">Database management and administrative tools</p>
+  </div>
+
+  <div class="tools-container">
+    <section class="tool-section">
+      <div class="section-header">
+        <h2>💾 Database Backups</h2>
+        <p class="section-description">Download database backup files organized by day of week</p>
+      </div>
+
+      <div class="backup-files">
+        <% if @backup_files.any? %>
+          <div class="backup-grid">
+            <% @backup_files.each do |backup| %>
+              <div class="backup-card">
+                <div class="backup-header">
+                  <h3 class="backup-day">📅 <%= backup[:day] %></h3>
+                  <span class="backup-size"><%= backup[:size] %></span>
+                </div>
+                
+                <div class="backup-details">
+                  <div class="backup-info">
+                    <span class="backup-filename">📄 <%= backup[:filename] %></span>
+                    <span class="backup-modified">🕒 <%= backup[:modified] %></span>
+                  </div>
+                </div>
+                
+                <div class="backup-actions">
+                  <%= link_to download_backup_path(filename: backup[:filename]), 
+                              class: "btn btn-primary download-btn",
+                              data: { 
+                                turbo_method: :get,
+                                confirm: "Download #{backup[:filename]}? (#{backup[:size]})"
+                              } do %>
+                    ⬇️ Download
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state">
+            <div class="empty-icon">📁</div>
+            <h3>No backup files found</h3>
+            <p>Run <code>rake db:backup:dump</code> to create your first backup.</p>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .tools-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .tool-section {
+    background: var(--card-bg, #2a2b35);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color, #3a3b45);
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color, #3a3b45);
+    padding-bottom: 1rem;
+  }
+
+  .section-header h2 {
+    color: var(--text-primary, #ffffff);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+
+  .section-description {
+    color: var(--text-secondary, #a0a0a0);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .backup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .backup-card {
+    background: var(--bg-secondary, #1e1f26);
+    border: 1px solid var(--border-color, #3a3b45);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .backup-card:hover {
+    border-color: var(--accent-color, #10b981);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+  }
+
+  .backup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .backup-day {
+    color: var(--text-primary, #ffffff);
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .backup-size {
+    background: var(--accent-color, #10b981);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .backup-details {
+    margin-bottom: 1.5rem;
+  }
+
+  .backup-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .backup-filename,
+  .backup-modified {
+    color: var(--text-secondary, #a0a0a0);
+    font-size: 0.9rem;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .backup-actions {
+    text-align: center;
+  }
+
+  .download-btn {
+    background: linear-gradient(135deg, var(--accent-color, #10b981) 0%, #059669 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .download-btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-secondary, #a0a0a0);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    color: var(--text-primary, #ffffff);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-state code {
+    background: var(--bg-secondary, #1e1f26);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    color: var(--accent-color, #10b981);
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+</style>

@@ -1,0 +1,34 @@
+{
+  "python_vs_dump": {
+    "cells_compared": 1079142,
+    "rebalance_days": 866,
+    "bitwise_equal": 1079142,
+    "max_ulp": 0,
+    "cells_1_ulp": 0,
+    "signed_zero_mismatches": 0,
+    "py_dtype": "float64",
+    "dump_dtype": "float64",
+    "py_nan_where_judge_scored": 0,
+    "passed": true,
+    "a": "runs/poc/baselines/reversal5.npy",
+    "b": "runs/poc/g0/judge_rev5_dump.npy"
+  },
+  "scores_vs_reversal_family_json": {
+    "fields_compared": 792,
+    "years": 17,
+    "differences": 0,
+    "first_differences": [],
+    "passed": true,
+    "a": "results/poc/g0_reversal_family.json",
+    "b": "results/poc/g0_scores_family.json"
+  },
+  "ref_c2_vs_judge_reversal": {
+    "reference_lines": 22,
+    "year_rows": 17,
+    "differences": 0,
+    "first_differences": [],
+    "passed": true,
+    "a": "runs/poc/g0/ref_c2_rev5.txt",
+    "b": "runs/poc/g0/judge_rev5_default.txt"
+  }
+}

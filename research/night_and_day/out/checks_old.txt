@@ -1,0 +1,28 @@
+1. direct OLS vs rolling: max abs diff over 200 stock-days 5.714377748766708e-08
+2. point in time: max |b_lag diff| through t0 0.0 same NaN pattern True
+3. legs sum vs close-to-close: max abs diff 2.8401121149324027e-08
+4. 2006: universe stock-days 3287, b0 median 0.935, b_lag median +0.070 (p10 -0.108, p90 +0.295), corr(b0, b_lag) +0.43
+4. 2007: universe stock-days 4287, b0 median 0.989, b_lag median +0.035 (p10 -0.149, p90 +0.285), corr(b0, b_lag) +0.35
+4. 2008: universe stock-days 12940, b0 median 1.063, b_lag median +0.006 (p10 -0.212, p90 +0.252), corr(b0, b_lag) +0.14
+4. 2009: universe stock-days 10798, b0 median 1.067, b_lag median +0.008 (p10 -0.183, p90 +0.220), corr(b0, b_lag) +0.14
+4. 2010: universe stock-days 11124, b0 median 1.177, b_lag median +0.026 (p10 -0.157, p90 +0.215), corr(b0, b_lag) +0.10
+4. 2011: universe stock-days 12040, b0 median 1.168, b_lag median +0.012 (p10 -0.121, p90 +0.182), corr(b0, b_lag) +0.24
+4. 2012: universe stock-days 12445, b0 median 1.191, b_lag median -0.004 (p10 -0.152, p90 +0.168), corr(b0, b_lag) +0.23
+4. 2013: universe stock-days 12718, b0 median 1.056, b_lag median +0.030 (p10 -0.121, p90 +0.208), corr(b0, b_lag) +0.24
+4. 2014: universe stock-days 14406, b0 median 1.082, b_lag median +0.017 (p10 -0.159, p90 +0.208), corr(b0, b_lag) +0.16
+4. 2015: universe stock-days 15552, b0 median 0.994, b_lag median -0.016 (p10 -0.185, p90 +0.172), corr(b0, b_lag) +0.20
+4. 2016: universe stock-days 16045, b0 median 1.034, b_lag median +0.045 (p10 -0.090, p90 +0.253), corr(b0, b_lag) +0.33
+4. 2017: universe stock-days 17136, b0 median 1.211, b_lag median +0.053 (p10 -0.175, p90 +0.336), corr(b0, b_lag) +0.36
+4. 2018: universe stock-days 18816, b0 median 0.930, b_lag median +0.017 (p10 -0.173, p90 +0.205), corr(b0, b_lag) +0.01
+4. 2019: universe stock-days 19665, b0 median 0.980, b_lag median +0.001 (p10 -0.159, p90 +0.136), corr(b0, b_lag) -0.12
+4. 2020: universe stock-days 22161, b0 median 1.143, b_lag median +0.034 (p10 -0.160, p90 +0.277), corr(b0, b_lag) +0.37
+4. 2021: universe stock-days 22442, b0 median 1.106, b_lag median -0.014 (p10 -0.245, p90 +0.195), corr(b0, b_lag) -0.02
+4. 2022: universe stock-days 24294, b0 median 1.040, b_lag median -0.006 (p10 -0.220, p90 +0.151), corr(b0, b_lag) -0.22
+4. 2023: universe stock-days 24335, b0 median 1.037, b_lag median +0.002 (p10 -0.155, p90 +0.168), corr(b0, b_lag) +0.25
+4. 2024: universe stock-days 25801, b0 median 1.063, b_lag median +0.034 (p10 -0.188, p90 +0.280), corr(b0, b_lag) +0.16
+4. 2025: universe stock-days 13554, b0 median 0.937, b_lag median -0.010 (p10 -0.229, p90 +0.164), corr(b0, b_lag) -0.21
+5. universe on 2007-12-03: 976 stocks, 500 largest 500
+5. universe on 2012-01-03: 1042 stocks, 500 largest 500
+5. universe on 2015-12-04: 1327 stocks, 500 largest 500
+5. universe on 2019-12-06: 1657 stocks, 500 largest 500
+5. universe on 2023-12-08: 2072 stocks, 500 largest 500

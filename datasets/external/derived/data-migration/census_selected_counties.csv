@@ -1,0 +1,41 @@
+fips,slug,state,county,reason
+06037,los_angeles_ca,California,Los Angeles County,most populous; immigration gateway; domestic outflow
+17031,cook_il,Illinois,Cook County,Chicago; gateway; domestic outflow
+48201,harris_tx,Texas,Harris County,Houston; fast growth and gateway
+04013,maricopa_az,Arizona,Maricopa County,Phoenix; fastest numeric growth
+06073,san_diego_ca,California,San Diego County,border metro
+06059,orange_ca,California,Orange County,large gateway suburb
+12086,miami_dade_fl,Florida,Miami-Dade County,largest Latin American gateway
+48113,dallas_tx,Texas,Dallas County,Dallas; gateway
+36047,kings_ny,New York,Kings County,Brooklyn; gateway
+06065,riverside_ca,California,Riverside County,Inland Empire; domestic in-migration
+36081,queens_ny,New York,Queens County,Queens; most foreign-born county
+32003,clark_nv,Nevada,Clark County,Las Vegas; housing-cycle growth
+53033,king_wa,Washington,King County,"Seattle; tech, H-1B gateway"
+48439,tarrant_tx,Texas,Tarrant County,Fort Worth; fast growth
+48029,bexar_tx,Texas,Bexar County,San Antonio
+12011,broward_fl,Florida,Broward County,gateway; Florida in-migration
+06085,santa_clara_ca,California,Santa Clara County,Silicon Valley; tech gateway
+26163,wayne_mi,Michigan,Wayne County,Detroit; long decline
+36061,new_york_ny,New York,New York County,Manhattan
+25017,middlesex_ma,Massachusetts,Middlesex County,"Boston area; universities, biotech"
+42101,philadelphia_pa,Pennsylvania,Philadelphia County,large old-core city
+48453,travis_tx,Texas,Travis County,"Austin; fast growth, tech"
+48085,collin_tx,Texas,Collin County,Dallas suburb; among fastest-growing large counties
+48121,denton_tx,Texas,Denton County,Dallas suburb; fast growth
+48157,fort_bend_tx,Texas,Fort Bend County,"Houston suburb; fast growth, diverse"
+37183,wake_nc,North Carolina,Wake County,Raleigh; fast growth
+37119,mecklenburg_nc,North Carolina,Mecklenburg County,Charlotte; banking hub
+12057,hillsborough_fl,Florida,Hillsborough County,Tampa
+12095,orange_fl,Florida,Orange County,Orlando; Puerto Rican and Latin American inflows
+12071,lee_fl,Florida,Lee County,"Fort Myers; retiree in-migration, hurricane Ian"
+04021,pinal_az,Arizona,Pinal County,Phoenix exurb; housing boom and bust
+49049,utah_ut,Utah,Utah County,Provo; fast natural increase and tech
+34017,hudson_nj,New Jersey,Hudson County,Jersey City; gateway
+51059,fairfax_va,Virginia,Fairfax County,"Washington suburb; federal economy, gateway"
+48329,midland_tx,Texas,Midland County,Permian Basin oil boom
+38105,williams_nd,North Dakota,Williams County,Bakken oil boom and bust
+22071,orleans_la,Louisiana,Orleans Parish,New Orleans; Hurricane Katrina
+06075,san_francisco_ca,California,San Francisco County,tech; pandemic outflow
+39035,cuyahoga_oh,Ohio,Cuyahoga County,Cleveland; Rust Belt decline
+08031,denver_co,Colorado,Denver County,Denver

@@ -1,0 +1,4 @@
+219 rolling 16-month windows, 2006-01..2025-06
+diff: median -0.015%, 5th..95th pct -0.140%..+0.203%, max +0.302%
+share with diff >= +0.175%: 0.082; share with Welch t >= 1.69: 0.018
+share with t <= -1.69: 0.009

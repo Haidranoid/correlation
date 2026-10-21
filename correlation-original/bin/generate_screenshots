@@ -1,0 +1,387 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+require 'json'
+
+# Screenshot generation script using headless Chrome
+# Requires: Chrome/Chromium browser and screenshot capabilities
+
+class ScreenshotGenerator
+  SCREENSHOTS_DIR = 'screenshots'
+  BASE_URL = 'http://localhost:3000'
+  
+  SCREENSHOTS = [
+    {
+      name: 'dashboard-overview',
+      url: '/',
+      description: 'Main dashboard with statistics and charts',
+      viewport: { width: 1920, height: 1080 },
+      wait_for: '.chart-container'
+    },
+    {
+      name: 'stocks-table', 
+      url: '/',
+      description: 'DataTables showing stock symbols and data',
+      viewport: { width: 1920, height: 1080 },
+      wait_for: '#stocks-table',
+      scroll_to: '#stocks-table'
+    },
+    {
+      name: 'stock-detail',
+      url: '/AAPL', # Will need a valid stock symbol
+      description: 'Individual stock page with company information',
+      viewport: { width: 1920, height: 1080 },
+      wait_for: '.stock-info'
+    },
+    {
+      name: 'charts-interactive',
+      url: '/',
+      description: 'Interactive charts with hover effects',
+      viewport: { width: 1920, height: 1080 },
+      wait_for: '.chart-container',
+      hover_element: '.chart-container canvas'
+    },
+    {
+      name: 'mobile-dashboard',
+      url: '/',
+      description: 'Mobile responsive dashboard view',
+      viewport: { width: 375, height: 667 },
+      wait_for: '.chart-container'
+    },
+    {
+      name: 'tablet-dashboard',
+      url: '/',
+      description: 'Tablet responsive dashboard view', 
+      viewport: { width: 768, height: 1024 },
+      wait_for: '.chart-container'
+    }
+  ].freeze
+
+  def initialize
+    @screenshots_dir = File.join(Dir.pwd, SCREENSHOTS_DIR)
+    ensure_screenshots_directory
+  end
+
+  def generate_all
+    puts "🚀 Starting screenshot generation..."
+    puts "📁 Screenshots will be saved to: #{@screenshots_dir}"
+    puts "🌐 Base URL: #{BASE_URL}"
+    puts ""
+
+    check_server_running
+    check_dependencies
+
+    SCREENSHOTS.each_with_index do |screenshot, index|
+      puts "📸 [#{index + 1}/#{SCREENSHOTS.length}] Capturing: #{screenshot[:name]}"
+      puts "   URL: #{BASE_URL}#{screenshot[:url]}"
+      puts "   Description: #{screenshot[:description]}"
+      
+      success = capture_screenshot(screenshot)
+      
+      if success
+        puts "   ✅ Success: #{screenshot[:name]}.png"
+      else
+        puts "   ❌ Failed: #{screenshot[:name]}"
+      end
+      
+      puts ""
+      sleep(1) # Brief pause between screenshots
+    end
+
+    puts "🎉 Screenshot generation complete!"
+    puts "📁 Check the #{SCREENSHOTS_DIR}/ directory for generated images"
+  end
+
+  private
+
+  def ensure_screenshots_directory
+    FileUtils.mkdir_p(@screenshots_dir)
+    puts "📁 Created screenshots directory: #{@screenshots_dir}"
+  end
+
+  def check_server_running
+    puts "🔍 Checking if Rails server is running..."
+    
+    require 'net/http'
+    uri = URI(BASE_URL)
+    
+    begin
+      response = Net::HTTP.get_response(uri)
+      if response.code == '200'
+        puts "✅ Rails server is running at #{BASE_URL}"
+      else
+        puts "⚠️  Server responded with status #{response.code}"
+      end
+    rescue => e
+      puts "❌ Rails server is not running at #{BASE_URL}"
+      puts "   Please start the server with: rails server"
+      puts "   Error: #{e.message}"
+      exit(1)
+    end
+  end
+
+  def check_dependencies
+    puts "🔍 Checking dependencies..."
+    
+    # Check for Chrome/Chromium
+    chrome_paths = [
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser', 
+      '/usr/bin/chromium',
+      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      'C:\Program Files\Google\Chrome\Application\chrome.exe',
+      'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
+    ]
+    
+    chrome_found = chrome_paths.find { |path| File.exist?(path) }
+    
+    if chrome_found
+      puts "✅ Chrome found at: #{chrome_found}"
+      @chrome_path = chrome_found
+    else
+      # Try which/where command
+      chrome_cmd = system('which google-chrome > /dev/null 2>&1') || 
+                   system('which chromium-browser > /dev/null 2>&1') ||
+                   system('which chromium > /dev/null 2>&1')
+      
+      if chrome_cmd
+        @chrome_path = 'google-chrome'
+        puts "✅ Chrome found in PATH"
+      else
+        puts "❌ Chrome/Chromium not found"
+        puts "   Please install Chrome or Chromium:"
+        puts "   - Ubuntu/Debian: sudo apt-get install chromium-browser"
+        puts "   - macOS: brew install --cask google-chrome"
+        puts "   - Windows: Download from https://www.google.com/chrome/"
+        exit(1)
+      end
+    end
+  end
+
+  def capture_screenshot(config)
+    filename = "#{config[:name]}.png"
+    filepath = File.join(@screenshots_dir, filename)
+    url = "#{BASE_URL}#{config[:url]}"
+    viewport = config[:viewport]
+    
+    # Build Chrome command
+    chrome_args = [
+      @chrome_path,
+      '--headless',
+      '--no-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+      '--disable-extensions',
+      '--disable-web-security',
+      '--allow-running-insecure-content',
+      "--window-size=#{viewport[:width]},#{viewport[:height]}",
+      "--screenshot=#{filepath}",
+      url
+    ]
+    
+    # Add wait conditions if specified
+    if config[:wait_for]
+      # Note: Basic headless Chrome doesn't support wait conditions
+      # For production use, consider using Puppeteer or Playwright
+      puts "   ⏳ Note: Wait conditions require Puppeteer/Playwright for full support"
+    end
+    
+    # Execute Chrome command
+    success = system(*chrome_args)
+    
+    if success && File.exist?(filepath)
+      file_size = File.size(filepath)
+      puts "   📊 File size: #{(file_size / 1024.0).round(1)}KB"
+      
+      # Optimize screenshot if needed
+      optimize_screenshot(filepath) if file_size > 500_000 # > 500KB
+      
+      true
+    else
+      puts "   ❌ Screenshot capture failed"
+      false
+    end
+  rescue => e
+    puts "   ❌ Error capturing screenshot: #{e.message}"
+    false
+  end
+
+  def optimize_screenshot(filepath)
+    puts "   🔧 Optimizing large screenshot..."
+    
+    # Try to use ImageMagick if available
+    if system('which convert > /dev/null 2>&1')
+      system("convert '#{filepath}' -quality 85 -strip '#{filepath}'")
+      puts "   ✅ Optimized with ImageMagick"
+    else
+      puts "   ⚠️  ImageMagick not found - install for automatic optimization"
+      puts "      Ubuntu/Debian: sudo apt-get install imagemagick"
+      puts "      macOS: brew install imagemagick"
+    end
+  end
+end
+
+# Enhanced screenshot generator using Puppeteer (if available)
+class PuppeteerScreenshotGenerator < ScreenshotGenerator
+  def initialize
+    super
+    @use_puppeteer = check_puppeteer_available
+  end
+
+  private
+
+  def check_puppeteer_available
+    if system('which node > /dev/null 2>&1')
+      # Check if we can use Puppeteer
+      node_script = <<-JS
+        try {
+          require('puppeteer');
+          console.log('puppeteer-available');
+        } catch(e) {
+          console.log('puppeteer-not-available');
+        }
+      JS
+      
+      result = `node -e "#{node_script}"`.strip
+      if result == 'puppeteer-available'
+        puts "✅ Puppeteer detected - will use enhanced screenshot capabilities"
+        return true
+      end
+    end
+    
+    puts "ℹ️  Puppeteer not available - using basic Chrome headless mode"
+    puts "   For enhanced screenshots with wait conditions, install:"
+    puts "   npm install puppeteer"
+    false
+  end
+
+  def capture_screenshot(config)
+    if @use_puppeteer
+      capture_with_puppeteer(config)
+    else
+      super(config)
+    end
+  end
+
+  def capture_with_puppeteer(config)
+    filename = "#{config[:name]}.png"
+    filepath = File.join(@screenshots_dir, filename)
+    url = "#{BASE_URL}#{config[:url]}"
+    viewport = config[:viewport]
+    
+    # Create Puppeteer script
+    puppeteer_script = create_puppeteer_script(url, filepath, viewport, config)
+    script_path = "/tmp/screenshot_#{config[:name]}.js"
+    
+    File.write(script_path, puppeteer_script)
+    
+    # Execute Puppeteer script
+    success = system("node #{script_path}")
+    
+    # Cleanup
+    File.delete(script_path) if File.exist?(script_path)
+    
+    if success && File.exist?(filepath)
+      file_size = File.size(filepath)
+      puts "   📊 File size: #{(file_size / 1024.0).round(1)}KB"
+      optimize_screenshot(filepath) if file_size > 500_000
+      true
+    else
+      false
+    end
+  rescue => e
+    puts "   ❌ Error with Puppeteer: #{e.message}"
+    false
+  end
+
+  def create_puppeteer_script(url, filepath, viewport, config)
+    <<-JS
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-dev-shm-usage']
+  });
+  
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: #{viewport[:width]},
+    height: #{viewport[:height]}
+  });
+  
+  try {
+    await page.goto('#{url}', { waitUntil: 'networkidle0', timeout: 30000 });
+    
+    #{config[:wait_for] ? "await page.waitForSelector('#{config[:wait_for]}', { timeout: 10000 });" : ""}
+    #{config[:scroll_to] ? "await page.$eval('#{config[:scroll_to]}', el => el.scrollIntoView());" : ""}
+    #{config[:hover_element] ? "await page.hover('#{config[:hover_element]}');" : ""}
+    
+    await page.screenshot({
+      path: '#{filepath}',
+      fullPage: false
+    });
+    
+    console.log('Screenshot captured successfully');
+  } catch (error) {
+    console.error('Screenshot failed:', error.message);
+    process.exit(1);
+  }
+  
+  await browser.close();
+})();
+    JS
+  end
+end
+
+# Main execution
+if __FILE__ == $0
+  puts "📸 Stock Correlation Analysis Platform - Screenshot Generator"
+  puts "=" * 60
+  puts ""
+
+  # Check for enhanced mode
+  if ARGV.include?('--enhanced') || ARGV.include?('-e')
+    generator = PuppeteerScreenshotGenerator.new
+  else
+    generator = ScreenshotGenerator.new
+  end
+
+  # Generate screenshots
+  generator.generate_all
+
+  puts ""
+  puts "💡 Tips:"
+  puts "   - Use --enhanced flag for better screenshots with Puppeteer"
+  puts "   - Make sure Rails server is running before generating"
+  puts "   - Check screenshots/ directory for results"
+  puts "   - Optimize large images with ImageMagick if needed"
+end
+    JS
+  end
+end
+
+# Main execution
+if __FILE__ == $0
+  puts "📸 Stock Correlation Analysis Platform - Screenshot Generator"
+  puts "=" * 60
+  puts ""
+
+  # Check for enhanced mode
+  if ARGV.include?('--enhanced') || ARGV.include?('-e')
+    generator = PuppeteerScreenshotGenerator.new
+  else
+    generator = ScreenshotGenerator.new
+  end
+
+  # Generate screenshots
+  generator.generate_all
+
+  puts ""
+  puts "💡 Tips:"
+  puts "   - Use --enhanced flag for better screenshots with Puppeteer"
+  puts "   - Make sure Rails server is running before generating"
+  puts "   - Check screenshots/ directory for results"
+  puts "   - Optimize large images with ImageMagick if needed"
+end

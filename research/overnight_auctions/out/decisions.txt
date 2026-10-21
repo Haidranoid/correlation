@@ -1,0 +1,101 @@
+Decisions for the overnight auctions experiment (experiments/+54.1-overnight-auctions.md).
+Written 2026-10-21T14:11-05:00, BEFORE any signal or outcome was computed. Only data-quality checks had been run
+(divcheck.py: the cent-grid look at dividend adjustment). Items added later carry their own time.
+
+D1  Dividends and splits (data check, divcheck.py). Stooq back-adjusts cumulatively: every earlier open, high, low and
+    close of a symbol is multiplied by the same factor and stored to 6 significant digits, so adjusted prices are
+    off the cent grid and raw prices are on it. A one-step change-point fit per symbol (a day is off-grid when >= 2 of
+    O, H, L, C are) gives the raw boundary B: days < B adjusted, days >= B raw. Splits are always adjusted (they also
+    move B). Most dividend payers' boundaries fall in Oct-Nov 2022 in BOTH stores (KO 2022-11-30, XOM 2022-11-14,
+    T 2022-10-06, JPM 2022-10-05, O 2022-11-30; SPY, AAPL and MSFT later). So an ex-date overnight is a total return
+    (adjusted) through about 2022 and price-only (the open drops by the dividend against an unadjusted previous close)
+    from late 2022 on, including all of the unseen months. Share of universe overnights in the raw region: 12-15% in
+    2008-2013 (nearly all stocks that never had an adjusted event), 29% in 2019, 48% in 2022, 94-99% in 2023-2025-06,
+    99% in 2026. There is no dividend calendar on disk for 2008-2025, so the plan's "drop ex-date overnights if
+    unadjusted" cannot be applied to history.
+    Headline: the store as is. Sensitivities, fixed now: (a) every test and the money test's average also over
+    2008-2022 only, and Test 3 split into 2020-2022 and 2023-2025-06; (b) in 2026-06-01..2026-10-19 (unseen months,
+    raw store) the Yahoo daily file on disk (twin_gap_fade_check y1d.csv: dividends and splits) gives ex-dates for its
+    symbols: drop ex-date overnights of the stock or its twin (signal and outcome) and report the change in the unseen
+    book and account as the measured size of the bias, with coverage. The "payer" flag (an adjusted region exists) is
+    not used as a drop rule: split adjustment also takes prices off the grid.
+
+D2  Timing. Signal day t: the decision is made before the 15:50 cutoff, so S(t) may use opens through t and closes
+    through t-1. The universe, twin, beta (twin) and the SPY beta for day t all come from the rebalance
+    k = kidx(rebal, t-1), i.e. rebal[k] <= t-1, whose inputs end at that rebalance's close (asserted in the code).
+    checks.py verifies it: for sampled t, overwrite every stock and fund close (and high, low) from column t on and
+    every open from t+1 on with garbage, recompute, and require S(:, t) bit-identical.
+
+D3  Overnight for the signal, o(d) = log(open_d / close_{d-1}) on consecutive export days, from the store. Missing if
+    a price is missing or <= 0, |o| > 0.5 (night and day's bad-print rule), d before 2008-01-02, or the open equals
+    the previous close (stale open). The twin gap fade's headline did not drop stale opens; its post-hoc check
+    defined them as open = previous close or open = close and found no change. Here the plan says a stale open is not
+    a real fill, so open = previous close is dropped; open = close is not usable for the signal (it needs day t's
+    close). Same rule for the twin fund's overnight. The rule uses only open_d and close_{d-1}, so x(d) is the same
+    whether d is today or an earlier day.
+
+D4  x_i(d) = o_i(d) - beta_i * o_twin(d), with the twin and beta of rebalance k = kidx(rebal, t-1) applied to all 21
+    overnights d = t-20..t. S_i(t) = mean of the present x over those 21, at least 17 present. Raw version:
+    S_raw = the same mean of o_i (stock only), at least 17 present.
+
+D5  Universe on day t: the judge-like liquid set at rebal[k] (night and day's universe(), copied), with a twin at k
+    (fund_row >= 0), minus c2eval.excluded at k; ranked set = universe members with a finite S(t). The raw version
+    uses the same universe and additionally needs a finite SPY beta. 500 largest: night and day's rule (top 500 by
+    63-day median dollar volume at rebal[k]); deciles re-ranked inside it. A day needs >= 50 ranked stocks.
+
+D6  Outcome position-day (exit day d = t+1): the stock's overnight on d valid by D3's rule, plus night and day's leg
+    rule on d (|intraday log| <= 0.5, not open = close = high = low); same for the hedge (twin, or SPY in the raw
+    version). Invalid position-days are dropped from that day's leg means (as night and day). Sensitivity for the
+    money test: exits with open_{t+1} = close_t kept at a 0 return instead of dropped.
+
+D7  Book: long the top round(10% x n) by S, short the bottom round(10% x n), equal weight, $1 long and $1 short.
+    Position return (long) = (open_d / close_t - 1) - beta * (twin open_d / twin close_t - 1); short = minus that.
+    Book gross = mean long - mean short over valid positions. Tug of war: the same positions' intraday leg on d,
+    (close_d / open_d - 1) - beta * (twin's same), gross. Raw version: rank S_raw, hedge with SPY's overnight at the
+    stock's SPY beta: OLS slope of the stock's daily close-to-close log return (export) on SPY's (store close) over
+    the 252 days ending at rebal[k], |r| > 0.5 missing, >= 227 pairs.
+
+D8  Costs: stocks 2 bps per side, both sides daily on $1 long and $1 short = 8 bps a day off the long-short. Hedge
+    legs netted across positions per fund each day: 2 x 1 bp x sum_f |net fund weight| (enter at close, exit at
+    open). Net = gross - 8 bps - hedge cost. Break-even stock cost per side = (gross - hedge cost) / 4.
+
+D9  Tests: periods by exit day. Test 1: all stocks, 2008-01-01..2019-12-31, mean net daily return, plain t >= 3
+    (Newey-West 5 lags reported). Test 2: the 500 largest, 2008-2019, net mean > 0 with t >= 2. Test 3: 2020-01-01..
+    2025-06-27 net mean > 0 ("same sign" = the plan's direction, positive); then the unseen months
+    2025-06-30..2026-10-19 (new export and store, once, at the end), net mean > 0.
+
+D10 Money test (the plan's own): each day t the 20 highest S of the all-stocks ranked set (stable sort), bought at
+    close_t and sold at open_{t+1}, long only, unhedged; the day's return is the mean simple overnight return of the
+    valid picks. 1,000 random accounts each draw 20 distinct stocks uniformly from the same day's ranked set, same
+    validity handling. numpy default_rng(seed 20261021). Calendar-year returns compound the daily returns by the
+    exit day's year: 2008 (from the first signal, late January) .. 2025 (to 06-27). Number = mean over the 18 years of
+    (account - median random account), in points, at 0 bps; also at 2 bps per side (4 bps a day). Reported: per-year
+    differences, years ahead, se, per-year p (share of random accounts >= the account), years with p < 0.1. Unseen
+    months: one period 2025-06-30..2026-10-19 (exit days), compounded. Volatility-matched accounts are not in the
+    plan and are not run.
+
+D11 The 9:35 extra (unseen months, at the end): the money account's positions with exit day d in the Yahoo 5-minute
+    window (from 2026-07-29, days where SPY has all 78 bars 09:30..15:55). Entry = the store's close_t. Exit at the
+    store's open_d vs Yahoo's open of the 09:35 bar (y5m.csv open_0935) for the stock on d. Usable only if the store
+    close equals Yahoo's daily close within 0.1% on t and d, and no dividend or split ex-date on d (y1d.csv). Share
+    kept = mean over the common set of the 9:35 return / mean of the open return; also per-day means with t, and
+    the same in excess of the day's universe mean (the ranked stocks with usable bars), and coverage.
+
+D12 Judge plumbing check: night and day's sanity() copied (5-day reversal, s = -log(c_t / c_{t-5}), rebalance=5),
+    saved under overnight_auctions/sanity_reversal5. Expect +11.8 pts/yr, beat random at p < 0.1 in 8 of 18 years.
+
+Results seen so far (2026-10-21T14:25-05:00): judge sanity check (+11.8, 8 of 18: wiring confirmed); tests.py old
+(Test 1 net +1.06 bps a day, t 2.08: fails; Test 2 fails; Test 3 fails); money.py old (+54.1 points a year at 0 bps,
+ahead 18 of 18; picks at the 84th volatility percentile; 2009 +399, 2008 +148, 2020 +120).
+
+P1  (2026-10-21T14:26-05:00, POST HOC, after the money test; no rule, pass/fail or file-name number changed) diag.py:
+    volatility-matched random accounts (judge-style deciles of trailing 63-day close-to-close volatility through t-1
+    within the day's ranked set; seed SEED+1); the money test inside the 500 largest (seed SEED+2); robust aggregates
+    of the yearly differences (median; mean without 2008, 2009, 2020: years chosen after seeing the by-year table);
+    the account's intraday and close-to-close legs on the same positions; the share of picks with close_{t-1} < $5
+    and the account restricted to close_{t-1} >= $5 (seed SEED+3). Reason: picks sit at the 84th volatility
+    percentile on survivor-only data, and the mean is carried by three years.
+
+P2  (2026-10-21T14:30:14-05:00, before any unseen-month number) Old-export results are final and drafted in the .md. The
+    unseen months are run once: build.py new, tests.py new, money.py new, diag.py new (the same post hoc
+    diagnostics), extra935.py (D11) and divunseen.py (D1 b). extra935 and divunseen were written before running new.

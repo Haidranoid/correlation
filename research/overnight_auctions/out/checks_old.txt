@@ -1,0 +1,15 @@
+1. t = 2008-07-18 (rebalance 2008-07-03): finite S 991; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2009-09-14 (rebalance 2009-09-02): finite S 849; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2010-06-22 (rebalance 2010-06-04): finite S 927; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2014-09-17 (rebalance 2014-09-05): finite S 1178; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2015-02-05 (rebalance 2015-01-06): finite S 1261; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2015-11-11 (rebalance 2015-11-04): finite S 1289; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2016-08-19 (rebalance 2016-08-05): finite S 1273; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2017-01-09 (rebalance 2017-01-05): finite S 1278; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2018-12-12 (rebalance 2018-12-06): finite S 1608; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2021-04-07 (rebalance 2021-03-10): finite S 1782; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2023-03-10 (rebalance 2023-02-08): finite S 1996; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. t = 2023-12-15 (rebalance 2023-12-08): finite S 2050; S identical True, S_raw identical True, universe identical True, SPY beta identical True
+1. timing check over 12 days: PASS
+1. control: garbling day t's open (2016-08-19) changes S for 1250 of 1273 stocks
+2. S vs direct computation on 300 random stock-days: max abs diff 9.69e-10 (float32 storage)

@@ -1,0 +1,410 @@
+<% content_for :title, "Edit User - Admin" %>
+
+<div class="admin-content">
+  <div class="admin-header">
+    <h1>✏️ Edit User Account</h1>
+  </div>
+
+  <div class="edit-form-layout">
+    <div class="form-container">
+      <%= form_with model: [@user], url: admin_user_path(@user), method: :patch, local: true do |f| %>
+        <% if @user.errors.any? %>
+          <div class="error-messages">
+            <div class="error-icon">⚠️</div>
+            <div class="error-content">
+              <h3><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h3>
+              <ul>
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-section">
+          <div class="section-header">
+            <h3>📧 Account Information</h3>
+            <p>Update the user's email address</p>
+          </div>
+          
+          <div class="field">
+            <%= f.label :email, "Email Address" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+          </div>
+        </div>
+
+        <div class="form-section password-section">
+          <div class="section-header">
+            <h3>🔒 Security Settings</h3>
+            <p class="help-text">
+              <strong>Optional:</strong> Leave password fields blank to keep the current password unchanged
+            </p>
+          </div>
+          
+          <div class="password-fields">
+            <div class="field">
+              <%= f.label :password, "New Password" %>
+              <%= f.password_field :password, autocomplete: "new-password", placeholder: "Enter new password (minimum 6 characters)" %>
+              <small class="field-hint">Minimum 6 characters required</small>
+            </div>
+
+            <div class="field">
+              <%= f.label :password_confirmation, "Confirm New Password" %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Re-enter the new password" %>
+              <small class="field-hint">Must match the password above</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit "💾 Update User Account", class: "btn btn-primary btn-update" %>
+          <%= link_to "✖️ Cancel Changes", admin_users_path, class: "btn btn-secondary btn-cancel" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="user-info-panel">
+      <div class="info-card">
+        <h3>👤 User Details</h3>
+        <div class="info-row">
+          <label>Account Created:</label>
+          <span><%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        <div class="info-row">
+          <label>Last Sign In:</label>
+          <span>
+            <%= @user.last_sign_in_at ? @user.last_sign_in_at.strftime("%B %d, %Y at %I:%M %p") : "Never signed in" %>
+          </span>
+        </div>
+        <div class="info-row">
+          <label>Account Status:</label>
+          <span class="status-active">✅ Active</span>
+        </div>
+      </div>
+
+      <div class="danger-zone">
+        <h3>⚠️ Danger Zone</h3>
+        <p>Permanent actions that cannot be undone</p>
+        <% unless @user == current_user %>
+          <%= link_to admin_user_path(@user), method: :delete, 
+              class: "btn btn-danger btn-full",
+              data: { 
+                turbo_method: :delete,
+                turbo_confirm: "Are you sure you want to delete #{@user.email}?\n\nThis action cannot be undone and will:\n• Remove the user account permanently\n• Revoke all access to the platform\n\nType 'DELETE' to confirm:" 
+              } do %>
+            🗑️ Delete User Account
+          <% end %>
+        <% else %>
+          <p class="self-delete-warning">
+            <em>You cannot delete your own account from this interface.</em>
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.edit-form-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+
+.form-container {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color, #3a3d4a);
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-header p {
+  color: var(--text-secondary, #94a3b8);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.password-section {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.password-fields {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  color: var(--text-primary, #ffffff);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.field input[type="email"],
+.field input[type="password"] {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg-primary, #1a1b23);
+  color: var(--text-primary, #ffffff);
+  border: 2px solid var(--border-color, #3a3d4a);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.field input[type="email"]:focus,
+.field input[type="password"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+.field-hint {
+  display: block;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color, #3a3d4a);
+}
+
+.btn-update {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-update:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-cancel {
+  background: var(--bg-secondary, #2a2d3a);
+  color: var(--text-primary, #ffffff);
+  border: 2px solid var(--border-color, #3a3d4a);
+  padding: 0.875rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: var(--border-color, #3a3d4a);
+  border-color: #4a4d5a;
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: var(--text-primary, #ffffff);
+}
+
+.user-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: var(--bg-secondary, #2a2d3a);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #3a3d4a);
+}
+
+.info-card h3 {
+  color: var(--text-primary, #ffffff);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-row label {
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 500;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.info-row span {
+  color: var(--text-primary, #ffffff);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.status-active {
+  color: #10b981 !important;
+  font-weight: 600;
+}
+
+.danger-zone {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.danger-zone h3 {
+  color: #ef4444;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.danger-zone p {
+  color: var(--text-secondary, #94a3b8);
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+.self-delete-warning {
+  color: var(--text-secondary, #94a3b8) !important;
+  font-size: 0.875rem !important;
+  text-align: center;
+  margin: 0 !important;
+}
+
+.error-messages {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.error-content h3 {
+  color: #ef4444;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+}
+
+.error-content ul {
+  color: #ef4444;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.error-content li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+  .edit-form-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 1rem;
+  }
+  
+  .form-container,
+  .info-card,
+  .danger-zone {
+    padding: 1rem;
+  }
+  
+}
+</style>

@@ -1,0 +1,3521 @@
+{
+  "years": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "fingerprints": [
+    "8b5ac076267c83ab"
+  ],
+  "g1": {
+    "checks": [
+      {
+        "check": "gross signal: rank IC in actual returns, combined z >= 2",
+        "value": "z = 5.85 (mean daily IC +0.0124, t > 0 in 13 of 14 years); census units z = 5.67 (IC +0.0097)",
+        "passed": true
+      },
+      {
+        "check": "nothing on the sign-flip null: combined z between -2 and 2 for both ICs",
+        "value": "actual returns z = 0.08 (IC +0.0008); census units z = 0.21 (IC +0.0012); test years: 3",
+        "passed": true
+      },
+      {
+        "check": "no tripwire: large-cap daily rank IC vs next-day return <= 0.05",
+        "value": "top 500 by dollar volume: mean +0.0129 (t 4.82), largest year +0.0293",
+        "passed": true
+      }
+    ],
+    "complete": true,
+    "passed": true
+  },
+  "canaries": [
+    {
+      "name": "canary_shift20",
+      "label": "canary: GPT ensemble, scores 20 days stale",
+      "ic_mean": 0.004122953138706374,
+      "ic_z": 2.3751826377129315,
+      "ic_ret_mean": 0.006683747999585883,
+      "ic_ret_z": 3.024398759806106,
+      "census_about_0": false,
+      "actual_about_0": false,
+      "reading": "census units IC +0.0041 (z 2.38): NOT about 0; actual returns IC +0.0067 (z 3.02): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)",
+      "unshifted_ic_z": 5.672189090742364,
+      "unshifted_ic_ret_z": 5.847298003793548
+    },
+    {
+      "name": "canary_permuted",
+      "label": "canary: GPT ensemble, dates permuted within year",
+      "ic_mean": 0.0040204805860951185,
+      "ic_z": 2.999147584077594,
+      "ic_ret_mean": 0.006680297267544161,
+      "ic_ret_z": 3.2208791650672164,
+      "census_about_0": false,
+      "actual_about_0": false,
+      "reading": "census units IC +0.0040 (z 3.00): NOT about 0; actual returns IC +0.0067 (z 3.22): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)",
+      "unshifted_ic_z": 5.672189090742364,
+      "unshifted_ic_ret_z": 5.847298003793548
+    },
+    {
+      "name": "canary_shift250",
+      "label": "canary: GPT ensemble, scores a year (250 days) stale",
+      "ic_mean": 0.0011936075702928168,
+      "ic_z": 0.43737320369143656,
+      "ic_ret_mean": 0.003893582333944719,
+      "ic_ret_z": 1.5935735502887085,
+      "census_about_0": true,
+      "actual_about_0": true,
+      "reading": "census units IC +0.0012 (z 0.44): about 0; actual returns IC +0.0039 (z 1.59): about 0",
+      "unshifted_ic_z": 5.672189090742364,
+      "unshifted_ic_ret_z": 5.847298003793548
+    },
+    {
+      "name": "canary_vreversal1_shift20",
+      "label": "reference canary: 1-day reversal, 20 days stale",
+      "ic_mean": 0.002485906922077179,
+      "ic_z": 1.266447092774817,
+      "ic_ret_mean": 0.002519248420624465,
+      "ic_ret_z": 1.2090521676679848,
+      "census_about_0": true,
+      "actual_about_0": true,
+      "reading": "census units IC +0.0025 (z 1.27): about 0; actual returns IC +0.0025 (z 1.21): about 0",
+      "unshifted_ic_z": 5.672189090742364,
+      "unshifted_ic_ret_z": 5.847298003793548
+    },
+    {
+      "name": "canary_vreversal1_permuted",
+      "label": "reference canary: 1-day reversal, dates permuted",
+      "ic_mean": -0.0024899943373080766,
+      "ic_z": -0.39274713439716924,
+      "ic_ret_mean": -0.0011121852890083699,
+      "ic_ret_z": 0.08566816926041249,
+      "census_about_0": true,
+      "actual_about_0": true,
+      "reading": "census units IC -0.0025 (z -0.39): about 0; actual returns IC -0.0011 (z 0.09): about 0",
+      "unshifted_ic_z": 5.672189090742364,
+      "unshifted_ic_ret_z": 5.847298003793548
+    }
+  ],
+  "percentile_check": {
+    "same_rank_measures_every_year": true,
+    "fields": [
+      "ic_mean",
+      "ic_t",
+      "ic_ret_mean",
+      "ic_ret_t",
+      "ls_bps_per_day",
+      "ls_t"
+    ],
+    "cash_years_original": 1,
+    "picks_per_day_original": 18.159228488071502,
+    "picks_per_day_percentile": 19.994058804620902
+  },
+  "models": [
+    {
+      "name": "stockGPT, ensemble of the seeds",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.009687582510223355,
+      "ic_resid_combined_z": 5.672189090742364,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_combined_z": 5.847298003793548,
+      "ic_ret_years_positive": 13,
+      "ls_bps_per_day": 2.436821814408115,
+      "ls_combined_z": 1.811347097065418,
+      "beat_random_years": "4 / 4 / 3",
+      "mean_return_pct": "picks +9.3% / -4.7% / -35.9%; random median +6.2% / -7.3% / -37.2%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "stockGPT, ensemble of the seeds",
+      "variant": "rebalance 5 (weekly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.0029417104357560802,
+      "ic_resid_combined_z": 0.9798075345186603,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_combined_z": 2.427740552840447,
+      "ic_ret_years_positive": 10,
+      "ls_bps_per_day": 0.007796692337308663,
+      "ls_combined_z": 0.327043135241857,
+      "beat_random_years": "4 / 4 / 4",
+      "mean_return_pct": "picks +11.4% / +8.3% / -0.7%; random median +6.5% / +3.5% / -4.8%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "stockGPT ensemble as daily percentile ranks (always 20 names), extra",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.009687582510223355,
+      "ic_resid_combined_z": 5.672189090742364,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_combined_z": 5.847298003793548,
+      "ic_ret_years_positive": 13,
+      "ls_bps_per_day": 2.436821814408115,
+      "ls_combined_z": 1.811347097065418,
+      "beat_random_years": "3 / 3 / 3",
+      "mean_return_pct": "picks +14.1% / -2.3% / -38.2%; random median +13.3% / -2.9% / -38.4%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "LightGBM",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.055573078612681584,
+      "ic_resid_combined_z": 23.96715931120275,
+      "ic_ret_mean": -0.0022031345100747596,
+      "ic_ret_combined_z": -0.7690639693183862,
+      "ic_ret_years_positive": 5,
+      "ls_bps_per_day": 5.485787887963176,
+      "ls_combined_z": 2.990549524191557,
+      "beat_random_years": "8 / 8 / 8",
+      "mean_return_pct": "picks +27.8% / +10.2% / -29.2%; random median +13.4% / -2.0% / -36.6%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "LightGBM",
+      "variant": "rebalance 5 (weekly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.11401788957244026,
+      "ic_resid_combined_z": 22.275438465733238,
+      "ic_ret_mean": -0.0036824386193490687,
+      "ic_ret_combined_z": -0.7759378107452349,
+      "ic_ret_years_positive": 7,
+      "ls_bps_per_day": 1.0294272675007792,
+      "ls_combined_z": 0.322819383936773,
+      "beat_random_years": "6 / 6 / 6",
+      "mean_return_pct": "picks +17.8% / +13.5% / +1.7%; random median +13.4% / +9.4% / -1.9%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "LightGBM, actual-return target (added after the POC run), extra",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.0011578536852983891,
+      "ic_resid_combined_z": 0.3723431774555367,
+      "ic_ret_mean": 0.02098953550496895,
+      "ic_ret_combined_z": 9.148712466155557,
+      "ic_ret_years_positive": 14,
+      "ls_bps_per_day": 10.235189613175981,
+      "ls_combined_z": 6.099459581878006,
+      "beat_random_years": "10 / 10 / 10",
+      "mean_return_pct": "picks +49.2% / +20.9% / -35.7%; random median +13.4% / -7.8% / -50.5%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "LightGBM, actual-return target (added after the POC run), extra",
+      "variant": "rebalance 5 (weekly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": -0.02275824143916213,
+      "ic_resid_combined_z": -5.313706596173311,
+      "ic_ret_mean": 0.014507234437661045,
+      "ic_ret_combined_z": 2.7145317758610426,
+      "ic_ret_years_positive": 9,
+      "ls_bps_per_day": 3.787045186241419,
+      "ls_combined_z": 2.3214526242416302,
+      "beat_random_years": "6 / 6 / 6",
+      "mean_return_pct": "picks +26.3% / +20.5% / +4.6%; random median +13.4% / +8.2% / -5.8%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "5-day reversal",
+      "variant": "rebalance 5 (weekly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.03354882240478576,
+      "ic_resid_combined_z": 8.074962075464514,
+      "ic_ret_mean": 0.014538990173883656,
+      "ic_ret_combined_z": 3.0462251394113307,
+      "ic_ret_years_positive": 11,
+      "ls_bps_per_day": 3.6330302072605822,
+      "ls_combined_z": 2.463294305649934,
+      "beat_random_years": "6 / 6 / 6",
+      "mean_return_pct": "picks +27.9% / +22.0% / +5.8%; random median +13.4% / +8.2% / -6.0%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "5-day reversal",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.016770495730684048,
+      "ic_resid_combined_z": 8.093948332701379,
+      "ic_ret_mean": 0.008835078166692508,
+      "ic_ret_combined_z": 3.669431690530505,
+      "ic_ret_years_positive": 13,
+      "ls_bps_per_day": 5.366412131677802,
+      "ls_combined_z": 2.568654442232228,
+      "beat_random_years": "10 / 10 / 9",
+      "mean_return_pct": "picks +28.0% / +14.8% / -17.1%; random median +13.3% / +1.8% / -26.2%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "1-day census reversal (-v[d]), extra",
+      "variant": "rebalance 1 (daily) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": 0.012582136890910962,
+      "ic_resid_combined_z": 6.078650484670847,
+      "ic_ret_mean": 0.011784052130329934,
+      "ic_ret_combined_z": 5.701408495471583,
+      "ic_ret_years_positive": 11,
+      "ls_bps_per_day": 1.9154197015171566,
+      "ls_combined_z": 1.9016638370227121,
+      "beat_random_years": "2 / 2 / 2",
+      "mean_return_pct": "picks +6.2% / -16.6% / -59.6%; random median +13.2% / -10.7% / -56.2%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "12-1 momentum",
+      "variant": "rebalance 5 (weekly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": -0.11345149343379628,
+      "ic_resid_combined_z": -19.763895482003107,
+      "ic_ret_mean": 0.017059989168111227,
+      "ic_ret_combined_z": 2.5273956397626978,
+      "ic_ret_years_positive": 12,
+      "ls_bps_per_day": 1.4562162611669403,
+      "ls_combined_z": 1.1387299510271514,
+      "beat_random_years": "5 / 5 / 5",
+      "mean_return_pct": "picks +18.7% / +17.6% / +14.4%; random median +13.2% / +12.2% / +9.1%; SPY +15.0%",
+      "notes": ""
+    },
+    {
+      "name": "12-1 momentum",
+      "variant": "rebalance 21 (monthly) / delay 0 / uniform",
+      "years": 14,
+      "ic_resid_mean": -0.2217160025706677,
+      "ic_resid_combined_z": -22.365149421681593,
+      "ic_ret_mean": 0.01735072719121666,
+      "ic_ret_combined_z": 1.3795285108843842,
+      "ic_ret_years_positive": 12,
+      "ls_bps_per_day": 1.387749209007214,
+      "ls_combined_z": 0.9761495829698454,
+      "beat_random_years": "5 / 5 / 5",
+      "mean_return_pct": "picks +17.7% / +17.2% / +15.6%; random median +13.2% / +12.7% / +11.2%; SPY +15.0%",
+      "notes": ""
+    }
+  ],
+  "graded": [
+    {
+      "file": "canary_permuted__r1_d0_uniform.json",
+      "name": "canary_permuted",
+      "label": "canary: GPT ensemble, dates permuted within year",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_permuted.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0040204805860951185,
+      "ic_z": 2.999147584077594,
+      "ic_pos": 9,
+      "ic_ret_mean": 0.006680297267544161,
+      "ic_ret_z": 3.2208791650672164,
+      "ic_ret_pos": 11,
+      "ls_bps": -0.17461556350536395,
+      "ls_z": 0.38860753764757566,
+      "ls_pos": 9,
+      "ls_turnover": 0.7387741238544488,
+      "hit_rate": 0.5090030429624693,
+      "beat": [
+        4,
+        3,
+        3
+      ],
+      "ret_mean": [
+        9.296238403162706,
+        -9.014060184934626,
+        -46.44842724507293
+      ],
+      "ret_compound": [
+        162.53304864960444,
+        -80.50176461979673,
+        -99.99211501479066
+      ],
+      "random_median_mean": [
+        6.8794010933764564,
+        -10.858891479812183,
+        -47.22085082862895
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.2089134688042504,
+      "buy_decile_random": 4.495426439154085,
+      "held_decile_strategy": 2.144320950754231,
+      "held_decile_random": 4.494649111507124,
+      "strategy_buys_per_year": 3722.5,
+      "picks_per_day": 18.15469779526905,
+      "cash_years": 1
+    },
+    {
+      "file": "canary_shift20__r1_d0_uniform.json",
+      "name": "canary_shift20",
+      "label": "canary: GPT ensemble, scores 20 days stale",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_shift20.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.004122953138706374,
+      "ic_z": 2.3751826377129315,
+      "ic_pos": 11,
+      "ic_ret_mean": 0.006683747999585883,
+      "ic_ret_z": 3.024398759806106,
+      "ic_ret_pos": 12,
+      "ls_bps": -0.30765690745534874,
+      "ls_z": -0.3811735669484339,
+      "ls_pos": 7,
+      "ls_turnover": 0.5943122138989139,
+      "hit_rate": 0.5051224194010795,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        8.235221062628938,
+        -5.521658985136107,
+        -36.19402171129152
+      ],
+      "ret_compound": [
+        169.99888941671455,
+        -61.299875522729394,
+        -99.88691498921078
+      ],
+      "random_median_mean": [
+        8.133112299394812,
+        -5.440460418159682,
+        -35.77627828755273
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.193417828009347,
+      "buy_decile_random": 4.4970341891677466,
+      "held_decile_strategy": 2.056781790302123,
+      "held_decile_random": 4.497878093056011,
+      "strategy_buys_per_year": 2783.9285714285716,
+      "picks_per_day": 18.037709656297416,
+      "cash_years": 0
+    },
+    {
+      "file": "canary_shift250__r1_d0_uniform.json",
+      "name": "canary_shift250",
+      "label": "canary: GPT ensemble, scores a year (250 days) stale",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_shift250.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 13,
+      "first_year": 2011,
+      "last_year": 2023,
+      "all_graded_years": 13,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0011936075702928168,
+      "ic_z": 0.43737320369143656,
+      "ic_pos": 6,
+      "ic_ret_mean": 0.003893582333944719,
+      "ic_ret_z": 1.5935735502887085,
+      "ic_ret_pos": 7,
+      "ls_bps": -0.8206173005958417,
+      "ls_z": -1.0277554307496348,
+      "ls_pos": 5,
+      "ls_turnover": 0.5812472902317976,
+      "hit_rate": 0.49843057962667786,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        8.67523732535087,
+        -4.59697815198075,
+        -34.40270857006062
+      ],
+      "ret_compound": [
+        168.56166851569031,
+        -51.26389771551557,
+        -99.71061743167462
+      ],
+      "random_median_mean": [
+        13.941864430158658,
+        0.016952330176200493,
+        -31.250091101132394
+      ],
+      "spy_mean": 14.659599908504676,
+      "qqq_mean": 20.447302292108855,
+      "spy_compound": 443.27577182315633,
+      "qqq_compound": 882.6122376095375,
+      "hold_all_mean": 12.280273477171455,
+      "buy_decile_strategy": 2.8369166177235177,
+      "buy_decile_random": 4.495786723058645,
+      "held_decile_strategy": 2.702472290961909,
+      "held_decile_random": 4.496258405410787,
+      "strategy_buys_per_year": 2633.923076923077,
+      "picks_per_day": 18.06510822687715,
+      "cash_years": 1
+    },
+    {
+      "file": "canary_vreversal1_permuted__r1_d0_uniform.json",
+      "name": "canary_vreversal1_permuted",
+      "label": "reference canary: 1-day reversal, dates permuted",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/vreversal1_permuted.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.0024899943373080766,
+      "ic_z": -0.39274713439716924,
+      "ic_pos": 7,
+      "ic_ret_mean": -0.0011121852890083699,
+      "ic_ret_z": 0.08566816926041249,
+      "ic_ret_pos": 7,
+      "ls_bps": -1.6989974133405439,
+      "ls_z": -0.5706131690093604,
+      "ls_pos": 6,
+      "ls_turnover": 0.8952699582106295,
+      "hit_rate": 0.4974953153223967,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        4.507170369481925,
+        -18.357436177575504,
+        -61.13136846849782
+      ],
+      "ret_compound": [
+        16.89762762605953,
+        -96.32061368233136,
+        -99.9998875914203
+      ],
+      "random_median_mean": [
+        13.095581953433427,
+        -11.30561572115326,
+        -57.29386002423002
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 4.669542768148513,
+      "buy_decile_random": 4.496776833138001,
+      "held_decile_strategy": 4.671588728887877,
+      "held_decile_random": 4.4967747722317615,
+      "strategy_buys_per_year": 4947.928571428572,
+      "picks_per_day": 19.99209486166008,
+      "cash_years": 0
+    },
+    {
+      "file": "canary_vreversal1_shift20__r1_d0_uniform.json",
+      "name": "canary_vreversal1_shift20",
+      "label": "reference canary: 1-day reversal, 20 days stale",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/vreversal1_shift20.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.002485906922077179,
+      "ic_z": 1.266447092774817,
+      "ic_pos": 9,
+      "ic_ret_mean": 0.002519248420624465,
+      "ic_ret_z": 1.2090521676679848,
+      "ic_ret_pos": 10,
+      "ls_bps": 2.8445915127881527,
+      "ls_z": 2.1293448749838846,
+      "ls_pos": 10,
+      "ls_turnover": 0.8758532949413214,
+      "hit_rate": 0.5076366034008636,
+      "beat": [
+        6,
+        6,
+        5
+      ],
+      "ret_mean": [
+        21.805887221525087,
+        -4.248126517723816,
+        -53.54938609425576
+      ],
+      "ret_compound": [
+        1147.6494561548857,
+        -57.08940489911917,
+        -99.99828789624534
+      ],
+      "random_median_mean": [
+        13.148562668105551,
+        -10.73959360686872,
+        -56.23920783904828
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.095439099895063,
+      "buy_decile_random": 4.496995944226097,
+      "held_decile_strategy": 5.12797611436073,
+      "held_decile_random": 4.497017019893939,
+      "strategy_buys_per_year": 4824.714285714285,
+      "picks_per_day": 19.99067759228473,
+      "cash_years": 0
+    },
+    {
+      "file": "decay_shift1__r1_d0_uniform.json",
+      "name": "decay_shift1",
+      "label": "GPT ensemble, scores used 1 day late",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_shift1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0023820959063195696,
+      "ic_z": 1.7524417330560031,
+      "ic_pos": 10,
+      "ic_ret_mean": 0.00610187288319366,
+      "ic_ret_z": 2.8713148958375205,
+      "ic_ret_pos": 11,
+      "ls_bps": -0.21333603799331075,
+      "ls_z": 0.03686735827355682,
+      "ls_pos": 9,
+      "ls_turnover": 0.5950198265244081,
+      "hit_rate": 0.5073256281803681,
+      "beat": [
+        2,
+        2,
+        1
+      ],
+      "ret_mean": [
+        10.062969896137298,
+        -4.134282768829953,
+        -35.515078664217654
+      ],
+      "ret_compound": [
+        254.46733622641844,
+        -50.11170202631976,
+        -99.8620035315326
+      ],
+      "random_median_mean": [
+        6.754572957220914,
+        -6.78021069131679,
+        -36.817393813717366
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.0799841734419515,
+      "buy_decile_random": 4.497880843809793,
+      "held_decile_strategy": 1.9545524508057546,
+      "held_decile_random": 4.497951581333358,
+      "strategy_buys_per_year": 2810.285714285714,
+      "picks_per_day": 18.14624947817024,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r1_d0_uniform.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.500490667529337,
+      "beat": [
+        4,
+        4,
+        3
+      ],
+      "ret_mean": [
+        9.33490361168504,
+        -4.731889903355359,
+        -35.85538384388861
+      ],
+      "ret_compound": [
+        214.09151145945066,
+        -55.81038320023628,
+        -99.87790127806457
+      ],
+      "random_median_mean": [
+        6.155654865382902,
+        -7.295469595758737,
+        -37.16591338367167
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.9870217816631432,
+      "buy_decile_random": 4.496222436399461,
+      "held_decile_strategy": 1.8667970871336022,
+      "held_decile_random": 4.496487583446338,
+      "strategy_buys_per_year": 2810.214285714286,
+      "picks_per_day": 18.159228488071502,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r1_d0_volatility.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.500490667529337,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        9.33490361168504,
+        -4.731889903355359,
+        -35.85538384388861
+      ],
+      "ret_compound": [
+        214.09151145945066,
+        -55.81038320023628,
+        -99.87790127806457
+      ],
+      "random_median_mean": [
+        6.527969764227282,
+        -7.0820935130628895,
+        -37.24027058379507
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.9870217816631432,
+      "buy_decile_random": 1.9870217816631432,
+      "held_decile_strategy": 1.8667970871336022,
+      "held_decile_random": 1.947910631906053,
+      "strategy_buys_per_year": 2810.214285714286,
+      "picks_per_day": 18.159228488071502,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r1_d1_uniform.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.500490667529337,
+      "beat": [
+        2,
+        2,
+        1
+      ],
+      "ret_mean": [
+        9.945691295968142,
+        -4.208159445991168,
+        -35.51333796706952
+      ],
+      "ret_compound": [
+        251.13337388193048,
+        -50.17677220214546,
+        -99.85876977497958
+      ],
+      "random_median_mean": [
+        6.426330253284256,
+        -7.037488843957267,
+        -36.94465100011835
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.9851281358040904,
+      "buy_decile_random": 4.496657270960459,
+      "held_decile_strategy": 1.8637492840551244,
+      "held_decile_random": 4.496739154711726,
+      "strategy_buys_per_year": 2798.6428571428573,
+      "picks_per_day": 18.159228488071502,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r1_d1_volatility.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.500490667529337,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        9.945691295968142,
+        -4.208159445991168,
+        -35.51333796706952
+      ],
+      "ret_compound": [
+        251.13337388193048,
+        -50.17677220214546,
+        -99.85876977497958
+      ],
+      "random_median_mean": [
+        7.521243696601853,
+        -6.245069468974694,
+        -36.73633147582799
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.9851281358040904,
+      "buy_decile_random": 1.9851281358040904,
+      "held_decile_strategy": 1.8637492840551244,
+      "held_decile_random": 1.9416614899352804,
+      "strategy_buys_per_year": 2798.6428571428573,
+      "picks_per_day": 18.159228488071502,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r5_d0_uniform.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0029417104357560802,
+      "ic_z": 0.9798075345186603,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_z": 2.427740552840447,
+      "ic_ret_pos": 10,
+      "ls_bps": 0.007796692337308663,
+      "ls_z": 0.327043135241857,
+      "ls_pos": 9,
+      "ls_turnover": 0.612210567303505,
+      "hit_rate": 0.5318959873803487,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        11.437980396567221,
+        8.256818410162245,
+        -0.6932775043472231
+      ],
+      "ret_compound": [
+        330.04348066358,
+        187.07272310507653,
+        -14.744551809673979
+      ],
+      "random_median_mean": [
+        6.495059572725736,
+        3.527745230816168,
+        -4.830942558919337
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.00006045067386,
+      "buy_decile_random": 4.497092207962231,
+      "held_decile_strategy": 1.8564315819920072,
+      "held_decile_random": 4.496519730372908,
+      "strategy_buys_per_year": 586.8571428571429,
+      "picks_per_day": 18.07703081232493,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r5_d0_volatility.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0029417104357560802,
+      "ic_z": 0.9798075345186603,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_z": 2.427740552840447,
+      "ic_ret_pos": 10,
+      "ls_bps": 0.007796692337308663,
+      "ls_z": 0.327043135241857,
+      "ls_pos": 9,
+      "ls_turnover": 0.612210567303505,
+      "hit_rate": 0.5318959873803487,
+      "beat": [
+        5,
+        5,
+        5
+      ],
+      "ret_mean": [
+        11.437980396567221,
+        8.256818410162245,
+        -0.6932775043472231
+      ],
+      "ret_compound": [
+        330.04348066358,
+        187.07272310507653,
+        -14.744551809673979
+      ],
+      "random_median_mean": [
+        7.433791811612524,
+        4.414092213983442,
+        -4.088922912112946
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.00006045067386,
+      "buy_decile_random": 2.00006045067386,
+      "held_decile_strategy": 1.8564315819920072,
+      "held_decile_random": 2.022759872076178,
+      "strategy_buys_per_year": 586.8571428571429,
+      "picks_per_day": 18.07703081232493,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r5_d1_uniform.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0029417104357560802,
+      "ic_z": 0.9798075345186603,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_z": 2.427740552840447,
+      "ic_ret_pos": 10,
+      "ls_bps": 0.007796692337308663,
+      "ls_z": 0.327043135241857,
+      "ls_pos": 9,
+      "ls_turnover": 0.612210567303505,
+      "hit_rate": 0.5318959873803487,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        8.668401221326997,
+        5.602415809570339,
+        -3.029195163638836
+      ],
+      "ret_compound": [
+        196.97204424653742,
+        98.66867032383966,
+        -40.61640690131728
+      ],
+      "random_median_mean": [
+        6.3794943935330135,
+        3.4364417907605103,
+        -4.857955284990554
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.99655952914758,
+      "buy_decile_random": 4.497004018584659,
+      "held_decile_strategy": 1.8551260067569382,
+      "held_decile_random": 4.496497866067863,
+      "strategy_buys_per_year": 583.8571428571429,
+      "picks_per_day": 18.07703081232493,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble__r5_d1_volatility.json",
+      "name": "gpt_ensemble",
+      "label": "stockGPT, ensemble of the seeds",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_ensemble.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0029417104357560802,
+      "ic_z": 0.9798075345186603,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_z": 2.427740552840447,
+      "ic_ret_pos": 10,
+      "ls_bps": 0.007796692337308663,
+      "ls_z": 0.327043135241857,
+      "ls_pos": 9,
+      "ls_turnover": 0.612210567303505,
+      "hit_rate": 0.5318959873803487,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        8.668401221326997,
+        5.602415809570339,
+        -3.029195163638836
+      ],
+      "ret_compound": [
+        196.97204424653742,
+        98.66867032383966,
+        -40.61640690131728
+      ],
+      "random_median_mean": [
+        7.328280752297624,
+        4.326885091686199,
+        -4.1278838509805125
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 1.99655952914758,
+      "buy_decile_random": 1.99655952914758,
+      "held_decile_strategy": 1.8551260067569382,
+      "held_decile_random": 2.017291494467231,
+      "strategy_buys_per_year": 583.8571428571429,
+      "picks_per_day": 18.07703081232493,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_ensemble_pct__r1_d0_uniform.json",
+      "name": "gpt_ensemble_pct",
+      "label": "stockGPT ensemble as daily percentile ranks (always 20 names), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_pct.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.5099295975943989,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        14.128685981665216,
+        -2.3240410619519145,
+        -38.19561484165032
+      ],
+      "ret_compound": [
+        462.28558954776577,
+        -37.968838624879254,
+        -99.9174695035044
+      ],
+      "random_median_mean": [
+        13.337858997249416,
+        -2.909752831337187,
+        -38.38395910776487
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.0764279113719,
+      "buy_decile_random": 4.496428964729703,
+      "held_decile_strategy": 1.944929462389389,
+      "held_decile_random": 4.496471615567999,
+      "strategy_buys_per_year": 3158.8571428571427,
+      "picks_per_day": 19.994058804620902,
+      "cash_years": 0
+    },
+    {
+      "file": "gpt_ensemble_pct__r1_d0_volatility.json",
+      "name": "gpt_ensemble_pct",
+      "label": "stockGPT ensemble as daily percentile ranks (always 20 names), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_pct.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.5099295975943989,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        14.128685981665216,
+        -2.3240410619519145,
+        -38.19561484165032
+      ],
+      "ret_compound": [
+        462.28558954776577,
+        -37.968838624879254,
+        -99.9174695035044
+      ],
+      "random_median_mean": [
+        11.347007293219502,
+        -4.657865756236774,
+        -39.5783546280734
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.0764279113719,
+      "buy_decile_random": 2.0764279113719,
+      "held_decile_strategy": 1.944929462389389,
+      "held_decile_random": 2.0267709404487344,
+      "strategy_buys_per_year": 3158.8571428571427,
+      "picks_per_day": 19.994058804620902,
+      "cash_years": 0
+    },
+    {
+      "file": "gpt_ensemble_pct__r1_d1_uniform.json",
+      "name": "gpt_ensemble_pct",
+      "label": "stockGPT ensemble as daily percentile ranks (always 20 names), extra",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_pct.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.009687582510223355,
+      "ic_z": 5.672189090742364,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.012436559006539392,
+      "ic_ret_z": 5.847298003793548,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.436821814408115,
+      "ls_z": 1.811347097065418,
+      "ls_pos": 11,
+      "ls_turnover": 0.5945367851719613,
+      "hit_rate": 0.5099295975943989,
+      "beat": [
+        1,
+        1,
+        1
+      ],
+      "ret_mean": [
+        12.111020026166006,
+        -3.9565410338486116,
+        -39.04130214962483
+      ],
+      "ret_compound": [
+        361.2062068603437,
+        -48.658175412198055,
+        -99.92981189999234
+      ],
+      "random_median_mean": [
+        12.874489382508882,
+        -3.2396065730067205,
+        -38.46202059938094
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.075573792923967,
+      "buy_decile_random": 4.496429039682551,
+      "held_decile_strategy": 1.9425837236252923,
+      "held_decile_random": 4.496471103432136,
+      "strategy_buys_per_year": 3146.0714285714284,
+      "picks_per_day": 19.994058804620902,
+      "cash_years": 0
+    },
+    {
+      "file": "gpt_ensemble_pct__r5_d0_uniform.json",
+      "name": "gpt_ensemble_pct",
+      "label": "stockGPT ensemble as daily percentile ranks (always 20 names), extra",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/gpt_ensemble_pct.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0029417104357560802,
+      "ic_z": 0.9798075345186603,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.010552885485618765,
+      "ic_ret_z": 2.427740552840447,
+      "ic_ret_pos": 10,
+      "ls_bps": 0.007796692337308663,
+      "ls_z": 0.327043135241857,
+      "ls_pos": 9,
+      "ls_turnover": 0.612210567303505,
+      "hit_rate": 0.5132100840336135,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        14.033345796923735,
+        10.390095974957747,
+        0.17089258342882743
+      ],
+      "ret_compound": [
+        500.58343837726846,
+        280.6194173725646,
+        -3.3029925277159533
+      ],
+      "random_median_mean": [
+        13.30851706662705,
+        9.721786091522459,
+        -0.3535529249078718
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.0907118177522754,
+      "buy_decile_random": 4.496607242284747,
+      "held_decile_strategy": 1.9360631538913846,
+      "held_decile_random": 4.495273216699857,
+      "strategy_buys_per_year": 661.8571428571429,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "gpt_null__r1_d0_uniform.json",
+      "name": "gpt_null",
+      "label": "stockGPT sign-flip null (seed 0)",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt_null/scores_seed0.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 3,
+      "first_year": 2012,
+      "last_year": 2022,
+      "all_graded_years": 3,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.001171944388320039,
+      "ic_z": 0.21484657140915908,
+      "ic_pos": 2,
+      "ic_ret_mean": 0.0007751068144742028,
+      "ic_ret_z": 0.07673271912504274,
+      "ic_ret_pos": 1,
+      "ls_bps": 0.332150593390477,
+      "ls_z": -0.25819325373000773,
+      "ls_pos": 2,
+      "ls_turnover": 0.6096605244281275,
+      "hit_rate": 0.4931817531251203,
+      "beat": [
+        0,
+        0,
+        0
+      ],
+      "ret_mean": [
+        8.334324190406072,
+        -8.731779447249266,
+        -43.49084462650858
+      ],
+      "ret_compound": [
+        25.919757550450484,
+        -26.620575501494493,
+        -85.5181854948649
+      ],
+      "random_median_mean": [
+        16.297105937997575,
+        -2.4557999669234403,
+        -40.53102534125495
+      ],
+      "spy_mean": 17.15965800192841,
+      "qqq_mean": 21.33115229394893,
+      "spy_compound": 60.45007353562344,
+      "qqq_compound": 78.20625131567121,
+      "hold_all_mean": 16.458865201347834,
+      "buy_decile_strategy": 5.667146849184469,
+      "buy_decile_random": 4.495577108287766,
+      "held_decile_strategy": 5.62240904530028,
+      "held_decile_random": 4.4944077855098135,
+      "strategy_buys_per_year": 3608.6666666666665,
+      "picks_per_day": 19.997354497354497,
+      "cash_years": 0
+    },
+    {
+      "file": "gpt_seed0__r1_d0_uniform.json",
+      "name": "gpt_seed0",
+      "label": "stockGPT, seed 0",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_seed0.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.010458787796522163,
+      "ic_z": 6.34370938054387,
+      "ic_pos": 12,
+      "ic_ret_mean": 0.012234872801692286,
+      "ic_ret_z": 6.098400011870752,
+      "ic_ret_pos": 12,
+      "ls_bps": 3.0781711609737963,
+      "ls_z": 2.296515072888101,
+      "ls_pos": 11,
+      "ls_turnover": 0.601317339347036,
+      "hit_rate": 0.47435442663511557,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        14.161466216129721,
+        -1.0256223705416734,
+        -34.42971750931476
+      ],
+      "ret_compound": [
+        500.49426338018395,
+        -19.40161842749918,
+        -99.80669959105126
+      ],
+      "random_median_mean": [
+        7.824995447932297,
+        -6.192424303285818,
+        -37.19427819719204
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.1007314514721127,
+      "buy_decile_random": 4.49721190401488,
+      "held_decile_strategy": 1.948169190147471,
+      "held_decile_random": 4.497347336753743,
+      "strategy_buys_per_year": 2878.3571428571427,
+      "picks_per_day": 17.936729050206814,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_seed1__r1_d0_uniform.json",
+      "name": "gpt_seed1",
+      "label": "stockGPT, seed 1",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_seed1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.007275653062333462,
+      "ic_z": 4.088176906966222,
+      "ic_pos": 13,
+      "ic_ret_mean": 0.011119640209935533,
+      "ic_ret_z": 5.217601919194365,
+      "ic_ret_pos": 12,
+      "ls_bps": 2.466428366856152,
+      "ls_z": 1.5943210850128129,
+      "ls_pos": 9,
+      "ls_turnover": 0.6196818329848048,
+      "hit_rate": 0.4699005878219454,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        11.070252996241555,
+        -2.3469892010130247,
+        -32.02127556295589
+      ],
+      "ret_compound": [
+        256.5704391984445,
+        -41.559696471692874,
+        -99.74458013697648
+      ],
+      "random_median_mean": [
+        7.404914708009164,
+        -5.206784656946299,
+        -33.26674689111686
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.3596916747037366,
+      "buy_decile_random": 4.4974934147532135,
+      "held_decile_strategy": 2.2236376084289997,
+      "held_decile_random": 4.497404665121228,
+      "strategy_buys_per_year": 2591.5,
+      "picks_per_day": 15.976471735779226,
+      "cash_years": 1
+    },
+    {
+      "file": "gpt_seed2__r1_d0_uniform.json",
+      "name": "gpt_seed2",
+      "label": "stockGPT, seed 2",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/gpt/scores_seed2.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.008349950493144936,
+      "ic_z": 4.884397791914334,
+      "ic_pos": 13,
+      "ic_ret_mean": 0.011637333401064131,
+      "ic_ret_z": 5.455730465522816,
+      "ic_ret_pos": 13,
+      "ls_bps": 2.1039623941680747,
+      "ls_z": 1.689433581069578,
+      "ls_pos": 11,
+      "ls_turnover": 0.59192182147896,
+      "hit_rate": 0.5124378185910557,
+      "beat": [
+        4,
+        3,
+        3
+      ],
+      "ret_mean": [
+        10.945724925340818,
+        -4.283318431329929,
+        -37.891921141465254
+      ],
+      "ret_compound": [
+        275.61325969340913,
+        -53.664755943908574,
+        -99.91376468890162
+      ],
+      "random_median_mean": [
+        10.96460442982186,
+        -4.160395182006623,
+        -37.59434576624545
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 2.1390663790785327,
+      "buy_decile_random": 4.496502780807698,
+      "held_decile_strategy": 2.028261222417775,
+      "held_decile_random": 4.496202141733864,
+      "strategy_buys_per_year": 2998.214285714286,
+      "picks_per_day": 17.95577630056794,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r1_d0_uniform.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.055573078612681584,
+      "ic_z": 23.96715931120275,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0022031345100747596,
+      "ic_ret_z": -0.7690639693183862,
+      "ic_ret_pos": 5,
+      "ls_bps": 5.485787887963176,
+      "ls_z": 2.990549524191557,
+      "ls_pos": 12,
+      "ls_turnover": 0.416295018423753,
+      "hit_rate": 0.5372272099249285,
+      "beat": [
+        8,
+        8,
+        8
+      ],
+      "ret_mean": [
+        27.752611164794388,
+        10.176796595354658,
+        -29.24841555592545
+      ],
+      "ret_compound": [
+        1910.9003631883709,
+        149.34575115502003,
+        -99.5286084800186
+      ],
+      "random_median_mean": [
+        13.414465407189425,
+        -1.958268218673592,
+        -36.580732668273
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.5491633685908965,
+      "buy_decile_random": 4.497326835919222,
+      "held_decile_strategy": 5.995214168797347,
+      "held_decile_random": 4.497086643532245,
+      "strategy_buys_per_year": 2992.714285714286,
+      "picks_per_day": 19.988137811119177,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r1_d0_volatility.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.055573078612681584,
+      "ic_z": 23.96715931120275,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0022031345100747596,
+      "ic_ret_z": -0.7690639693183862,
+      "ic_ret_pos": 5,
+      "ls_bps": 5.485787887963176,
+      "ls_z": 2.990549524191557,
+      "ls_pos": 12,
+      "ls_turnover": 0.416295018423753,
+      "hit_rate": 0.5372272099249285,
+      "beat": [
+        5,
+        5,
+        5
+      ],
+      "ret_mean": [
+        27.752611164794388,
+        10.176796595354658,
+        -29.24841555592545
+      ],
+      "ret_compound": [
+        1910.9003631883709,
+        149.34575115502003,
+        -99.5286084800186
+      ],
+      "random_median_mean": [
+        15.000062146214278,
+        -0.755373670289984,
+        -36.143324671635284
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.5491633685908965,
+      "buy_decile_random": 5.5491633685908965,
+      "held_decile_strategy": 5.995214168797347,
+      "held_decile_random": 5.977526256400732,
+      "strategy_buys_per_year": 2992.714285714286,
+      "picks_per_day": 19.988137811119177,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r1_d1_uniform.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.055573078612681584,
+      "ic_z": 23.96715931120275,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0022031345100747596,
+      "ic_ret_z": -0.7690639693183862,
+      "ic_ret_pos": 5,
+      "ls_bps": 5.485787887963176,
+      "ls_z": 2.990549524191557,
+      "ls_pos": 12,
+      "ls_turnover": 0.416295018423753,
+      "hit_rate": 0.5372272099249285,
+      "beat": [
+        6,
+        6,
+        5
+      ],
+      "ret_mean": [
+        22.24807280449378,
+        5.563356080933793,
+        -31.954063000364794
+      ],
+      "ret_compound": [
+        928.9237444881671,
+        28.80978214127623,
+        -99.7493812151253
+      ],
+      "random_median_mean": [
+        13.013706625453088,
+        -2.2555043940588413,
+        -36.687779803916676
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.564316447493307,
+      "buy_decile_random": 4.497362258950257,
+      "held_decile_strategy": 6.010414215713673,
+      "held_decile_random": 4.497058669187973,
+      "strategy_buys_per_year": 2979.5,
+      "picks_per_day": 19.988137811119177,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r1_d1_volatility.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.055573078612681584,
+      "ic_z": 23.96715931120275,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0022031345100747596,
+      "ic_ret_z": -0.7690639693183862,
+      "ic_ret_pos": 5,
+      "ls_bps": 5.485787887963176,
+      "ls_z": 2.990549524191557,
+      "ls_pos": 12,
+      "ls_turnover": 0.416295018423753,
+      "hit_rate": 0.5372272099249285,
+      "beat": [
+        5,
+        5,
+        5
+      ],
+      "ret_mean": [
+        22.24807280449378,
+        5.563356080933793,
+        -31.954063000364794
+      ],
+      "ret_compound": [
+        928.9237444881671,
+        28.80978214127623,
+        -99.7493812151253
+      ],
+      "random_median_mean": [
+        15.010377544213942,
+        -0.6676585882461771,
+        -35.9362320794361
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.564316447493307,
+      "buy_decile_random": 5.564316447493307,
+      "held_decile_strategy": 6.010414215713673,
+      "held_decile_random": 5.990541765249389,
+      "strategy_buys_per_year": 2979.5,
+      "picks_per_day": 19.988137811119177,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r5_d0_uniform.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.11401788957244026,
+      "ic_z": 22.275438465733238,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0036824386193490687,
+      "ic_ret_z": -0.7759378107452349,
+      "ic_ret_pos": 7,
+      "ls_bps": 1.0294272675007792,
+      "ls_z": 0.322819383936773,
+      "ls_pos": 9,
+      "ls_turnover": 0.5129024448639309,
+      "hit_rate": 0.5924794932898532,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        17.782250263044883,
+        13.548139673922616,
+        1.7267564596190026
+      ],
+      "ret_compound": [
+        508.06334238889184,
+        262.31600605548084,
+        -23.536444340521413
+      ],
+      "random_median_mean": [
+        13.383460066031486,
+        9.35864453923782,
+        -1.893646367384212
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.595302795182903,
+      "buy_decile_random": 4.495867444301604,
+      "held_decile_strategy": 5.940131486345487,
+      "held_decile_random": 4.495733078985001,
+      "strategy_buys_per_year": 750.2142857142857,
+      "picks_per_day": 19.978991596638654,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r5_d0_volatility.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.11401788957244026,
+      "ic_z": 22.275438465733238,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0036824386193490687,
+      "ic_ret_z": -0.7759378107452349,
+      "ic_ret_pos": 7,
+      "ls_bps": 1.0294272675007792,
+      "ls_z": 0.322819383936773,
+      "ls_pos": 9,
+      "ls_turnover": 0.5129024448639309,
+      "hit_rate": 0.5924794932898532,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        17.782250263044883,
+        13.548139673922616,
+        1.7267564596190026
+      ],
+      "ret_compound": [
+        508.06334238889184,
+        262.31600605548084,
+        -23.536444340521413
+      ],
+      "random_median_mean": [
+        14.52763872071458,
+        10.415249296834514,
+        -1.0659499178807217
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.595302795182903,
+      "buy_decile_random": 5.595302795182903,
+      "held_decile_strategy": 5.940131486345487,
+      "held_decile_random": 5.869776912323645,
+      "strategy_buys_per_year": 750.2142857142857,
+      "picks_per_day": 19.978991596638654,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r5_d1_uniform.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.11401788957244026,
+      "ic_z": 22.275438465733238,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0036824386193490687,
+      "ic_ret_z": -0.7759378107452349,
+      "ic_ret_pos": 7,
+      "ls_bps": 1.0294272675007792,
+      "ls_z": 0.322819383936773,
+      "ls_pos": 9,
+      "ls_turnover": 0.5129024448639309,
+      "hit_rate": 0.5924794932898532,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        12.25022911493663,
+        8.243592826019041,
+        -2.94851556733413
+      ],
+      "ret_compound": [
+        231.96185203901626,
+        98.39483055847052,
+        -57.75122957854577
+      ],
+      "random_median_mean": [
+        12.850282538528713,
+        8.859035724426716,
+        -2.2875673719922287
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.607456981470539,
+      "buy_decile_random": 4.495878136635823,
+      "held_decile_strategy": 5.94851096112554,
+      "held_decile_random": 4.495751092824485,
+      "strategy_buys_per_year": 746.1428571428571,
+      "picks_per_day": 19.978991596638654,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm__r5_d1_volatility.json",
+      "name": "lgbm",
+      "label": "LightGBM",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.11401788957244026,
+      "ic_z": 22.275438465733238,
+      "ic_pos": 14,
+      "ic_ret_mean": -0.0036824386193490687,
+      "ic_ret_z": -0.7759378107452349,
+      "ic_ret_pos": 7,
+      "ls_bps": 1.0294272675007792,
+      "ls_z": 0.322819383936773,
+      "ls_pos": 9,
+      "ls_turnover": 0.5129024448639309,
+      "hit_rate": 0.5924794932898532,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        12.25022911493663,
+        8.243592826019041,
+        -2.94851556733413
+      ],
+      "ret_compound": [
+        231.96185203901626,
+        98.39483055847052,
+        -57.75122957854577
+      ],
+      "random_median_mean": [
+        12.92202451922731,
+        8.893384747825491,
+        -2.358434899506983
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.607456981470539,
+      "buy_decile_random": 5.607456981470539,
+      "held_decile_strategy": 5.94851096112554,
+      "held_decile_random": 5.882666029034682,
+      "strategy_buys_per_year": 746.1428571428571,
+      "picks_per_day": 19.978991596638654,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r1_d0_uniform.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0011578536852983891,
+      "ic_z": 0.3723431774555367,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.02098953550496895,
+      "ic_ret_z": 9.148712466155557,
+      "ic_ret_pos": 14,
+      "ls_bps": 10.235189613175981,
+      "ls_z": 6.099459581878006,
+      "ls_pos": 12,
+      "ls_turnover": 0.6730964850165438,
+      "hit_rate": 0.5049932744194433,
+      "beat": [
+        10,
+        10,
+        10
+      ],
+      "ret_mean": [
+        49.191355472047064,
+        20.91361355279373,
+        -35.67391015467682
+      ],
+      "ret_compound": [
+        14391.249224772664,
+        669.6103416676535,
+        -99.88644448869267
+      ],
+      "random_median_mean": [
+        13.375636894573592,
+        -7.845661669742687,
+        -50.52938232836578
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.6107137651327035,
+      "buy_decile_random": 4.496487610467414,
+      "held_decile_strategy": 5.70120818404744,
+      "held_decile_random": 4.496871726983541,
+      "strategy_buys_per_year": 4206.571428571428,
+      "picks_per_day": 19.996045181217536,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r1_d0_volatility.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0011578536852983891,
+      "ic_z": 0.3723431774555367,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.02098953550496895,
+      "ic_ret_z": 9.148712466155557,
+      "ic_ret_pos": 14,
+      "ls_bps": 10.235189613175981,
+      "ls_z": 6.099459581878006,
+      "ls_pos": 12,
+      "ls_turnover": 0.6730964850165438,
+      "hit_rate": 0.5049932744194433,
+      "beat": [
+        11,
+        11,
+        11
+      ],
+      "ret_mean": [
+        49.191355472047064,
+        20.91361355279373,
+        -35.67391015467682
+      ],
+      "ret_compound": [
+        14391.249224772664,
+        669.6103416676535,
+        -99.88644448869267
+      ],
+      "random_median_mean": [
+        16.37584583328784,
+        -5.669734093025779,
+        -49.79208755748912
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.6107137651327035,
+      "buy_decile_random": 5.6107137651327035,
+      "held_decile_strategy": 5.70120818404744,
+      "held_decile_random": 5.695414023022961,
+      "strategy_buys_per_year": 4206.571428571428,
+      "picks_per_day": 19.996045181217536,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r1_d1_uniform.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0011578536852983891,
+      "ic_z": 0.3723431774555367,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.02098953550496895,
+      "ic_ret_z": 9.148712466155557,
+      "ic_ret_pos": 14,
+      "ls_bps": 10.235189613175981,
+      "ls_z": 6.099459581878006,
+      "ls_pos": 12,
+      "ls_turnover": 0.6730964850165438,
+      "hit_rate": 0.5049932744194433,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        21.513069281698137,
+        -1.4137597697694289,
+        -47.379805427673475
+      ],
+      "ret_compound": [
+        954.0661173868914,
+        -43.45817893640883,
+        -99.99140321757989
+      ],
+      "random_median_mean": [
+        12.829123580869126,
+        -8.209676696425976,
+        -50.602471999187394
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.616503256909029,
+      "buy_decile_random": 4.49654829017422,
+      "held_decile_strategy": 5.706554442797616,
+      "held_decile_random": 4.496934438304112,
+      "strategy_buys_per_year": 4189.0,
+      "picks_per_day": 19.996045181217536,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r1_d1_volatility.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 1,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0011578536852983891,
+      "ic_z": 0.3723431774555367,
+      "ic_pos": 8,
+      "ic_ret_mean": 0.02098953550496895,
+      "ic_ret_z": 9.148712466155557,
+      "ic_ret_pos": 14,
+      "ls_bps": 10.235189613175981,
+      "ls_z": 6.099459581878006,
+      "ls_pos": 12,
+      "ls_turnover": 0.6730964850165438,
+      "hit_rate": 0.5049932744194433,
+      "beat": [
+        4,
+        4,
+        4
+      ],
+      "ret_mean": [
+        21.513069281698137,
+        -1.4137597697694289,
+        -47.379805427673475
+      ],
+      "ret_compound": [
+        954.0661173868914,
+        -43.45817893640883,
+        -99.99140321757989
+      ],
+      "random_median_mean": [
+        13.03911619603431,
+        -8.29518030195945,
+        -51.06269658511364
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.616503256909029,
+      "buy_decile_random": 5.616503256909029,
+      "held_decile_strategy": 5.706554442797616,
+      "held_decile_random": 5.703292285861198,
+      "strategy_buys_per_year": 4189.0,
+      "picks_per_day": 19.996045181217536,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r5_d0_uniform.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.02275824143916213,
+      "ic_z": -5.313706596173311,
+      "ic_pos": 1,
+      "ic_ret_mean": 0.014507234437661045,
+      "ic_ret_z": 2.7145317758610426,
+      "ic_ret_pos": 9,
+      "ls_bps": 3.787045186241419,
+      "ls_z": 2.3214526242416302,
+      "ls_pos": 10,
+      "ls_turnover": 0.7611713095570697,
+      "hit_rate": 0.4910770308123249,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        26.30623140944221,
+        20.505400919462353,
+        4.6258581614627
+      ],
+      "ret_compound": [
+        2021.6411887049271,
+        998.7365167596856,
+        52.03851180830581
+      ],
+      "random_median_mean": [
+        13.373155259630265,
+        8.232027702175102,
+        -5.839525944982523
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.642371391581066,
+      "buy_decile_random": 4.4957477924629385,
+      "held_decile_strategy": 5.688610301663038,
+      "held_decile_random": 4.495441866375996,
+      "strategy_buys_per_year": 949.7857142857143,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r5_d0_volatility.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.02275824143916213,
+      "ic_z": -5.313706596173311,
+      "ic_pos": 1,
+      "ic_ret_mean": 0.014507234437661045,
+      "ic_ret_z": 2.7145317758610426,
+      "ic_ret_pos": 9,
+      "ls_bps": 3.787045186241419,
+      "ls_z": 2.3214526242416302,
+      "ls_pos": 10,
+      "ls_turnover": 0.7611713095570697,
+      "hit_rate": 0.4910770308123249,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        26.30623140944221,
+        20.505400919462353,
+        4.6258581614627
+      ],
+      "ret_compound": [
+        2021.6411887049271,
+        998.7365167596856,
+        52.03851180830581
+      ],
+      "random_median_mean": [
+        13.947113345869983,
+        8.714090300461228,
+        -5.609294296439684
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.642371391581066,
+      "buy_decile_random": 5.642371391581066,
+      "held_decile_strategy": 5.688610301663038,
+      "held_decile_random": 5.669452780226915,
+      "strategy_buys_per_year": 949.7857142857143,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r5_d1_uniform.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.02275824143916213,
+      "ic_z": -5.313706596173311,
+      "ic_pos": 1,
+      "ic_ret_mean": 0.014507234437661045,
+      "ic_ret_z": 2.7145317758610426,
+      "ic_ret_pos": 9,
+      "ls_bps": 3.787045186241419,
+      "ls_z": 2.3214526242416302,
+      "ls_pos": 10,
+      "ls_turnover": 0.7611713095570697,
+      "hit_rate": 0.4910770308123249,
+      "beat": [
+        7,
+        7,
+        7
+      ],
+      "ret_mean": [
+        24.970164670202873,
+        19.270805297916496,
+        3.6588519836680544
+      ],
+      "ret_compound": [
+        1857.8568593413638,
+        918.3502346234599,
+        42.77542549878335
+      ],
+      "random_median_mean": [
+        12.912215545558976,
+        7.833885540897377,
+        -6.108847217166945
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.64283060132001,
+      "buy_decile_random": 4.495934977883224,
+      "held_decile_strategy": 5.687627103383314,
+      "held_decile_random": 4.495475293000715,
+      "strategy_buys_per_year": 944.5714285714286,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "lgbm_ret__r5_d1_volatility.json",
+      "name": "lgbm_ret",
+      "label": "LightGBM, actual-return target (added after the POC run), extra",
+      "rebalance": 5,
+      "delay": 1,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/lgbm_ret/scores.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.02275824143916213,
+      "ic_z": -5.313706596173311,
+      "ic_pos": 1,
+      "ic_ret_mean": 0.014507234437661045,
+      "ic_ret_z": 2.7145317758610426,
+      "ic_ret_pos": 9,
+      "ls_bps": 3.787045186241419,
+      "ls_z": 2.3214526242416302,
+      "ls_pos": 10,
+      "ls_turnover": 0.7611713095570697,
+      "hit_rate": 0.4910770308123249,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        24.970164670202873,
+        19.270805297916496,
+        3.6588519836680544
+      ],
+      "ret_compound": [
+        1857.8568593413638,
+        918.3502346234599,
+        42.77542549878335
+      ],
+      "random_median_mean": [
+        13.069580568250794,
+        7.911106573163999,
+        -6.2199112682105735
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 5.64283060132001,
+      "buy_decile_random": 5.64283060132001,
+      "held_decile_strategy": 5.687627103383314,
+      "held_decile_random": 5.670174078686716,
+      "strategy_buys_per_year": 944.5714285714286,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "lowvol__r1_d0_uniform.json",
+      "name": "lowvol",
+      "label": "static reference: -log volatility (252 days)",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/controls/lowvol.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 14,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.0019449490675722061,
+      "ic_z": 0.6233422033480187,
+      "ic_pos": 6,
+      "ic_ret_mean": 0.012846913682916768,
+      "ic_ret_z": 2.8846361070884976,
+      "ic_ret_pos": 11,
+      "ls_bps": -2.0149948192912452,
+      "ls_z": -0.8875008883318259,
+      "ls_pos": 6,
+      "ls_turnover": 0.009032538687629146,
+      "hit_rate": 0.5047506594451414,
+      "beat": [
+        3,
+        3,
+        3
+      ],
+      "ret_mean": [
+        7.219785528596886,
+        6.713510787383851,
+        5.209508158552479
+      ],
+      "ret_compound": [
+        152.29690452954245,
+        136.08106697917327,
+        93.4144128820652
+      ],
+      "random_median_mean": [
+        13.273172323395565,
+        12.734934375969445,
+        11.135650167623249
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 0.0712023869751789,
+      "buy_decile_random": 4.4962945274605755,
+      "held_decile_strategy": 0.03939501827774451,
+      "held_decile_random": 4.498975690230521,
+      "strategy_buys_per_year": 104.92857142857143,
+      "picks_per_day": 19.979859402253677,
+      "cash_years": 0
+    },
+    {
+      "file": "momentum_12_1__r21_d0_uniform.json",
+      "name": "momentum_12_1",
+      "label": "12-1 momentum",
+      "rebalance": 21,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/momentum_12_1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.2217160025706677,
+      "ic_z": -22.365149421681593,
+      "ic_pos": 0,
+      "ic_ret_mean": 0.01735072719121666,
+      "ic_ret_z": 1.3795285108843842,
+      "ic_ret_pos": 12,
+      "ls_bps": 1.387749209007214,
+      "ls_z": 0.9761495829698454,
+      "ls_pos": 10,
+      "ls_turnover": 0.2635237083676228,
+      "hit_rate": 0.28358516483516477,
+      "beat": [
+        5,
+        5,
+        5
+      ],
+      "ret_mean": [
+        17.686004123884125,
+        17.160131583694398,
+        15.595470714546437
+      ],
+      "ret_compound": [
+        400.03501266199305,
+        369.3045115641567,
+        287.9284443289964
+      ],
+      "random_median_mean": [
+        13.246042996865338,
+        12.738723137006234,
+        11.232371627596024
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 7.477991562878057,
+      "buy_decile_random": 4.495708286189633,
+      "held_decile_strategy": 7.72427294456387,
+      "held_decile_random": 4.494709381606984,
+      "strategy_buys_per_year": 101.0,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "momentum_12_1__r5_d0_uniform.json",
+      "name": "momentum_12_1",
+      "label": "12-1 momentum",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/momentum_12_1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": -0.11345149343379628,
+      "ic_z": -19.763895482003107,
+      "ic_pos": 0,
+      "ic_ret_mean": 0.017059989168111227,
+      "ic_ret_z": 2.5273956397626978,
+      "ic_ret_pos": 12,
+      "ls_bps": 1.4562162611669403,
+      "ls_z": 1.1387299510271514,
+      "ls_pos": 11,
+      "ls_turnover": 0.12874861645512597,
+      "hit_rate": 0.38198319327731095,
+      "beat": [
+        5,
+        5,
+        5
+      ],
+      "ret_mean": [
+        18.676232612069345,
+        17.586390099775464,
+        14.375688254831868
+      ],
+      "ret_compound": [
+        604.5085823282831,
+        518.5302156786257,
+        318.510904910247
+      ],
+      "random_median_mean": [
+        13.229431772052418,
+        12.185787894558457,
+        9.112777978624667
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 7.3648223950465,
+      "buy_decile_random": 4.497748211605027,
+      "held_decile_strategy": 7.7174601359933614,
+      "held_decile_random": 4.497593713308435,
+      "strategy_buys_per_year": 196.07142857142858,
+      "picks_per_day": 20.0,
+      "cash_years": 0
+    },
+    {
+      "file": "reversal5__r1_d0_uniform.json",
+      "name": "reversal5",
+      "label": "5-day reversal",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/reversal5.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.016770495730684048,
+      "ic_z": 8.093948332701379,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.008835078166692508,
+      "ic_ret_z": 3.669431690530505,
+      "ic_ret_pos": 13,
+      "ls_bps": 5.366412131677802,
+      "ls_z": 2.568654442232228,
+      "ls_pos": 13,
+      "ls_turnover": 0.385245263656652,
+      "hit_rate": 0.5068120722646376,
+      "beat": [
+        10,
+        10,
+        9
+      ],
+      "ret_mean": [
+        28.03685838412753,
+        14.838610572563676,
+        -17.148982530240342
+      ],
+      "ret_compound": [
+        1819.250445955122,
+        324.12808625191485,
+        -95.44206032321281
+      ],
+      "random_median_mean": [
+        13.294698921286288,
+        1.766437232063756,
+        -26.248108970798224
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 7.690616366230645,
+      "buy_decile_random": 4.496721560955829,
+      "held_decile_strategy": 7.919028620384898,
+      "held_decile_random": 4.496425212248843,
+      "strategy_buys_per_year": 2166.9285714285716,
+      "picks_per_day": 19.98841676753322,
+      "cash_years": 0
+    },
+    {
+      "file": "reversal5__r5_d0_uniform.json",
+      "name": "reversal5",
+      "label": "5-day reversal",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/reversal5.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.03354882240478576,
+      "ic_z": 8.074962075464514,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.014538990173883656,
+      "ic_ret_z": 3.0462251394113307,
+      "ic_ret_pos": 11,
+      "ls_bps": 3.6330302072605822,
+      "ls_z": 2.463294305649934,
+      "ls_pos": 12,
+      "ls_turnover": 0.8528399552406327,
+      "hit_rate": 0.5314751428130308,
+      "beat": [
+        6,
+        6,
+        6
+      ],
+      "ret_mean": [
+        27.94352712774182,
+        22.001255736615715,
+        5.7515143506338395
+      ],
+      "ret_compound": [
+        1314.630624201324,
+        627.6059388001903,
+        -1.3671613486666123
+      ],
+      "random_median_mean": [
+        13.372546262666237,
+        8.186832512946896,
+        -6.01874919323177
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 7.855825420880383,
+      "buy_decile_random": 4.496519959683392,
+      "held_decile_strategy": 7.918176831144407,
+      "held_decile_random": 4.496202871080051,
+      "strategy_buys_per_year": 959.5,
+      "picks_per_day": 19.99439775910364,
+      "cash_years": 0
+    },
+    {
+      "file": "reversal5__r5_d0_volatility.json",
+      "name": "reversal5",
+      "label": "5-day reversal",
+      "rebalance": 5,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/reversal5.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.03354882240478576,
+      "ic_z": 8.074962075464514,
+      "ic_pos": 14,
+      "ic_ret_mean": 0.014538990173883656,
+      "ic_ret_z": 3.0462251394113307,
+      "ic_ret_pos": 11,
+      "ls_bps": 3.6330302072605822,
+      "ls_z": 2.463294305649934,
+      "ls_pos": 12,
+      "ls_turnover": 0.8528399552406327,
+      "hit_rate": 0.5314751428130308,
+      "beat": [
+        7,
+        7,
+        7
+      ],
+      "ret_mean": [
+        27.94352712774182,
+        22.001255736615715,
+        5.7515143506338395
+      ],
+      "ret_compound": [
+        1314.630624201324,
+        627.6059388001903,
+        -1.3671613486666123
+      ],
+      "random_median_mean": [
+        14.511252589634031,
+        9.197642978784943,
+        -5.336997960703154
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 7.855825420880383,
+      "buy_decile_random": 7.855825420880383,
+      "held_decile_strategy": 7.918176831144407,
+      "held_decile_random": 7.862955655696849,
+      "strategy_buys_per_year": 959.5,
+      "picks_per_day": 19.99439775910364,
+      "cash_years": 0
+    },
+    {
+      "file": "vreversal1__r1_d0_uniform.json",
+      "name": "vreversal1",
+      "label": "1-day census reversal (-v[d]), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "uniform",
+      "random": 1000,
+      "scores": "runs/poc/baselines/vreversal1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.012582136890910962,
+      "ic_z": 6.078650484670847,
+      "ic_pos": 13,
+      "ic_ret_mean": 0.011784052130329934,
+      "ic_ret_z": 5.701408495471583,
+      "ic_ret_pos": 11,
+      "ls_bps": 1.9154197015171566,
+      "ls_z": 1.9016638370227121,
+      "ls_pos": 10,
+      "ls_turnover": 0.8756629805104398,
+      "hit_rate": 0.5048030586634126,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        6.173628005418335,
+        -16.559248419975166,
+        -59.55481920107675
+      ],
+      "ret_compound": [
+        63.33765095071961,
+        -94.39877161511133,
+        -99.9997784826039
+      ],
+      "random_median_mean": [
+        13.234645343847246,
+        -10.682283617396038,
+        -56.21771398321346
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 4.967573063479422,
+      "buy_decile_random": 4.496811621497785,
+      "held_decile_strategy": 4.993546749715219,
+      "held_decile_random": 4.496803507787422,
+      "strategy_buys_per_year": 4825.714285714285,
+      "picks_per_day": 19.996325266901348,
+      "cash_years": 0
+    },
+    {
+      "file": "vreversal1__r1_d0_volatility.json",
+      "name": "vreversal1",
+      "label": "1-day census reversal (-v[d]), extra",
+      "rebalance": 1,
+      "delay": 0,
+      "random_match": "volatility",
+      "random": 1000,
+      "scores": "runs/poc/baselines/vreversal1.npy",
+      "fingerprint": "8b5ac076267c83ab",
+      "years": 14,
+      "first_year": 2010,
+      "last_year": 2023,
+      "all_graded_years": 17,
+      "costs": [
+        0.0,
+        5.0,
+        20.0
+      ],
+      "ic_mean": 0.012582136890910962,
+      "ic_z": 6.078650484670847,
+      "ic_pos": 13,
+      "ic_ret_mean": 0.011784052130329934,
+      "ic_ret_z": 5.701408495471583,
+      "ic_ret_pos": 11,
+      "ls_bps": 1.9154197015171566,
+      "ls_z": 1.9016638370227121,
+      "ls_pos": 10,
+      "ls_turnover": 0.8756629805104398,
+      "hit_rate": 0.5048030586634126,
+      "beat": [
+        2,
+        2,
+        2
+      ],
+      "ret_mean": [
+        6.173628005418335,
+        -16.559248419975166,
+        -59.55481920107675
+      ],
+      "ret_compound": [
+        63.33765095071961,
+        -94.39877161511133,
+        -99.9997784826039
+      ],
+      "random_median_mean": [
+        11.85446837762103,
+        -12.077273115340574,
+        -57.35675959342656
+      ],
+      "spy_mean": 15.020450933935951,
+      "qqq_mean": 20.64197470242133,
+      "spy_compound": 550.3636530818815,
+      "qqq_compound": 1110.3101811705326,
+      "hold_all_mean": 13.029591042541428,
+      "buy_decile_strategy": 4.967573063479422,
+      "buy_decile_random": 4.967573063479422,
+      "held_decile_strategy": 4.993546749715219,
+      "held_decile_random": 4.978015148278201,
+      "strategy_buys_per_year": 4825.714285714285,
+      "picks_per_day": 19.996325266901348,
+      "cash_years": 0
+    }
+  ],
+  "tripwire": {
+    "gpt_ensemble": {
+      "overall": {
+        "mean": 0.012923666846172188,
+        "t": 4.820148007252596,
+        "days": 3524
+      },
+      "max_year_mean": 0.02934577762839233,
+      "tripped": false,
+      "flagged": []
+    },
+    "gpt_null": {
+      "overall": {
+        "mean": 0.0012484861955401696,
+        "t": 0.3102285245137329,
+        "days": 753
+      },
+      "max_year_mean": 0.008439712930050934,
+      "tripped": false,
+      "flagged": []
+    },
+    "lgbm": {
+      "overall": {
+        "mean": -0.0008977295776452417,
+        "t": -0.27330445634844475,
+        "days": 3524
+      },
+      "max_year_mean": 0.015580523293058294,
+      "tripped": false,
+      "flagged": []
+    },
+    "lgbm_ret": {
+      "overall": {
+        "mean": 0.024871780020755376,
+        "t": 8.996206251042006,
+        "days": 3524
+      },
+      "max_year_mean": 0.05034083133704805,
+      "tripped": true,
+      "flagged": [
+        2021
+      ]
+    },
+    "reversal5": {
+      "overall": {
+        "mean": 0.010804356300979997,
+        "t": 3.5247637711473097,
+        "days": 3524
+      },
+      "max_year_mean": 0.029849265363745138,
+      "tripped": false,
+      "flagged": []
+    },
+    "vreversal1": {
+      "overall": {
+        "mean": 0.014925733144461396,
+        "t": 5.762341530100062,
+        "days": 3524
+      },
+      "max_year_mean": 0.03618784482953298,
+      "tripped": false,
+      "flagged": []
+    }
+  },
+  "g0": {
+    "python_vs_dump": true,
+    "scores_vs_reversal_family_json": true,
+    "ref_c2_vs_judge_reversal": true
+  },
+  "diagnostics": {
+    "gpt_ensemble": {
+      "v[d]": -0.30866047412336417,
+      "log volatility (252 days)": -0.468135102540688,
+      "lgbm": 0.11957537974418474,
+      "reversal5": 0.0814918208686099,
+      "vreversal1": 0.30866047412336417,
+      "momentum_12_1": 0.0715927513481542,
+      "seed0": 0.9263426908193382,
+      "seed1": 0.870561650740582,
+      "seed2": 0.9018976540482354
+    },
+    "lgbm": {
+      "v[d]": -0.10537709098073353,
+      "log volatility (252 days)": -0.044785132995469275,
+      "momentum_12_1": -0.678148463362857,
+      "reversal5": 0.21366524118959496,
+      "vreversal1": 0.10537709098073353
+    },
+    "lgbm_ret": {
+      "v[d]": -0.2398644402687285,
+      "log volatility (252 days)": -0.3588762056154996,
+      "momentum_12_1": 0.22883581341982934,
+      "reversal5": 0.14060219060651044,
+      "vreversal1": 0.2398644402687285,
+      "gpt_ensemble": 0.34595851253855237,
+      "lgbm": 0.08762836575655097
+    }
+  },
+  "gpt_val_ic_actual_by_year": {
+    "2010": 0.009466412100542528,
+    "2011": 0.011571360503664425,
+    "2012": 0.019829983715343637,
+    "2013": 0.011795070231099955,
+    "2014": 0.014401560976977965,
+    "2015": 0.022570598383937563,
+    "2016": 0.0242259530097477,
+    "2017": 0.01569934731766779,
+    "2018": -2.6377661141977564e-06,
+    "2019": 0.01629195587107401,
+    "2020": 0.0053443020667183795,
+    "2021": 0.02187507291415214,
+    "2022": 0.03234888424376404,
+    "2023": 0.020118029488795847
+  },
+  "gpt_runs": 42,
+  "null_runs": 3,
+  "timings": {
+    "steps": {
+      "export": 0,
+      "G0": 10,
+      "stockGPT walk-forward": 3229,
+      "sign-flip null": 188,
+      "baselines": 106,
+      "grading": 61,
+      "controls": 86,
+      "summary": 0
+    },
+    "gpt": {
+      "per_seed_seconds": {
+        "0": 1237.2851521968842,
+        "1": 969.2434632778168,
+        "2": 1008.100831747055
+      },
+      "per_year": {
+        "2010": {
+          "train_seconds": 42.01631339391073,
+          "score_seconds": 13.461743911107382,
+          "steps": 356.6666666666667,
+          "max_steps": 400.0,
+          "best_step": 178.66666666666666,
+          "train_positions": 1829383
+        },
+        "2011": {
+          "train_seconds": 47.45948259035746,
+          "score_seconds": 14.057118018468222,
+          "steps": 378.3333333333333,
+          "max_steps": 400.0,
+          "best_step": 223.33333333333334,
+          "train_positions": 2402141
+        },
+        "2012": {
+          "train_seconds": 42.16466236114502,
+          "score_seconds": 10.71380360921224,
+          "steps": 400.0,
+          "max_steps": 400.0,
+          "best_step": 223.33333333333334,
+          "train_positions": 2985422
+        },
+        "2013": {
+          "train_seconds": 39.45474727948507,
+          "score_seconds": 11.38066061337789,
+          "steps": 400.0,
+          "max_steps": 400.0,
+          "best_step": 334.3333333333333,
+          "train_positions": 3593001
+        },
+        "2014": {
+          "train_seconds": 44.59843500455221,
+          "score_seconds": 12.470951716105143,
+          "steps": 400.0,
+          "max_steps": 400.0,
+          "best_step": 201.0,
+          "train_positions": 4238151
+        },
+        "2015": {
+          "train_seconds": 48.02577495574951,
+          "score_seconds": 12.89254117012024,
+          "steps": 400.0,
+          "max_steps": 400.0,
+          "best_step": 268.0,
+          "train_positions": 4915343
+        },
+        "2016": {
+          "train_seconds": 34.87208620707194,
+          "score_seconds": 13.633530219395956,
+          "steps": 290.3333333333333,
+          "max_steps": 400.0,
+          "best_step": 89.33333333333333,
+          "train_positions": 5637839
+        },
+        "2017": {
+          "train_seconds": 50.78190414110819,
+          "score_seconds": 14.313238541285196,
+          "steps": 413.3333333333333,
+          "max_steps": 413.3333333333333,
+          "best_step": 413.3333333333333,
+          "train_positions": 6406311
+        },
+        "2018": {
+          "train_seconds": 49.595919609069824,
+          "score_seconds": 15.256487607955933,
+          "steps": 412.6666666666667,
+          "max_steps": 463.0,
+          "best_step": 283.3333333333333,
+          "train_positions": 7218740
+        },
+        "2019": {
+          "train_seconds": 60.971638917922974,
+          "score_seconds": 22.51258897781372,
+          "steps": 516.0,
+          "max_steps": 516.0,
+          "best_step": 346.6666666666667,
+          "train_positions": 8068027
+        },
+        "2020": {
+          "train_seconds": 56.302292823791504,
+          "score_seconds": 24.303916215896606,
+          "steps": 384.0,
+          "max_steps": 574.3333333333334,
+          "best_step": 96.0,
+          "train_positions": 8979607
+        },
+        "2021": {
+          "train_seconds": 119.57898290952046,
+          "score_seconds": 34.395143270492554,
+          "steps": 636.3333333333334,
+          "max_steps": 636.3333333333334,
+          "best_step": 497.0,
+          "train_positions": 9956517
+        },
+        "2022": {
+          "train_seconds": 87.51747663815816,
+          "score_seconds": 32.05614463488261,
+          "steps": 470.6666666666667,
+          "max_steps": 703.0,
+          "best_step": 117.66666666666667,
+          "train_positions": 11018748
+        },
+        "2023": {
+          "train_seconds": 83.1061475276947,
+          "score_seconds": 33.64941620826721,
+          "steps": 605.0,
+          "max_steps": 776.0,
+          "best_step": 216.0,
+          "train_positions": 12192927
+        }
+      },
+      "total_seconds": 3214.629447221756
+    },
+    "null": {
+      "per_seed_seconds": {
+        "0": 182.38541841506958
+      },
+      "per_year": {
+        "2012": {
+          "train_seconds": 32.496853828430176,
+          "score_seconds": 10.818440675735474,
+          "steps": 335.0,
+          "max_steps": 400.0,
+          "best_step": 134.0,
+          "train_positions": 2985422
+        },
+        "2017": {
+          "train_seconds": 50.78097891807556,
+          "score_seconds": 14.344013214111328,
+          "steps": 414.0,
+          "max_steps": 414.0,
+          "best_step": 207.0,
+          "train_positions": 6406311
+        },
+        "2022": {
+          "train_seconds": 51.04818940162659,
+          "score_seconds": 22.896942377090454,
+          "steps": 472.0,
+          "max_steps": 704.0,
+          "best_step": 118.0,
+          "train_positions": 11018748
+        }
+      },
+      "total_seconds": 182.38541841506958
+    },
+    "lgbm_per_year_seconds": {
+      "2010": 2.1295385360717773,
+      "2011": 3.6232259273529053,
+      "2012": 3.0593605041503906,
+      "2013": 5.847991466522217,
+      "2014": 6.963416576385498,
+      "2015": 7.037720680236816,
+      "2016": 5.1456358432769775,
+      "2017": 6.785885572433472,
+      "2018": 9.109732627868652,
+      "2019": 7.4649107456207275,
+      "2020": 8.06751561164856,
+      "2021": 8.688071250915527,
+      "2022": 7.564085960388184,
+      "2023": 7.490139722824097
+    },
+    "lgbm_total_seconds": 104.55277228355408,
+    "lgbm_ret_per_year_seconds": {
+      "2010": 1.9063539505004883,
+      "2011": 2.594142198562622,
+      "2012": 3.0365068912506104,
+      "2013": 4.518631458282471,
+      "2014": 10.28875470161438,
+      "2015": 5.798580884933472,
+      "2016": 4.751489639282227,
+      "2017": 4.779412269592285,
+      "2018": 9.814600706100464,
+      "2019": 6.271118640899658,
+      "2020": 6.096288204193115,
+      "2021": 9.120422124862671,
+      "2022": 7.761059761047363,
+      "2023": 6.697048902511597
+    },
+    "lgbm_ret_total_seconds": 115.64006471633911
+  }
+}

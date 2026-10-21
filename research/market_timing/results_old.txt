@@ -1,0 +1,72 @@
+Months: 242 (2005-04-04 .. 2025-05-14, last hold ends 2025-06-13)
+
+## 2005-04..2025-06: 242 months
+| | Annual return | Sharpe | Max drawdown | Avg exposure |
+|---|---|---|---|---|
+| Rule (100% when avg corr above median) | +7.0% | 0.48 | -57.0% | 73% |
+| Buy and hold SPY | +9.8% | 0.58 | -56.5% | 100% |
+| Random timing, median of 10,000 | +7.3% | 0.55 | -45.6% | 73% |
+| Volatility-managed SPY (c = 6.02e-05) | +7.2% | 0.70 | -23.1% | 73% |
+| Absorption-ratio rule (reported only) | +7.6% | 0.65 | -35.1% | 75% |
+rule - median random: -0.30 pts/yr; random p (annual) 0.6246; random p (Sharpe) 0.8466
+Sharpe rule - vol: -0.227, bootstrap p 0.8674 (5-95%: -0.489..+0.091)
+Sharpe rule - buy&hold: -0.103, bootstrap p 0.9346
+AR rule - its median random: +0.18 pts/yr, p 0.4273; AR Sharpe - buy&hold +0.073, bootstrap p 0.2382
+SPY next-month return after 100% months +0.89% (n 111), after 50% months +0.89% (n 131), diff t +0.00; rule switches 39
+
+## 2005-04..2019-12 (tests 1-2): 177 months
+| | Annual return | Sharpe | Max drawdown | Avg exposure |
+|---|---|---|---|---|
+| Rule (100% when avg corr above median) | +6.2% | 0.44 | -57.0% | 74% |
+| Buy and hold SPY | +8.4% | 0.53 | -56.5% | 100% |
+| Random timing, median of 10,000 | +6.3% | 0.50 | -46.2% | 74% |
+| Volatility-managed SPY (c = 5.61e-05) | +7.4% | 0.76 | -21.7% | 74% |
+| Absorption-ratio rule (reported only) | +6.8% | 0.61 | -35.1% | 77% |
+rule - median random: -0.12 pts/yr; random p (annual) 0.5449; random p (Sharpe) 0.7619
+Sharpe rule - vol: -0.315, bootstrap p 0.8689 (5-95%: -0.606..+0.111)
+Sharpe rule - buy&hold: -0.089, bootstrap p 0.8672
+AR rule - its median random: +0.21 pts/yr, p 0.4216; AR Sharpe - buy&hold +0.080, bootstrap p 0.3065
+SPY next-month return after 100% months +0.85% (n 84), after 50% months +0.72% (n 93), diff t +0.17; rule switches 32
+
+## 2020-01..2025-06 (test 3): 65 months
+| | Annual return | Sharpe | Max drawdown | Avg exposure |
+|---|---|---|---|---|
+| Rule (100% when avg corr above median) | +9.0% | 0.56 | -28.0% | 71% |
+| Buy and hold SPY | +13.6% | 0.70 | -33.7% | 100% |
+| Random timing, median of 10,000 | +9.6% | 0.66 | -24.2% | 71% |
+| Volatility-managed SPY (c = 7.00e-05) | +6.7% | 0.58 | -18.9% | 71% |
+| Absorption-ratio rule (reported only) | +9.7% | 0.75 | -24.2% | 69% |
+rule - median random: -0.60 pts/yr; random p (annual) 0.6239; random p (Sharpe) 0.7584
+Sharpe rule - vol: -0.016, bootstrap p 0.5099 (5-95%: -0.583..+0.575)
+Sharpe rule - buy&hold: -0.135, bootstrap p 0.8242
+AR rule - its median random: +0.24 pts/yr, p 0.4488; AR Sharpe - buy&hold +0.056, bootstrap p 0.3749
+SPY next-month return after 100% months +1.02% (n 27), after 50% months +1.28% (n 38), diff t -0.21; rule switches 7
+
+## By period (random timing reordered within each; vol-managed uses the whole span's c)
+| Period | Months | Rule | Buy and hold | Median random | Rule − random | p | Vol-managed | Rule Sharpe | B&H Sharpe | Vol Sharpe | Rule exposure |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2005-04..2009 | 57 | -1.6% | -0.8% | -0.5% | -1.1 | 0.68 | +2.2% | 0.05 | 0.09 | 0.28 | 83% |
+| 2010-2014 | 60 | +10.1% | +13.9% | +9.5% | +0.7 | 0.35 | +10.7% | 0.78 | 0.90 | 0.97 | 68% |
+| 2015-2019 | 60 | +10.1% | +12.4% | +8.6% | +1.5 | 0.11 | +9.7% | 0.99 | 0.94 | 0.95 | 70% |
+| 2020-2025-06 | 65 | +9.0% | +13.6% | +9.6% | -0.6 | 0.62 | +6.3% | 0.56 | 0.70 | 0.58 | 71% |
+
+## Absorption-ratio rule by period
+| Period | AR rule | Median random | AR − random | p | AR Sharpe | Exposure |
+|---|---|---|---|---|---|---|
+| 2005-04..2025-06 | +7.6% | +7.4% | +0.2 | 0.43 | 0.65 | 75% |
+| 2005-04..2019-12 | +6.8% | +6.6% | +0.2 | 0.42 | 0.61 | 77% |
+| 2020-01..2025-06 | +9.7% | +9.5% | +0.2 | 0.45 | 0.75 | 69% |
+| 2005-04..2009 | +0.3% | -0.1% | +0.5 | 0.42 | 0.09 | 68% |
+| 2010-2014 | +11.5% | +11.9% | -0.4 | 0.59 | 0.94 | 86% |
+| 2015-2019 | +8.5% | +9.2% | -0.7 | 0.71 | 0.90 | 75% |
+
+## Sensitivity: only 500-stock states in the median
+full from 2007-06-05 (216 months): rule +6.4% vs median random +7.0% (-0.63, p 0.726); Sharpe rule 0.43, B&H 0.55, vol 0.64 (boot p vs vol 0.839); exposure 74%; AR +7.5% vs +7.0% (p 0.328)
+test1 from 2007-06-05 (151 months): rule +5.3% vs median random +5.9% (-0.59, p 0.677); Sharpe rule 0.38, B&H 0.48, vol 0.68 (boot p vs vol 0.878); exposure 75%; AR +6.5% vs +5.9% (p 0.312)
+test3 from 2020-01-08 (65 months): rule +9.0% vs median random +9.6% (-0.60, p 0.624); Sharpe rule 0.56, B&H 0.70, vol 0.58 (boot p vs vol 0.510); exposure 71%; AR +9.7% vs +9.5% (p 0.449)
+
+Diagnostic, full span: corr(avg corr, next 21-day SPY log return) +0.036 (t +0.56); vs median +0.005 (t +0.08); absorption +0.013 (t +0.20)
+Cost at 5 bps on the half that moves, per year: 0.048 pts
+
+Tests: 1 FAIL; 2 FAIL; 3 FAIL
+File-name number (rule - median random, 2005-04..2025-06): -0.3

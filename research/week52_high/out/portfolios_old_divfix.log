@@ -1,0 +1,10 @@
+[    0.8s] divfix: total-return index built
+[    0.8s] old divfix periods 269 2002-12-31 .. 2025-06-13
+[    1.0s] pth: periods with 6 cohorts 240, legs median 385
+[    1.2s] mom: periods with 6 cohorts 240, legs median 385
+[    1.3s] jt6: periods with 6 cohorts 240, legs median 385
+[    1.5s] pth_skip: periods with 6 cohorts 240, legs median 385
+[    1.5s] pth_big: periods with 6 cohorts 240, legs median 150
+[    1.6s] mom_big: periods with 6 cohorts 240, legs median 150
+[    1.7s] pth_skip_big: periods with 6 cohorts 240, legs median 150
+[    1.7s] saved /home/bhoult/.local/share/correlation2/experiments/week52_high/series_old_divfix.npz

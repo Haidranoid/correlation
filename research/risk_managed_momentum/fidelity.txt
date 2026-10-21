@@ -1,0 +1,16 @@
+plain  all 2006-01-01..2025-06-27: daily corr(WML, French UMD) = 0.899 over 4902 days  <- the check (needs >= 0.5)
+plain  big 2006-01-01..2025-06-27: daily corr(WML, French UMD) = 0.894 over 4902 days
+plain  all 2006-01-01..2019-12-31: daily corr(WML, French UMD) = 0.901 over 3523 days
+plain  big 2006-01-01..2019-12-31: daily corr(WML, French UMD) = 0.892 over 3523 days
+plain  all 2020-01-01..2025-06-27: daily corr(WML, French UMD) = 0.897 over 1379 days
+plain  big 2020-01-01..2025-06-27: daily corr(WML, French UMD) = 0.896 over 1379 days
+plain  all monthly 2006-01..2025-06: corr(WML, French UMD) = 0.909 over 234 months
+plain  big monthly 2006-01..2025-06: corr(WML, French UMD) = 0.901 over 234 months
+divfix all 2006-01-01..2025-06-27: daily corr(WML, French UMD) = 0.898 over 4902 days
+divfix big 2006-01-01..2025-06-27: daily corr(WML, French UMD) = 0.894 over 4902 days
+divfix all 2006-01-01..2019-12-31: daily corr(WML, French UMD) = 0.901 over 3523 days
+divfix big 2006-01-01..2019-12-31: daily corr(WML, French UMD) = 0.892 over 3523 days
+divfix all 2020-01-01..2025-06-27: daily corr(WML, French UMD) = 0.896 over 1379 days
+divfix big 2020-01-01..2025-06-27: daily corr(WML, French UMD) = 0.896 over 1379 days
+divfix all monthly 2006-01..2025-06: corr(WML, French UMD) = 0.909 over 234 months
+divfix big monthly 2006-01..2025-06: corr(WML, French UMD) = 0.902 over 234 months

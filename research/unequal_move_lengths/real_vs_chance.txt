@@ -1,0 +1,32 @@
+Real vs chance: pairs of real stocks with |z| >= 4 at the 3 predictive offsets (B right after A, +1 week, +1 month),
+overlapping observations, against the mean of 8 block sign-flip null copies (residuals flipped, census variable rebuilt).
+z excess = (real - mean null) / sd of the null copies. "Excess" = ratio >= 1.10 and z excess >= 3.
+median ratio (added after the results): real over the median null copy; the copies are skewed (one copy in 8 often
+has 1.5-2.7x the others, when its signs line up with a market-wide episode), which pulls the mean up.
+noise ref = the calibration's real/chance for continuous noise A -> real stocks B (same null, same periods).
+Today's census (non-overlapping, old null) for comparison where it has the combination.
+
+  #    A    B           rolling 5-year periods (20)  z exc median                    full history  z exc   |z|>=3 rolling  |z|>=5 rolling  noise ref census today  excess
+  1    1    5      71,932 /    84,380.0 =  0.85    -0.3   1.01        88 /      87.1 =  1.01    0.0             0.96            0.73       0.98         1.03  no
+  2    1   10      31,758 /    37,012.8 =  0.86    -0.4   1.00        53 /      53.6 =  0.99   -0.1             0.95            0.76       0.98         1.02  no
+  3    1   21      19,303 /    20,884.9 =  0.92    -0.3   1.04        28 /      31.8 =  0.88   -0.3             0.99            0.85       0.99         1.02  no
+  4    1   42      11,447 /    14,292.5 =  0.80    -0.7   0.85        18 /      30.8 =  0.59   -1.6             0.93            0.63       1.00          nan  no
+  5    1   63       8,029 /     8,396.8 =  0.96    -0.3   1.01        22 /      21.0 =  1.05    0.1             0.99            0.92       1.01         0.99  no
+  6    5   10      21,031 /    19,302.5 =  1.09     1.8   1.10        42 /      40.6 =  1.03    0.1             1.02            1.25       0.99         1.03  no
+  7    5   21      12,009 /    12,718.1 =  0.94    -0.3   1.02        38 /      28.2 =  1.35    0.9             1.00            0.70       0.98         1.03  no
+  8    5   42       8,287 /     8,718.9 =  0.95    -0.5   0.96        15 /      27.4 =  0.55   -2.2             0.97            0.88       0.99          nan  no
+  9    5   63       6,677 /     7,042.2 =  0.95    -0.4   0.92        23 /      27.2 =  0.84   -0.3             0.98            0.84       1.00         0.99  no
+ 10    5  126       6,882 /     7,284.5 =  0.94    -0.5   0.96        33 /      20.0 =  1.65    2.4             0.98            0.89       1.00          nan  no
+ 11   10   21       9,912 /    10,893.6 =  0.91    -0.5   0.94        34 /      28.1 =  1.21    1.6             0.97            0.62       0.98         1.07  no
+ 12   10   42       7,701 /     8,462.9 =  0.91    -0.6   0.90        19 /      25.8 =  0.74   -0.9             0.95            0.72       1.00          nan  no
+ 13   10   63       6,552 /     6,715.4 =  0.98    -0.2   0.99        26 /      24.8 =  1.05    0.1             0.98            1.02       1.02         1.09  no
+ 14   21   42       6,020 /     6,100.2 =  0.99    -0.1   1.04        14 /      27.4 =  0.51   -1.2             0.98            1.10       0.97          nan  no
+ 15   21   63       5,468 /     5,537.5 =  0.99    -0.3   1.00        32 /      24.4 =  1.31    0.7             0.98            0.74       1.03         1.18  no
+ 16   21  126       5,569 /     5,591.4 =  1.00    -0.1   1.00        43 /      20.9 =  2.06    4.9             1.00            0.86       1.03          nan  no
+ 17   63  126       1,968 /     2,044.0 =  0.96    -0.6   0.96        37 /      24.5 =  1.51    2.2             1.01            1.24       1.10          nan  no
+ 18   21    5      11,838 /    11,963.2 =  0.99    -0.1   0.98        38 /      29.5 =  1.29    1.0             0.98            0.98       0.96         1.02  no
+ 19   63   21       5,274 /     5,193.9 =  1.02     0.5   1.02        37 /      27.9 =  1.33    0.8             1.00            0.95       1.04         1.30  no
+ 20   63    5       6,593 /     6,874.5 =  0.96    -0.6   0.97        35 /      17.1 =  2.04    3.2             0.95            1.14       1.00         1.03  no
+all 20, rolling: 264,250 / 289,409.8 = 0.913 (z excess -0.5)
+
+Stocks per period: Y2006 299, Y2007 301, Y2008 298, Y2009 283, Y2010 295, Y2011 947, Y2012 996, Y2013 1017, Y2014 1144, Y2015 1196, Y2016 1224, Y2017 1306, Y2018 1392, Y2019 1477, Y2020 1500, Y2021 1500, Y2022 1500, Y2023 1500, Y2024 1500, Y2025 1500, full 308

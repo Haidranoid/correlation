@@ -1,0 +1,7 @@
+[    1.1s] prices ready
+[    2.0s] new bab: 224 months, first 2008-03, last 2026-10; mean names per leg 709/709; mean ex-ante leg betas 0.84/1.41; mean turnover 0.28
+[    2.0s] new bab500: 224 months, first 2008-03, last 2026-10; mean names per leg 249/249; mean ex-ante leg betas 0.82/1.41; mean turnover 0.34
+[    2.0s] new bab_unlev: 224 months, first 2008-03, last 2026-10; mean names per leg 709/709; mean ex-ante leg betas 0.84/1.41; mean turnover 0.30
+[    2.0s] new nmv_ew: 224 months, first 2008-03, last 2026-10; mean names per leg 473/472; mean ex-ante leg betas 0.84/1.40; mean turnover 0.35
+[    2.0s] new nmv_dv: 224 months, first 2008-03, last 2026-10; mean names per leg 473/472; mean ex-ante leg betas 0.84/1.42; mean turnover 0.39
+[    2.0s] saved /home/bhoult/.local/share/correlation2/experiments/betting_against_beta/series_new.npz

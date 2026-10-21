@@ -1,0 +1,85 @@
+Decisions for experiments/+23.6-intraday-lead-lag.md, logged as made (times CDT, 2026-10-21).
+
+13:57  Before any fetch
+- Universe: night_and_day/common.py's liquid-set rule evaluated at t0 = the new export's last day (2026-10-19,
+  index 6239), not at the last twins rebalance; the exclusion mask is excluded(E_new, tw)[rebal_index(tw, t0)]
+  (rebalance of 2026-10-15). Top 500 by median 63-day dollar volume. Plus the plan's 20 funds (none of them is
+  among the 500). Store ticker -> Yahoo symbol as twin_gap_fade_check/positions.py ('.' -> '-').
+- Fetch: twin_gap_fade_check/fetch.py copied; 5m with period=60d, daily bars 2026-07-01..2026-10-20 (for the 2%
+  rule), 1m in 7-day pieces from 2026-09-22 (the check's first available day) through 2026-10-20. Today
+  (2026-10-21) is still trading during the fetch and is dropped by the full-day rule.
+
+14:02  After seeing the 5m bars' structure (times, volumes, counts per day), before any return was computed
+- Missing bar = absent from Yahoo's output, or a non-finite close. Yahoo leaves out bars with no trades (299
+  symbol-days have 77 bars, fewer have less) and does not forward-fill them (no flat bar at the prior close).
+  2,109 of 2,424,480 five-minute bars have volume 0, but every one has a price range (SPY, QQQ, NVDA, AAPL among
+  them), so volume 0 is Yahoo's volume field failing, not "no trades": those bars count as present. A flat
+  volume-0 bar at the previous bar's close would count as missing (none occur).
+- Return at bar b = log(close_b / close_{b-1}) within the day, needing both bars present. The 09:30 bar's return
+  (from the prior close) is excluded. A full 5m day gives returns at bars 2..78 (77 returns) and 76 lag-1 slots
+  (r(k), r(k+1)) inside the day; nothing crosses days. 1m: 389 returns, 388 slots.
+- Only bars with 09:30 <= time < 16:00 and UTC offset -04:00 (America/New_York, EDT in this whole window) are kept.
+- Full day = SPY has all 78 (5m) or 390 (1m) bars from 09:30. This drops half-days and today's partial day.
+- 2% rule: a symbol-day counts only if its last bar's close is within 2% of Yahoo's daily close from the fresh
+  daily fetch; a symbol-day without a daily bar is dropped. In-window splits from the daily fetch's stock_splits
+  column are listed.
+- Split: the full days in date order; selection = the first floor(D/2) days, test = the rest.
+- Market adjustment: beta per symbol = OLS slope (with intercept) of its returns on SPY's same-bar returns over
+  the selection half, over bars where both exist; adjusted r = r - beta * r_SPY, in both halves. A bar where SPY's
+  return is missing gives no adjusted return (never happens on a full day).
+- SPY's adjusted return is identically zero (beta on itself = 1), so SPY is out of the adjusted pair set: 519
+  symbols, 519 x 518 = 268,842 ordered pairs. SPY stays in the raw same-bar context and as test 2's baseline.
+- Lead-lag statistic: exact pairwise-complete Pearson correlation of r_A(k) and r_B(k+1) over the slots where both
+  exist, from six masked matrix products (n, Sx, Sy, Sxx, Syy, Sxy). Checked against a direct computation for
+  pairs drawn at random, real and shifted. Pairs with fewer than 1,000 bar pairs are left out of every count.
+- Null: B's days rotated by s within the half (A's day i with B's day (i+s) mod D_half), on the same adjusted
+  returns, for s = 1..20 (all distinct and nonzero for the 5m halves). For the 1m halves (about 10 days each)
+  only D_half - 1 distinct nonzero shifts exist, so the 1m null uses s = 1..D_half-1.
+- Threshold = 99.9th percentile of |corr| pooled over every pair and every shift. The null count = the mean over
+  shifts of the number of pairs above the threshold (about 0.1% of pairs by construction). The number for the
+  file name = (selection count / null count - 1) x 100.
+- Robustness variant, pre-registered and reported, not graded: each symbol's adjusted returns divided by its own
+  same-day sd before correlating. Reason: volatility clusters by day across stocks; in the real alignment the
+  volatile days of A and B coincide, which fattens the |corr| tail with no lead-lag, while the day-shift null
+  breaks that coincidence. Test 1 could pass for that reason alone; test 2 (out of sample) is the real guard.
+- Test 2:
+  - Selected pairs: |corr| above the threshold in the selection half (signed). A follower's prediction for bar
+    k+1 = sum over its selected leaders of sign(corr) x adjusted r_A(k), over the leaders whose r_A(k) exists
+    (a missing leader term is dropped, not zero); no leader present -> no prediction.
+  - IC target: the follower's adjusted r_B(k+1) (selection-half beta). Raw r_B(k+1) reported too.
+  - Spearman rank IC across followers for each bar with at least 10 followers having a prediction and a target.
+  - Mean IC over bars; standard error clustered by day: e = IC - mean, SE = sqrt(sum over days of (sum of e in
+    the day)^2) / n_bars. Pass: t >= 3.
+  - Baseline: prediction = beta_lag_B x r_SPY(k), beta_lag_B = OLS slope of B's raw r_B(k+1) on SPY's raw r(k)
+    over the selection half. Its IC is computed on the same followers at the same bar as the lead-lag IC; paired
+    difference (lead-lag IC - baseline IC) per bar, day-clustered t >= 2.
+- Test 3 (money): each bar, long the top tenth and short the bottom tenth of the followers with a prediction and
+  a raw return in bar k+1 (round(0.1 x n), at least 1 per side, n >= 10), equal weight, held one bar, in raw
+  (actual) returns. Gross = mean over bars of mean(long) - mean(short). Cost: 1 bp x the turnover of the weights
+  (long weights +1/n_long, short -1/n_short; a day starts and ends flat), so replacing the whole book costs 4 bp;
+  net = gross - cost, must be positive. Break-even cost per side = gross / mean turnover.
+- Funds vs stocks: for each cell (fund->stock, stock->stock, stock->fund, fund->fund) the share of its pairs above
+  the threshold, against the null's share for the same cell, plus mean |corr|.
+- Same-bar context: the distribution of corr(r_A(k), r_B(k)) over pairs, raw and adjusted, selection half.
+- Brief items that don't apply: the judge is not used (intraday bars, no daily scores), so the 5-day reversal
+  sanity check has no path here; the unseen months don't apply (the plan says so).
+
+14:15  While writing analyze.py, before running it
+- A bar where a prediction (lead-lag or baseline) is the same for every follower (e.g. SPY's return exactly 0 for
+  the baseline) gets IC 0 for that prediction, not NaN, so the paired difference keeps the bar.
+- Money ties at the decile cut are broken by the symbol order (stable sort); the book needs >= 10 followers with
+  a prediction and a raw return in bar k+1, the same minimum as the IC.
+- Context reported, not graded: each top pair's correlation in the test half; the share of selected pairs keeping
+  their sign in the test half; the test half's own count above its own null threshold and its overlap with the
+  selected pairs; whether the leader of a selected pair trades more dollars than the follower (Yahoo bars).
+- WBD: Yahoo returns 5m bars but no daily bars ("possibly delisted"), so the 2% rule drops all its symbol-days.
+
+14:25  After the 5m results, before the 1m run (data inspection of the 1m panel, no 1m return computed)
+- 1m: 579 of 4,138,787 bars have volume 0; 14 of them close at the previous bar's close. The panel holds closes
+  only, so the "flat volume-0 bar at the prior close" rule is applied as "volume 0 and close = previous close"
+  -> missing, in both bar sizes. It removes those 14 1m bars and 36 of the 2,109 volume-0 5m bars (none of the 5m
+  ones is flat, open = high = low = close, which the 14:02 check looked at). The 5m results barely move: 331
+  pairs above the threshold before and after (+23.6), IC +0.00558 -> +0.00556, gross +0.388 -> +0.386 bp/bar.
+- 1m: 21 full days (2026-09-22..10-20), so selection = 10 days, test = 11; null shifts 1..9 in the selection half.
+- Added to the output after the 5m results (reporting only, no rule changed): how many of the null shifts have a
+  count at least the actual one.

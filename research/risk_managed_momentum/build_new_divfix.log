@@ -1,0 +1,5 @@
+[    0.0s] universe ready; sizes median 1247
+[    1.0s] prices ready divfix
+[    1.1s] new divfix all: WML months 262 first 2005-01 last 2026-10; RMOM first 2005-08; names per leg mean 126 (min 28, max 243); ranked mean 1268; turnover WML 1.24 RMOM 0.82
+[    1.1s] new divfix big: WML months 262 first 2005-01 last 2026-10; RMOM first 2005-08; names per leg mean 47 (min 28, max 50); ranked mean 471; turnover WML 1.25 RMOM 0.75
+[    1.1s] saved /home/bhoult/.local/share/correlation2/experiments/risk_managed_momentum/series_new_divfix.npz

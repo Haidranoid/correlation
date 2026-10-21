@@ -1,0 +1,52 @@
+# Decoupling money test, old export; scores /home/bhoult/.local/share/correlation2/experiments/decoupling/scores_old.npy
+events 407; from 2006-06-28: scored stocks per day median 1 (max 83), positive per day median 0 (max 37); days with no positive score 50%
+
+== uniform random accounts ==
+years 17; beat random at p<0.1 (0 bps: 1, 5 bps: 1, 20 bps: 1) of 17; change over random +0.3 pts/yr (se 0.4, ahead 8/17); IC actual returns z -92604511377.63; long-short 0.21 bps/day z +0.03, turnover 13%, costs 0.11 x c bps/day
+skipped: [{'end': '2007-06-28', 'reason': 'only 0 stocks can be picked (history before the holdout too short?)', 'start': '2006-06-28'}, {'end': '2008-06-28', 'reason': "no candidate has a finite score on the holdout's rebalance days", 'start': '2007-06-28'}]
+ 0 bps: change over random +0.31 pts/yr (se 0.44, ahead 8/17)
+ 5 bps: change over random +0.31 pts/yr (se 0.44, ahead 8/17)
+20 bps: change over random +0.31 pts/yr (se 0.44, ahead 8/17)
+year       SPY     picks   random-median  p      candidates  LS bps/day (t)
+2008-09   -28.0%    +0.7%    +0.8%        0.528    299       -0.0 (-0.00)
+2009-10   +17.5%    -0.4%    -0.8%        0.325    865       -14.6 (-0.85)
+2010-11   +19.7%    +1.2%    +1.0%        0.431    917       +16.1 (+0.85)
+2011-12    +6.3%    -2.6%    -2.0%        0.644    993       +49.6 (+1.19)
+2012-13   +23.7%   +16.3%   +13.6%        0.229   1038       -4.4 (-0.28)
+2013-14   +24.0%    +1.6%    +0.9%        0.171   1039       +30.1 (+1.81)
+2014-15    +9.2%    -0.7%    -0.6%        0.520   1190       -5.8 (-0.39)
+2015-16    -2.8%    -3.0%    -0.5%        0.989   1259       -45.6 (-0.60)
+2016-17   +23.3%    +0.1%    +0.8%        0.755   1291       +7.3 (+0.52)
+2017-18   +13.7%    +0.2%    +0.7%        0.623   1395       -29.2 (-1.34)
+2018-19   +10.4%    -1.5%    -2.4%        0.288   1527       +6.5 (+0.40)
+2019-20    +5.0%    -0.5%    -5.6%        0.057   1614       -11.3 (-0.48)
+2020-21   +44.3%   +43.1%   +40.4%        0.397   1677       -21.1 (-1.49)
+2021-22    -7.6%    -2.6%    -0.8%        0.788   1838       +5.7 (+0.25)
+2022-23   +14.1%    +0.6%    +0.2%        0.294   1969       +9.2 (+0.14)
+2023-24   +27.0%    -4.3%    -3.3%        0.602   1968       +5.8 (+0.19)
+2024-25   +13.6%    -1.9%    -1.1%        0.696   2036       +5.3 (+0.20)
+
+== volatility random accounts ==
+years 17; beat random at p<0.1 (0 bps: 1, 5 bps: 1, 20 bps: 1) of 17; change over random +0.2 pts/yr (se 0.4, ahead 7/17); IC actual returns z -92604511377.63; long-short 0.21 bps/day z +0.03, turnover 13%, costs 0.11 x c bps/day
+skipped: [{'end': '2007-06-28', 'reason': 'only 0 stocks can be picked (history before the holdout too short?)', 'start': '2006-06-28'}, {'end': '2008-06-28', 'reason': "no candidate has a finite score on the holdout's rebalance days", 'start': '2007-06-28'}]
+ 0 bps: change over random +0.17 pts/yr (se 0.41, ahead 7/17)
+ 5 bps: change over random +0.17 pts/yr (se 0.41, ahead 7/17)
+20 bps: change over random +0.17 pts/yr (se 0.41, ahead 7/17)
+year       SPY     picks   random-median  p      candidates  LS bps/day (t)
+2008-09   -28.0%    +0.7%    +1.1%        0.779    299       -0.0 (-0.00)
+2009-10   +17.5%    -0.4%    -0.7%        0.346    865       -14.6 (-0.85)
+2010-11   +19.7%    +1.2%    +1.2%        0.501    917       +16.1 (+0.85)
+2011-12    +6.3%    -2.6%    -1.6%        0.759    993       +49.6 (+1.19)
+2012-13   +23.7%   +16.3%   +12.5%        0.180   1038       -4.4 (-0.28)
+2013-14   +24.0%    +1.6%    +0.8%        0.103   1039       +30.1 (+1.81)
+2014-15    +9.2%    -0.7%    -0.5%        0.579   1190       -5.8 (-0.39)
+2015-16    -2.8%    -3.0%    -0.9%        0.982   1259       -45.6 (-0.60)
+2016-17   +23.3%    +0.1%    +1.0%        0.762   1291       +7.3 (+0.52)
+2017-18   +13.7%    +0.2%    +0.1%        0.477   1395       -29.2 (-1.34)
+2018-19   +10.4%    -1.5%    -2.2%        0.304   1527       +6.5 (+0.40)
+2019-20    +5.0%    -0.5%    -5.1%        0.038   1614       -11.3 (-0.48)
+2020-21   +44.3%   +43.1%   +44.9%        0.560   1677       -21.1 (-1.49)
+2021-22    -7.6%    -2.6%    -1.9%        0.641   1838       +5.7 (+0.25)
+2022-23   +14.1%    +0.6%    +0.6%        0.502   1969       +9.2 (+0.14)
+2023-24   +27.0%    -4.3%    -4.5%        0.482   1968       +5.8 (+0.19)
+2024-25   +13.6%    -1.9%    -1.3%        0.634   2036       +5.3 (+0.20)

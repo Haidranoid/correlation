@@ -1,0 +1,23 @@
+# Pick concentration, old export, decision days from 2006-06-28 (post-hoc, reported only)
+days with picks 4492; mean thrusting groups among the 20 picks 2.34; days with all 20 from one group 1173 (26%)
+  2006: 129 days, 2.84 groups, one group 18%
+  2007: 239 days, 2.08 groups, one group 31%
+  2008: 240 days, 2.43 groups, one group 28%
+  2009: 226 days, 2.41 groups, one group 10%
+  2010: 199 days, 2.51 groups, one group 9%
+  2011: 252 days, 2.36 groups, one group 32%
+  2012: 231 days, 2.34 groups, one group 22%
+  2013: 219 days, 2.30 groups, one group 35%
+  2014: 231 days, 2.55 groups, one group 15%
+  2015: 238 days, 2.18 groups, one group 28%
+  2016: 252 days, 1.92 groups, one group 54%
+  2017: 237 days, 1.84 groups, one group 47%
+  2018: 251 days, 1.91 groups, one group 49%
+  2019: 237 days, 2.19 groups, one group 19%
+  2020: 219 days, 3.03 groups, one group 16%
+  2021: 252 days, 2.47 groups, one group 25%
+  2022: 242 days, 2.76 groups, one group 9%
+  2023: 235 days, 2.07 groups, one group 26%
+  2024: 243 days, 2.37 groups, one group 21%
+  2025: 120 days, 2.73 groups, one group 17%
+share of pick-days by group label (top 12): XLU 20%, GDX 15%, KRE 13%, IYR 11%, XOP 5%, XHB 3%, XLE 2%, GLD 2%, IWM 2%, XLF 2%, OIH 2%, IWN 1%

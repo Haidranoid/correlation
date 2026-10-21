@@ -1,0 +1,13 @@
+signs from training: G -1, A -1, G_lag -1, A_lag -1
+
+== unseen: decision days 2025-06-30..2026-10-07 (65)
+U G      IC +0.0019 (t +0.52, 65 wk, 54% >0, 2037 names) | book gross -0.1 bps/wk (t -0.02), net -12.0 (t -1.45), turnover 118%/side, break-even -0.1 bps/side, 204/side
+U A      IC +0.0023 (t +0.50, 65 wk, 52% >0, 2242 names) | book gross +1.0 bps/wk (t +0.09), net -10.6 (t -1.00), turnover 116%/side, break-even 0.4 bps/side, 224/side
+U G_lag  IC -0.0004 (t -0.10, 65 wk, 57% >0, 2037 names) | book gross -6.1 bps/wk (t -0.64), net -18.0 (t -1.89), turnover 118%/side, break-even -2.6 bps/side, 204/side
+U A_lag  IC -0.0006 (t -0.12, 65 wk, 49% >0, 2242 names) | book gross -4.1 bps/wk (t -0.39), net -15.7 (t -1.46), turnover 115%/side, break-even -1.8 bps/side, 224/side
+B G      IC +0.0083 (t +1.24, 65 wk, 58% >0, 440 names) | book gross +32.5 bps/wk (t +2.18), net +20.8 (t +1.39), turnover 117%/side, break-even 13.9 bps/side, 44/side
+B A      IC +0.0097 (t +1.19, 65 wk, 55% >0, 494 names) | book gross +18.8 bps/wk (t +0.90), net +7.4 (t +0.36), turnover 113%/side, break-even 8.3 bps/side, 49/side
+B G_lag  IC +0.0070 (t +1.07, 65 wk, 57% >0, 440 names) | book gross +13.3 bps/wk (t +0.79), net +1.7 (t +0.10), turnover 116%/side, break-even 5.7 bps/side, 44/side
+B A_lag  IC +0.0060 (t +0.71, 65 wk, 51% >0, 494 names) | book gross -6.1 bps/wk (t -0.29), net -17.4 (t -0.83), turnover 113%/side, break-even -2.7 bps/side, 49/side
+
+Test 3b (unseen months): IC +0.0019 (t +0.52) (needs > 0): PASS

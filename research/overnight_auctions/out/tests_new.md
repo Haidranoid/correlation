@@ -1,0 +1,41 @@
+# Overnight auctions: tests on the new export
+
+Bps a day, $1 long and $1 short; t plain (NW = Newey-West, 5 lags). Net = gross - 8 bps (stocks, 2 bps a side, both sides daily) - netted hedge cost (1 bp a side).
+
+| Book | Period | Days | Names | Leg | Gross (t; NW) | Hedge cost | Net (t; NW) | Break-even bps/side | Net % a year | Sharpe net | Tug of war gross (t) | Long - universe (t) | Short - universe (t) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Twin, all stocks | unseen 2025-06-30..2026-10-19 | 329 | 2241 | 213 | +4.66 (+2.68; +2.90) | 3.28 | -6.62 (-3.81; -4.14) | +0.34 | -16.7 | -3.34 | -7.46 (-3.08) | +1.98 (+1.87) | -2.68 (-2.63) |
+| Twin, 500 largest | unseen 2025-06-30..2026-10-19 | 329 | 499 | 49 | +7.32 (+2.42; +2.47) | 4.22 | -4.90 (-1.62; -1.65) | +0.78 | -12.3 | -1.42 | -4.44 (-1.11) | +4.07 (+2.34) | -3.25 (-1.70) |
+| Raw (SPY-hedged), all stocks | unseen 2025-06-30..2026-10-19 | 329 | 2269 | 220 | +4.01 (+0.92; +0.98) | 1.04 | -5.03 (-1.16; -1.24) | +0.74 | -12.7 | -1.01 | -9.56 (-1.89) | +3.43 (+1.11) | -0.57 (-0.27) |
+| Raw (SPY-hedged), 500 largest | unseen 2025-06-30..2026-10-19 | 329 | 500 | 50 | +3.78 (+0.56; +0.64) | 1.62 | -5.84 (-0.87; -0.99) | +0.54 | -14.7 | -0.76 | -10.89 (-1.38) | +2.82 (+0.61) | -0.96 (-0.29) |
+
+## By calendar year (exit day), gross and net bps a day (t), tug of war gross
+
+
+### Twin, all stocks
+
+| Year | Days | Gross (t) | Net (t) | Tug of war (t) |
+|---|---|---|---|---|
+| 2025 | 129 | +4.25 (+1.94) | -6.84 (-3.14) | -6.08 (-1.67) |
+| 2026 | 200 | +4.93 (+1.98) | -6.48 (-2.60) | -8.36 (-2.59) |
+
+### Twin, 500 largest
+
+| Year | Days | Gross (t) | Net (t) | Tug of war (t) |
+|---|---|---|---|---|
+| 2025 | 129 | +8.49 (+2.12) | -3.51 (-0.88) | +0.10 (+0.02) |
+| 2026 | 200 | +6.57 (+1.54) | -5.79 (-1.36) | -7.37 (-1.37) |
+
+### Raw (SPY-hedged), all stocks
+
+| Year | Days | Gross (t) | Net (t) | Tug of war (t) |
+|---|---|---|---|---|
+| 2025 | 129 | +7.01 (+1.55) | -1.77 (-0.39) | -8.14 (-1.26) |
+| 2026 | 200 | +2.07 (+0.32) | -7.13 (-1.09) | -10.48 (-1.45) |
+
+### Raw (SPY-hedged), 500 largest
+
+| Year | Days | Gross (t) | Net (t) | Tug of war (t) |
+|---|---|---|---|---|
+| 2025 | 129 | +9.54 (+1.41) | +0.28 (+0.04) | -8.04 (-0.81) |
+| 2026 | 200 | +0.07 (+0.01) | -9.78 (-0.96) | -12.72 (-1.13) |

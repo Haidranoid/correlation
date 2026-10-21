@@ -1,0 +1,23 @@
+# Decoupling context, old export: monthly medians over universe stock-days with a valid measure
+
+months 243; correlation across months of the median Drop with the number of events: +0.52
+months in the top 10% of median Drop (>= +0.014): 25, holding 260 of 405 events (64%)
+
+month    med rho_before  med rho_now  med Drop  events
+2021-03   +0.80          +0.73        +0.059    44
+2021-02   +0.80          +0.71        +0.075    23
+2012-10   +0.82          +0.72        +0.095    22
+2020-10   +0.80          +0.75        +0.046    22
+2020-08   +0.80          +0.81        -0.008    18
+2012-11   +0.80          +0.72        +0.064    18
+2020-09   +0.80          +0.77        +0.025    17
+2021-01   +0.80          +0.75        +0.041    13
+2023-07   +0.76          +0.74        +0.016    13
+2023-08   +0.75          +0.73        +0.020    13
+2012-04   +0.82          +0.74        +0.069    12
+2023-09   +0.74          +0.70        +0.032    9
+2023-10   +0.73          +0.71        +0.004    8
+2020-11   +0.80          +0.77        +0.019    8
+2020-01   +0.70          +0.66        +0.035    7
+...
+all months: median of the monthly median Drop -0.064; of the monthly median rho_before +0.69 (10th / 90th percentile +0.62 / +0.79); of the monthly median rho_now +0.77

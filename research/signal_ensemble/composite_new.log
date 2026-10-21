@@ -1,0 +1,17 @@
+11:22:14 loaded rev5
+11:22:14 loaded mom12_1
+11:22:14 loaded twin5
+11:22:15 loaded vol
+11:22:15 loaded corr
+11:22:15 2007-12-14 universe 286 composite 286
+11:22:15 2009-12-09 universe 802 composite 802
+11:22:15 2011-12-02 universe 975 composite 975
+11:22:15 2013-11-29 universe 1036 composite 1036
+11:22:16 2015-11-24 universe 1207 composite 1207
+11:22:16 2017-11-17 universe 1359 composite 1359
+11:22:16 2019-11-14 universe 1508 composite 1508
+11:22:16 2021-11-09 universe 1790 composite 1790
+11:22:17 2023-11-06 universe 1827 composite 1827
+11:22:17 2025-11-04 universe 2201 composite 2201
+11:22:17 saved /home/bhoult/.local/share/correlation2/experiments/signal_ensemble/new/composite.npy
+11:22:18 saved weekly.npz

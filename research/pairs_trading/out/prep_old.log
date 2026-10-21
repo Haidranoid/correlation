@@ -1,0 +1,7 @@
+[    0.0s] export old 8503 5911
+[   21.0s] universe done; sizes median 1284 max 2301
+[   21.1s] gap days ['2011-02-17']
+[   22.5s] store vs export closes: both finite 19024109 differ > 1% 0 (0.0000%)
+[   22.5s] store gap days ['2011-02-17']
+[   22.7s] universe with complete formation year: median 1282 min 295 max 2269 ; dropped by completeness: median 3
+[   22.7s] saved

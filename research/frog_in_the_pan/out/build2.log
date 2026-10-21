@@ -1,0 +1,64 @@
+[    0.5s] old plain rows 0..1000
+[    0.9s] old plain rows 1000..2000
+[    1.2s] old plain rows 2000..3000
+[    1.6s] old plain rows 3000..4000
+[    1.9s] old plain rows 4000..5000
+[    2.3s] old plain rows 5000..6000
+[    2.6s] old plain rows 6000..7000
+[    3.0s] old plain rows 7000..8000
+[    3.1s] old plain rows 8000..8503
+[    3.2s] old plain: finite PRET stock-days 16773145; daily returns with |log r| > 0.5 dropped as bad prints: 10343 of 19015606 (0.05439%)
+[    0.4s] old divfix rows 0..1000
+[    0.9s] old divfix rows 1000..2000
+[    1.2s] old divfix rows 2000..3000
+[    1.6s] old divfix rows 3000..4000
+[    2.0s] old divfix rows 4000..5000
+[    2.4s] old divfix rows 5000..6000
+[    2.8s] old divfix rows 6000..7000
+[    3.2s] old divfix rows 7000..8000
+[    3.3s] old divfix rows 8000..8503
+[    3.4s] old divfix: finite PRET stock-days 16773145; daily returns with |log r| > 0.5 dropped as bad prints: 10343 of 19015606 (0.05439%)
+[    0.5s] new plain rows 0..1000
+[    0.9s] new plain rows 1000..2000
+[    1.3s] new plain rows 2000..3000
+[    1.7s] new plain rows 3000..4000
+[    2.1s] new plain rows 4000..5000
+[    2.5s] new plain rows 5000..6000
+[    2.9s] new plain rows 6000..7000
+[    3.3s] new plain rows 7000..8000
+[    3.7s] new plain rows 8000..9000
+[    3.9s] new plain rows 9000..9508
+[    4.0s] new plain: finite PRET stock-days 17131770; daily returns with |log r| > 0.5 dropped as bad prints: 10430 of 19435717 (0.05366%)
+[    0.5s] new divfix rows 0..1000
+[    1.0s] new divfix rows 1000..2000
+[    1.4s] new divfix rows 2000..3000
+[    1.9s] new divfix rows 3000..4000
+[    2.3s] new divfix rows 4000..5000
+[    2.8s] new divfix rows 5000..6000
+[    3.2s] new divfix rows 6000..7000
+[    3.7s] new divfix rows 7000..8000
+[    4.2s] new divfix rows 8000..9000
+[    4.4s] new divfix rows 9000..9508
+[    4.6s] new divfix: finite PRET stock-days 17131770; daily returns with |log r| > 0.5 dropped as bad prints: 10428 of 19435717 (0.05365%)
+[    0.0s] universe ready; sizes median 1284
+[    0.6s] prices ready plain
+[    1.3s] old plain all: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 86/86; turnover FIP 1.53 MOM 1.08
+[    1.8s] old plain big: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 32/32; turnover FIP 1.58 MOM 1.11
+[    1.8s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_old_plain.npz
+[    0.0s] universe ready; sizes median 1284
+[    0.9s] prices ready divfix
+[    1.6s] old divfix all: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 86/86; turnover FIP 1.53 MOM 1.08
+[    2.1s] old divfix big: formations 246, periods 245 (2004-12-31 .. 2025-06-13); FIP legs mean 32/32; turnover FIP 1.58 MOM 1.11
+[    2.1s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_old_divfix.npz
+[    0.0s] universe ready; sizes median 1247
+[    0.6s] prices ready plain
+[    1.4s] new plain all: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 85/85; turnover FIP 1.51 MOM 1.08
+[    2.0s] new plain big: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 32/32; turnover FIP 1.58 MOM 1.11
+[    2.0s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_new_plain.npz
+[    0.0s] universe ready; sizes median 1247
+[    1.0s] prices ready divfix
+[    1.8s] new divfix all: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 85/85; turnover FIP 1.51 MOM 1.08
+[    2.4s] new divfix big: formations 262, periods 261 (2004-12-31 .. 2026-10-15); FIP legs mean 32/32; turnover FIP 1.58 MOM 1.11
+[    2.4s] saved /home/bhoult/.local/share/correlation2/experiments/frog_in_the_pan/books_new_divfix.npz
+[    0.3s] plain: 300 random stock-days (finite in the loop or the panel): NaN mismatches 0; max |PRET diff| 1.11e-07; max |ID diff| 8.29e-09
+[    0.5s] divfix: 300 random stock-days (finite in the loop or the panel): NaN mismatches 0; max |PRET diff| 1.96e-07; max |ID diff| 7.35e-09

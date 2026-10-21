@@ -1,0 +1,77 @@
+first BAC return day (any universe >= 100): 2006-01-03; graded periods start 2008-03-06 (universe >= 500)
+
+== Test 1: BAC, 2008-03-06..2019-12-31 (net = after 5 bps per side) ==
+                                     yrs  ret%/yr   vol%  Sharpe  alpha EW      t  beta EW  alpha SPY      t  beta SPY
+BAC net                             11.8     2.45   7.98    0.31      2.99   1.31    -0.08       3.15   1.36     -0.07
+BAC gross                           11.8     2.67   7.98    0.33      3.21   1.41    -0.08       3.38   1.46     -0.07
+PASS test 1 (both alpha t >= 2 and Sharpe >= 0.3, net): False
+
+== By period (net, then gross) ==
+                                     yrs  ret%/yr   vol%  Sharpe  alpha EW      t  beta EW  alpha SPY      t  beta SPY
+BAC net 2006-01..2008-03 (299 stocks; not graded)   2.2     6.47   7.62    0.85      6.19   1.11    -0.14       6.45   1.11     -0.13
+BAC net 2008-03..2009                1.8    -1.10  13.62   -0.08     -1.48  -0.16    -0.10      -1.42  -0.16     -0.08
+BAC net 2010-2014                    5.0     3.07   4.64    0.66      3.59   1.77    -0.04       3.79   1.87     -0.05
+BAC net 2015-2019                    5.0     3.12   7.83    0.40      3.59   0.97    -0.11       4.08   1.07     -0.09
+BAC net 2020-2025-06                 5.5    -3.55  13.33   -0.27     -3.63  -0.63    -0.03      -3.59  -0.62      0.00
+BAC net all 2008-03..2025-06        17.3     0.55   9.99    0.05      0.77   0.32    -0.06       1.02   0.42     -0.05
+BAC gross 2006-01..2008-03 (299 stocks; not graded)   2.2     6.74   7.63    0.88      6.46   1.15    -0.14       6.72   1.16     -0.13
+BAC gross 2008-03..2009              1.8    -0.70  13.62   -0.05     -1.08  -0.12    -0.10      -1.03  -0.11     -0.08
+BAC gross 2010-2014                  5.0     3.26   4.64    0.70      3.79   1.86    -0.04       3.98   1.97     -0.05
+BAC gross 2015-2019                  5.0     3.32   7.83    0.42      3.79   1.02    -0.11       4.27   1.12     -0.09
+BAC gross 2020-2025-06               5.5    -3.32  13.33   -0.25     -3.40  -0.59    -0.03      -3.36  -0.58      0.00
+BAC gross all 2008-03..2025-06      17.3     0.77   9.99    0.08      1.00   0.42    -0.06       1.25   0.51     -0.05
+
+== Test 2: the 500 largest (by 252-day median dollar volume), net ==
+                                     yrs  ret%/yr   vol%  Sharpe  alpha EW      t  beta EW  alpha SPY      t  beta SPY
+BAC500 net 2008-03..2019            11.8     1.58   9.07    0.17      2.20   0.87    -0.10       2.32   0.90     -0.07
+BAC500 gross 2008-03..2019          11.8     1.82   9.07    0.20      2.45   0.97    -0.10       2.56   0.99     -0.07
+BAC500 net 2008-03..2009             1.8    -3.22  14.75   -0.22     -3.56  -0.37    -0.09      -3.45  -0.36     -0.06
+BAC500 net 2010-2014                 5.0     3.45   5.30    0.65      4.28   1.91    -0.07       4.44   1.96     -0.07
+BAC500 net 2015-2019                 5.0     1.46   9.33    0.16      2.17   0.51    -0.17       2.88   0.66     -0.13
+BAC500 net 2020-2025-06              5.5    -3.24  14.24   -0.23     -3.42  -0.58    -0.07      -3.11  -0.52     -0.01
+BAC500 net all 2008-03..2025-06     17.3     0.05  10.97    0.00      0.36   0.14    -0.08       0.60   0.23     -0.05
+PASS test 2 (same sign as test 1, both alpha t >= 1.5): False
+
+== Test 3: 2020-01-02..2025-06-27 (old export), net ==
+                                     yrs  ret%/yr   vol%  Sharpe  alpha EW      t  beta EW  alpha SPY      t  beta SPY
+BAC net 2020-2025-06                 5.5    -3.55  13.33   -0.27     -3.63  -0.63    -0.03      -3.59  -0.62      0.00
+BAC gross 2020-2025-06               5.5    -3.32  13.33   -0.25     -3.40  -0.59    -0.03      -3.36  -0.58      0.00
+BAC500 net 2020-2025-06              5.5    -3.24  14.24   -0.23     -3.42  -0.58    -0.07      -3.11  -0.52     -0.01
+PASS test 3 (both alphas with test 1's sign): False
+
+== Controls and sensitivities (net) ==
+                                     yrs  ret%/yr   vol%  Sharpe  alpha EW      t  beta EW  alpha SPY      t  beta SPY
+BAB 2008-03..2019                   11.8     2.26  12.50    0.18      3.88   1.26    -0.25       4.20   1.25     -0.20
+BAB 2020-2025-06                     5.5    -6.22  16.90   -0.37     -6.73  -1.02    -0.19      -5.57  -0.80     -0.05
+Low volatility 2008-03..2019        11.8     1.16  11.83    0.10      2.76   0.96    -0.25       3.04   0.96     -0.19
+Low volatility 2020-2025-06          5.5    -4.73  17.40   -0.27     -5.32  -0.84    -0.22      -3.89  -0.56     -0.07
+BAB, 500 largest 2008-03..2019      11.8     2.64  14.37    0.18      4.52   1.29    -0.29       4.94   1.30     -0.23
+BAB, 500 largest 2020-2025-06        5.5    -7.82  21.76   -0.36     -8.64  -1.06    -0.30      -5.68  -0.65     -0.17
+Low vol, 500 largest 2008-03..2019  11.8     2.22  13.42    0.17      4.05   1.25    -0.28       4.47   1.26     -0.22
+Low vol, 500 largest 2020-2025-06    5.5    -6.81  21.18   -0.32     -7.64  -1.00    -0.31      -4.64  -0.56     -0.17
+BAC, $1/$1 (no beta scaling) 2008-03..2019  11.8     0.28  10.52    0.03      2.29   1.02    -0.31       3.70   1.57     -0.34
+BAC, $1/$1 (no beta scaling) 2020-2025-06   5.5    -6.14  15.27   -0.40     -6.95  -1.26    -0.30      -2.09  -0.36     -0.32
+BAC, flag-only universe 2008-03..2019  11.8     2.32   8.00    0.29      2.87   1.26    -0.09       3.05   1.32     -0.08
+BAC, flag-only universe 2020-2025-06   5.5    -3.38  13.23   -0.26     -3.46  -0.61    -0.03      -3.37  -0.59     -0.00
+
+== Test 4: BAC net on the EW market, BAB and low volatility (net), Newey-West 5 lags ==
+  2008-03..2019          mkt+BAB          alpha   1.16%/yr t  0.66 | loadings +0.03 (t +3.6), +0.47 (t +20.0) | R2 0.49
+  2008-03..2019          mkt+LowVol       alpha   2.31%/yr t  1.05 | loadings -0.02 (t -1.2), +0.25 (t +6.4) | R2 0.16
+  2008-03..2019          mkt+BAB+LowVol   alpha   0.67%/yr t  0.68 | loadings -0.01 (t -1.1), +1.33 (t +57.7), -1.02 (t -40.9) | R2 0.84
+  2008-03..2019          BAC500 on mkt+BAB500+LowVol500 alpha   0.43%/yr t  0.34 | loadings -0.00 (t -0.4), +1.28 (t +56.4), -0.99 (t -40.8) | R2 0.80
+  2020-2025-06           mkt+BAB          alpha  -0.32%/yr t -0.07 | loadings +0.06 (t +2.7), +0.49 (t +12.2) | R2 0.36
+  2020-2025-06           mkt+LowVol       alpha  -3.26%/yr t -0.58 | loadings -0.01 (t -0.5), +0.07 (t +1.4) | R2 0.01
+  2020-2025-06           mkt+BAB+LowVol   alpha   0.04%/yr t  0.02 | loadings -0.00 (t -0.3), +1.39 (t +69.1), -1.07 (t -42.9) | R2 0.90
+  2020-2025-06           BAC500 on mkt+BAB500+LowVol500 alpha   0.39%/yr t  0.17 | loadings +0.02 (t +1.5), +1.54 (t +47.4), -1.25 (t -24.6) | R2 0.85
+  all 2008-03..2025-06   mkt+BAB          alpha   0.59%/yr t  0.32 | loadings +0.05 (t +4.5), +0.48 (t +21.3) | R2 0.41
+  all 2008-03..2025-06   mkt+LowVol       alpha   0.75%/yr t  0.32 | loadings -0.03 (t -1.7), +0.15 (t +4.8) | R2 0.06
+  all 2008-03..2025-06   mkt+BAB+LowVol   alpha   0.40%/yr t  0.46 | loadings -0.00 (t -0.7), +1.36 (t +86.4), -1.05 (t -56.6) | R2 0.87
+  all 2008-03..2025-06   BAC500 on mkt+BAB500+LowVol500 alpha   0.27%/yr t  0.24 | loadings +0.01 (t +0.8), +1.40 (t +57.9), -1.11 (t -35.6) | R2 0.82
+
+== Book facts (formations 2008-03..2025-06) ==
+  bac         stocks per leg   96.1; ex-ante leg beta long 0.88 short 1.14; turnover per rebalance 0.36 (gross book 2.03); cost 0.23%/yr
+  bac500      stocks per leg   33.5; ex-ante leg beta long 0.85 short 1.09; turnover per rebalance 0.41 (gross book 2.10); cost 0.25%/yr
+  bab         stocks per leg  480.4; ex-ante leg beta long 0.77 short 1.29; turnover per rebalance 0.34 (gross book 2.09); cost 0.21%/yr
+  lowvol      stocks per leg  480.4; ex-ante leg beta long 0.81 short 1.24; turnover per rebalance 0.33 (gross book 2.06); cost 0.21%/yr
+  bac_dollar  stocks per leg   96.1; ex-ante leg beta long 0.88 short 1.14; turnover per rebalance 0.34 (gross book 2.00); cost 0.21%/yr
+  BAC daily gross: worst -7.36% on 2020-11-09, best 4.51% on 2020-03-17

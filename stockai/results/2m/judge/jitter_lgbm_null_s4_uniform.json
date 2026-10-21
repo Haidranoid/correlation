@@ -1,0 +1,988 @@
+{
+  "c2_commit": "93351262d1f155aa049b39198cc17c59f66e0867",
+  "mode": "walk-forward",
+  "options": {
+    "cash": 10000.0,
+    "costs_bps": [
+      0.0,
+      5.0,
+      20.0,
+      50.0
+    ],
+    "delay": 0,
+    "dump_scores": null,
+    "end": null,
+    "export": "/home/bhoult/.local/share/correlation2/export/full",
+    "family": "scores",
+    "fingerprint_check": "fingerprint 8b5ac076267c83ab matches /home/bhoult/.local/share/correlation2/export/full/meta.json",
+    "locked": false,
+    "lookback": null,
+    "peer_window": 756,
+    "picks": 10,
+    "random": 1000,
+    "random_match": "uniform",
+    "rebalance": 42,
+    "scores": "runs/2m/jitter/lgbm_null_s4.npy",
+    "scores_dtype": "<f8",
+    "start": "2023-06-28",
+    "walk_forward": true
+  },
+  "skipped": [
+    {
+      "end": "2007-06-28",
+      "reason": "only 0 stocks can be picked (history before the holdout too short?)",
+      "start": "2006-06-28"
+    },
+    {
+      "end": "2008-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2007-06-28"
+    },
+    {
+      "end": "2009-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2008-06-28"
+    },
+    {
+      "end": "2010-06-28",
+      "reason": "no candidate has a finite score on the holdout's rebalance days",
+      "start": "2009-06-28"
+    }
+  ],
+  "summary": {
+    "beat_random_p_lt_0_1": [
+      {
+        "cost_bps": 0.0,
+        "years": 3
+      },
+      {
+        "cost_bps": 5.0,
+        "years": 3
+      },
+      {
+        "cost_bps": 20.0,
+        "years": 3
+      },
+      {
+        "cost_bps": 50.0,
+        "years": 3
+      }
+    ],
+    "ic_ret_t_positive_years": 7,
+    "ic_ret_z": -0.23884959045095563,
+    "ic_t_positive_years": 8,
+    "ic_z": 1.9248412306654006,
+    "ls_bps_per_day_mean": -0.5352163850718678,
+    "ls_cost_bps_per_day_per_bps": 0.07894549856349745,
+    "ls_positive_years": 8,
+    "ls_turnover_mean": 0.8289277349167232,
+    "ls_z": 0.02754141740669951,
+    "years": 14
+  },
+  "tool": "stockai-judge 0.1.0",
+  "variable": {
+    "fingerprint": "8b5ac076267c83ab",
+    "first_day": "2001-12-31",
+    "last_day": "2025-06-27",
+    "n": 8503,
+    "t": 5911
+  },
+  "years": [
+    {
+      "candidates": 917,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 9872.185375562347,
+          "final_pct": -1.2781462443765323,
+          "p": 0.997,
+          "random_median_pct": 22.962328185428717
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 9812.0761169276,
+          "final_pct": -1.879238830724006,
+          "p": 0.997,
+          "random_median_pct": 22.21570316001531
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 9633.613218021177,
+          "final_pct": -3.6638678197882246,
+          "p": 0.997,
+          "random_median_pct": 19.998925101389364
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 9284.95992738156,
+          "final_pct": -7.150400726184403,
+          "p": 0.997,
+          "random_median_pct": 15.7051894528786
+        }
+      ],
+      "days": 253,
+      "end": "2011-06-28",
+      "first_day": "2010-06-28",
+      "hit_rate": 0.44285714285714284,
+      "hits": 70,
+      "hold_all_pct": 22.770719392351047,
+      "ic_mean": 0.08938495226565782,
+      "ic_ret_mean": 0.0599076369258666,
+      "ic_ret_t": 2.0764182440410974,
+      "ic_t": 2.5181354099179343,
+      "last_day": "2011-06-27",
+      "ls_bps_per_day": 0.825556344744282,
+      "ls_sharpe": 0.4830449108405541,
+      "ls_t": 0.5217481354738627,
+      "ls_turnover": 0.8598901098901099,
+      "pairs": 917,
+      "qqq_pct": 23.17271603648352,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.484995796071238,
+        "random_buys_max": 66,
+        "random_buys_mean": 65.415,
+        "random_buys_min": 62,
+        "random_held_decile": 4.479802371541502,
+        "strategy_buy_decile": 7.333333333333333,
+        "strategy_buys": 66,
+        "strategy_held_decile": 7.391304347826087,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 19.71151426454254,
+      "start": "2010-06-28"
+    },
+    {
+      "candidates": 993,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 12936.667817267651,
+          "final_pct": 29.366678172676508,
+          "p": 0.001,
+          "random_median_pct": -0.7372195333761544
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 12853.854883052822,
+          "final_pct": 28.53854883052822,
+          "p": 0.001,
+          "random_median_pct": -1.3629915697997985
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 12608.120523946342,
+          "final_pct": 26.081205239463422,
+          "p": 0.001,
+          "random_median_pct": -3.220181485699136
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 12128.639293590464,
+          "final_pct": 21.28639293590464,
+          "p": 0.001,
+          "random_median_pct": -6.888372531945586
+        }
+      ],
+      "days": 253,
+      "end": "2012-06-28",
+      "first_day": "2011-06-28",
+      "hit_rate": 0.5142857142857142,
+      "hits": 70,
+      "hold_all_pct": -1.1657730625820872,
+      "ic_mean": -0.007419714942725532,
+      "ic_ret_mean": 0.049635033669515397,
+      "ic_ret_t": 0.8379721181897486,
+      "ic_t": -0.1887285799272575,
+      "last_day": "2012-06-27",
+      "ls_bps_per_day": 3.171274074367549,
+      "ls_sharpe": 0.6683429680874123,
+      "ls_t": 0.7218929122964666,
+      "ls_turnover": 0.8754208754208754,
+      "pairs": 993,
+      "qqq_pct": 14.871838011890759,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.520098003891331,
+        "random_buys_max": 70,
+        "random_buys_mean": 69.385,
+        "random_buys_min": 66,
+        "random_held_decile": 4.517746640316205,
+        "strategy_buy_decile": 4.385714285714286,
+        "strategy_buys": 70,
+        "strategy_held_decile": 4.274703557312253,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 6.30135612053877,
+      "start": "2011-06-28"
+    },
+    {
+      "candidates": 1038,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 11153.325080078554,
+          "final_pct": 11.533250800785533,
+          "p": 0.967,
+          "random_median_pct": 27.55146190252895
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 11099.833023034684,
+          "final_pct": 10.998330230346841,
+          "p": 0.967,
+          "random_median_pct": 26.954491075663654
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 10940.617542864407,
+          "final_pct": 9.406175428644081,
+          "p": 0.967,
+          "random_median_pct": 25.146487789964223
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 10627.801336862938,
+          "final_pct": 6.278013368629387,
+          "p": 0.968,
+          "random_median_pct": 21.647386865038996
+        }
+      ],
+      "days": 250,
+      "end": "2013-06-28",
+      "first_day": "2012-06-28",
+      "hit_rate": 0.65,
+      "hits": 60,
+      "hold_all_pct": 28.670016286300882,
+      "ic_mean": 0.022411777079071982,
+      "ic_ret_mean": -0.020690700200696573,
+      "ic_ret_t": -0.44734334422315775,
+      "ic_t": 0.2943596702805566,
+      "last_day": "2013-06-27",
+      "ls_bps_per_day": -1.696858352423632,
+      "ls_sharpe": -0.6301585841781641,
+      "ls_t": -0.6301585841781641,
+      "ls_turnover": 0.7854368932038835,
+      "pairs": 1038,
+      "qqq_pct": 14.733640291545868,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.505204178537512,
+        "random_buys_max": 53,
+        "random_buys_mean": 52.65,
+        "random_buys_min": 50,
+        "random_held_decile": 4.5124308,
+        "strategy_buy_decile": 7.509433962264151,
+        "strategy_buys": 53,
+        "strategy_held_decile": 7.6012,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 23.686545591763284,
+      "start": "2012-06-28"
+    },
+    {
+      "candidates": 1039,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 13320.702669268981,
+          "final_pct": 33.20702669268982,
+          "p": 0.214,
+          "random_median_pct": 26.004033498642887
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 13249.023294410812,
+          "final_pct": 32.49023294410811,
+          "p": 0.214,
+          "random_median_pct": 25.3262797408643
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 13035.894729367961,
+          "final_pct": 30.358947293679606,
+          "p": 0.214,
+          "random_median_pct": 23.311072153988576
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 12618.129928578546,
+          "final_pct": 26.181299285785453,
+          "p": 0.215,
+          "random_median_pct": 19.38850579745466
+        }
+      ],
+      "days": 252,
+      "end": "2014-06-28",
+      "first_day": "2013-06-28",
+      "hit_rate": 0.6666666666666666,
+      "hits": 60,
+      "hold_all_pct": 24.998117667071675,
+      "ic_mean": 0.06225045944206765,
+      "ic_ret_mean": 0.0438622954799859,
+      "ic_ret_t": 0.9725985646126354,
+      "ic_t": 1.1684098305324342,
+      "last_day": "2014-06-27",
+      "ls_bps_per_day": 4.0978169400806985,
+      "ls_sharpe": 1.0400517366753848,
+      "ls_t": 1.0400517366753848,
+      "ls_turnover": 0.825242718446602,
+      "pairs": 1039,
+      "qqq_pct": 33.752257115400596,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.496721535414248,
+        "random_buys_max": 59,
+        "random_buys_mean": 58.564,
+        "random_buys_min": 55,
+        "random_held_decile": 4.492034920634921,
+        "strategy_buy_decile": 5.169491525423729,
+        "strategy_buys": 59,
+        "strategy_held_decile": 5.246428571428571,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 23.9584972674572,
+      "start": "2013-06-28"
+    },
+    {
+      "candidates": 1190,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 8178.990062642431,
+          "final_pct": -18.210099373575684,
+          "p": 0.999,
+          "random_median_pct": 6.496344685090927
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 8139.891669355814,
+          "final_pct": -18.601083306441858,
+          "p": 0.999,
+          "random_median_pct": 5.987717293042816
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 8023.5224681378195,
+          "final_pct": -19.76477531862181,
+          "p": 0.999,
+          "random_median_pct": 4.4738764301456735
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 7794.90750129281,
+          "final_pct": -22.05092498707191,
+          "p": 0.999,
+          "random_median_pct": 1.528858214813078
+        }
+      ],
+      "days": 251,
+      "end": "2015-06-28",
+      "first_day": "2014-06-30",
+      "hit_rate": 0.5333333333333333,
+      "hits": 60,
+      "hold_all_pct": 7.284629904141449,
+      "ic_mean": 0.013820160474220433,
+      "ic_ret_mean": -0.047839316663767,
+      "ic_ret_t": -1.5672963196303578,
+      "ic_t": 0.20448812269129335,
+      "last_day": "2015-06-26",
+      "ls_bps_per_day": -5.247650971502901,
+      "ls_sharpe": -1.5381541294660133,
+      "ls_t": -1.5381541294660133,
+      "ls_turnover": 0.7997649907420595,
+      "pairs": 1190,
+      "qqq_pct": 17.82459469902191,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.519959000056945,
+        "random_buys_max": 53,
+        "random_buys_mean": 52.683,
+        "random_buys_min": 50,
+        "random_held_decile": 4.524973705179283,
+        "strategy_buy_decile": 8.320754716981131,
+        "strategy_buys": 53,
+        "strategy_held_decile": 8.465737051792829,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 9.230039701308424,
+      "start": "2014-06-28"
+    },
+    {
+      "candidates": 1259,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 6625.702352596961,
+          "final_pct": -33.74297647403039,
+          "p": 0.999,
+          "random_median_pct": -8.660085260205875
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 6590.866398122027,
+          "final_pct": -34.09133601877973,
+          "p": 0.999,
+          "random_median_pct": -9.137424056844557
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 6487.266311555281,
+          "final_pct": -35.12733688444719,
+          "p": 0.999,
+          "random_median_pct": -10.557079518130053
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 6284.104245839552,
+          "final_pct": -37.15895754160448,
+          "p": 0.999,
+          "random_median_pct": -13.325724799147187
+        }
+      ],
+      "days": 252,
+      "end": "2016-06-28",
+      "first_day": "2015-06-29",
+      "hit_rate": 0.6166666666666667,
+      "hits": 60,
+      "hold_all_pct": -8.38291502279972,
+      "ic_mean": -0.008232044794676208,
+      "ic_ret_mean": -0.1752613003068547,
+      "ic_ret_t": -2.5967339953632695,
+      "ic_t": -0.1389452896425682,
+      "last_day": "2016-06-27",
+      "ls_bps_per_day": -21.48224736016894,
+      "ls_sharpe": -2.3796463447399954,
+      "ls_t": -2.3796463447399954,
+      "ls_turnover": 0.8119999999999999,
+      "pairs": 1259,
+      "qqq_pct": -5.4290326070337125,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.517357436546902,
+        "random_buys_max": 58,
+        "random_buys_mean": 57.641,
+        "random_buys_min": 55,
+        "random_held_decile": 4.510715079365079,
+        "strategy_buy_decile": 8.46551724137931,
+        "strategy_buys": 58,
+        "strategy_held_decile": 8.475396825396825,
+        "unmatched_buys": 0
+      },
+      "spy_pct": -2.7841769864391575,
+      "start": "2015-06-28"
+    },
+    {
+      "candidates": 1291,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 12300.15244783968,
+          "final_pct": 23.001524478396806,
+          "p": 0.653,
+          "random_median_pct": 27.446632672171955
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 12241.654541520104,
+          "final_pct": 22.41654541520104,
+          "p": 0.653,
+          "random_median_pct": 26.841171599661863
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 12067.53531374348,
+          "final_pct": 20.675353137434804,
+          "p": 0.653,
+          "random_median_pct": 25.045761530160824
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 11725.418230767977,
+          "final_pct": 17.254182307679766,
+          "p": 0.652,
+          "random_median_pct": 21.488311260793424
+        }
+      ],
+      "days": 252,
+      "end": "2017-06-28",
+      "first_day": "2016-06-28",
+      "hit_rate": 0.6333333333333333,
+      "hits": 60,
+      "hold_all_pct": 27.37747980401599,
+      "ic_mean": -0.03638926829716268,
+      "ic_ret_mean": -0.07321015297098384,
+      "ic_ret_t": -1.5956918654230976,
+      "ic_t": -0.486526682233378,
+      "last_day": "2017-06-27",
+      "ls_bps_per_day": -4.529230369036527,
+      "ls_sharpe": -1.0651130211223847,
+      "ls_t": -1.0651130211223847,
+      "ls_turnover": 0.9015503875968992,
+      "pairs": 1291,
+      "qqq_pct": 36.447484569386425,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.505776563656024,
+        "random_buys_max": 53,
+        "random_buys_mean": 52.713,
+        "random_buys_min": 50,
+        "random_held_decile": 4.50818492063492,
+        "strategy_buy_decile": 6.735849056603773,
+        "strategy_buys": 53,
+        "strategy_held_decile": 6.887698412698413,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 23.337058773606522,
+      "start": "2016-06-28"
+    },
+    {
+      "candidates": 1395,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 13071.280110634774,
+          "final_pct": 30.712801106347754,
+          "p": 0.048,
+          "random_median_pct": 13.188998040395061
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 13001.570359223528,
+          "final_pct": 30.015703592235287,
+          "p": 0.048,
+          "random_median_pct": 12.604318876508213
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 12794.281496875692,
+          "final_pct": 27.942814968756924,
+          "p": 0.048,
+          "random_median_pct": 10.84198992901828
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 12387.88937088776,
+          "final_pct": 23.878893708877612,
+          "p": 0.048,
+          "random_median_pct": 7.3969297662519695
+        }
+      ],
+      "days": 252,
+      "end": "2018-06-28",
+      "first_day": "2017-06-28",
+      "hit_rate": 0.7,
+      "hits": 60,
+      "hold_all_pct": 13.872027690149324,
+      "ic_mean": 0.16492578270298355,
+      "ic_ret_mean": 0.04178288398076566,
+      "ic_ret_t": 0.9016738454927384,
+      "ic_t": 2.8721855369984928,
+      "last_day": "2018-06-27",
+      "ls_bps_per_day": 3.8814222219124552,
+      "ls_sharpe": 0.9774023484471076,
+      "ls_t": 0.9774023484471076,
+      "ls_turnover": 0.7748201438848922,
+      "pairs": 1395,
+      "qqq_pct": 23.964246730463735,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.48613832203478,
+        "random_buys_max": 58,
+        "random_buys_mean": 57.677,
+        "random_buys_min": 55,
+        "random_held_decile": 4.487421031746032,
+        "strategy_buy_decile": 8.344827586206897,
+        "strategy_buys": 58,
+        "strategy_held_decile": 8.325,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 13.71350853351052,
+      "start": "2017-06-28"
+    },
+    {
+      "candidates": 1527,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 9907.953694142896,
+          "final_pct": -0.9204630585710416,
+          "p": 0.674,
+          "random_median_pct": 3.06305682722785
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 9855.347629961612,
+          "final_pct": -1.4465237003838727,
+          "p": 0.674,
+          "random_median_pct": 2.51680611968772
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 9698.911109571944,
+          "final_pct": -3.010888904280562,
+          "p": 0.675,
+          "random_median_pct": 0.892377259107735
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 9392.183818321819,
+          "final_pct": -6.078161816781813,
+          "p": 0.675,
+          "random_median_pct": -2.2927686729339647
+        }
+      ],
+      "days": 251,
+      "end": "2019-06-28",
+      "first_day": "2018-06-28",
+      "hit_rate": 0.6666666666666666,
+      "hits": 60,
+      "hold_all_pct": 3.4267867579365063,
+      "ic_mean": -0.015327927033950917,
+      "ic_ret_mean": -0.0330054576847215,
+      "ic_ret_t": -0.7305956788386061,
+      "ic_t": -0.30585988439114337,
+      "last_day": "2019-06-27",
+      "ls_bps_per_day": 0.828699774436385,
+      "ls_sharpe": 0.15318804587914575,
+      "ls_t": 0.15318804587914575,
+      "ls_turnover": 0.9,
+      "pairs": 1527,
+      "qqq_pct": 10.843045873031087,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.490724044663292,
+        "random_buys_max": 58,
+        "random_buys_mean": 57.676,
+        "random_buys_min": 55,
+        "random_held_decile": 4.492346613545816,
+        "strategy_buy_decile": 7.189655172413793,
+        "strategy_buys": 58,
+        "strategy_held_decile": 7.145816733067729,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 10.356790335111942,
+      "start": "2018-06-28"
+    },
+    {
+      "candidates": 1614,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 9147.816747096082,
+          "final_pct": -8.521832529039186,
+          "p": 0.586,
+          "random_median_pct": -5.3739182651771795
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 9097.978342052065,
+          "final_pct": -9.020216579479346,
+          "p": 0.586,
+          "random_median_pct": -5.888559071934618
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 8949.807212536756,
+          "final_pct": -10.501927874632432,
+          "p": 0.587,
+          "random_median_pct": -7.4186248794079095
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 8659.441607661267,
+          "final_pct": -13.405583923387333,
+          "p": 0.587,
+          "random_median_pct": -10.417140089369969
+        }
+      ],
+      "days": 252,
+      "end": "2020-06-28",
+      "first_day": "2019-06-28",
+      "hit_rate": 0.4,
+      "hits": 60,
+      "hold_all_pct": -7.647598734093696,
+      "ic_mean": 0.07988128292380679,
+      "ic_ret_mean": -0.007135156482209995,
+      "ic_ret_t": -0.11209675874327212,
+      "ic_t": 2.27684375289155,
+      "last_day": "2020-06-26",
+      "ls_bps_per_day": 1.3422214701649804,
+      "ls_sharpe": 0.2379166366729533,
+      "ls_t": 0.2379166366729533,
+      "ls_turnover": 0.8310559006211179,
+      "pairs": 1614,
+      "qqq_pct": 29.84568319790657,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.498392067533164,
+        "random_buys_max": 60,
+        "random_buys_mean": 59.704,
+        "random_buys_min": 57,
+        "random_held_decile": 4.498346428571429,
+        "strategy_buy_decile": 7.5,
+        "strategy_buys": 60,
+        "strategy_held_decile": 7.19563492063492,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 4.989000191887705,
+      "start": "2019-06-28"
+    },
+    {
+      "candidates": 1677,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 24063.04239645515,
+          "final_pct": 140.6304239645515,
+          "p": 0.005,
+          "random_median_pct": 69.18892777438512
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 23941.639444705263,
+          "final_pct": 139.4163944470526,
+          "p": 0.005,
+          "random_median_pct": 68.3321140997032
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 23580.465218264933,
+          "final_pct": 135.80465218264933,
+          "p": 0.005,
+          "random_median_pct": 65.78315489921225
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 22871.62230610262,
+          "final_pct": 128.7162230610262,
+          "p": 0.005,
+          "random_median_pct": 60.81662637650291
+        }
+      ],
+      "days": 251,
+      "end": "2021-06-28",
+      "first_day": "2020-06-29",
+      "hit_rate": 0.7166666666666667,
+      "hits": 60,
+      "hold_all_pct": 70.77175788803942,
+      "ic_mean": 0.055598731729002815,
+      "ic_ret_mean": 0.03262462701976621,
+      "ic_ret_t": 1.1904980900817883,
+      "ic_t": 2.046608577572037,
+      "last_day": "2021-06-25",
+      "ls_bps_per_day": 10.981844449018348,
+      "ls_sharpe": 1.1980429625070192,
+      "ls_t": 1.1980429625070192,
+      "ls_turnover": 0.741317365269461,
+      "pairs": 1677,
+      "qqq_pct": 46.30273838894639,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.477428033360237,
+        "random_buys_max": 56,
+        "random_buys_mean": 55.755,
+        "random_buys_min": 53,
+        "random_held_decile": 4.477460956175299,
+        "strategy_buy_decile": 6.910714285714286,
+        "strategy_buys": 56,
+        "strategy_held_decile": 6.980876494023905,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 44.30243816258652,
+      "start": "2020-06-28"
+    },
+    {
+      "candidates": 1838,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 4182.160710333305,
+          "final_pct": -58.17839289666695,
+          "p": 1.0,
+          "random_median_pct": -16.75333289622154
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 4159.966648954679,
+          "final_pct": -58.400333510453216,
+          "p": 1.0,
+          "random_median_pct": -17.184332369963396
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 4093.967819491286,
+          "final_pct": -59.060321805087135,
+          "p": 1.0,
+          "random_median_pct": -18.487183515803206
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 3964.564891844004,
+          "final_pct": -60.354351081559955,
+          "p": 1.0,
+          "random_median_pct": -21.060312104653388
+        }
+      ],
+      "days": 252,
+      "end": "2022-06-28",
+      "first_day": "2021-06-28",
+      "hit_rate": 0.26666666666666666,
+      "hits": 60,
+      "hold_all_pct": -16.007842359875934,
+      "ic_mean": -0.13081239208610165,
+      "ic_ret_mean": 0.006008310910845484,
+      "ic_ret_t": 0.10954048809069389,
+      "ic_t": -2.465602064594498,
+      "last_day": "2022-06-27",
+      "ls_bps_per_day": -1.1739791246121851,
+      "ls_sharpe": -0.11931413097934708,
+      "ls_t": -0.11931413097934708,
+      "ls_turnover": 0.8464480874316941,
+      "pairs": 1838,
+      "qqq_pct": -15.851832024632573,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.489920332525113,
+        "random_buys_max": 58,
+        "random_buys_mean": 57.74,
+        "random_buys_min": 54,
+        "random_held_decile": 4.48351626984127,
+        "strategy_buy_decile": 4.793103448275862,
+        "strategy_buys": 58,
+        "strategy_held_decile": 5.071428571428571,
+        "unmatched_buys": 0
+      },
+      "spy_pct": -7.612516714326634,
+      "start": "2021-06-28"
+    },
+    {
+      "candidates": 1969,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 5888.21911794933,
+          "final_pct": -41.117808820506696,
+          "p": 1.0,
+          "random_median_pct": 8.528296148099423
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 5858.246495993081,
+          "final_pct": -41.41753504006919,
+          "p": 1.0,
+          "random_median_pct": 7.98078206124333
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 5769.08427850336,
+          "final_pct": -42.3091572149664,
+          "p": 1.0,
+          "random_median_pct": 6.368348915117172
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 5594.122519753024,
+          "final_pct": -44.058774802469756,
+          "p": 1.0,
+          "random_median_pct": 3.2049475778417547
+        }
+      ],
+      "days": 251,
+      "end": "2023-06-28",
+      "first_day": "2022-06-28",
+      "hit_rate": 0.5333333333333333,
+      "hits": 60,
+      "hold_all_pct": 6.834551627593299,
+      "ic_mean": 0.028219194332340287,
+      "ic_ret_mean": 0.05444180907193857,
+      "ic_ret_t": 1.8976894894778837,
+      "ic_t": 0.6203670762253498,
+      "last_day": "2023-06-27",
+      "ls_bps_per_day": 7.202591219688258,
+      "ls_sharpe": 1.8403067319218822,
+      "ls_t": 1.8403067319218822,
+      "ls_turnover": 0.8290816326530612,
+      "pairs": 1969,
+      "qqq_pct": 25.295569859837187,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.493527123998028,
+        "random_buys_max": 55,
+        "random_buys_mean": 54.767,
+        "random_buys_min": 53,
+        "random_held_decile": 4.498286852589642,
+        "strategy_buy_decile": 6.890909090909091,
+        "strategy_buys": 55,
+        "strategy_held_decile": 7.050597609561753,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 14.078919880511421,
+      "start": "2022-06-28"
+    },
+    {
+      "candidates": 1968,
+      "costs": [
+        {
+          "cost_bps": 0.0,
+          "final": 8769.42338617011,
+          "final_pct": -12.30576613829889,
+          "p": 0.962,
+          "random_median_pct": 8.702540693918227
+        },
+        {
+          "cost_bps": 5.0,
+          "final": 8721.881095755245,
+          "final_pct": -12.781189042447549,
+          "p": 0.962,
+          "random_median_pct": 8.118265518989908
+        },
+        {
+          "cost_bps": 20.0,
+          "final": 8580.530552096592,
+          "final_pct": -14.194694479034077,
+          "p": 0.962,
+          "random_median_pct": 6.383372764477935
+        },
+        {
+          "cost_bps": 50.0,
+          "final": 8303.505105013295,
+          "final_pct": -16.964948949867054,
+          "p": 0.962,
+          "random_median_pct": 2.982562514974685
+        }
+      ],
+      "days": 252,
+      "end": "2024-06-28",
+      "first_day": "2023-06-28",
+      "hit_rate": 0.5833333333333334,
+      "hits": 60,
+      "hold_all_pct": 9.612316757331808,
+      "ic_mean": -0.036392429233483625,
+      "ic_ret_mean": -0.07576830638307154,
+      "ic_ret_t": -1.830326212203574,
+      "ic_t": -1.2136390672345638,
+      "last_day": "2024-06-27",
+      "ls_bps_per_day": -5.694489707674918,
+      "ls_sharpe": -0.855112751505916,
+      "ls_t": -0.855112751505916,
+      "ls_turnover": 0.8229591836734693,
+      "pairs": 1968,
+      "qqq_pct": 33.214695691650874,
+      "random_check": {
+        "mode": "uniform",
+        "random_buy_decile": 4.482476987447699,
+        "random_buys_max": 60,
+        "random_buys_mean": 59.75,
+        "random_buys_min": 58,
+        "random_held_decile": 4.481560317460318,
+        "strategy_buy_decile": 8.3,
+        "strategy_buys": 60,
+        "strategy_held_decile": 8.363492063492064,
+        "unmatched_buys": 0
+      },
+      "spy_pct": 27.01733795304426,
+      "start": "2023-06-28"
+    }
+  ]
+}

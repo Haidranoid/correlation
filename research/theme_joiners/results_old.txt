@@ -1,0 +1,215 @@
+# Theme joiners: old export (232 refits, 2006-03-03 .. 2025-06-13)
+Units: coefficients are bps of 21-day market-relative log return per bottom-to-top move of the percentile.
+
+### What J looks like, 2006-03 .. 2025-06 (231 refits; no outcome used)
+  stocks with J per refit: mean 1496, min 1487
+  mean cross-sectional correlation of pct(J) with pct(own 63-day return) +0.143, with pct(own 12-1) +0.082
+  mean J: hot-group members +0.075, cold-group members -0.063, others +0.034
+  mean change in corr with H +0.012, with C -0.017
+
+## Test 1 (2006-03 .. 2019): J coefficient with controls, positive with t >= 3
+### 2006-03 .. 2019: 165 refits 2006-04-03 .. 2019-12-06
+  J coefficient, no controls:   -45.6 bps (se 37.7, t -1.21, 165 refits)
+  J coefficient, with controls: -16.7 bps (se 25.9, t -0.65, 165 refits)  (positive in 47% of refits)
+  full model, every coefficient (bps per 21 days; percentiles: bottom -> top): intercept +6.0 (t +0.15); pJ -16.7 (t -0.65); p63 +9.1 (t +0.27); p12-1 +16.2 (t +0.35); hot -43.1 (t -2.29); cold -57.1 (t -2.11)
+  reported only, beta-adjusted J: no controls -13.6 bps (se 24.1, t -0.57, 165 refits); with controls -6.1 bps (se 19.8, t -0.31, 165 refits)
+  book (residualized J, top minus bottom decile, 21 days): gross -2.3 bps (se 23.2, t -0.10, 165 refits); mean cost 14.7 bps; net -17.1 bps (se 23.2, t -0.74, 165 refits) (positive in 41%)
+    legs (simple 21-day return): long +98.5 bps, short +100.8 bps; net a year (x12) -205 bps
+
+## Test 3 (2020 .. 2025-06): same sign
+### 2020 .. 2025-06: 65 refits 2020-01-08 .. 2025-05-14
+  J coefficient, no controls:   -30.7 bps (se 102.3, t -0.30, 65 refits)
+  J coefficient, with controls: -0.4 bps (se 69.8, t -0.01, 65 refits)  (positive in 51% of refits)
+  full model, every coefficient (bps per 21 days; percentiles: bottom -> top): intercept -32.9 (t -0.44); pJ -0.4 (t -0.01); p63 -26.9 (t -0.44); p12-1 +173.0 (t +1.70); hot -60.3 (t -1.16); cold -76.1 (t -1.11)
+  reported only, beta-adjusted J: no controls -63.0 bps (se 89.5, t -0.70, 65 refits); with controls -47.2 bps (se 62.6, t -0.75, 65 refits)
+  book (residualized J, top minus bottom decile, 21 days): gross +0.7 bps (se 50.6, t +0.01, 65 refits); mean cost 15.1 bps; net -14.4 bps (se 50.6, t -0.28, 65 refits) (positive in 52%)
+    legs (simple 21-day return): long +99.0 bps, short +98.3 bps; net a year (x12) -172 bps
+
+## Reported only: 2006-03 .. 2025-06
+### 2006-03 .. 2025-06: 230 refits 2006-04-03 .. 2025-05-14
+  J coefficient, no controls:   -41.4 bps (se 39.5, t -1.05, 230 refits)
+  J coefficient, with controls: -12.1 bps (se 27.0, t -0.45, 230 refits)  (positive in 48% of refits)
+  full model, every coefficient (bps per 21 days; percentiles: bottom -> top): intercept -5.0 (t -0.14); pJ -12.1 (t -0.45); p63 -1.1 (t -0.04); p12-1 +60.5 (t +1.37); hot -47.9 (t -2.41); cold -62.5 (t -2.29)
+  reported only, beta-adjusted J: no controls -27.6 bps (se 30.5, t -0.90, 230 refits); with controls -17.7 bps (se 22.6, t -0.78, 230 refits)
+  book (residualized J, top minus bottom decile, 21 days): gross -1.5 bps (se 21.9, t -0.07, 230 refits); mean cost 14.8 bps; net -16.3 bps (se 21.9, t -0.75, 230 refits) (positive in 44%)
+    legs (simple 21-day return): long +98.6 bps, short +100.1 bps; net a year (x12) -196 bps
+
+### By year (refit year): J coefficient no controls / with controls; book net (bps per 21 days)
+| Year | Refits | No controls | t | With controls | t | Book net | t |
+|---|---|---|---|---|---|---|---|
+| 2006 | 9 | -68.2 | -0.81 | -44.8 | -0.73 | -80.8 | -1.75 |
+| 2007 | 12 | -21.8 | -0.39 | -53.6 | -1.39 | -108.6 | -3.08 |
+| 2008 | 12 | -301.6 | -1.30 | -159.5 | -1.12 | +20.9 | +0.25 |
+| 2009 | 12 | -141.7 | -0.50 | +115.8 | +0.94 | +252.6 | +1.40 |
+| 2010 | 12 | -94.6 | -0.71 | -100.3 | -0.86 | -94.2 | -0.94 |
+| 2011 | 12 | -67.5 | -0.37 | -51.4 | -0.45 | -78.1 | -1.06 |
+| 2012 | 12 | -101.3 | -1.84 | -94.6 | -1.88 | -92.4 | -1.86 |
+| 2013 | 12 | +101.7 | +1.71 | +70.8 | +1.43 | +14.0 | +0.26 |
+| 2014 | 12 | +154.0 | +1.44 | +160.2 | +2.24 | +80.0 | +1.27 |
+| 2015 | 12 | +107.2 | +1.32 | +49.6 | +0.57 | -26.4 | -0.40 |
+| 2016 | 12 | -183.7 | -1.39 | -119.8 | -0.98 | -98.7 | -0.92 |
+| 2017 | 12 | +13.6 | +0.18 | +7.5 | +0.11 | +4.7 | +0.07 |
+| 2018 | 12 | +59.8 | +0.64 | +59.2 | +0.61 | +35.7 | +0.45 |
+| 2019 | 12 | -99.6 | -0.64 | -80.6 | -0.69 | -83.4 | -1.21 |
+| 2020 | 12 | -89.0 | -0.24 | -2.3 | -0.01 | -76.9 | -0.61 |
+| 2021 | 12 | +163.9 | +0.81 | +69.4 | +0.44 | -33.2 | -0.24 |
+| 2022 | 12 | +49.6 | +0.21 | +98.3 | +0.49 | +82.4 | +0.67 |
+| 2023 | 12 | -105.3 | -0.70 | -24.9 | -0.20 | +27.4 | +0.25 |
+| 2024 | 12 | -55.1 | -0.55 | -70.1 | -0.85 | -81.2 | -1.08 |
+| 2025 | 5 | -313.4 | -0.52 | -173.8 | -0.37 | +9.0 | +0.03 |
+
+## Hot and cold groups, and the top 10 joiners, at dates fixed in advance
+### 2007-01-03 (refit k=48)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | GOOGL, EBAY, SIRI, BIDU | IWM | 58 | +7.6% |
+| Hot | X, NUE, AA, ATI | XLB | 64 | +7.4% |
+| Hot | BRK-B, GLW, DD, PARA | IWM | 59 | +5.9% |
+| Cold | CNI, LPX, MGA, MFC | EWC | 22 | -5.4% |
+| Cold | VVR, PPT, BXMX, EFR | IEF | 38 | -4.5% |
+| Cold | GE, C, BAC, MO | XLF | 43 | -3.7% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| IBOC | +0.92 | +0.25 | -0.67 | COF, JBLU, MHK | -1.5% |
+| AVA | +0.90 | +0.46 | -0.44 | EXC, D, DUK | -0.4% |
+| ATO | +0.76 | +0.47 | -0.28 | EXC, D, DUK | +4.8% |
+| TYL | +0.75 | +0.19 | -0.56 | CMCSA, GEN, BSX | +6.3% |
+| MCY | +0.70 | +0.29 | -0.41 | GS, AIG, ALL | +0.3% |
+| HBAN | +0.69 | +0.42 | -0.27 | GE, C, BAC (cold) | -6.8% |
+| RNST | +0.68 | +0.15 | -0.53 | RGS, PRA, PFS | -1.0% |
+| HELE | +0.68 | +0.36 | -0.32 | GILD, TEVA, BIIB | +25.5% |
+| BRK-A | +0.66 | +0.31 | -0.35 | BRK-B, GLW, DD (hot) | +5.2% |
+| ADC | +0.64 | +0.35 | -0.29 | BRK-B, GLW, DD (hot) | -1.1% |
+
+### 2009-03-05 (refit k=74)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | B, NEM, AEM, KGC | GLD | 25 | +54.2% |
+| Hot | AAPL, GOOGL, BB, MSFT | QQQ | 64 | +25.2% |
+| Hot | MS, GNW, CCI, SBAC | AOD | 42 | +20.4% |
+| Cold | BAC, JPM, C, WFC | IYF | 31 | -56.4% |
+| Cold | FLG, CFR, BOH, EWBC | IWN | 60 | -35.0% |
+| Cold | BIDU, NLY, TGNA, MNST | IWM | 45 | -24.6% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| JACK | +1.18 | +0.52 | -0.66 | WMT, TGT, HD | +33.8% |
+| SMG | +1.17 | +0.55 | -0.63 | LVS, WYNN, ADP | +9.5% |
+| TSCO | +1.06 | +0.45 | -0.61 | WMT, TGT, HD | +3.1% |
+| HURN | +1.00 | +0.50 | -0.50 | GE, CTSH, DECK | +1.8% |
+| KSS | +0.94 | +0.43 | -0.51 | WMT, TGT, HD | +38.3% |
+| SKX | +0.91 | +0.42 | -0.49 | GE, CTSH, DECK | -50.3% |
+| IVAC | +0.91 | +0.49 | -0.42 | BIDU, NLY, TGNA (cold) | -1.5% |
+| PRDO | +0.89 | +0.49 | -0.40 | GE, CTSH, DECK | +42.2% |
+| MATW | +0.87 | +0.44 | -0.43 | ATR, MFA, EPAC | +1.9% |
+| PRGS | +0.87 | +0.45 | -0.42 | GE, CTSH, DECK | -4.7% |
+
+### 2014-01-06 (refit k=132)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | VLO, MPC, PSX, LYB | IEO | 19 | +10.0% |
+| Hot | GS, MS, BLK, STT | SPY | 45 | +8.8% |
+| Hot | GOOGL, CMG, BX, FTNT | IWM | 29 | +8.8% |
+| Cold | B, NEM, WPM, KGC | GDX | 25 | -11.0% |
+| Cold | VOD, PBR, TSM, AMX | EWC | 67 | -7.1% |
+| Cold | XOM, SLB, HAL, OXY | OIH | 49 | -6.3% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| BP | +0.75 | +0.61 | -0.14 | GE, IBM, ORCL | +8.1% |
+| SSB | +0.65 | +0.49 | -0.16 | MCD, DAL, YUM | +8.1% |
+| VLO | +0.60 | +0.30 | -0.30 | VLO, MPC, PSX (hot) | +31.6% |
+| DIN | +0.60 | +0.62 | +0.02 | GOOGL, CMG, BX (hot) | +16.1% |
+| RMD | +0.58 | +0.52 | -0.07 | EBAY, BIDU, MA | -20.7% |
+| BANR | +0.58 | +0.32 | -0.26 | USB, PNC, FITB | +12.0% |
+| FLR | +0.57 | +0.30 | -0.27 | XOM, SLB, HAL (cold) | +3.3% |
+| FIS | +0.56 | +0.48 | -0.08 | UNH, MDT, BAX | +7.3% |
+| HOPE | +0.56 | +0.27 | -0.29 | USB, PNC, FITB | +8.4% |
+| ALGT | +0.55 | +0.33 | -0.21 | MCD, DAL, YUM | -0.7% |
+
+### 2020-04-08 (refit k=207)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | AAPL, AMZN, MSFT, NFLX | QQQ | 61 | +31.3% |
+| Hot | KO, PEP, NEE, LMT | XLU | 65 | +30.3% |
+| Hot | JNJ, PG, MRK, BRK-B | XLP | 60 | +27.3% |
+| Cold | XOM, CVX, OXY, SLB | XOP | 60 | -62.0% |
+| Cold | BA, DAL, ULTA, EXPE | XHB | 66 | -34.7% |
+| Cold | RTX, MPC, VLO, STZ | REM | 52 | -28.8% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| KNX | +1.87 | +1.09 | -0.77 | GE, CAT, UPS | +27.5% |
+| SNDR | +1.78 | +1.02 | -0.76 | GE, CAT, UPS | +24.6% |
+| CVBF | +1.74 | +0.97 | -0.78 | BLK, KR, ROP | +25.9% |
+| WBA | +1.74 | +0.87 | -0.87 | GE, CAT, UPS | +11.4% |
+| FAST | +1.72 | +0.97 | -0.75 | UNP, F, DD | +26.3% |
+| OZK | +1.70 | +1.00 | -0.71 | BLK, KR, ROP | -14.6% |
+| CNX | +1.67 | +0.75 | -0.92 | BKNG, ALGN, CTSH | +52.3% |
+| CBU | +1.62 | +0.91 | -0.71 | BLK, KR, ROP | +23.2% |
+| VMI | +1.58 | +0.89 | -0.70 | AAPL, AMZN, MSFT (hot) | +8.5% |
+| ONC | +1.58 | +0.88 | -0.70 | ILMN, REGN, TEVA | +22.6% |
+
+### 2021-01-07 (refit k=216)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | XOM, CVX, OXY, COP | FCG | 46 | +33.2% |
+| Hot | JPM, BAC, C, WFC | KRE | 48 | +15.2% |
+| Hot | ETSY, NVAX, ENPH, SPCE | TAN | 51 | +12.2% |
+| Cold | NEE, LMT, AMT, D | XLU | 46 | -20.8% |
+| Cold | PLD, PSA, AVB, O | IYR | 46 | -19.3% |
+| Cold | JNJ, WMT, PFE, PG | XLP | 72 | -18.2% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| JBGS | +1.12 | +0.41 | -0.70 | PLD, PSA, AVB (cold) | -11.2% |
+| STNG | +1.09 | +0.62 | -0.48 | CSCO, MCD, SBUX | -6.8% |
+| EQR | +1.08 | +0.48 | -0.60 | PLD, PSA, AVB (cold) | -15.1% |
+| FRO | +1.04 | +0.63 | -0.41 | CSCO, MCD, SBUX | -25.2% |
+| CBU | +0.96 | +0.34 | -0.62 | JPM, BAC, C (hot) | -3.7% |
+| MAN | +0.95 | +0.31 | -0.64 | T, KO, IBM | +4.3% |
+| BXP | +0.94 | +0.46 | -0.47 | PLD, PSA, AVB (cold) | -11.5% |
+| DDD | +0.93 | +0.39 | -0.54 | ETSY, NVAX, ENPH (hot) | +106.7% |
+| DHT | +0.91 | +0.55 | -0.36 | CSCO, MCD, SBUX | -14.2% |
+| ALB | +0.90 | +0.32 | -0.58 | UPS, MMM, LIN | +42.9% |
+
+### 2025-06-13 (refit k=269)
+| | Group (largest members) | Twin-fund label | Members | 63-day market-relative return |
+|---|---|---|---|---|
+| Hot | ORCL, GEV, VST, CEG | AIRR | 51 | +22.1% |
+| Hot | FCX, NEM, B, AEM | GDX | 25 | +18.8% |
+| Hot | TSLA, GOOGL, MSTR, COIN | BLOK | 23 | +16.4% |
+| Cold | UNH, TMO, DHR, ELV | XLV | 57 | -10.7% |
+| Cold | BABA, PDD, JD, VALE | KWEB | 36 | -9.6% |
+| Cold | REGN, VRTX, MRNA, ARGX | XBI | 52 | -8.8% |
+
+Top 10 joiners:
+| Stock | J | Change in corr with H | with C | Own group (largest members) | Own 63-day return |
+|---|---|---|---|---|---|
+| SHLS | +0.93 | +0.35 | -0.58 | FSLR, ENPH, WSM | +43.6% |
+| JBL | +0.82 | +0.34 | -0.48 | NVDA, AVGO, AMD | +24.4% |
+| GRMN | +0.77 | +0.30 | -0.47 | BKNG, DIS, ABNB | -7.4% |
+| MNDY | +0.75 | +0.37 | -0.37 | MSFT, AMZN, CRM | +7.7% |
+| ST | +0.74 | +0.41 | -0.33 | INTC, TXN, ADI | -0.2% |
+| KEYS | +0.73 | +0.27 | -0.46 | INTC, TXN, ADI | +2.7% |
+| MT | +0.72 | +0.35 | -0.38 | BA, BLK, GM | -8.0% |
+| BBY | +0.71 | +0.40 | -0.31 | NKE, TGT, LULU | -4.0% |
+| ARRY | +0.70 | +0.25 | -0.45 | FSLR, ENPH, WSM | +25.6% |
+| WYNN | +0.69 | +0.02 | -0.66 | BABA, PDD, JD (cold) | -3.7% |
+
+## Money test: the judge, rebalance=21, walk-forward (score = residualized J percentile)
+  scored stock-days 7,240,618; days with a score 4840
+  uniform: years 18; beat random at p<0.1 (0 bps: 4, 5 bps: 4, 20 bps: 4) of 18; change over random -1.5 pts/yr (se 3.9, ahead 8/18); IC actual returns z -1.78; long-short -1.23 bps/day z -0.93, turnover 74%, costs 0.14 x c bps/day
+    per year: [-10.95, -10.35, 44.52, -21.21, -11.76, 1.14, -2.32, 0.33, -7.8, -8.4, 6.92, -3.6, 0.44, -22.81, 11.06, 17.79, 13.34, -23.71]
+    at cost level 1: change over random -1.5 (ahead 8/18)
+    at cost level 2: change over random -1.5 (ahead 8/18)
+  volatility: years 18; beat random at p<0.1 (0 bps: 2, 5 bps: 2, 20 bps: 2) of 18; change over random -0.8 pts/yr (se 2.7, ahead 9/18); IC actual returns z -1.78; long-short -1.23 bps/day z -0.93, turnover 74%, costs 0.14 x c bps/day
+    per year: [-9.25, -2.16, 26.04, -11.34, -6.73, -0.23, 1.29, 3.35, -4.98, -9.63, 4.86, 0.04, 0.51, -22.37, 1.31, 18.57, 10.72, -14.32]
+    at cost level 1: change over random -0.8 (ahead 9/18)
+    at cost level 2: change over random -0.8 (ahead 9/18)

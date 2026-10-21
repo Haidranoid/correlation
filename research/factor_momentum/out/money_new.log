@@ -1,0 +1,88 @@
+
+#### book: /home/bhoult/.local/share/correlation2/experiments/factor_momentum/book_new.npy; scores from 2004-12-31; finite per day median 500, positive per day median 251
+
+== book, uniform random accounts ==
+ 0 bps: change over random +24.44 pts/yr (se nan, ahead 1/1); per year [24.44]
+ 5 bps: change over random +24.18 pts/yr (se nan, ahead 1/1); per year [24.18]
+20 bps: change over random +23.44 pts/yr (se nan, ahead 1/1); per year [23.44]
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family scores, rebalanced every 21 trading day(s): 627 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 45.6% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean -0.0760, t = -4.87
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0210, t = +1.25
+Long-short top/bottom 10%: 5.50 bps/day gross, Sharpe 1.24, t = 1.44, book turnover 61% per rebalance
+Random guessers (uniform): 212.8 names bought on average (209..214; the picks bought 214); mean volatility decile of buys 4.49 (picks 2.05), of holdings 4.49 (picks 1.94)
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             14327     43.3%   random guessers: median 11883, 5.8% did at least as well (p = 0.058)
+Picks, 5 bps per trade                              14181     41.8%   random guessers: median 11763, 5.8% did at least as well (p = 0.058)
+Picks, 20 bps per trade                             13754     37.5%   random guessers: median 11410, 5.8% did at least as well (p = 0.058)
+
+
+== book, volatility random accounts ==
+ 0 bps: change over random +34.52 pts/yr (se nan, ahead 1/1); per year [34.52]
+ 5 bps: change over random +34.17 pts/yr (se nan, ahead 1/1); per year [34.17]
+20 bps: change over random +33.14 pts/yr (se nan, ahead 1/1); per year [33.14]
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family scores, rebalanced every 21 trading day(s): 627 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 45.6% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean -0.0760, t = -4.87
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0210, t = +1.25
+Long-short top/bottom 10%: 5.50 bps/day gross, Sharpe 1.24, t = 1.44, book turnover 61% per rebalance
+Random guessers (volatility): 214.0 names bought on average (214..214; the picks bought 214); mean volatility decile of buys 2.05 (picks 2.05), of holdings 2.07 (picks 1.94); 0 buys unmatched
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             14327     43.3%   random guessers: median 10874, 0.0% did at least as well (p = 0.000)
+Picks, 5 bps per trade                              14181     41.8%   random guessers: median 10764, 0.0% did at least as well (p = 0.000)
+Picks, 20 bps per trade                             13754     37.5%   random guessers: median 10439, 0.0% did at least as well (p = 0.000)
+
+
+#### plain: /home/bhoult/.local/share/correlation2/experiments/factor_momentum/plain_new.npy; scores from 2004-12-31; finite per day median 500, positive per day median 331
+
+== plain, uniform random accounts ==
+ 0 bps: change over random +54.81 pts/yr (se nan, ahead 1/1); per year [54.81]
+ 5 bps: change over random +54.60 pts/yr (se nan, ahead 1/1); per year [54.6]
+20 bps: change over random +53.96 pts/yr (se nan, ahead 1/1); per year [53.96]
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family scores, rebalanced every 21 trading day(s): 627 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 30.3% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean -0.2338, t = -4.75
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0035, t = +0.06
+Long-short top/bottom 10%: 9.37 bps/day gross, Sharpe 0.50, t = 0.58, book turnover 25% per rebalance
+Random guessers (uniform): 90.8 names bought on average (88..91; the picks bought 91); mean volatility decile of buys 4.50 (picks 8.34), of holdings 4.49 (picks 8.49)
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             17445     74.5%   random guessers: median 11964, 0.2% did at least as well (p = 0.002)
+Picks, 5 bps per trade                              17375     73.8%   random guessers: median 11916, 0.2% did at least as well (p = 0.002)
+Picks, 20 bps per trade                             17167     71.7%   random guessers: median 11772, 0.2% did at least as well (p = 0.002)
+
+
+== plain, volatility random accounts ==
+ 0 bps: change over random +49.17 pts/yr (se nan, ahead 1/1); per year [49.17]
+ 5 bps: change over random +48.98 pts/yr (se nan, ahead 1/1); per year [48.98]
+20 bps: change over random +48.40 pts/yr (se nan, ahead 1/1); per year [48.4]
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 2s
+Family scores, rebalanced every 21 trading day(s): 627 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 30.3% of 320 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean -0.2338, t = -4.75
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0035, t = +0.06
+Long-short top/bottom 10%: 9.37 bps/day gross, Sharpe 0.50, t = 0.58, book turnover 25% per rebalance
+Random guessers (volatility): 91.0 names bought on average (91..91; the picks bought 91); mean volatility decile of buys 8.34 (picks 8.34), of holdings 7.89 (picks 8.49); 0 buys unmatched
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             17445     74.5%   random guessers: median 12528, 4.9% did at least as well (p = 0.049)
+Picks, 5 bps per trade                              17375     73.8%   random guessers: median 12478, 4.9% did at least as well (p = 0.049)
+Picks, 20 bps per trade                             17167     71.7%   random guessers: median 12327, 4.9% did at least as well (p = 0.049)
+

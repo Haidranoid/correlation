@@ -1,0 +1,38 @@
+point-in-time check: months through 2025-06 identical with data to 2026-10-19: True
+unseen months: 16 return months, 2025-07 .. 2026-10 (last one partial, through 2026-10-19)
+strategy net of 2 bps: +4.86% compounded excess (+0.301%/month, t +1.28, Sharpe 1.11, max DD -2.4%); gross +4.97%, 5 bps +4.70%, 20 bps +3.87%
+SPY excess +19.6%, 60/40 excess +8.9%; correlation with SPY +0.62, 60/40 +0.68; gross exposure 0.99
+Test 3, unseen months same (positive) sign: PASS
+vs 1,000 random-sign portfolios (seed 20261021), 0 bps, account total return over the unseen months: strategy +10.45%, random median +5.11% -> +5.33 points (not annualized); share at or above 0.025; always-long +8.56%
+
+by kind, unseen months, compounded contribution (sum of monthly contributions), %:
+   Equities +2.25; Bonds -0.39; Commodities +2.99; Currencies +0.58; Real estate -0.61
+
+month     net%    SPY%   AQR%   long funds
+2025-07   -0.81   +1.92   -0.61   18/23
+2025-08   +0.85   +1.69   +1.04   13/23
+2025-09   +0.98   +3.22   +3.11   15/23
+2025-10   +0.38   +2.02   -0.50   15/23
+2025-11   +0.45   -0.10   +1.67   17/23
+2025-12   +0.90   -0.24   +2.78   15/23
+2026-01   +1.13   +1.18   +4.26   16/23
+2026-02   +0.93   -1.14   +3.28   18/23
+2026-03   -2.37   -5.26   +1.88   18/23
+2026-04   +1.59  +10.20   +5.15   15/23
+2026-05   +0.07   +4.97   +0.00   17/23
+2026-06   -0.12   -1.35    +nan   17/23
+2026-07   +0.06   -0.30    +nan   16/23
+2026-08   +0.92   +2.36    +nan   15/23
+2026-09   +0.18   -0.67    +nan   15/23
+2026-10   -0.32   +0.29    +nan   12/23
+
+fidelity (gross, 0 bps) with AQR TSMOM:
+   2008-01..2026-05: 221 months, correlation +0.750
+   unseen months with AQR data, 2025-07..2026-05: 11 months, correlation +0.513
+   1994-02..2026-05: 388 months, correlation +0.585
+
+AQR TSMOM (current vintage; AQR rebuilds full history on each update, so this is a post-publication reconstruction, not a fund's live record):
+   2010-01..2026-05: 197 months, +5.25%/yr, vol 13.1%, Sharpe 0.40, t +1.63
+   2013-01..2026-05 (after the JFE issue, May 2012): 161 months, +5.37%/yr, vol 13.1%, Sharpe 0.41, t +1.50
+   2025-07..2026-05: 11 months, +24.08%/yr, vol 6.6%, Sharpe 3.63, t +3.48
+   1985-01..2009-12: 300 months, +16.84%/yr, vol 11.9%, Sharpe 1.41, t +7.06

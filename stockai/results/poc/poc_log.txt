@@ -1,0 +1,444 @@
+== scripts/poc.sh  2026-10-18T23:19:12-05:00: years 2010-2023, seeds 0 1 2, null 2012,2017,2022; results results/poc, runs runs/poc
+   GPU: NVIDIA GeForce RTX 5080, 35 %, 1890 MiB, 16303 MiB
+   GPU process: 14215 chrome, 170 MiB
+   GPU process: 17188 slack, 168 MiB
+   GPU process: 59151 resources, 49 MiB
+   GPU process: 10287 snapd-desktop-integration, 8 MiB
+   GPU process: 2977855 nautilus, 85 MiB
+   GPU process: 2891795 external_test, 456 MiB
+== export
+   export /home/bhoult/.local/share/correlation2/export/full: 8503 stocks x 5911 days, 2001-12-31 .. 2025-06-27, fingerprint 8b5ac076267c83ab
+   export took 0 s
+== G0: Python reversal scores graded through --family scores must reproduce --family reversal exactly
+reversal, lookback 5: runs/poc/baselines/reversal5.npy (8503 stocks x 5911 days, float64)
+  48,126,980 finite scores of 50,261,233, decision days 2001-12-31..2024-06-26; NaN from decision day 2024-06-27 on (the locked year's first decision)
+  +0.0 (no score, as correlation2): 31,164,353; -0.0 (unchanged price): 195,454; closes <= 0 written as NaN: 0  [1.7s]
+G0 scores: PASS: 1,079,142 of 1,079,142 cells bitwise equal (866 rebalance days), max difference 0 ulp
+G0 json: PASS: 792 fields compared (17 years): 0 differ
+G0 tables: PASS: 22 reference lines (17 year rows): 0 differ
+   G0 took 10 s
+== stockGPT walk-forward: years 2010-2023, seeds 0 1 2
+seed 0 year 2010
+  done: best step 268/400, val ic actual +0.0090, ic v +0.0147, +177.18 mbit; train 38s (eval 30s) + score 10s
+seed 0 year 2011
+  done: best step 268/400, val ic actual +0.0135, ic v +0.0185, +21.36 mbit; train 37s (eval 30s) + score 10s
+seed 0 year 2012
+  done: best step 201/400, val ic actual +0.0151, ic v +0.0067, +34.51 mbit; train 38s (eval 31s) + score 11s
+seed 0 year 2013
+  done: best step 268/400, val ic actual +0.0102, ic v +0.0125, +29.23 mbit; train 39s (eval 32s) + score 11s
+seed 0 year 2014
+  done: best step 201/400, val ic actual +0.0122, ic v +0.0220, +23.85 mbit; train 44s (eval 36s) + score 12s
+seed 0 year 2015
+  done: best step 335/400, val ic actual +0.0246, ic v +0.0221, +36.91 mbit; train 47s (eval 39s) + score 13s
+seed 0 year 2016
+  done: best step 67/268, val ic actual +0.0246, ic v +0.0175, +14.18 mbit; train 32s (eval 27s) + score 14s
+seed 0 year 2017
+  done: best step 414/414, val ic actual +0.0149, ic v +0.0182, +41.03 mbit; train 51s (eval 43s) + score 14s
+seed 0 year 2018
+  done: best step 308/462, val ic actual -0.0029, ic v +0.0046, +26.09 mbit; train 56s (eval 47s) + score 15s
+seed 0 year 2019
+  done: best step 348/517, val ic actual +0.0174, ic v +0.0161, +30.62 mbit; train 65s (eval 55s) + score 35s
+seed 0 year 2020
+  done: best step 96/384, val ic actual +0.0055, ic v -0.0022, +66.70 mbit; train 86s (eval 71s) + score 37s
+seed 0 year 2021
+  done: best step 318/634, val ic actual +0.0189, ic v +0.0311, +44.04 mbit; train 144s (eval 120s) + score 42s
+seed 0 year 2022
+  done: best step 118/472, val ic actual +0.0247, ic v +0.0231, +22.58 mbit; train 106s (eval 88s) + score 48s
+seed 0 year 2023
+  done: best step 260/650, val ic actual +0.0190, ic v +0.0125, +23.58 mbit; train 133s (eval 109s) + score 52s
+seed 1 year 2010
+  done: best step 134/335, val ic actual +0.0097, ic v +0.0195, +156.46 mbit; train 59s (eval 47s) + score 20s
+seed 1 year 2011
+  done: best step 268/400, val ic actual +0.0097, ic v +0.0167, +22.88 mbit; train 75s (eval 60s) + score 22s
+seed 1 year 2012
+  done: best step 268/400, val ic actual +0.0235, ic v +0.0145, +33.26 mbit; train 50s (eval 40s) + score 11s
+seed 1 year 2013
+  done: best step 400/400, val ic actual +0.0116, ic v +0.0131, +30.93 mbit; train 40s (eval 33s) + score 11s
+seed 1 year 2014
+  done: best step 201/400, val ic actual +0.0158, ic v +0.0240, +23.63 mbit; train 47s (eval 39s) + score 13s
+seed 1 year 2015
+  done: best step 268/400, val ic actual +0.0207, ic v +0.0167, +35.49 mbit; train 50s (eval 43s) + score 13s
+seed 1 year 2016
+  done: best step 134/335, val ic actual +0.0217, ic v +0.0177, +29.38 mbit; train 40s (eval 34s) + score 14s
+seed 1 year 2017
+  done: best step 413/413, val ic actual +0.0180, ic v +0.0196, +40.55 mbit; train 51s (eval 43s) + score 14s
+seed 1 year 2018
+  done: best step 78/312, val ic actual +0.0054, ic v +0.0045, +16.04 mbit; train 37s (eval 31s) + score 15s
+seed 1 year 2019
+  done: best step 348/517, val ic actual +0.0168, ic v +0.0210, +31.16 mbit; train 59s (eval 50s) + score 16s
+seed 1 year 2020
+  done: best step 96/384, val ic actual +0.0056, ic v +0.0008, +45.20 mbit; train 41s (eval 34s) + score 18s
+seed 1 year 2021
+  done: best step 535/637, val ic actual +0.0222, ic v +0.0306, +45.31 mbit; train 70s (eval 58s) + score 20s
+seed 1 year 2022
+  done: best step 118/472, val ic actual +0.0403, ic v +0.0276, +27.41 mbit; train 51s (eval 42s) + score 23s
+seed 1 year 2023
+  done: best step 258/645, val ic actual +0.0201, ic v +0.0131, +22.41 mbit; train 64s (eval 53s) + score 25s
+seed 2 year 2010
+  done: best step 134/335, val ic actual +0.0097, ic v +0.0230, +163.80 mbit; train 29s (eval 23s) + score 10s
+seed 2 year 2011
+  done: best step 134/335, val ic actual +0.0115, ic v +0.0151, +21.15 mbit; train 30s (eval 24s) + score 10s
+seed 2 year 2012
+  done: best step 201/400, val ic actual +0.0208, ic v +0.0109, +37.27 mbit; train 38s (eval 31s) + score 11s
+seed 2 year 2013
+  done: best step 335/400, val ic actual +0.0136, ic v +0.0132, +29.28 mbit; train 39s (eval 32s) + score 11s
+seed 2 year 2014
+  done: best step 201/400, val ic actual +0.0152, ic v +0.0228, +20.66 mbit; train 43s (eval 36s) + score 12s
+seed 2 year 2015
+  done: best step 201/400, val ic actual +0.0225, ic v +0.0165, +32.52 mbit; train 47s (eval 39s) + score 13s
+seed 2 year 2016
+  done: best step 67/268, val ic actual +0.0264, ic v +0.0181, +8.05 mbit; train 32s (eval 27s) + score 14s
+seed 2 year 2017
+  done: best step 413/413, val ic actual +0.0142, ic v +0.0185, +41.30 mbit; train 51s (eval 44s) + score 14s
+seed 2 year 2018
+  done: best step 464/464, val ic actual -0.0025, ic v +0.0023, +26.69 mbit; train 56s (eval 48s) + score 15s
+seed 2 year 2019
+  done: best step 344/514, val ic actual +0.0147, ic v +0.0161, +28.96 mbit; train 59s (eval 50s) + score 17s
+seed 2 year 2020
+  done: best step 96/384, val ic actual +0.0049, ic v -0.0039, +50.31 mbit; train 42s (eval 35s) + score 18s
+seed 2 year 2021
+  done: best step 638/638, val ic actual +0.0245, ic v +0.0351, +49.61 mbit; train 145s (eval 122s) + score 42s
+seed 2 year 2022
+  done: best step 117/468, val ic actual +0.0320, ic v +0.0270, +28.01 mbit; train 106s (eval 88s) + score 26s
+seed 2 year 2023
+  done: best step 130/520, val ic actual +0.0212, ic v +0.0086, +6.60 mbit; train 52s (eval 43s) + score 25s
+wrote runs/poc/gpt in 3227s
+   stockGPT walk-forward took 3229 s
+== stockGPT sign-flip null: years 2012,2017,2022, seed 0
+seed 0 year 2012
+  done: best step 134/335, val ic actual +0.0051, ic v -0.0038, +27.61 mbit; train 32s (eval 26s) + score 11s
+seed 0 year 2017
+  done: best step 207/414, val ic actual +0.0048, ic v -0.0002, +36.99 mbit; train 51s (eval 43s) + score 14s
+seed 0 year 2022
+  done: best step 118/472, val ic actual -0.0012, ic v -0.0028, +23.02 mbit; train 51s (eval 43s) + score 23s
+wrote runs/poc/gpt_null in 187s
+   sign-flip null took 188 s
+== baselines: LightGBM (2010-2023), 12-1 momentum, 5-day reversal, 1-day census reversal
+LightGBM walk-forward: 8503 stocks x 5911 days from /home/bhoult/.local/share/correlation2/export/full; years 2010..2023; reading days through 2024-06-26 only
+  2010: 877,156 train rows (1115/1115 days), 237,799 val rows, best iteration 6; val L2 0.49384 vs zero 0.49437; val IC v +0.0548 (t 10.0), returns +0.0064 (t 0.8); 579,212 test scores; 17s
+  2011: 1,115,312 train rows (1368/1368 days), 253,087 val rows, best iteration 64; val L2 0.83224 vs zero 0.83482; val IC v +0.0618 (t 9.7), returns +0.0057 (t 0.8); 609,035 test scores; 4s
+  2012: 1,369,212 train rows (1621/1621 days), 271,051 val rows, best iteration 30; val L2 1.01509 vs zero 1.01840; val IC v +0.0584 (t 7.5), returns +0.0115 (t 1.3); 633,844 test scores; 3s
+  2013: 1,637,993 train rows (1871/1871 days), 278,205 val rows, best iteration 140; val L2 0.85743 vs zero 0.86052; val IC v +0.0598 (t 9.1), returns +0.0061 (t 0.8); 675,912 test scores; 6s
+  2014: 1,915,607 train rows (2123/2123 days), 317,309 val rows, best iteration 167; val L2 0.92736 vs zero 0.93211; val IC v +0.0772 (t 10.0), returns +0.0132 (t 1.5); 714,852 test scores; 7s
+  2015: 2,230,729 train rows (2374/2374 days), 343,262 val rows, best iteration 116; val L2 0.99744 vs zero 1.00116; val IC v +0.0606 (t 7.0), returns -0.0014 (t -0.2); 761,720 test scores; 7s
+  2016: 2,573,436 train rows (2626/2626 days), 357,916 val rows, best iteration 25; val L2 1.12130 vs zero 1.12369; val IC v +0.0445 (t 4.8), returns -0.0061 (t -0.6); 806,637 test scores; 5s
+  2017: 2,931,452 train rows (2878/2878 days), 378,351 val rows, best iteration 58; val L2 0.80875 vs zero 0.81145; val IC v +0.0696 (t 8.1), returns +0.0027 (t 0.3); 848,942 test scores; 7s
+  2018: 3,308,669 train rows (3130/3130 days), 414,195 val rows, best iteration 97; val L2 0.97815 vs zero 0.98091; val IC v +0.0551 (t 6.4), returns -0.0092 (t -1.0); 904,857 test scores; 9s
+  2019: 3,720,314 train rows (3381/3381 days), 435,320 val rows, best iteration 40; val L2 0.97398 vs zero 0.97697; val IC v +0.0565 (t 5.6), returns -0.0003 (t -0.0); 976,310 test scores; 7s
+  2020: 3,999,384 train rows (3495/3633 days), 452,214 val rows, best iteration 42; val L2 1.48300 vs zero 1.48659; val IC v +0.0556 (t 5.1), returns -0.0013 (t -0.1); 1,056,218 test scores; 8s
+  2021: 3,999,792 train rows (3375/3884 days), 510,762 val rows, best iteration 59; val L2 0.68686 vs zero 0.68901; val IC v +0.0676 (t 5.2), returns +0.0059 (t 0.4); 1,180,103 test scores; 9s
+  2022: 3,999,247 train rows (3244/4136 days), 558,105 val rows, best iteration 30; val L2 0.97310 vs zero 0.97433; val IC v +0.0376 (t 3.7), returns -0.0148 (t -1.2); 1,347,741 test scores; 8s
+  2023: 3,999,327 train rows (3087/4387 days), 557,133 val rows, best iteration 29; val L2 0.89200 vs zero 0.89474; val IC v +0.0524 (t 5.6), returns -0.0036 (t -0.4); 1,459,337 test scores; 7s
+wrote runs/poc/baselines/lgbm/scores.npy (12,554,720 finite scores of 50,261,233, decision days 2010-06-25..2024-06-26) and runs/poc/baselines/lgbm/train_log.jsonl [105s]
+momentum 252-21: runs/poc/baselines/momentum_12_1.npy (8503 stocks x 5911 days, float64)
+  15,389,366 finite scores of 50,261,233, decision days 2002-12-31..2024-06-26  [0.5s]
+one-day census reversal (-v[d]): runs/poc/baselines/vreversal1.npy (8503 stocks x 5911 days, float32)
+  15,169,056 finite scores of 50,261,233, decision days 2003-12-31..2024-06-26  [0.2s]
+   baselines took 106 s
+== grading: stockai-judge walk-forward, --start 2023-06-28, costs 0/5/20 bps, 1,000 random accounts
+   graded gpt_ensemble__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d0_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d1_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d1_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r5_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d0_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d1_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d1_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_seed0__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 6.10
+   graded gpt_seed1__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 5.22
+   graded gpt_seed2__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.46
+   graded gpt_null__r1_d0_uniform: Rank IC in actual returns: t positive in 1 of 3 years; combined across years z = 0.08
+   graded momentum_12_1__r5_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 2.55
+   graded momentum_12_1__r21_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 1.22
+   graded reversal5__r5_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+   graded reversal5__r5_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+   graded reversal5__r1_d0_uniform: Rank IC in actual returns: t positive in 16 of 17 years; combined across years z = 4.24
+   graded vreversal1__r1_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   graded vreversal1__r1_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   grading took 42 s
+== controls: score canaries and the large-cap tripwire
+shifted 20 days later: runs/poc/controls/gpt_ensemble_shift20.npy (12,543,184 finite scores, decision days 2010-07-26..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/gpt_ensemble_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 3.02
+   graded canary_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 3.22
+shifted 20 days later: runs/poc/controls/vreversal1_shift20.npy (12,588,779 finite scores, decision days 2010-06-25..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/vreversal1_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+-log trailing volatility (static reference): runs/poc/controls/lowvol.npy (13,366,139 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_vreversal1_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 1.21
+   graded canary_vreversal1_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = 0.09
+   graded lowvol__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.88
+shifted 1 days later: runs/poc/controls/gpt_ensemble_shift1.npy (12,657,484 finite scores, decision days 2010-06-28..2024-06-26)
+   graded decay_shift1__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.87
+tripwire runs/poc/gpt/scores_ensemble.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0129 (t 4.82, 3524 days); largest year mean +0.0293; not tripped (<= 0.05)
+tripwire runs/poc/gpt_null/scores_seed0.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0012 (t 0.31, 753 days); largest year mean +0.0084; not tripped (<= 0.05)
+tripwire runs/poc/baselines/lgbm/scores.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return -0.0009 (t -0.27, 3524 days); largest year mean +0.0156; not tripped (<= 0.05)
+tripwire runs/poc/baselines/reversal5.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0108 (t 3.52, 3524 days); largest year mean +0.0298; not tripped (<= 0.05)
+tripwire runs/poc/baselines/vreversal1.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0149 (t 5.76, 3524 days); largest year mean +0.0362; not tripped (<= 0.05)
+runs/poc/gpt/scores_ensemble.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.309
+  with log volatility (252 days): -0.468
+  with lgbm: +0.120
+  with reversal5: +0.081
+  with vreversal1: +0.309
+  with momentum_12_1: +0.072
+  with seed0: +0.926
+  with seed1: +0.871
+  with seed2: +0.902
+runs/poc/baselines/lgbm/scores.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.105
+  with log volatility (252 days): -0.045
+  with momentum_12_1: -0.678
+  with reversal5: +0.214
+  with vreversal1: +0.105
+   controls took 68 s
+== summary
+stockGPT, ensemble of the seeds              daily, delay 0, uniform      14 yrs  IC +0.0097 z   5.67  ICret +0.0124 z   5.85  LS   2.44 bps/d z   1.81  beat 4/4/3
+stockGPT, ensemble of the seeds              weekly, delay 0, uniform     14 yrs  IC +0.0029 z   0.98  ICret +0.0106 z   2.43  LS   0.01 bps/d z   0.33  beat 4/4/4
+LightGBM                                     daily, delay 0, uniform      14 yrs  IC +0.0556 z  23.97  ICret -0.0022 z  -0.77  LS   5.49 bps/d z   2.99  beat 8/8/8
+LightGBM                                     weekly, delay 0, uniform     14 yrs  IC +0.1140 z  22.28  ICret -0.0037 z  -0.78  LS   1.03 bps/d z   0.32  beat 6/6/6
+5-day reversal                               weekly, delay 0, uniform     14 yrs  IC +0.0335 z   8.07  ICret +0.0145 z   3.05  LS   3.63 bps/d z   2.46  beat 6/6/6
+5-day reversal                               daily, delay 0, uniform      14 yrs  IC +0.0168 z   8.09  ICret +0.0088 z   3.67  LS   5.37 bps/d z   2.57  beat 10/10/9
+1-day census reversal (-v[d]), extra         daily, delay 0, uniform      14 yrs  IC +0.0126 z   6.08  ICret +0.0118 z   5.70  LS   1.92 bps/d z   1.90  beat 2/2/2
+12-1 momentum                                weekly, delay 0, uniform     14 yrs  IC -0.1135 z -19.76  ICret +0.0171 z   2.53  LS   1.46 bps/d z   1.14  beat 5/5/5
+12-1 momentum                                monthly, delay 0, uniform    14 yrs  IC -0.2217 z -22.37  ICret +0.0174 z   1.38  LS   1.39 bps/d z   0.98  beat 5/5/5
+G1 pass: gross signal: rank IC in actual returns, combined z >= 2: z = 5.85 (mean daily IC +0.0124, t > 0 in 13 of 14 years); census units z = 5.67 (IC +0.0097)
+G1 pass: nothing on the sign-flip null: combined |z| < 2 for both ICs: actual returns z = 0.08 (IC +0.0008); census units z = 0.21 (IC +0.0012); test years: 3
+G1 pass: no tripwire: large-cap daily rank IC vs next-day return <= 0.05: top 500 by dollar volume: mean +0.0129 (t 4.82), largest year +0.0293
+G1: PASSED
+canary: GPT ensemble, scores 20 days stale: census units IC +0.0041 (z 2.38): NOT about 0; actual returns IC +0.0067 (z 3.02): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+canary: GPT ensemble, dates permuted within year: census units IC +0.0040 (z 3.00): NOT about 0; actual returns IC +0.0067 (z 3.22): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+reference canary: 1-day reversal, 20 days stale: census units IC +0.0025 (z 1.27): about 0; actual returns IC +0.0025 (z 1.21): about 0
+reference canary: 1-day reversal, dates permuted: census units IC -0.0025 (z -0.39): about 0; actual returns IC -0.0011 (z 0.09): about 0
+wrote results/poc/summary.md and results/poc/summary.json (33 graded files)
+   summary took 0 s
+== done in 3643 s; tables in results/poc/summary.md
+== scripts/poc.sh  2026-10-19T00:24:55-05:00: years 2010-2023, seeds 0 1 2, null 2012,2017,2022; results results/poc, runs runs/poc
+   GPU: NVIDIA GeForce RTX 5080, 100 %, 1929 MiB, 16303 MiB
+   GPU process: 14215 chrome, 173 MiB
+   GPU process: 17188 slack, 167 MiB
+   GPU process: 59151 resources, 49 MiB
+   GPU process: 10287 snapd-desktop-integration, 8 MiB
+   GPU process: 2977855 nautilus, 85 MiB
+   GPU process: 3174645 c2, 456 MiB
+== grading: stockai-judge walk-forward, --start 2023-06-28, costs 0/5/20 bps, 1,000 random accounts
+   graded gpt_ensemble__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d0_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d1_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r1_d1_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded gpt_ensemble__r5_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d0_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d1_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_ensemble__r5_d1_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded gpt_seed0__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 6.10
+   graded gpt_seed1__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 5.22
+   graded gpt_seed2__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.46
+   graded gpt_null__r1_d0_uniform: Rank IC in actual returns: t positive in 1 of 3 years; combined across years z = 0.08
+   graded momentum_12_1__r5_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 2.55
+   graded momentum_12_1__r21_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 1.22
+   graded reversal5__r5_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+percentile ranks within each day: runs/poc/controls/gpt_ensemble_pct.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+   graded gpt_ensemble_pct__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r1_d0_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r1_d1_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r5_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded reversal5__r5_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+   graded reversal5__r1_d0_uniform: Rank IC in actual returns: t positive in 16 of 17 years; combined across years z = 4.24
+   graded vreversal1__r1_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   graded vreversal1__r1_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   grading took 55 s
+== controls: score canaries and the large-cap tripwire
+shifted 20 days later: runs/poc/controls/gpt_ensemble_shift20.npy (12,543,184 finite scores, decision days 2010-07-26..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/gpt_ensemble_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 3.02
+   graded canary_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 3.22
+shifted 250 days later: runs/poc/controls/gpt_ensemble_shift250.npy (11,194,215 finite scores, decision days 2011-06-27..2024-06-26)
+   graded canary_shift250__r1_d0_uniform: Rank IC in actual returns: t positive in 7 of 13 years; combined across years z = 1.59
+shifted 20 days later: runs/poc/controls/vreversal1_shift20.npy (12,588,779 finite scores, decision days 2010-06-25..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/vreversal1_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+-log trailing volatility (static reference): runs/poc/controls/lowvol.npy (13,366,139 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_vreversal1_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 1.21
+   graded canary_vreversal1_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = 0.09
+   graded lowvol__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.88
+shifted 1 days later: runs/poc/controls/gpt_ensemble_shift1.npy (12,657,484 finite scores, decision days 2010-06-28..2024-06-26)
+   graded decay_shift1__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.87
+tripwire runs/poc/gpt/scores_ensemble.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0129 (t 4.82, 3524 days); largest year mean +0.0293; not tripped (<= 0.05)
+tripwire runs/poc/gpt_null/scores_seed0.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0012 (t 0.31, 753 days); largest year mean +0.0084; not tripped (<= 0.05)
+tripwire runs/poc/baselines/lgbm/scores.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return -0.0009 (t -0.27, 3524 days); largest year mean +0.0156; not tripped (<= 0.05)
+tripwire runs/poc/baselines/reversal5.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0108 (t 3.52, 3524 days); largest year mean +0.0298; not tripped (<= 0.05)
+tripwire runs/poc/baselines/vreversal1.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0149 (t 5.76, 3524 days); largest year mean +0.0362; not tripped (<= 0.05)
+runs/poc/gpt/scores_ensemble.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.309
+  with log volatility (252 days): -0.468
+  with lgbm: +0.120
+  with reversal5: +0.081
+  with vreversal1: +0.309
+  with momentum_12_1: +0.072
+  with seed0: +0.926
+  with seed1: +0.871
+  with seed2: +0.902
+runs/poc/baselines/lgbm/scores.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.105
+  with log volatility (252 days): -0.045
+  with momentum_12_1: -0.678
+  with reversal5: +0.214
+  with vreversal1: +0.105
+   controls took 80 s
+== summary
+stockGPT, ensemble of the seeds              daily, delay 0, uniform      14 yrs  IC +0.0097 z   5.67  ICret +0.0124 z   5.85  LS   2.44 bps/d z   1.81  beat 4/4/3
+stockGPT, ensemble of the seeds              weekly, delay 0, uniform     14 yrs  IC +0.0029 z   0.98  ICret +0.0106 z   2.43  LS   0.01 bps/d z   0.33  beat 4/4/4
+stockGPT ensemble as daily percentile ranks (always 20 names), extra daily, delay 0, uniform      14 yrs  IC +0.0097 z   5.67  ICret +0.0124 z   5.85  LS   2.44 bps/d z   1.81  beat 3/3/3
+LightGBM                                     daily, delay 0, uniform      14 yrs  IC +0.0556 z  23.97  ICret -0.0022 z  -0.77  LS   5.49 bps/d z   2.99  beat 8/8/8
+LightGBM                                     weekly, delay 0, uniform     14 yrs  IC +0.1140 z  22.28  ICret -0.0037 z  -0.78  LS   1.03 bps/d z   0.32  beat 6/6/6
+5-day reversal                               weekly, delay 0, uniform     14 yrs  IC +0.0335 z   8.07  ICret +0.0145 z   3.05  LS   3.63 bps/d z   2.46  beat 6/6/6
+5-day reversal                               daily, delay 0, uniform      14 yrs  IC +0.0168 z   8.09  ICret +0.0088 z   3.67  LS   5.37 bps/d z   2.57  beat 10/10/9
+1-day census reversal (-v[d]), extra         daily, delay 0, uniform      14 yrs  IC +0.0126 z   6.08  ICret +0.0118 z   5.70  LS   1.92 bps/d z   1.90  beat 2/2/2
+12-1 momentum                                weekly, delay 0, uniform     14 yrs  IC -0.1135 z -19.76  ICret +0.0171 z   2.53  LS   1.46 bps/d z   1.14  beat 5/5/5
+12-1 momentum                                monthly, delay 0, uniform    14 yrs  IC -0.2217 z -22.37  ICret +0.0174 z   1.38  LS   1.39 bps/d z   0.98  beat 5/5/5
+G1 pass: gross signal: rank IC in actual returns, combined z >= 2: z = 5.85 (mean daily IC +0.0124, t > 0 in 13 of 14 years); census units z = 5.67 (IC +0.0097)
+G1 pass: nothing on the sign-flip null: combined |z| < 2 for both ICs: actual returns z = 0.08 (IC +0.0008); census units z = 0.21 (IC +0.0012); test years: 3
+G1 pass: no tripwire: large-cap daily rank IC vs next-day return <= 0.05: top 500 by dollar volume: mean +0.0129 (t 4.82), largest year +0.0293
+G1: PASSED
+canary: GPT ensemble, scores 20 days stale: census units IC +0.0041 (z 2.38): NOT about 0; actual returns IC +0.0067 (z 3.02): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+canary: GPT ensemble, dates permuted within year: census units IC +0.0040 (z 3.00): NOT about 0; actual returns IC +0.0067 (z 3.22): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+canary: GPT ensemble, scores a year (250 days) stale: census units IC +0.0012 (z 0.44): about 0; actual returns IC +0.0039 (z 1.59): about 0
+reference canary: 1-day reversal, 20 days stale: census units IC +0.0025 (z 1.27): about 0; actual returns IC +0.0025 (z 1.21): about 0
+reference canary: 1-day reversal, dates permuted: census units IC -0.0025 (z -0.39): about 0; actual returns IC -0.0011 (z 0.09): about 0
+wrote results/poc/summary.md and results/poc/summary.json (38 graded files)
+   summary took 0 s
+== done in 135 s; tables in results/poc/summary.md
+== scripts/poc.sh  2026-10-19T01:42:48-05:00: years 2010-2023, seeds 0 1 2, null 2012,2017,2022; results results/poc, runs runs/poc
+   GPU: NVIDIA GeForce RTX 5080, 1 %, 1431 MiB, 16303 MiB
+   GPU process: 14215 chrome, 176 MiB
+   GPU process: 17188 slack, 167 MiB
+   GPU process: 59151 resources, 49 MiB
+   GPU process: 10287 snapd-desktop-integration, 8 MiB
+   GPU process: 2977855 nautilus, 85 MiB
+== grading: stockai-judge walk-forward, --start 2023-06-28, costs 0/5/20 bps, 1,000 random accounts
+   graded gpt_ensemble__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded lgbm_ret__r1_d0_uniform: Rank IC in actual returns: t positive in 14 of 14 years; combined across years z = 9.15
+   graded gpt_ensemble__r1_d0_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d0_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded lgbm_ret__r1_d0_volatility: Rank IC in actual returns: t positive in 14 of 14 years; combined across years z = 9.15
+   graded gpt_ensemble__r1_d1_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_uniform: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded lgbm_ret__r1_d1_uniform: Rank IC in actual returns: t positive in 14 of 14 years; combined across years z = 9.15
+   graded gpt_ensemble__r1_d1_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded lgbm__r1_d1_volatility: Rank IC in actual returns: t positive in 5 of 14 years; combined across years z = -0.77
+   graded lgbm_ret__r1_d1_volatility: Rank IC in actual returns: t positive in 14 of 14 years; combined across years z = 9.15
+   graded gpt_ensemble__r5_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded lgbm_ret__r5_d0_uniform: Rank IC in actual returns: t positive in 9 of 14 years; combined across years z = 2.71
+   graded gpt_ensemble__r5_d0_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d0_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded lgbm_ret__r5_d0_volatility: Rank IC in actual returns: t positive in 9 of 14 years; combined across years z = 2.71
+   graded gpt_ensemble__r5_d1_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded lgbm_ret__r5_d1_uniform: Rank IC in actual returns: t positive in 9 of 14 years; combined across years z = 2.71
+   graded gpt_ensemble__r5_d1_volatility: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded lgbm__r5_d1_volatility: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = -0.78
+   graded lgbm_ret__r5_d1_volatility: Rank IC in actual returns: t positive in 9 of 14 years; combined across years z = 2.71
+   graded gpt_seed0__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 6.10
+   graded gpt_seed1__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 5.22
+   graded gpt_seed2__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.46
+   graded gpt_null__r1_d0_uniform: Rank IC in actual returns: t positive in 1 of 3 years; combined across years z = 0.08
+   graded momentum_12_1__r5_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 2.55
+   graded momentum_12_1__r21_d0_uniform: Rank IC in actual returns: t positive in 13 of 17 years; combined across years z = 1.22
+   graded reversal5__r5_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+percentile ranks within each day: runs/poc/controls/gpt_ensemble_pct.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+   graded gpt_ensemble_pct__r1_d0_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r1_d0_volatility: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r1_d1_uniform: Rank IC in actual returns: t positive in 13 of 14 years; combined across years z = 5.85
+   graded gpt_ensemble_pct__r5_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 2.43
+   graded reversal5__r5_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 3.39
+   graded reversal5__r1_d0_uniform: Rank IC in actual returns: t positive in 16 of 17 years; combined across years z = 4.24
+   graded vreversal1__r1_d0_uniform: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   graded vreversal1__r1_d0_volatility: Rank IC in actual returns: t positive in 14 of 17 years; combined across years z = 6.47
+   grading took 61 s
+== controls: score canaries and the large-cap tripwire
+shifted 20 days later: runs/poc/controls/gpt_ensemble_shift20.npy (12,543,184 finite scores, decision days 2010-07-26..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/gpt_ensemble_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 12 of 14 years; combined across years z = 3.02
+   graded canary_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 3.22
+shifted 250 days later: runs/poc/controls/gpt_ensemble_shift250.npy (11,194,215 finite scores, decision days 2011-06-27..2024-06-26)
+   graded canary_shift250__r1_d0_uniform: Rank IC in actual returns: t positive in 7 of 13 years; combined across years z = 1.59
+shifted 20 days later: runs/poc/controls/vreversal1_shift20.npy (12,588,779 finite scores, decision days 2010-06-25..2024-06-26)
+permuted within years (seed 0): runs/poc/controls/vreversal1_permuted.npy (12,663,511 finite scores, decision days 2010-06-25..2024-06-26)
+-log trailing volatility (static reference): runs/poc/controls/lowvol.npy (13,366,139 finite scores, decision days 2010-06-25..2024-06-26)
+   graded canary_vreversal1_shift20__r1_d0_uniform: Rank IC in actual returns: t positive in 10 of 14 years; combined across years z = 1.21
+   graded canary_vreversal1_permuted__r1_d0_uniform: Rank IC in actual returns: t positive in 7 of 14 years; combined across years z = 0.09
+   graded lowvol__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.88
+shifted 1 days later: runs/poc/controls/gpt_ensemble_shift1.npy (12,657,484 finite scores, decision days 2010-06-28..2024-06-26)
+   graded decay_shift1__r1_d0_uniform: Rank IC in actual returns: t positive in 11 of 14 years; combined across years z = 2.87
+tripwire runs/poc/gpt/scores_ensemble.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0129 (t 4.82, 3524 days); largest year mean +0.0293; not tripped (<= 0.05)
+tripwire runs/poc/gpt_null/scores_seed0.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0012 (t 0.31, 753 days); largest year mean +0.0084; not tripped (<= 0.05)
+tripwire runs/poc/baselines/lgbm/scores.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return -0.0009 (t -0.27, 3524 days); largest year mean +0.0156; not tripped (<= 0.05)
+tripwire runs/poc/baselines/lgbm_ret/scores.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0249 (t 9.00, 3524 days); largest year mean +0.0503; TRIPPED (> 0.05): [2021]
+tripwire runs/poc/baselines/reversal5.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0108 (t 3.52, 3524 days); largest year mean +0.0298; not tripped (<= 0.05)
+tripwire runs/poc/baselines/vreversal1.npy: top 500 by 63-day dollar volume, mean daily rank IC vs next-day return +0.0149 (t 5.76, 3524 days); largest year mean +0.0362; not tripped (<= 0.05)
+runs/poc/gpt/scores_ensemble.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.309
+  with log volatility (252 days): -0.468
+  with lgbm: +0.120
+  with reversal5: +0.081
+  with vreversal1: +0.309
+  with momentum_12_1: +0.072
+  with seed0: +0.926
+  with seed1: +0.871
+  with seed2: +0.902
+runs/poc/baselines/lgbm/scores.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.105
+  with log volatility (252 days): -0.045
+  with momentum_12_1: -0.678
+  with reversal5: +0.214
+  with vreversal1: +0.105
+runs/poc/baselines/lgbm_ret/scores.npy: mean daily rank correlation over 2010-2023 test days
+  with v[d]: -0.240
+  with log volatility (252 days): -0.359
+  with momentum_12_1: +0.229
+  with reversal5: +0.141
+  with vreversal1: +0.240
+  with gpt_ensemble: +0.346
+  with lgbm: +0.088
+   controls took 86 s
+== summary
+stockGPT, ensemble of the seeds              daily, delay 0, uniform      14 yrs  IC +0.0097 z   5.67  ICret +0.0124 z   5.85  LS   2.44 bps/d z   1.81  beat 4/4/3
+stockGPT, ensemble of the seeds              weekly, delay 0, uniform     14 yrs  IC +0.0029 z   0.98  ICret +0.0106 z   2.43  LS   0.01 bps/d z   0.33  beat 4/4/4
+stockGPT ensemble as daily percentile ranks (always 20 names), extra daily, delay 0, uniform      14 yrs  IC +0.0097 z   5.67  ICret +0.0124 z   5.85  LS   2.44 bps/d z   1.81  beat 3/3/3
+LightGBM                                     daily, delay 0, uniform      14 yrs  IC +0.0556 z  23.97  ICret -0.0022 z  -0.77  LS   5.49 bps/d z   2.99  beat 8/8/8
+LightGBM                                     weekly, delay 0, uniform     14 yrs  IC +0.1140 z  22.28  ICret -0.0037 z  -0.78  LS   1.03 bps/d z   0.32  beat 6/6/6
+LightGBM, actual-return target (added after the POC run), extra daily, delay 0, uniform      14 yrs  IC +0.0012 z   0.37  ICret +0.0210 z   9.15  LS  10.24 bps/d z   6.10  beat 10/10/10
+LightGBM, actual-return target (added after the POC run), extra weekly, delay 0, uniform     14 yrs  IC -0.0228 z  -5.31  ICret +0.0145 z   2.71  LS   3.79 bps/d z   2.32  beat 6/6/6
+5-day reversal                               weekly, delay 0, uniform     14 yrs  IC +0.0335 z   8.07  ICret +0.0145 z   3.05  LS   3.63 bps/d z   2.46  beat 6/6/6
+5-day reversal                               daily, delay 0, uniform      14 yrs  IC +0.0168 z   8.09  ICret +0.0088 z   3.67  LS   5.37 bps/d z   2.57  beat 10/10/9
+1-day census reversal (-v[d]), extra         daily, delay 0, uniform      14 yrs  IC +0.0126 z   6.08  ICret +0.0118 z   5.70  LS   1.92 bps/d z   1.90  beat 2/2/2
+12-1 momentum                                weekly, delay 0, uniform     14 yrs  IC -0.1135 z -19.76  ICret +0.0171 z   2.53  LS   1.46 bps/d z   1.14  beat 5/5/5
+12-1 momentum                                monthly, delay 0, uniform    14 yrs  IC -0.2217 z -22.37  ICret +0.0174 z   1.38  LS   1.39 bps/d z   0.98  beat 5/5/5
+G1 pass: gross signal: rank IC in actual returns, combined z >= 2: z = 5.85 (mean daily IC +0.0124, t > 0 in 13 of 14 years); census units z = 5.67 (IC +0.0097)
+G1 pass: nothing on the sign-flip null: combined z between -2 and 2 for both ICs: actual returns z = 0.08 (IC +0.0008); census units z = 0.21 (IC +0.0012); test years: 3
+G1 pass: no tripwire: large-cap daily rank IC vs next-day return <= 0.05: top 500 by dollar volume: mean +0.0129 (t 4.82), largest year +0.0293
+G1: PASSED
+canary: GPT ensemble, scores 20 days stale: census units IC +0.0041 (z 2.38): NOT about 0; actual returns IC +0.0067 (z 3.02): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+canary: GPT ensemble, dates permuted within year: census units IC +0.0040 (z 3.00): NOT about 0; actual returns IC +0.0067 (z 3.22): NOT about 0 (the static -log volatility score alone: actual returns IC +0.0128, z 2.88; census units z 0.62)
+canary: GPT ensemble, scores a year (250 days) stale: census units IC +0.0012 (z 0.44): about 0; actual returns IC +0.0039 (z 1.59): about 0
+reference canary: 1-day reversal, 20 days stale: census units IC +0.0025 (z 1.27): about 0; actual returns IC +0.0025 (z 1.21): about 0
+reference canary: 1-day reversal, dates permuted: census units IC -0.0025 (z -0.39): about 0; actual returns IC -0.0011 (z 0.09): about 0
+wrote results/poc/summary.md and results/poc/summary.json (46 graded files)
+   summary took 0 s
+== done in 147 s; tables in results/poc/summary.md

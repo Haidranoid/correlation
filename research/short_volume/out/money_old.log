@@ -1,0 +1,9 @@
+[    0.3s] old scored days 2385 median names 1475 first 2016-01-04
+[    1.4s] delay 0 uniform: change +6.02 (ahead 8/10, se 2.15); at 0/5/20 bps [6.02, 5.75, 5.03]
+[    1.4s]     years 10; beat random at p<0.1 (0 bps: 1, 5 bps: 1, 20 bps: 1) of 10; change over random +6.0 pts/yr (se 2.1, ahead 8/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day
+[    2.6s] delay 0 volatility: change +6.55 (ahead 8/10, se 2.27); at 0/5/20 bps [6.55, 6.3, 5.62]
+[    2.6s]     years 10; beat random at p<0.1 (0 bps: 3, 5 bps: 3, 20 bps: 3) of 10; change over random +6.5 pts/yr (se 2.3, ahead 8/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day
+[    3.7s] delay 1 uniform: change +6.22 (ahead 9/10, se 1.55); at 0/5/20 bps [6.22, 5.95, 5.2]
+[    3.7s]     years 10; beat random at p<0.1 (0 bps: 3, 5 bps: 2, 20 bps: 2) of 10; change over random +6.2 pts/yr (se 1.6, ahead 9/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day
+[    4.8s] delay 1 volatility: change +6.14 (ahead 9/10, se 1.66); at 0/5/20 bps [6.14, 5.91, 5.26]
+[    4.8s]     years 10; beat random at p<0.1 (0 bps: 2, 5 bps: 2, 20 bps: 2) of 10; change over random +6.1 pts/yr (se 1.7, ahead 9/10); IC actual returns z +4.54; long-short 2.45 bps/day z +4.34, turnover 67%, costs 0.54 x c bps/day

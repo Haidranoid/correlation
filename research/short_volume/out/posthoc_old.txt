@@ -1,0 +1,6 @@
+U train : corr(G, -x5) +0.182; IC reversal +0.0178 (t +2.46); IC G +0.0093 (t +4.02); IC G after reversal +0.0063 (t +2.60); long side +8.2 bps/wk (t +3.42), short side -2.9 (t -1.21); 284 wk
+U test1 : corr(G, -x5) +0.087; IC reversal +0.0084 (t +0.92); IC G +0.0062 (t +2.89); IC G after reversal +0.0055 (t +2.33); long side +7.3 bps/wk (t +2.94), short side -5.9 (t -2.11); 202 wk
+U test3 : corr(G, -x5) +0.097; IC reversal +0.0147 (t +1.51); IC G +0.0023 (t +1.32); IC G after reversal +0.0013 (t +0.68); long side +2.0 bps/wk (t +0.70), short side -4.5 (t -1.57); 274 wk
+B train : corr(G, -x5) +0.213; IC reversal +0.0174 (t +1.97); IC G +0.0157 (t +4.63); IC G after reversal +0.0125 (t +3.58); long side +8.4 bps/wk (t +2.56), short side -6.9 (t -2.24); 284 wk
+B test1 : corr(G, -x5) +0.128; IC reversal +0.0085 (t +0.77); IC G +0.0049 (t +1.39); IC G after reversal +0.0040 (t +1.14); long side +11.9 bps/wk (t +3.15), short side +1.7 (t +0.37); 202 wk
+B test3 : corr(G, -x5) +0.132; IC reversal +0.0144 (t +1.16); IC G +0.0016 (t +0.54); IC G after reversal +0.0013 (t +0.43); long side +6.7 bps/wk (t +1.37), short side -1.8 (t -0.39); 274 wk

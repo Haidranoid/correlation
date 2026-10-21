@@ -1,0 +1,40 @@
+10:54:31 old N 8503 T 5911
+10:54:33 rows 0..600
+10:54:35 rows 600..1200
+10:54:37 rows 1200..1800
+10:54:39 rows 1800..2400
+10:54:41 rows 2400..3000
+10:54:42 rows 3000..3600
+10:54:44 rows 3600..4200
+10:54:46 rows 4200..4800
+10:54:48 rows 4800..5400
+10:54:50 rows 5400..6000
+10:54:52 rows 6000..6600
+10:54:54 rows 6600..7200
+10:54:56 rows 7200..7800
+10:54:57 rows 7800..8400
+10:54:58 rows 8400..8503
+10:54:58 ret1: finite share on the last day 0.90
+10:54:58 ret5: finite share on the last day 0.89
+10:54:58 ret21: finite share on the last day 0.88
+10:54:58 ret63: finite share on the last day 0.85
+10:54:58 ret126: finite share on the last day 0.82
+10:54:59 ret252: finite share on the last day 0.76
+10:54:59 mom12_1: finite share on the last day 0.77
+10:54:59 vol21: finite share on the last day 0.85
+10:54:59 vol63: finite share on the last day 0.83
+10:54:59 vr5_60: finite share on the last day 0.88
+10:54:59 vr21_252: finite share on the last day 0.82
+10:54:59 dvol21: finite share on the last day 0.90
+10:54:59 hl5: finite share on the last day 0.91
+10:54:59 hl21: finite share on the last day 0.89
+10:54:59 clv5: finite share on the last day 0.91
+10:54:59 gap5: finite share on the last day 0.88
+10:54:59 intra5: finite share on the last day 0.91
+10:54:59 maxret21: finite share on the last day 0.85
+10:54:59 skew63: finite share on the last day 0.83
+10:54:59 beta252: finite share on the last day 0.77
+10:54:59 mcorr252: finite share on the last day 0.77
+10:54:59 dist_high252: finite share on the last day 0.77
+10:54:59 done
+exit 0

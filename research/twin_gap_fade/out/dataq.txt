@@ -1,0 +1,15 @@
+export 8503 x 5911 from 2008 index 1511 2008-01-02
+stock-days with DV>=5M and close>=5 from 2008: 7280980
+open missing (NaN): 0.0
+open <= 0: 0.0
+open == close: 0.010444610478259795
+open == high == low == close: 6.908410680979758e-05
+open == previous close: 0.03693252831349626
+open outside [low, high] by > 0.1%: 3.1589154207263307e-06
+store close vs export close differ by > 0.5%: 0.0
+|overnight log| > 0.5: 1864  |intraday log| > 0.5: 1448
+2008 liquid stock-days 259580 open==close 0.0056 open==prev close 0.0325 open NaN 0.0
+2012 liquid stock-days 277488 open==close 0.0119 open==prev close 0.035 open NaN 0.0
+2016 liquid stock-days 376511 open==close 0.0118 open==prev close 0.0404 open NaN 0.0
+2020 liquid stock-days 509448 open==close 0.0071 open==prev close 0.024 open NaN 0.0
+2024 liquid stock-days 620020 open==close 0.0097 open==prev close 0.0381 open NaN 0.0

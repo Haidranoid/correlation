@@ -1,0 +1,113 @@
+all test1 2007-2019      Hidden text peers           : 151 months, book 292 (legs 29); gross +0.063% (t +0.19), net -0.112% (t -0.33), sd 4.16%, 72 up; long-all -0.100% (t -0.46), short-all -0.163% (t -0.82); turnover 3.51
+all test1 2007-2019      Visible text peers          : 151 months, book 292 (legs 29); gross +0.099% (t +0.31), net -0.077% (t -0.24), sd 3.99%, 69 up; long-all -0.063% (t -0.26), short-all -0.162% (t -0.59); turnover 3.52
+all test1 2007-2019      All text peers              : 151 months, book 292 (legs 29); gross +0.026% (t +0.08), net -0.151% (t -0.44), sd 4.17%, 70 up; long-all -0.224% (t -0.92), short-all -0.250% (t -1.24); turnover 3.53
+all test1 2007-2019      Correlation peers (top 20)  : 151 months, book 292 (legs 29); gross -0.167% (t -0.44), net -0.345% (t -0.91), sd 4.68%, 74 up; long-all -0.217% (t -0.77), short-all -0.050% (t -0.18); turnover 3.56
+all test1 2007-2019      H-V                         : 151 months, net -0.036% (t -0.09), 73 up
+all test1 2007-2019      H-A                         : 151 months, net +0.038% (t +0.14), 70 up
+all test1 2007-2019      H-R                         : 151 months, net +0.233% (t +0.54), 80 up
+
+all test3 2020-2022-05   Hidden text peers           : 29 months, book 329 (legs 32); gross +0.447% (t +0.37), net +0.275% (t +0.23), sd 6.45%, 15 up; long-all +0.171% (t +0.22), short-all -0.276% (t -0.41); turnover 3.43
+all test3 2020-2022-05   Visible text peers          : 29 months, book 329 (legs 32); gross +0.836% (t +0.64), net +0.663% (t +0.50), sd 7.09%, 16 up; long-all -0.255% (t -0.28), short-all -1.091% (t -1.49); turnover 3.47
+all test3 2020-2022-05   All text peers              : 29 months, book 329 (legs 32); gross +0.551% (t +0.40), net +0.377% (t +0.27), sd 7.43%, 17 up; long-all +0.221% (t +0.26), short-all -0.330% (t -0.43); turnover 3.48
+all test3 2020-2022-05   Correlation peers (top 20)  : 29 months, book 329 (legs 32); gross +0.483% (t +0.33), net +0.308% (t +0.21), sd 7.98%, 12 up; long-all -0.251% (t -0.31), short-all -0.734% (t -0.69); turnover 3.51
+all test3 2020-2022-05   H-V                         : 29 months, net -0.388% (t -0.31), 11 up
+all test3 2020-2022-05   H-A                         : 29 months, net -0.101% (t -0.14), 15 up
+all test3 2020-2022-05   H-R                         : 29 months, net -0.033% (t -0.02), 17 up
+
+all 2007-2009            Hidden text peers           : 31 months, book 140 (legs 14); gross +1.348% (t +1.07), net +1.173% (t +0.93), sd 7.01%, 21 up; long-all +0.188% (t +0.25), short-all -1.160% (t -1.70); turnover 3.50
+all 2007-2009            Visible text peers          : 31 months, book 140 (legs 14); gross +0.175% (t +0.14), net +0.002% (t +0.00), sd 6.88%, 16 up; long-all -0.133% (t -0.14), short-all -0.308% (t -0.27); turnover 3.45
+all 2007-2009            All text peers              : 31 months, book 140 (legs 14); gross +0.682% (t +0.60), net +0.510% (t +0.44), sd 6.38%, 20 up; long-all -0.690% (t -0.81), short-all -1.373% (t -2.15); turnover 3.45
+all 2007-2009            Correlation peers (top 20)  : 31 months, book 140 (legs 14); gross -0.710% (t -0.54), net -0.885% (t -0.67), sd 7.31%, 15 up; long-all -0.209% (t -0.20), short-all +0.502% (t +0.46); turnover 3.49
+all 2007-2009            H-V                         : 31 months, net +1.171% (t +0.76), 18 up
+all 2007-2009            H-A                         : 31 months, net +0.664% (t +0.58), 15 up
+all 2007-2009            H-R                         : 31 months, net +2.058% (t +1.26), 20 up
+
+all 2010-2014            Hidden text peers           : 60 months, book 288 (legs 28); gross +0.029% (t +0.08), net -0.147% (t -0.43), sd 2.67%, 26 up; long-all -0.071% (t -0.30), short-all -0.100% (t -0.44); turnover 3.51
+all 2010-2014            Visible text peers          : 60 months, book 288 (legs 28); gross +0.460% (t +1.45), net +0.282% (t +0.89), sd 2.45%, 26 up; long-all +0.158% (t +0.69), short-all -0.302% (t -1.30); turnover 3.56
+all 2010-2014            All text peers              : 60 months, book 288 (legs 28); gross +0.334% (t +0.93), net +0.155% (t +0.43), sd 2.78%, 28 up; long-all +0.166% (t +0.64), short-all -0.168% (t -0.74); turnover 3.57
+all 2010-2014            Correlation peers (top 20)  : 60 months, book 288 (legs 28); gross +0.614% (t +1.26), net +0.435% (t +0.89), sd 3.78%, 30 up; long-all +0.113% (t +0.37), short-all -0.501% (t -1.71); turnover 3.58
+all 2010-2014            H-V                         : 60 months, net -0.429% (t -1.17), 26 up
+all 2010-2014            H-A                         : 60 months, net -0.302% (t -1.03), 27 up
+all 2010-2014            H-R                         : 60 months, net -0.582% (t -1.07), 28 up
+
+all 2015-2019            Hidden text peers           : 60 months, book 374 (legs 37); gross -0.566% (t -1.34), net -0.742% (t -1.76), sd 3.27%, 25 up; long-all -0.278% (t -0.92), short-all +0.288% (t +1.09); turnover 3.51
+all 2015-2019            Visible text peers          : 60 months, book 374 (legs 37); gross -0.300% (t -0.73), net -0.476% (t -1.16), sd 3.19%, 27 up; long-all -0.248% (t -0.78), short-all +0.053% (t +0.19); turnover 3.52
+all 2015-2019            All text peers              : 60 months, book 374 (legs 37); gross -0.621% (t -1.24), net -0.797% (t -1.59), sd 3.89%, 22 up; long-all -0.372% (t -1.09), short-all +0.249% (t +0.85); turnover 3.53
+all 2015-2019            Correlation peers (top 20)  : 60 months, book 374 (legs 37); gross -0.668% (t -1.42), net -0.846% (t -1.79), sd 3.65%, 29 up; long-all -0.551% (t -1.58), short-all +0.117% (t +0.39); turnover 3.57
+all 2015-2019            H-V                         : 60 months, net -0.266% (t -0.76), 29 up
+all 2015-2019            H-A                         : 60 months, net +0.056% (t +0.24), 28 up
+all 2015-2019            H-R                         : 60 months, net +0.105% (t +0.27), 32 up
+
+all all 2007-2022-05     Hidden text peers           : 180 months, book 298 (legs 29); gross +0.125% (t +0.37), net -0.050% (t -0.15), sd 4.59%, 87 up; long-all -0.056% (t -0.26), short-all -0.181% (t -0.92); turnover 3.49
+all all 2007-2022-05     Visible text peers          : 180 months, book 298 (legs 29); gross +0.218% (t +0.63), net +0.042% (t +0.12), sd 4.62%, 85 up; long-all -0.094% (t -0.37), short-all -0.312% (t -1.21); turnover 3.51
+all all 2007-2022-05     All text peers              : 180 months, book 298 (legs 29); gross +0.110% (t +0.31), net -0.066% (t -0.18), sd 4.82%, 87 up; long-all -0.152% (t -0.62), short-all -0.263% (t -1.26); turnover 3.52
+all all 2007-2022-05     Correlation peers (top 20)  : 180 months, book 298 (legs 29); gross -0.062% (t -0.16), net -0.240% (t -0.60), sd 5.33%, 86 up; long-all -0.222% (t -0.83), short-all -0.160% (t -0.56); turnover 3.55
+all all 2007-2022-05     H-V                         : 180 months, net -0.092% (t -0.25), 84 up
+all all 2007-2022-05     H-A                         : 180 months, net +0.016% (t +0.06), 85 up
+all all 2007-2022-05     H-R                         : 180 months, net +0.190% (t +0.43), 97 up
+
+big test1 2007-2019      Hidden text peers           : 151 months, book 136 (legs 13); gross -0.269% (t -0.67), net -0.444% (t -1.10), sd 4.97%, 71 up; long-all -0.156% (t -0.53), short-all +0.113% (t +0.55); turnover 3.50
+big test1 2007-2019      Visible text peers          : 151 months, book 136 (legs 13); gross +0.350% (t +0.88), net +0.174% (t +0.44), sd 4.89%, 84 up; long-all +0.096% (t +0.36), short-all -0.254% (t -0.89); turnover 3.52
+big test1 2007-2019      All text peers              : 151 months, book 136 (legs 13); gross -0.250% (t -0.64), net -0.425% (t -1.09), sd 4.81%, 74 up; long-all -0.471% (t -1.69), short-all -0.221% (t -1.00); turnover 3.52
+big test1 2007-2019      Correlation peers (top 20)  : 151 months, book 136 (legs 13); gross -0.178% (t -0.39), net -0.356% (t -0.77), sd 5.66%, 67 up; long-all -0.351% (t -1.15), short-all -0.173% (t -0.60); turnover 3.55
+big test1 2007-2019      H-V                         : 151 months, net -0.618% (t -1.31), 71 up
+big test1 2007-2019      H-A                         : 151 months, net -0.019% (t -0.06), 74 up
+big test1 2007-2019      H-R                         : 151 months, net -0.088% (t -0.18), 72 up
+
+big test3 2020-2022-05   Hidden text peers           : 29 months, book 95 (legs 9); gross +0.459% (t +0.27), net +0.287% (t +0.17), sd 9.16%, 17 up; long-all -0.039% (t -0.03), short-all -0.498% (t -0.51); turnover 3.44
+big test3 2020-2022-05   Visible text peers          : 29 months, book 95 (legs 9); gross -0.072% (t -0.05), net -0.247% (t -0.18), sd 7.54%, 13 up; long-all -0.114% (t -0.11), short-all -0.042% (t -0.07); turnover 3.50
+big test3 2020-2022-05   All text peers              : 29 months, book 95 (legs 9); gross -0.128% (t -0.09), net -0.304% (t -0.21), sd 7.93%, 16 up; long-all +0.087% (t +0.09), short-all +0.215% (t +0.23); turnover 3.52
+big test3 2020-2022-05   Correlation peers (top 20)  : 29 months, book 95 (legs 9); gross +1.001% (t +0.64), net +0.827% (t +0.53), sd 8.39%, 15 up; long-all -0.226% (t -0.22), short-all -1.227% (t -1.27); turnover 3.48
+big test3 2020-2022-05   H-V                         : 29 months, net +0.534% (t +0.30), 16 up
+big test3 2020-2022-05   H-A                         : 29 months, net +0.591% (t +0.44), 18 up
+big test3 2020-2022-05   H-R                         : 29 months, net -0.540% (t -0.32), 15 up
+
+big 2007-2009            Hidden text peers           : 31 months, book 90 (legs 9); gross +0.366% (t +0.23), net +0.193% (t +0.12), sd 8.81%, 15 up; long-all -0.045% (t -0.04), short-all -0.411% (t -0.64); turnover 3.45
+big 2007-2009            Visible text peers          : 31 months, book 90 (legs 9); gross +0.818% (t +0.52), net +0.646% (t +0.41), sd 8.80%, 20 up; long-all +0.182% (t +0.18), short-all -0.635% (t -0.54); turnover 3.44
+big 2007-2009            All text peers              : 31 months, book 90 (legs 9); gross -0.028% (t -0.02), net -0.199% (t -0.15), sd 7.25%, 15 up; long-all -0.984% (t -0.99), short-all -0.956% (t -1.51); turnover 3.42
+big 2007-2009            Correlation peers (top 20)  : 31 months, book 90 (legs 9); gross -1.537% (t -0.98), net -1.711% (t -1.09), sd 8.70%, 14 up; long-all -1.241% (t -1.16), short-all +0.296% (t +0.29); turnover 3.48
+big 2007-2009            H-V                         : 31 months, net -0.453% (t -0.24), 17 up
+big 2007-2009            H-A                         : 31 months, net +0.392% (t +0.31), 15 up
+big 2007-2009            H-R                         : 31 months, net +1.904% (t +1.03), 17 up
+
+big 2010-2014            Hidden text peers           : 60 months, book 153 (legs 15); gross -0.234% (t -0.58), net -0.410% (t -1.02), sd 3.12%, 32 up; long-all -0.013% (t -0.04), short-all +0.221% (t +0.78); turnover 3.52
+big 2010-2014            Visible text peers          : 60 months, book 153 (legs 15); gross +0.652% (t +1.84), net +0.474% (t +1.34), sd 2.74%, 34 up; long-all +0.252% (t +0.95), short-all -0.400% (t -1.55); turnover 3.56
+big 2010-2014            All text peers              : 60 months, book 153 (legs 15); gross +0.251% (t +0.59), net +0.073% (t +0.17), sd 3.29%, 31 up; long-all -0.012% (t -0.04), short-all -0.263% (t -0.92); turnover 3.57
+big 2010-2014            Correlation peers (top 20)  : 60 months, book 153 (legs 15); gross +0.788% (t +1.35), net +0.609% (t +1.04), sd 4.52%, 28 up; long-all +0.324% (t +0.86), short-all -0.464% (t -1.38); turnover 3.58
+big 2010-2014            H-V                         : 60 months, net -0.884% (t -1.90), 27 up
+big 2010-2014            H-A                         : 60 months, net -0.483% (t -1.52), 28 up
+big 2010-2014            H-R                         : 60 months, net -1.019% (t -1.57), 28 up
+
+big 2015-2019            Hidden text peers           : 60 months, book 143 (legs 14); gross -0.631% (t -1.35), net -0.807% (t -1.72), sd 3.63%, 24 up; long-all -0.357% (t -1.09), short-all +0.274% (t +1.00); turnover 3.51
+big 2015-2019            Visible text peers          : 60 months, book 143 (legs 14); gross -0.192% (t -0.41), net -0.369% (t -0.78), sd 3.65%, 30 up; long-all -0.103% (t -0.31), short-all +0.089% (t +0.31); turnover 3.53
+big 2015-2019            All text peers              : 60 months, book 143 (legs 14); gross -0.865% (t -1.47), net -1.041% (t -1.77), sd 4.55%, 28 up; long-all -0.665% (t -1.78), short-all +0.200% (t +0.58); turnover 3.52
+big 2015-2019            Correlation peers (top 20)  : 60 months, book 143 (legs 14); gross -0.443% (t -0.76), net -0.620% (t -1.06), sd 4.54%, 25 up; long-all -0.566% (t -1.52), short-all -0.124% (t -0.32); turnover 3.56
+big 2015-2019            H-V                         : 60 months, net -0.438% (t -0.89), 27 up
+big 2015-2019            H-A                         : 60 months, net +0.234% (t +0.66), 31 up
+big 2015-2019            H-R                         : 60 months, net -0.186% (t -0.38), 27 up
+
+big all 2007-2022-05     Hidden text peers           : 180 months, book 130 (legs 12); gross -0.152% (t -0.35), net -0.326% (t -0.75), sd 5.82%, 88 up; long-all -0.137% (t -0.45), short-all +0.014% (t +0.06); turnover 3.49
+big all 2007-2022-05     Visible text peers          : 180 months, book 130 (legs 12); gross +0.282% (t +0.70), net +0.106% (t +0.27), sd 5.38%, 97 up; long-all +0.063% (t +0.22), short-all -0.220% (t -0.85); turnover 3.52
+big all 2007-2022-05     All text peers              : 180 months, book 130 (legs 12); gross -0.230% (t -0.57), net -0.406% (t -1.01), sd 5.41%, 90 up; long-all -0.381% (t -1.35), short-all -0.151% (t -0.63); turnover 3.52
+big all 2007-2022-05     Correlation peers (top 20)  : 180 months, book 130 (legs 12); gross +0.012% (t +0.03), net -0.165% (t -0.36), sd 6.17%, 82 up; long-all -0.331% (t -1.08), short-all -0.343% (t -1.19); turnover 3.54
+big all 2007-2022-05     H-V                         : 180 months, net -0.433% (t -0.89), 87 up
+big all 2007-2022-05     H-A                         : 180 months, net +0.080% (t +0.23), 92 up
+big all 2007-2022-05     H-R                         : 180 months, net -0.161% (t -0.32), 87 up
+
+by formation year (all firms), net % a month: H, V, A, R, H-V, firms per formation
+  2007: +0.66, +2.85, +1.45, +2.36, -2.19, 30 (H up 5 of 7)
+  2008: +3.04, -0.27, +0.77, -2.57, +3.31, 171 (H up 7 of 12)
+  2009: -0.39, -1.38, -0.30, -1.09, +1.00, 169 (H up 9 of 12)
+  2010: +0.56, +1.06, +0.80, +1.14, -0.50, 226 (H up 5 of 12)
+  2011: +0.30, +0.11, +0.55, +0.23, +0.19, 266 (H up 5 of 12)
+  2012: -1.53, -0.73, -0.87, -0.75, -0.81, 274 (H up 4 of 12)
+  2013: -0.34, +1.00, +0.46, +1.08, -1.33, 307 (H up 6 of 12)
+  2014: +0.27, -0.03, -0.17, +0.47, +0.30, 365 (H up 6 of 12)
+  2015: -1.20, +0.50, -0.74, +0.63, -1.70, 357 (H up 5 of 12)
+  2016: -0.89, -0.28, -0.46, -1.19, -0.61, 344 (H up 4 of 12)
+  2017: -0.99, -1.27, -1.52, -1.50, +0.28, 362 (H up 3 of 12)
+  2018: +0.17, -0.30, -0.23, -1.11, +0.48, 404 (H up 7 of 12)
+  2019: -0.80, -1.02, -1.04, -1.06, +0.22, 405 (H up 6 of 12)
+  2020: +0.95, +1.59, +2.15, +2.52, -0.64, 366 (H up 7 of 12)
+  2021: -0.43, +0.38, -0.89, -1.25, -0.82, 315 (H up 6 of 12)
+  2022: +0.36, -0.88, -0.86, -1.27, +1.24, 271 (H up 2 of 5)

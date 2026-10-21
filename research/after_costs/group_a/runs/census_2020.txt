@@ -1,0 +1,17 @@
+--store /home/bhoult/.local/share/correlation2/experiments/after_costs/group_a/stores/old_cut_2021-06-28 census holdout --name main --family census --start 2020-06-28 --costs 0,5,20
+
+Holdout 2020-06-29 .. 2021-06-25 (251 trading days), 1s
+65 of the run's 285 correlation periods aren't covered exactly by today's price data, so they are left out.
+147 of the run's stocks are no longer in today's data, so pairs with them are left out.
+Family census, rebalanced every 1 trading day(s): 81900 pairs from 4 correlation period(s) that ended before the holdout; 1773 stocks can be picked
+Picks beat the market over their holding period: 51.0% of 5020 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0051, t = +2.40
+Long-short top/bottom 10%: 3.10 bps/day gross, Sharpe 1.53, t = 1.52, book turnover 41% per rebalance
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          14430     44.3%
+Buy and hold QQQ (Nasdaq-100)                       14630     46.3%
+Buy and hold all 1773 candidates                    17234     72.3%
+Picks, no trading costs                             19254     92.5%   random guessers: median 17311, 10.2% did at least as well (p = 0.102)
+Picks, 5 bps per trade                              16831     68.3%   random guessers: median 15146, 10.3% did at least as well (p = 0.103)
+Picks, 20 bps per trade                             11237     12.4%   random guessers: median 10139, 11.0% did at least as well (p = 0.110)

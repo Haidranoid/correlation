@@ -1,0 +1,18 @@
+09:01:43 old export 8503 5911 2001-12-31 2025-06-27
+09:01:43 twins 270 refreshes
+09:01:43 evaluated rebalances 210 2008-01-03 .. 2025-06-13
+09:01:44 momentum: recomputed equals saved on 15389366 values; saved file ends 2024-06-26
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:55: RuntimeWarning: All-NaN slice encountered
+  ok &= np.nan_to_num(np.nanmedian(c, 1)) >= 5.0
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:56: RuntimeWarning: All-NaN slice encountered
+  ok &= np.nan_to_num(np.nanmedian(v, 1)) >= 5e6
+/home/bhoult/programming/correlation2/research/free_timing/free_timing.py:93: RuntimeWarning: All-NaN slice encountered
+  med = np.where(ok, np.nanmedian(v63, 1), -np.inf)
+09:02:04 trades 9962 P1 6792 P2 3170
+09:02:05 bad opens set missing: 14330
+09:02:05 S1: twin residual
+09:02:48 S2: 5-day reversal
+09:03:07 S1 day-0 coverage 0.989
+09:03:07 S2 day-0 coverage 1.0
+09:03:07 S3 day-0 coverage 0.761
+09:03:08 wrote /home/bhoult/programming/correlation2/research/free_timing/trades_old.npz [84s]

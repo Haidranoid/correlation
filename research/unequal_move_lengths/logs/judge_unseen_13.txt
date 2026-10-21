@@ -1,0 +1,15 @@
+Holdout 2025-06-30 .. 2026-10-19 (329 trading days), 1s
+Family scores, rebalanced every 63 trading day(s): 793 pairs from 0 pre-holdout window(s); 2155 stocks can be picked
+Picks beat the market over their holding period: 46.7% of 120 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0226, t = +2.75
+Rank correlation of prediction vs actual return (IC in returns): mean +0.0028, t = +0.33
+Long-short top/bottom 10%: -0.53 bps/day gross, Sharpe -0.16, t = -0.19, book turnover 83% per rebalance
+Random guessers (uniform): 105.3 names bought on average (101..106; the picks bought 106); mean volatility decile of buys 4.49 (picks 4.31), of holdings 4.49 (picks 4.10)
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          12465     24.6%
+Buy and hold QQQ (Nasdaq-100)                       13107     31.1%
+Buy and hold all 2155 candidates                    12066     20.7%
+Picks, no trading costs                             10383      3.8%   random guessers: median 11875, 87.0% did at least as well (p = 0.870)
+Picks, 5 bps per trade                              10333      3.3%   random guessers: median 11818, 87.0% did at least as well (p = 0.870)
+Picks, 20 bps per trade                             10185      1.9%   random guessers: median 11651, 87.1% did at least as well (p = 0.871)

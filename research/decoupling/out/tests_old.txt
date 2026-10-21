@@ -1,0 +1,93 @@
+# Decoupling tests, old export
+
+Outcome = D x (sum of e over t+1..t+63), in log-return bps. t = month-clustered (CR1) [iid t].
+
+## 2005 (before the test period): 8 events, 8 with a 63-day outcome, D > 0: 50%
+  outcome D x fwd:             -771 bps (t -1.71, n 8, 5 months) [iid t -1.27]; median -245 bps; share > 0 50%
+    D > 0:                     +96 bps (t +0.61, n 4, 3 months); raw hedged drift +96 bps (t +0.61)
+    D < 0:                     -1637 bps (t -2.22, n 4, 3 months); raw hedged drift +1637 bps (t +2.22)
+  3 big days back in D (Dall): +273 bps (t +0.33, n 8, 5 months)
+  unsigned hedged drift fwd:   +867 bps (t +1.70, n 8, 5 months)
+  the 500 largest only:        -771 bps (t -1.71, n 8, 5 months)
+  matched non-breaks (the plan): events 8 (no match 0), matches/event 17.8; event -771 bps, controls +142 bps (t +0.96); difference -912 bps (t -2.07, n 8, 5 months) [iid t -1.59]
+  matches also with rho_before >= 0.5: events 8 (no match 0), matches/event 15.9; event -771 bps, controls -179 bps (t -3.08); difference -592 bps (t -1.28, n 8, 5 months) [iid t -0.95]
+
+## 2006-2012: 98 events, 98 with a 63-day outcome, D > 0: 47%
+  outcome D x fwd:             -167 bps (t -1.21, n 98, 26 months) [iid t -1.09]; median +10 bps; share > 0 52%
+    D > 0:                     -9 bps (t -0.06, n 46, 13 months); raw hedged drift -9 bps (t -0.06)
+    D < 0:                     -308 bps (t -1.48, n 52, 23 months); raw hedged drift +308 bps (t +1.48)
+  3 big days back in D (Dall): -161 bps (t -0.96, n 98, 26 months)
+  unsigned hedged drift fwd:   +159 bps (t +1.29, n 98, 26 months)
+  the 500 largest only:        -163 bps (t -0.70, n 43, 17 months)
+  matched non-breaks (the plan): events 98 (no match 0), matches/event 20.0; event -167 bps, controls +31 bps (t +0.97); difference -199 bps (t -1.42, n 98, 26 months) [iid t -1.30]
+  matches also with rho_before >= 0.5: events 98 (no match 0), matches/event 20.0; event -167 bps, controls +81 bps (t +2.19); difference -248 bps (t -1.79, n 98, 26 months) [iid t -1.66]
+
+## 2013-2019: 62 events, 62 with a 63-day outcome, D > 0: 52%
+  outcome D x fwd:             +53 bps (t +0.40, n 62, 32 months) [iid t +0.34]; median -81 bps; share > 0 45%
+    D > 0:                     -85 bps (t -0.40, n 32, 23 months); raw hedged drift -85 bps (t -0.40)
+    D < 0:                     +201 bps (t +0.99, n 30, 17 months); raw hedged drift -201 bps (t -0.99)
+  3 big days back in D (Dall): +44 bps (t +0.30, n 62, 32 months)
+  unsigned hedged drift fwd:   -141 bps (t -0.89, n 62, 32 months)
+  the 500 largest only:        +444 bps (t +1.85, n 22, 16 months)
+  matched non-breaks (the plan): events 62 (no match 0), matches/event 20.0; event +53 bps, controls +38 bps (t +0.77); difference +16 bps (t +0.11, n 62, 32 months) [iid t +0.10]
+  matches also with rho_before >= 0.5: events 62 (no match 0), matches/event 20.0; event +53 bps, controls +72 bps (t +1.71); difference -19 bps (t -0.13, n 62, 32 months) [iid t -0.11]
+
+## 2006-2019 (Tests 1 and 2): 160 events, 160 with a 63-day outcome, D > 0: 49%
+  outcome D x fwd:             -82 bps (t -0.80, n 160, 58 months) [iid t -0.73]; median -4 bps; share > 0 49%
+    D > 0:                     -40 bps (t -0.32, n 78, 36 months); raw hedged drift -40 bps (t -0.32)
+    D < 0:                     -122 bps (t -0.76, n 82, 40 months); raw hedged drift +122 bps (t +0.76)
+  3 big days back in D (Dall): -81 bps (t -0.70, n 160, 58 months)
+  unsigned hedged drift fwd:   +43 bps (t +0.43, n 160, 58 months)
+  the 500 largest only:        +43 bps (t +0.23, n 65, 33 months)
+  matched non-breaks (the plan): events 160 (no match 0), matches/event 20.0; event -82 bps, controls +34 bps (t +1.24); difference -115 bps (t -1.11, n 160, 58 months) [iid t -1.02]
+  matches also with rho_before >= 0.5: events 160 (no match 0), matches/event 20.0; event -82 bps, controls +78 bps (t +2.83); difference -159 bps (t -1.55, n 160, 58 months) [iid t -1.42]
+
+## 2020-2025-06-27 (Test 3): 239 events, 239 with a 63-day outcome, D > 0: 45%
+  outcome D x fwd:             -75 bps (t -0.72, n 239, 33 months) [iid t -0.67]; median -64 bps; share > 0 48%
+    D > 0:                     +78 bps (t +0.47, n 108, 25 months); raw hedged drift +78 bps (t +0.47)
+    D < 0:                     -202 bps (t -0.99, n 131, 29 months); raw hedged drift +202 bps (t +0.99)
+  3 big days back in D (Dall): -36 bps (t -0.33, n 239, 33 months)
+  unsigned hedged drift fwd:   +146 bps (t +0.91, n 239, 33 months)
+  the 500 largest only:        -217 bps (t -1.70, n 56, 23 months)
+  matched non-breaks (the plan): events 239 (no match 0), matches/event 20.0; event -75 bps, controls -52 bps (t -1.17); difference -23 bps (t -0.20, n 239, 33 months) [iid t -0.19]
+  matches also with rho_before >= 0.5: events 239 (no match 0), matches/event 20.0; event -75 bps, controls -49 bps (t -1.13); difference -26 bps (t -0.20, n 239, 33 months) [iid t -0.22]
+
+## All, old export: 407 events, 407 with a 63-day outcome, D > 0: 47%
+  outcome D x fwd:             -92 bps (t -1.23, n 407, 96 months) [iid t -1.14]; median -18 bps; share > 0 49%
+    D > 0:                     +30 bps (t +0.28, n 190, 64 months); raw hedged drift +30 bps (t +0.28)
+    D < 0:                     -198 bps (t -1.45, n 217, 72 months); raw hedged drift +198 bps (t +1.45)
+  3 big days back in D (Dall): -48 bps (t -0.60, n 407, 96 months)
+  unsigned hedged drift fwd:   +119 bps (t +1.18, n 407, 96 months)
+  the 500 largest only:        -121 bps (t -1.10, n 129, 61 months)
+  matched non-breaks (the plan): events 407 (no match 0), matches/event 20.0; event -92 bps, controls -15 bps (t -0.49); difference -77 bps (t -0.93, n 407, 96 months) [iid t -0.92]
+  matches also with rho_before >= 0.5: events 407 (no match 0), matches/event 19.9; event -92 bps, controls -2 bps (t -0.06); difference -90 bps (t -1.01, n 407, 96 months) [iid t -1.08]
+
+## By year: events, D>0, mean outcome bps (n), matched difference bps
+  2004:    2 events, D>0  50%, outcome  -1198 (2), difference  -1174 (2)
+  2005:    6 events, D>0  50%, outcome   -628 (6), difference   -825 (6)
+  2006:    1 events, D>0   0%, outcome   -660 (1), difference   -946 (1)
+  2007:    1 events, D>0   0%, outcome   +816 (1), difference   +464 (1)
+  2009:   10 events, D>0  30%, outcome   -470 (10), difference   -415 (10)
+  2010:    6 events, D>0  50%, outcome   -874 (6), difference   -817 (6)
+  2011:   12 events, D>0  33%, outcome   +848 (12), difference   +650 (12)
+  2012:   68 events, D>0  53%, outcome   -247 (68), difference   -261 (68)
+  2013:    6 events, D>0  50%, outcome   +813 (6), difference  +1131 (6)
+  2014:    9 events, D>0  67%, outcome   +112 (9), difference    +47 (9)
+  2015:    5 events, D>0  40%, outcome  -1309 (5), difference  -1349 (5)
+  2016:    3 events, D>0  67%, outcome   -611 (3), difference   -389 (3)
+  2017:   27 events, D>0  33%, outcome    +82 (27), difference     -9 (27)
+  2018:    5 events, D>0 100%, outcome   +112 (5), difference    +92 (5)
+  2019:    7 events, D>0  71%, outcome   +432 (7), difference   +211 (7)
+  2020:   80 events, D>0  50%, outcome   -233 (80), difference    -96 (80)
+  2021:   95 events, D>0  44%, outcome   +143 (95), difference   +219 (95)
+  2022:    2 events, D>0 100%, outcome   +227 (2), difference   +717 (2)
+  2023:   50 events, D>0  42%, outcome   -265 (50), difference   -341 (50)
+  2024:    9 events, D>0  22%, outcome    -90 (9), difference   -373 (9)
+  2025:    3 events, D>0  33%, outcome   +232 (3), difference   +126 (3)
+
+Months with the most events: 2021-03 44, 2021-02 23, 2012-10 22, 2020-10 22, 2020-08 18, 2012-11 18, 2020-09 17, 2021-01 13
+matching bins: median pool size of the event's bin 814; event deciles (0-9) counts [41, 30, 25, 36, 33, 36, 42, 44, 48, 72]
+
+Test 1 (2006-2019 mean >= +100 bps, month t >= 3): FAIL (-82 bps, t -0.80)
+Test 2 (beats matched non-breaks, t >= 2): FAIL (-115 bps, t -1.11)
+Test 3, 2020-2025-06 (mean outcome > 0): FAIL (-75 bps; matched difference -23 bps)

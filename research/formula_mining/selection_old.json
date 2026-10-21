@@ -1,0 +1,330 @@
+{
+ "selected": [
+  {
+   "formula": "ret1*clv5",
+   "sign": -1,
+   "train_t": -4.669117570798342,
+   "train_ic": -0.023972464826476025,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.7513139090754659,
+   "holdout_ic_oriented": 0.0038262957568388142,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1-mom12_1",
+   "sign": -1,
+   "train_t": -4.512026616413448,
+   "train_ic": -0.02858593002480194,
+   "train_weeks": 503,
+   "holdout_t_oriented": 2.2928820818990876,
+   "holdout_ic_oriented": 0.014848199465393307,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1*twres5",
+   "sign": -1,
+   "train_t": -4.422843373458845,
+   "train_ic": -0.021081137822545767,
+   "train_weeks": 502,
+   "holdout_t_oriented": 1.027880710807119,
+   "holdout_ic_oriented": 0.004580980459996955,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1*ret5",
+   "sign": -1,
+   "train_t": -4.365324273615016,
+   "train_ic": -0.026414055602797182,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.6226232025577597,
+   "holdout_ic_oriented": 0.0035655505057835455,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "vr5_60*clv5",
+   "sign": -1,
+   "train_t": -4.355840785232074,
+   "train_ic": -0.015112233829439752,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.5681726797247483,
+   "holdout_ic_oriented": 0.0020361533897198733,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "vr21_252*clv5",
+   "sign": -1,
+   "train_t": -4.321864349048519,
+   "train_ic": -0.015345360129078257,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.57627558269845,
+   "holdout_ic_oriented": 0.0020030981864969403,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1",
+   "sign": -1,
+   "train_t": -4.244763751378323,
+   "train_ic": -0.02461884826341228,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.7064914781291707,
+   "holdout_ic_oriented": 0.004201440913453067,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1*vr21_252",
+   "sign": -1,
+   "train_t": -4.215133366521843,
+   "train_ic": -0.019610914546962895,
+   "train_weeks": 503,
+   "holdout_t_oriented": -0.08750900027316307,
+   "holdout_ic_oriented": -0.0003938503405624462,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5-mom12_1",
+   "sign": -1,
+   "train_t": -4.174055357438562,
+   "train_ic": -0.027977183340065274,
+   "train_weeks": 503,
+   "holdout_t_oriented": 2.299561475095078,
+   "holdout_ic_oriented": 0.015754494861316845,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "clv5*twres5",
+   "sign": -1,
+   "train_t": -4.152049176909237,
+   "train_ic": -0.01621919427224544,
+   "train_weeks": 502,
+   "holdout_t_oriented": 1.2883179450393718,
+   "holdout_ic_oriented": 0.004787595040489134,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5*clv5",
+   "sign": -1,
+   "train_t": -4.1490576106084704,
+   "train_ic": -0.021993720050522518,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.838161952142716,
+   "holdout_ic_oriented": 0.004353460083699377,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5*vr21_252",
+   "sign": -1,
+   "train_t": -4.117043247651092,
+   "train_ic": -0.01968532237705501,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.04571319829018465,
+   "holdout_ic_oriented": 0.00021200312669190043,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5*twres5",
+   "sign": -1,
+   "train_t": -4.085337720401492,
+   "train_ic": -0.019684670351171454,
+   "train_weeks": 502,
+   "holdout_t_oriented": 1.134321777699939,
+   "holdout_ic_oriented": 0.005107900313481066,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1*vr5_60",
+   "sign": -1,
+   "train_t": -4.003455294764784,
+   "train_ic": -0.018153946535958754,
+   "train_weeks": 503,
+   "holdout_t_oriented": -0.17808862084734078,
+   "holdout_ic_oriented": -0.0008255397928775051,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5",
+   "sign": -1,
+   "train_t": -3.985668572874377,
+   "train_ic": -0.02456876592278319,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.9218770200144523,
+   "holdout_ic_oriented": 0.00541856017144963,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "clv5",
+   "sign": -1,
+   "train_t": -3.9722675504069773,
+   "train_ic": -0.016075943776261706,
+   "train_weeks": 503,
+   "holdout_t_oriented": 1.1232066026628156,
+   "holdout_ic_oriented": 0.004751245229361819,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1-ret252",
+   "sign": -1,
+   "train_t": -3.9631432524064105,
+   "train_ic": -0.025308331400164006,
+   "train_weeks": 503,
+   "holdout_t_oriented": 2.104472610757202,
+   "holdout_ic_oriented": 0.013697987582361702,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "vr21_252*twres5",
+   "sign": -1,
+   "train_t": -3.957364206292889,
+   "train_ic": -0.012469862415756556,
+   "train_weeks": 502,
+   "holdout_t_oriented": 0.23526309753932245,
+   "holdout_ic_oriented": 0.0006593535688378955,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret1*twres21",
+   "sign": -1,
+   "train_t": -3.9292063298403175,
+   "train_ic": -0.019814126569606644,
+   "train_weeks": 499,
+   "holdout_t_oriented": 0.9050555099280185,
+   "holdout_ic_oriented": 0.004545777500031336,
+   "holdout_weeks": 526
+  },
+  {
+   "formula": "ret5*vr5_60",
+   "sign": -1,
+   "train_t": -3.8854962979188103,
+   "train_ic": -0.018561563755468923,
+   "train_weeks": 503,
+   "holdout_t_oriented": 0.03796458435418192,
+   "holdout_ic_oriented": 0.000182034716395327,
+   "holdout_weeks": 526
+  }
+ ],
+ "sel_idx": [
+  39,
+  356,
+  46,
+  26,
+  219,
+  234,
+  0,
+  35,
+  380,
+  291,
+  63,
+  59,
+  70,
+  34,
+  1,
+  14,
+  355,
+  241,
+  47,
+  58
+ ],
+ "sign": [
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0,
+  -1.0
+ ],
+ "best_abs_t": 4.669117570798342,
+ "best_formula": "ret1*clv5",
+ "p95_abs_t_of_676": 3.505289246284919,
+ "composite_train": {
+  "t": 5.501369626623712,
+  "mean": 0.02872318766600641,
+  "weeks": 503
+ },
+ "composite_holdout": {
+  "t": 1.3892492955553797,
+  "mean": 0.006807078764261183,
+  "weeks": 526
+ },
+ "reversal5_holdout": {
+  "t": 0.9218770200144523,
+  "mean": 0.005418560171449631,
+  "weeks": 526
+ },
+ "composite_minus_reversal_holdout": {
+  "t": 0.4440373043799943,
+  "mean": 0.0013885185928115536,
+  "weeks": 526
+ },
+ "composite_vs_reversal_rank_corr_mean": 0.8170221333812163,
+ "weeks": {
+  "train": [
+   "2005-01-03",
+   "2014-12-22",
+   503
+  ],
+  "holdout": [
+   "2015-01-07",
+   "2025-06-16",
+   526
+  ]
+ },
+ "composite_holdout_by_year": {
+  "2015": [
+   0.017243436721013906,
+   0.0036857639666808416
+  ],
+  "2016": [
+   0.0032839945088832985,
+   -0.011295741960832231
+  ],
+  "2017": [
+   0.02137894407536375,
+   0.015484492931515197
+  ],
+  "2018": [
+   0.01065443864124157,
+   0.015532603724635078
+  ],
+  "2019": [
+   -0.0004388203877040797,
+   -0.011021144038585855
+  ],
+  "2020": [
+   0.015956045268222325,
+   0.0270197937753304
+  ],
+  "2021": [
+   -0.004931095817227713,
+   -0.007505832895756468
+  ],
+  "2022": [
+   0.0012450862862432108,
+   0.022015623130847484
+  ],
+  "2023": [
+   -0.011328371587907091,
+   -0.018652992769281965
+  ],
+  "2024": [
+   0.018838362841777326,
+   0.012299761316119168
+  ],
+  "2025": [
+   -0.0015244662416213626,
+   0.01888289635667729
+  ]
+ }
+}

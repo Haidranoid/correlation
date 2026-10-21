@@ -3,3 +3,10 @@ target/
 /cache/
 *.parquet
 __pycache__/
+/datasets/stocks/*/prices.bin
+/correlation-original/data/
+.venv/
+*.pyc
+.pytest_cache/
+node_modules/
+/correlation-original/config/credentials.yml.enc

@@ -1,0 +1,13 @@
+approximate account: compounded +80.6%; sum of weekly returns +63.4% over 66 weeks; 408 distinct stocks
+  QURE     contribution +20.7% (held 10 weeks)
+  ASTS     contribution +4.5% (held 6 weeks)
+  RCAT     contribution +3.8% (held 13 weeks)
+  GFI      contribution +2.9% (held 8 weeks)
+  AGX      contribution +2.7% (held 13 weeks)
+  AUPH     contribution +2.3% (held 6 weeks)
+  PTCT     contribution +2.3% (held 5 weeks)
+  CAPR     contribution +2.2% (held 14 weeks)
+  HNRG     contribution +2.2% (held 9 weeks)
+  AEM      contribution +2.1% (held 9 weeks)
+top 5 contribute +34.6% of +63.4% (sum of weekly returns); without them +28.9%
+worst: WVE -1.7%, KROS -1.8%, SMR -2.2%, RGTI -2.9%, METC -2.9%

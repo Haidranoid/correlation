@@ -1,0 +1,58 @@
+gap days filled: stocks ['2011-02-17'], funds ['2011-02-17']
+Test 1 start: rebalance 38 = 2006-03-03
+  2005-06-02 k 29 eligible 304 universe 304 ranked 0 distinct twins 1 spy False
+  2005-07-01 k 30 eligible 306 universe 306 ranked 0 distinct twins 1 spy False
+  2005-08-02 k 31 eligible 305 universe 305 ranked 0 distinct twins 1 spy False
+  2005-08-31 k 32 eligible 307 universe 307 ranked 0 distinct twins 1 spy False
+  2005-09-30 k 33 eligible 304 universe 304 ranked 0 distinct twins 1 spy False
+  2005-10-31 k 34 eligible 304 universe 304 ranked 0 distinct twins 1 spy False
+  2005-11-30 k 35 eligible 304 universe 304 ranked 0 distinct twins 1 spy False
+  2005-12-30 k 36 eligible 305 universe 305 ranked 0 distinct twins 1 spy False
+  2006-02-01 k 37 eligible 1520 universe 500 ranked 0 distinct twins 48 spy True
+  2006-03-03 k 38 eligible 1557 universe 500 ranked 500 distinct twins 49 spy True
+  2006-04-03 k 39 eligible 1577 universe 500 ranked 500 distinct twins 50 spy True
+  2006-05-03 k 40 eligible 1593 universe 500 ranked 500 distinct twins 49 spy True
+
+== Coverage by year (mean over the year's rebalances) ==
+year  eligible  universe  ranked  plain500-no-twin  plain500-excluded  median-corr  distinct-twins  broad  twin-changed(k vs k-1)
+2003      290    290      0     7.2     0.0  0.513      1  1.00  nan
+2004      303    303      0     3.7     0.7  0.433      1  1.00  nan
+2005      305    305      0   196.2     0.1  0.419      1  1.00  nan
+2006     1591    500    454     6.9     1.0  0.566     52  0.28  0.199
+2007     1695    500    499     7.4     0.9  0.611     67  0.31  0.250
+2008     1651    500    500     4.4     1.0  0.715     82  0.30  0.270
+2009     1537    500    500     0.8     1.0  0.794     71  0.38  0.246
+2010     1771    500    500     3.2     1.0  0.753     66  0.31  0.202
+2011     1874    500    500     4.5     2.4  0.758     68  0.30  0.169
+2012     1943    500    499     6.2     2.3  0.792     66  0.31  0.164
+2013     2098    500    499     5.7     0.8  0.669     76  0.25  0.172
+2014     2283    500    500     7.1     1.2  0.650     88  0.21  0.185
+2015     2404    500    499     5.9     1.4  0.699     97  0.14  0.170
+2016     2511    500    500     4.0     1.8  0.740    105  0.15  0.193
+2017     2699    500    500     5.7     2.4  0.644    111  0.11  0.208
+2018     2882    500    500     7.9     1.6  0.658     99  0.13  0.160
+2019     3017    500    499    11.8     1.2  0.718    103  0.11  0.156
+2020     3138    500    498    11.3     1.6  0.788    114  0.17  0.232
+2021     3644    500    497    20.6     1.8  0.729    129  0.12  0.211
+2022     3885    500    499     6.6     2.8  0.759    131  0.08  0.194
+2023     3992    500    500     2.5     2.5  0.763    116  0.10  0.172
+2024     4046    500    499     5.0     4.0  0.634    128  0.09  0.196
+2025     3946    500    499     9.2     8.3  0.655    128  0.08  0.213
+
+== Plain 12-1 momentum vs stockai/runs/poc/baselines/momentum_12_1.npy ==
+stored finite through column 5659 = 2024-06-26
+raw closes, columns 0..5659: 15389366 cells finite in both, max abs diff 0.00e+00; 0 cells finite in only one
+gap-filled closes change 3816 of 16980292 finite cells (float32 rounding aside), 0 of them on rebalance days
+
+== Signals by hand ==
+twin signal A vs VTI (twin at k-1), beta 1.282, decided 2015-07-08: code -0.877903 hand -0.877903; twin at k IVV
+  unscaled: code -0.114732 hand -0.114732; plain: code -0.015778 hand -0.015778
+market-residual signal: beta 1.274: code -0.842723 hand -0.842723; unscaled code -0.111489 hand -0.111489
+mean cross-sectional rank correlation with the twin signal: twin~plain 0.78, twin~mkt 0.84, twin~twin_raw 0.97
+
+== Book code ==
+oracle (next 21 days from close t), hedge twin: +22.48%/month t +55.6 n 230
+oracle (next 21 days from close t), hedge None: +31.17%/month t +49.8 n 230
+hand leg SWKS vs SMH beta 1.469 formed 2015-07-08: code -0.065105 hand -0.065105
+deciles: n 500 legs 50/50; min s in long 1.435 = 90th pct 1.435; max s in short -1.076 = 10th pct -1.076
+hedge: net fund weight +0.180 (end of hold); long-leg mean beta 1.01, short-leg 1.18

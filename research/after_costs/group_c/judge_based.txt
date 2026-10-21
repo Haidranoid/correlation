@@ -1,0 +1,281 @@
+-1.4-overnight-peers.md  scores_on_old__r21_d0_uniform.json
+  years 2008-06-30..2025-06-27 (17 judge years); change over random at 0 bps -1.41 (file name check)
+  account at 5 bps +11.26%/yr; SPY total return +12.89%/yr; after-cost number -1.63 -> -1.6
+    2008-06-30..2009-06-26  acct0   +45.88  acct5   +45.31  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   +71.35
+    2009-06-29..2010-06-25  acct0   +53.06  acct5   +51.42  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   +31.72
+    2010-06-28..2011-06-27  acct0    +2.62  acct5    +1.37  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff   -19.62
+    2011-06-28..2012-06-27  acct0    +9.27  acct5    +7.98  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    +1.68
+    2012-06-28..2013-06-27  acct0   +37.61  acct5   +36.14  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff   +12.48
+    2013-06-28..2014-06-27  acct0   +16.74  acct5   +15.52  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -8.43
+    2014-06-30..2015-06-26  acct0    -8.55  acct5    -9.50  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff   -18.76
+    2015-06-29..2016-06-27  acct0    +0.66  acct5    -0.41  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    +2.39
+    2016-06-28..2017-06-27  acct0   +19.35  acct5   +18.01  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -5.36
+    2017-06-28..2018-06-27  acct0    +6.01  acct5    +4.81  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    -8.89
+    2018-06-28..2019-06-27  acct0   -14.82  acct5   -15.79  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -26.16
+    2019-06-28..2020-06-26  acct0   +12.69  acct5   +11.47  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    +6.48
+    2020-06-29..2021-06-25  acct0   +58.67  acct5   +56.90  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +12.60
+    2021-06-28..2022-06-27  acct0   -20.37  acct5   -21.22  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff   -13.60
+    2022-06-28..2023-06-27  acct0    -2.76  acct5    -3.83  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -17.91
+    2023-06-28..2024-06-27  acct0   +26.24  acct5   +24.87  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff    -2.14
+    2024-06-28..2025-06-27  acct0   -30.85  acct5   -31.62  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -45.56
++4.7-hidden-text-peers.md  hidden_text_peers_old__r21_d0_uniform.json
+  years 2007-06-28..2022-06-27 (15 judge years); change over random at 0 bps +4.71 (file name check)
+  account at 5 bps +14.64%/yr; SPY total return +10.04%/yr; after-cost number +4.60 -> +4.6
+    2007-06-28..2008-06-27  acct0   -20.08  acct5   -20.55  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff    -7.05
+    2008-06-30..2009-06-26  acct0   -18.58  acct5   -19.25  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff    +6.79
+    2009-06-29..2010-06-25  acct0   +18.50  acct5   +17.41  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    -2.29
+    2010-06-28..2011-06-27  acct0   +35.55  acct5   +34.13  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff   +13.15
+    2011-06-28..2012-06-27  acct0    +2.88  acct5    +1.72  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -4.58
+    2012-06-28..2013-06-27  acct0   +42.37  acct5   +40.92  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff   +17.26
+    2013-06-28..2014-06-27  acct0   +29.68  acct5   +28.35  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    +4.40
+    2014-06-30..2015-06-26  acct0   +15.90  acct5   +14.70  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    +5.45
+    2015-06-29..2016-06-27  acct0    -4.64  acct5    -5.63  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    -2.82
+    2016-06-28..2017-06-27  acct0   +16.83  acct5   +15.60  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -7.76
+    2017-06-28..2018-06-27  acct0   +32.26  acct5   +30.88  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   +17.18
+    2018-06-28..2019-06-27  acct0    -7.10  acct5    -8.07  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -18.44
+    2019-06-28..2020-06-26  acct0   +31.33  acct5   +30.01  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   +25.03
+    2020-06-29..2021-06-25  acct0   +78.77  acct5   +76.87  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +32.57
+    2021-06-28..2022-06-27  acct0   -16.75  acct5   -17.55  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -9.93
+-2.0-factor-momentum.md  book_old__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps -2.00 (file name check)
+  account at 5 bps +7.66%/yr; SPY total return +11.43%/yr; after-cost number -3.76 -> -3.8
+    2007-06-28..2008-06-27  acct0   -16.89  acct5   -17.54  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff    -4.04
+    2008-06-30..2009-06-26  acct0   -27.00  acct5   -27.56  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff    -1.52
+    2009-06-29..2010-06-25  acct0   +11.42  acct5   +10.54  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    -9.16
+    2010-06-28..2011-06-27  acct0   +13.82  acct5   +12.90  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    -8.09
+    2011-06-28..2012-06-27  acct0   +14.70  acct5   +13.65  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    +7.35
+    2012-06-28..2013-06-27  acct0   +20.30  acct5   +19.33  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    -4.33
+    2013-06-28..2014-06-27  acct0   +20.42  acct5   +19.40  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -4.56
+    2014-06-30..2015-06-26  acct0   +24.39  acct5   +23.29  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff   +14.03
+    2015-06-29..2016-06-27  acct0    -1.06  acct5    -1.91  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    +0.90
+    2016-06-28..2017-06-27  acct0   +15.21  acct5   +14.28  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -9.09
+    2017-06-28..2018-06-27  acct0    +8.05  acct5    +7.18  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    -6.51
+    2018-06-28..2019-06-27  acct0    +6.22  acct5    +5.28  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    -5.09
+    2019-06-28..2020-06-26  acct0    +6.13  acct5    +5.28  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    +0.30
+    2020-06-29..2021-06-25  acct0   +36.95  acct5   +35.82  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff    -8.48
+    2021-06-28..2022-06-27  acct0    -8.49  acct5    -9.33  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -1.71
+    2022-06-28..2023-06-27  acct0    +7.26  acct5    +6.40  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -7.67
+    2023-06-28..2024-06-27  acct0   +17.56  acct5   +16.60  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -10.42
+    2024-06-28..2025-06-27  acct0    +5.20  acct5    +4.33  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff    -9.62
++6.0-short-volume.md  scores_G_old__r5_d0_uniform.json
+  years 2015-06-29..2025-06-27 (10 judge years); change over random at 0 bps +6.02 (file name check)
+  account at 5 bps +14.18%/yr; SPY total return +14.13%/yr; after-cost number +0.05 -> +0.0
+    2015-06-29..2016-06-27  acct0   +16.98  acct5   +14.68  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   +17.49
+    2016-06-28..2017-06-27  acct0   +45.02  acct5   +39.07  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   +15.71
+    2017-06-28..2018-06-27  acct0   +20.14  acct5   +15.33  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    +1.63
+    2018-06-28..2019-06-27  acct0    -0.27  acct5    -4.33  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -14.69
+    2019-06-28..2020-06-26  acct0    +8.06  acct5    +3.60  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -1.39
+    2020-06-29..2021-06-25  acct0   +65.29  acct5   +58.57  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +14.28
+    2021-06-28..2022-06-27  acct0    -7.15  acct5   -10.90  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -3.29
+    2022-06-28..2023-06-27  acct0   +11.81  acct5    +7.28  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -6.80
+    2023-06-28..2024-06-27  acct0   +14.13  acct5    +9.54  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -17.48
+    2024-06-28..2025-06-27  acct0   +13.32  acct5    +8.98  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff    -4.96
+-1.5-theme-joiners.md  scores_old__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps -1.52 (file name check)
+  account at 5 bps +7.92%/yr; SPY total return +11.43%/yr; after-cost number -3.51 -> -3.5
+    2007-06-28..2008-06-27  acct0   -26.35  acct5   -27.14  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   -13.64
+    2008-06-30..2009-06-26  acct0   -27.32  acct5   -27.95  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff    -1.91
+    2009-06-29..2010-06-25  acct0   +72.65  acct5   +70.89  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   +51.18
+    2010-06-28..2011-06-27  acct0    +1.57  acct5    +0.43  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff   -20.56
+    2011-06-28..2012-06-27  acct0   -11.59  acct5   -12.59  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff   -18.89
+    2012-06-28..2013-06-27  acct0   +29.37  acct5   +28.04  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    +4.38
+    2013-06-28..2014-06-27  acct0   +24.01  acct5   +22.70  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -1.26
+    2014-06-30..2015-06-26  acct0    +7.02  acct5    +5.98  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -3.28
+    2015-06-29..2016-06-27  acct0   -15.71  acct5   -16.53  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   -13.72
+    2016-06-28..2017-06-27  acct0   +19.34  acct5   +18.12  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -5.24
+    2017-06-28..2018-06-27  acct0   +20.40  acct5   +19.11  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    +5.41
+    2018-06-28..2019-06-27  acct0    -1.09  acct5    -2.16  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -12.52
+    2019-06-28..2020-06-26  acct0    -4.22  acct5    -5.20  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   -10.19
+    2020-06-29..2021-06-25  acct0   +49.32  acct5   +47.84  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff    +3.55
+    2021-06-28..2022-06-27  acct0    -5.47  acct5    -6.38  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    +1.23
+    2022-06-28..2023-06-27  acct0   +25.10  acct5   +23.82  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    +9.75
+    2023-06-28..2024-06-27  acct0   +21.92  acct5   +20.67  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff    -6.35
+    2024-06-28..2025-06-27  acct0   -16.19  acct5   -17.09  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -31.04
++0.3-decoupling.md  scores_old__r5_d0_uniform.json
+  years 2008-06-30..2025-06-27 (17 judge years); change over random at 0 bps +0.31 (file name check)
+  account at 5 bps +2.66%/yr; SPY total return +12.89%/yr; after-cost number -10.23 -> -10.2
+    2008-06-30..2009-06-26  acct0    +0.71  acct5    +0.71  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   +26.75
+    2009-06-29..2010-06-25  acct0    -0.41  acct5    -0.43  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   -20.13
+    2010-06-28..2011-06-27  acct0    +1.24  acct5    +1.21  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff   -19.78
+    2011-06-28..2012-06-27  acct0    -2.55  acct5    -2.57  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -8.87
+    2012-06-28..2013-06-27  acct0   +16.28  acct5   +16.09  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    -7.58
+    2013-06-28..2014-06-27  acct0    +1.59  acct5    +1.58  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff   -22.38
+    2014-06-30..2015-06-26  acct0    -0.67  acct5    -0.70  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -9.96
+    2015-06-29..2016-06-27  acct0    -3.01  acct5    -3.02  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    -0.22
+    2016-06-28..2017-06-27  acct0    +0.10  acct5    +0.08  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -23.29
+    2017-06-28..2018-06-27  acct0    +0.19  acct5    +0.15  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   -13.55
+    2018-06-28..2019-06-27  acct0    -1.50  acct5    -1.53  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -11.89
+    2019-06-28..2020-06-26  acct0    -0.47  acct5    -0.52  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -5.51
+    2020-06-29..2021-06-25  acct0   +43.12  acct5   +42.63  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff    -1.67
+    2021-06-28..2022-06-27  acct0    -2.60  acct5    -2.64  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    +4.98
+    2022-06-28..2023-06-27  acct0    +0.56  acct5    +0.55  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -13.52
+    2023-06-28..2024-06-27  acct0    -4.32  acct5    -4.42  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -31.44
+    2024-06-28..2025-06-27  acct0    -1.87  acct5    -1.88  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -15.83
++7.7-announcement-beta.md  beta_timing_old__r1_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps +7.74 (file name check)
+  account at 5 bps +10.84%/yr; SPY total return +11.43%/yr; after-cost number -0.59 -> -0.6
+    2007-06-28..2008-06-27  acct0   -18.71  acct5   -24.06  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   -10.56
+    2008-06-30..2009-06-26  acct0  +100.94  acct5   +89.10  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff  +115.14
+    2009-06-29..2010-06-25  acct0   +10.41  acct5    +3.38  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   -16.32
+    2010-06-28..2011-06-27  acct0    +5.85  acct5    -1.01  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff   -21.99
+    2011-06-28..2012-06-27  acct0    +3.49  acct5    -3.16  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -9.46
+    2012-06-28..2013-06-27  acct0   +33.16  acct5   +24.75  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    +1.09
+    2013-06-28..2014-06-27  acct0   +22.50  acct5   +15.24  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -8.71
+    2014-06-30..2015-06-26  acct0    -4.17  acct5    -9.95  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff   -19.21
+    2015-06-29..2016-06-27  acct0   +30.09  acct5   +22.15  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   +24.95
+    2016-06-28..2017-06-27  acct0    +4.41  acct5    -1.89  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -25.26
+    2017-06-28..2018-06-27  acct0    +1.83  acct5    -4.72  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   -18.42
+    2018-06-28..2019-06-27  acct0   +24.18  acct5   +15.91  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    +5.54
+    2019-06-28..2020-06-26  acct0   +46.94  acct5   +38.08  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   +33.09
+    2020-06-29..2021-06-25  acct0   +24.07  acct5   +16.30  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   -27.99
+    2021-06-28..2022-06-27  acct0   -27.42  acct5   -32.47  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff   -24.85
+    2022-06-28..2023-06-27  acct0   +17.36  acct5   +10.29  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -3.79
+    2023-06-28..2024-06-27  acct0   +23.04  acct5   +14.73  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -12.28
+    2024-06-28..2025-06-27  acct0   +31.39  acct5   +22.41  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff    +8.46
++1.9-seasonality.md  season_old_raw__r1_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps +1.87 (file name check)
+  account at 5 bps +11.20%/yr; SPY total return +11.43%/yr; after-cost number -0.23 -> -0.2
+    2007-06-28..2008-06-27  acct0   -11.89  acct5   -12.87  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff    +0.62
+    2008-06-30..2009-06-26  acct0    -4.76  acct5    -5.81  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   +20.24
+    2009-06-29..2010-06-25  acct0   +39.50  acct5   +37.94  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   +18.24
+    2010-06-28..2011-06-27  acct0   +25.41  acct5   +23.97  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    +2.99
+    2011-06-28..2012-06-27  acct0   -10.30  acct5   -11.34  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff   -17.64
+    2012-06-28..2013-06-27  acct0   +34.47  acct5   +32.89  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    +9.23
+    2013-06-28..2014-06-27  acct0   +38.08  acct5   +36.46  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff   +12.50
+    2014-06-30..2015-06-26  acct0    +7.78  acct5    +6.52  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -2.73
+    2015-06-29..2016-06-27  acct0   -25.53  acct5   -26.40  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   -23.59
+    2016-06-28..2017-06-27  acct0    +3.23  acct5    +2.02  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -21.34
+    2017-06-28..2018-06-27  acct0   +13.50  acct5   +12.18  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    -1.51
+    2018-06-28..2019-06-27  acct0    -8.39  acct5    -9.43  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -19.80
+    2019-06-28..2020-06-26  acct0   +36.93  acct5   +35.33  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   +30.34
+    2020-06-29..2021-06-25  acct0   +90.00  acct5   +87.78  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +43.48
+    2021-06-28..2022-06-27  acct0   -40.54  acct5   -41.23  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff   -33.61
+    2022-06-28..2023-06-27  acct0    -1.38  acct5    -2.54  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -16.62
+    2023-06-28..2024-06-27  acct0    -9.09  acct5   -10.16  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -37.18
+    2024-06-28..2025-06-27  acct0   +47.99  acct5   +46.25  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   +32.30
+-3.8-betting-against-beta.md  bab_money_old__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps -3.77 (file name check)
+  account at 5 bps +7.00%/yr; SPY total return +11.43%/yr; after-cost number -4.42 -> -4.4
+    2007-06-28..2008-06-27  acct0   -11.69  acct5   -11.76  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff    +1.74
+    2008-06-30..2009-06-26  acct0    -7.60  acct5    -7.75  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   +18.29
+    2009-06-29..2010-06-25  acct0   +14.90  acct5   +14.75  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    -4.95
+    2010-06-28..2011-06-27  acct0   +15.00  acct5   +14.86  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    -6.13
+    2011-06-28..2012-06-27  acct0   +11.83  acct5   +11.68  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    +5.38
+    2012-06-28..2013-06-27  acct0   +17.14  acct5   +16.96  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    -6.70
+    2013-06-28..2014-06-27  acct0   +18.27  acct5   +18.04  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -5.92
+    2014-06-30..2015-06-26  acct0    +2.19  acct5    +2.01  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -7.24
+    2015-06-29..2016-06-27  acct0   +22.58  acct5   +22.33  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   +25.14
+    2016-06-28..2017-06-27  acct0   +17.35  acct5   +17.18  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -6.18
+    2017-06-28..2018-06-27  acct0    -0.44  acct5    -0.56  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   -14.26
+    2018-06-28..2019-06-27  acct0   +18.37  acct5   +18.25  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    +7.88
+    2019-06-28..2020-06-26  acct0   +37.23  acct5   +36.98  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   +31.99
+    2020-06-29..2021-06-25  acct0   +10.46  acct5   +10.35  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   -33.95
+    2021-06-28..2022-06-27  acct0   -10.64  acct5   -10.75  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -3.13
+    2022-06-28..2023-06-27  acct0    -9.78  acct5    -9.92  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -24.00
+    2023-06-28..2024-06-27  acct0    -9.26  acct5    -9.38  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -36.40
+    2024-06-28..2025-06-27  acct0    -7.13  acct5    -7.25  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -21.19
+-5.3-52-week-high.md  pth_money_old__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps -5.27 (file name check)
+  account at 5 bps +4.02%/yr; SPY total return +11.43%/yr; after-cost number -7.41 -> -7.4
+    2007-06-28..2008-06-27  acct0    -2.54  acct5    -3.42  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   +10.08
+    2008-06-30..2009-06-26  acct0   -40.69  acct5   -41.00  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   -14.96
+    2009-06-29..2010-06-25  acct0   +10.39  acct5    +9.24  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff   -10.47
+    2010-06-28..2011-06-27  acct0   +29.70  acct5   +28.18  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    +7.19
+    2011-06-28..2012-06-27  acct0    +3.89  acct5    +2.77  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -3.53
+    2012-06-28..2013-06-27  acct0   +18.56  acct5   +17.25  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    -6.41
+    2013-06-28..2014-06-27  acct0   +24.56  acct5   +23.20  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -0.76
+    2014-06-30..2015-06-26  acct0    +4.06  acct5    +2.90  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -6.36
+    2015-06-29..2016-06-27  acct0    -5.80  acct5    -6.80  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    -3.99
+    2016-06-28..2017-06-27  acct0   +19.41  acct5   +18.10  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -5.27
+    2017-06-28..2018-06-27  acct0   +10.48  acct5    +9.26  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    -4.44
+    2018-06-28..2019-06-27  acct0    -1.58  acct5    -2.65  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -13.01
+    2019-06-28..2020-06-26  acct0    +1.90  acct5    +0.81  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -4.18
+    2020-06-29..2021-06-25  acct0   +18.55  acct5   +17.21  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   -27.08
+    2021-06-28..2022-06-27  acct0   -10.34  acct5   -11.34  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -3.72
+    2022-06-28..2023-06-27  acct0    -5.33  acct5    -6.31  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -20.39
+    2023-06-28..2024-06-27  acct0    +6.23  acct5    +5.07  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -21.95
+    2024-06-28..2025-06-27  acct0   +11.05  acct5    +9.85  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff    -4.10
++7.8-etf-stat-arb.md  money_old__r1_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps +7.82 (file name check)
+  account at 5 bps +4.60%/yr; SPY total return +11.43%/yr; after-cost number -6.83 -> -6.8
+    2007-06-28..2008-06-27  acct0   -18.93  acct5   -25.60  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   -12.10
+    2008-06-30..2009-06-26  acct0    +6.66  acct5    -2.24  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   +23.80
+    2009-06-29..2010-06-25  acct0   +43.23  acct5   +27.58  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    +7.87
+    2010-06-28..2011-06-27  acct0   +33.18  acct5   +18.57  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    -2.41
+    2011-06-28..2012-06-27  acct0    +9.16  acct5    -3.39  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -9.68
+    2012-06-28..2013-06-27  acct0   +26.91  acct5   +12.84  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff   -10.82
+    2013-06-28..2014-06-27  acct0   +25.05  acct5   +10.71  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff   -13.25
+    2014-06-30..2015-06-26  acct0   +22.08  acct5    +7.89  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    -1.37
+    2015-06-29..2016-06-27  acct0    -2.36  acct5   -13.83  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   -11.02
+    2016-06-28..2017-06-27  acct0   +12.36  acct5    -0.55  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -23.91
+    2017-06-28..2018-06-27  acct0   +20.80  acct5    +6.36  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff    -7.34
+    2018-06-28..2019-06-27  acct0    -5.47  acct5   -16.80  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff   -27.17
+    2019-06-28..2020-06-26  acct0   +12.94  acct5    -0.93  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -5.92
+    2020-06-29..2021-06-25  acct0   +99.96  acct5   +75.09  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +30.79
+    2021-06-28..2022-06-27  acct0   -26.63  acct5   -35.86  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff   -28.24
+    2022-06-28..2023-06-27  acct0   +25.38  acct5    +9.42  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -4.66
+    2023-06-28..2024-06-27  acct0   +26.81  acct5   +10.85  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -16.16
+    2024-06-28..2025-06-27  acct0   +17.13  acct5    +2.63  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -11.32
+-1.7-max-lottery.md  max_money_old__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps -1.67 (file name check)
+  account at 5 bps +7.81%/yr; SPY total return +11.43%/yr; after-cost number -3.61 -> -3.6
+    2007-06-28..2008-06-27  acct0   -16.64  acct5   -17.44  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff    -3.95
+    2008-06-30..2009-06-26  acct0   -23.70  acct5   -24.33  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff    +1.71
+    2009-06-29..2010-06-25  acct0   +23.24  acct5   +22.00  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    +2.29
+    2010-06-28..2011-06-27  acct0   +24.14  acct5   +22.84  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    +1.85
+    2011-06-28..2012-06-27  acct0   +13.46  acct5   +12.32  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    +6.02
+    2012-06-28..2013-06-27  acct0   +19.59  acct5   +18.40  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    -5.26
+    2013-06-28..2014-06-27  acct0   +19.65  acct5   +18.42  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -5.54
+    2014-06-30..2015-06-26  acct0   +10.91  acct5    +9.74  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    +0.48
+    2015-06-29..2016-06-27  acct0    +5.81  acct5    +4.68  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff    +7.49
+    2016-06-28..2017-06-27  acct0   +19.15  acct5   +17.90  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff    -5.47
+    2017-06-28..2018-06-27  acct0    +1.87  acct5    +0.88  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   -12.82
+    2018-06-28..2019-06-27  acct0   +15.79  acct5   +14.65  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    +4.29
+    2019-06-28..2020-06-26  acct0   -10.61  acct5   -11.52  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff   -16.51
+    2020-06-29..2021-06-25  acct0   +52.51  acct5   +50.97  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff    +6.68
+    2021-06-28..2022-06-27  acct0    +2.29  acct5    +1.30  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    +8.92
+    2022-06-28..2023-06-27  acct0    -0.30  acct5    -1.29  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff   -15.36
+    2023-06-28..2024-06-27  acct0    +6.09  acct5    +5.07  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   -21.95
+    2024-06-28..2025-06-27  acct0    -3.22  acct5    -4.00  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   -17.95
++3.5-frog-in-the-pan.md  score_old_divfix__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps +3.55 (file name check)
+  account at 5 bps +13.45%/yr; SPY total return +11.43%/yr; after-cost number +2.03 -> +2.0
+    2007-06-28..2008-06-27  acct0    +3.43  acct5    +2.95  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   +16.45
+    2008-06-30..2009-06-26  acct0   -46.83  acct5   -47.12  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   -21.08
+    2009-06-29..2010-06-25  acct0   +21.44  acct5   +20.84  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    +1.13
+    2010-06-28..2011-06-27  acct0   +23.48  acct5   +22.76  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    +1.77
+    2011-06-28..2012-06-27  acct0    +1.13  acct5    +0.58  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -5.72
+    2012-06-28..2013-06-27  acct0   +33.31  acct5   +32.55  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    +8.89
+    2013-06-28..2014-06-27  acct0   +19.04  acct5   +18.40  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -5.56
+    2014-06-30..2015-06-26  acct0   +17.38  acct5   +16.89  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    +7.63
+    2015-06-29..2016-06-27  acct0   -25.26  acct5   -25.67  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   -22.86
+    2016-06-28..2017-06-27  acct0    -1.06  acct5    -1.60  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -24.97
+    2017-06-28..2018-06-27  acct0   +26.75  acct5   +26.14  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   +12.44
+    2018-06-28..2019-06-27  acct0    +1.46  acct5    +0.94  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    -9.42
+    2019-06-28..2020-06-26  acct0    -4.21  acct5    -4.73  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -9.72
+    2020-06-29..2021-06-25  acct0  +103.97  acct5  +102.96  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +58.66
+    2021-06-28..2022-06-27  acct0   -13.32  acct5   -13.76  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -6.15
+    2022-06-28..2023-06-27  acct0   +11.21  acct5   +10.61  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -3.46
+    2023-06-28..2024-06-27  acct0   +40.64  acct5   +40.00  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   +12.98
+    2024-06-28..2025-06-27  acct0   +40.07  acct5   +39.46  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   +25.51
++3.5-frog-in-the-pan.md (plain)  score_old_plain__r21_d0_uniform.json
+  years 2007-06-28..2025-06-27 (18 judge years); change over random at 0 bps +3.49 (file name check)
+  account at 5 bps +13.39%/yr; SPY total return +11.43%/yr; after-cost number +1.96 -> +2.0
+    2007-06-28..2008-06-27  acct0    +3.43  acct5    +2.95  SPY(yahoo TR)  -13.50  SPY(judge)  -15.15  diff   +16.45
+    2008-06-30..2009-06-26  acct0   -46.83  acct5   -47.12  SPY(yahoo TR)  -26.04  SPY(judge)  -28.02  diff   -21.08
+    2009-06-29..2010-06-25  acct0   +21.44  acct5   +20.84  SPY(yahoo TR)  +19.70  SPY(judge)  +17.45  diff    +1.13
+    2010-06-28..2011-06-27  acct0   +23.48  acct5   +22.76  SPY(yahoo TR)  +20.99  SPY(judge)  +19.71  diff    +1.77
+    2011-06-28..2012-06-27  acct0    +1.13  acct5    +0.58  SPY(yahoo TR)   +6.30  SPY(judge)   +6.30  diff    -5.72
+    2012-06-28..2013-06-27  acct0   +33.31  acct5   +32.55  SPY(yahoo TR)  +23.66  SPY(judge)  +23.69  diff    +8.89
+    2013-06-28..2014-06-27  acct0   +19.04  acct5   +18.40  SPY(yahoo TR)  +23.96  SPY(judge)  +23.96  diff    -5.56
+    2014-06-30..2015-06-26  acct0   +17.38  acct5   +16.89  SPY(yahoo TR)   +9.26  SPY(judge)   +9.23  diff    +7.63
+    2015-06-29..2016-06-27  acct0   -25.26  acct5   -25.67  SPY(yahoo TR)   -2.81  SPY(judge)   -2.78  diff   -22.86
+    2016-06-28..2017-06-27  acct0    -1.06  acct5    -1.60  SPY(yahoo TR)  +23.36  SPY(judge)  +23.34  diff   -24.97
+    2017-06-28..2018-06-27  acct0   +26.75  acct5   +26.14  SPY(yahoo TR)  +13.70  SPY(judge)  +13.71  diff   +12.44
+    2018-06-28..2019-06-27  acct0    +1.46  acct5    +0.94  SPY(yahoo TR)  +10.36  SPY(judge)  +10.36  diff    -9.42
+    2019-06-28..2020-06-26  acct0    -4.21  acct5    -4.73  SPY(yahoo TR)   +4.99  SPY(judge)   +4.99  diff    -9.72
+    2020-06-29..2021-06-25  acct0  +103.97  acct5  +102.96  SPY(yahoo TR)  +44.30  SPY(judge)  +44.30  diff   +58.66
+    2021-06-28..2022-06-27  acct0   -13.32  acct5   -13.76  SPY(yahoo TR)   -7.62  SPY(judge)   -7.61  diff    -6.15
+    2022-06-28..2023-06-27  acct0   +11.44  acct5   +10.84  SPY(yahoo TR)  +14.08  SPY(judge)  +14.08  diff    -3.24
+    2023-06-28..2024-06-27  acct0   +39.32  acct5   +38.70  SPY(yahoo TR)  +27.02  SPY(judge)  +27.02  diff   +11.68
+    2024-06-28..2025-06-27  acct0   +39.95  acct5   +39.36  SPY(yahoo TR)  +13.95  SPY(judge)  +13.61  diff   +25.42

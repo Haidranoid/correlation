@@ -1,0 +1,32 @@
+{
+ "window": "2026-07-01..2026-10-19",
+ "ranked_stock_days": 181231,
+ "covered_share": 0.9821608885897004,
+ "ex_dates_in_file": 3070,
+ "headline": {
+  "book_gross_bps": 1.6502295477726845,
+  "book_gross_t": 0.4854063723976243,
+  "book_net_bps": -9.823799523452793,
+  "book_net_t": -2.8900069685575347,
+  "account_pct": 3.8460892155011805,
+  "random_median_pct": 6.676934525761413,
+  "diff": -2.8308453102602327,
+  "p": 0.787,
+  "daily_excess_bps": -3.2586155357835307,
+  "daily_excess_t": -0.4205747746226161,
+  "days": 77
+ },
+ "ex_dates_dropped": {
+  "book_gross_bps": 3.2846605420517934,
+  "book_gross_t": 0.9537000352479448,
+  "book_net_bps": -8.056325032181793,
+  "book_net_t": -2.3401276061806557,
+  "account_pct": 3.2315919823095562,
+  "random_median_pct": 7.136641997636495,
+  "diff": -3.905050015326939,
+  "p": 0.867,
+  "daily_excess_bps": -4.61168586968571,
+  "daily_excess_t": -0.6133017430954797,
+  "days": 77
+ }
+}

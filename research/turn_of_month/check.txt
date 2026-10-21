@@ -1,0 +1,20 @@
+old export days 5911 2001-12-31 .. 2025-06-27
+new export days 6240 2001-12-31 .. 2026-10-19
+new export first len(old) days equal old: True
+old span: export days 4923, Yahoo SPY days 4923, only in export 0 [], only in Yahoo 0 []
+unseen: export days 330, Yahoo SPY days 330, only in export 0 [], only in Yahoo 0 []
+old span: SPY return NaN days 0 ; first SPY price day in export 2001-12-31
+unseen: SPY return NaN days 0 days 329
+old/new SPY return identical over old span: True
+SPY |return| > 7% days in span: [('2008-09-29', -0.0784), ('2008-10-13', 0.1452), ('2008-10-15', -0.0984), ('2008-10-28', 0.1169), ('2008-11-20', -0.0742), ('2008-12-01', -0.0886), ('2009-03-23', 0.0718), ('2020-03-09', -0.0781), ('2020-03-12', -0.0957), ('2020-03-13', 0.0855), ('2020-03-16', -0.1094), ('2020-03-24', 0.0906), ('2025-04-09', 0.105)]
+rf NaN in span 0 unseen 0
+rf annualized mean over span (x252) 0.0162
+market NaN in span 0 unseen 0
+old/new market max abs diff over old span: 0.001589071604777087
+labels differ (old-only calendar vs new calendar) on []
+span months 234 ; TOM days per month: values {np.int64(3): np.int64(1), np.int64(4): np.int64(233)} ; trading days per month min/max 19 23
+2006-2025-06: days 4902, TOM 935, by position {-1: 233, 1: 234, 2: 234, 3: 234}
+2006-2019: days 3523, TOM 672, by position {-1: 168, 1: 168, 2: 168, 3: 168}
+2020-2025-06: days 1379, TOM 263, by position {-1: 65, 1: 66, 2: 66, 3: 66}
+unseen: days 329 TOM 64 {-1: 16, 1: 16, 2: 16, 3: 16} first day 2025-06-30 label -1 last 2026-10-19
+old export labels equal new export labels on old days: True

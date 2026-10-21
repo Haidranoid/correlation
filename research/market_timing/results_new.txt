@@ -1,0 +1,11 @@
+Unseen months: 15 (2025-07-16 .. 2026-09-16, last hold ends 2026-10-15)
+| | Annual return | Sharpe | Max drawdown | Avg exposure |
+|---|---|---|---|---|
+| Rule | +9.0% | 1.43 | -4.6% | 50% |
+| Buy and hold SPY | +18.5% | 1.44 | -9.1% | 100% |
+| Random timing, median of 10,000 | +9.0% | 1.43 | -4.6% | 50% |
+| Volatility-managed SPY (whole old span's c) | +16.3% | 1.37 | -8.9% | 91% |
+| Absorption-ratio rule | +16.2% | 1.53 | -7.8% | 77% |
+rule - median random +0.00 pts/yr, p 1.000; AR - its median random +2.21, p 0.148
+weights: rule [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]; AR [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 1.0, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5]
+new vs old export states over the old span: corr 0.9999, max |diff| 0.0065, rule weights differ in 2 of 246 months

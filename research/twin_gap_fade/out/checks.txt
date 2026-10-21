@@ -1,0 +1,5 @@
+oracle (long the best hedged intraday returns): gross +581.5 bps/day, t +172.0, days 4398
+noise signal: gross +0.03 bps/day, t +0.08
+leg size / ranked set: median 0.1000, min n 299, days 4398
+hand check 2014-03-12: n 1140, legs 114; gross by hand +40.764 bps, books() +40.764 bps
+z by hand for MKSI (twin IWN, beta 1.03): -5.7855; build.py -5.7855; window values 252

@@ -1,0 +1,14 @@
+saved /home/bhoult/.local/share/correlation2/experiments/seasonality/scores/season_new_raw.npy; scored days 4981 (2006-12-29..2026-10-19), point-in-time asserts passed on 4981 days
+CHANGE OVER RANDOM (uniform, 0 bps): -11.76 pts/yr; per year [-11.76]; ahead 0/1; se nan
+CHANGE OVER RANDOM (uniform, 5 bps): -11.61 pts/yr; per year [-11.61]; ahead 0/1; se nan
+CHANGE OVER RANDOM (uniform, 20 bps): -11.22 pts/yr; per year [-11.22]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 0 bps): -18.29 pts/yr; per year [-18.29]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 5 bps): -18.02 pts/yr; per year [-18.02]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 20 bps): -17.23 pts/yr; per year [-17.23]; ahead 0/1; se nan
+saved /home/bhoult/.local/share/correlation2/experiments/seasonality/scores/season_new_fix.npy; scored days 4981 (2006-12-29..2026-10-19), point-in-time asserts passed on 4981 days
+CHANGE OVER RANDOM (uniform, 0 bps): -13.64 pts/yr; per year [-13.64]; ahead 0/1; se nan
+CHANGE OVER RANDOM (uniform, 5 bps): -13.46 pts/yr; per year [-13.46]; ahead 0/1; se nan
+CHANGE OVER RANDOM (uniform, 20 bps): -12.99 pts/yr; per year [-12.99]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 0 bps): -19.48 pts/yr; per year [-19.48]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 5 bps): -19.19 pts/yr; per year [-19.19]; ahead 0/1; se nan
+CHANGE OVER RANDOM (volatility, 20 bps): -18.34 pts/yr; per year [-18.34]; ahead 0/1; se nan

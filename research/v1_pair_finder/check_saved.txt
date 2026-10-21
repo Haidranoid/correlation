@@ -1,0 +1,18 @@
+MSFT 1986-03-13..2026-10-19, AAPL 1984-09-07..2026-10-19 (store 2026-10-19)
+w=7: 38 saved rows, 38 checkable; same sign later 31/38 = 0.82; all offsets at this window 7020/14301 = 0.49
+w=14: 1 saved rows, 1 checkable; same sign later 1/1 = 1.00; all offsets at this window 6751/14301 = 0.47
+w=20: 176 saved rows, 176 checkable; same sign later 118/176 = 0.67; all offsets at this window 6862/14301 = 0.48
+w=21: 180 saved rows, 180 checkable; same sign later 126/180 = 0.70; all offsets at this window 6892/14300 = 0.48
+w=30: 300 saved rows, 300 checkable; same sign later 196/300 = 0.65; all offsets at this window 6815/14290 = 0.48
+w=40: 546 saved rows, 546 checkable; same sign later 302/546 = 0.55; all offsets at this window 6933/14276 = 0.49
+ALL saved MSFT->AAPL rows checkable: 1241; same sign later 0.624 (base, every offset at the same windows: 0.481); mean sign(saved r) x later r +0.055; later points per row median 182 (min 161, max 323)
+k-matched base (all offsets within +-100 days of each saved one, same window): 0.589; the saved rows fall in 30 clusters of nearby offsets (gaps > 50 days) across the 6 windows
+(full-history r on the 2026 store vs saved r: median |diff| 0.001; the 2026 store is re-adjusted for later dividends)
+  offsets 0: 6 rows, same sign 0.83, mean saved r +0.41, mean later r +0.09
+  offsets 1-30: 50 rows, same sign 0.94, mean saved r +0.35, mean later r +0.17
+  offsets >365: 1185 rows, same sign 0.61, mean saved r -0.09, mean later r +0.03
+  strongest saved: w=40 k=14201 saved r -0.802 -> later r -0.197 on 170 points
+  strongest saved: w=40 k=14261 saved r +0.775 -> later r -0.216 on 170 points
+  strongest saved: w=40 k=14202 saved r -0.765 -> later r -0.214 on 227 points
+  strongest saved: w=40 k=14268 saved r -0.765 -> later r -0.242 on 170 points
+  strongest saved: w=40 k=14203 saved r -0.759 -> later r -0.228 on 281 points

@@ -1,0 +1,18 @@
+SPY: days differing by >1e-4: 0, >1e-3: 0, max 0.00e+00; largest at 
+XLB: days differing by >1e-4: 11, >1e-3: 11, max 6.96e-03; largest at 2023-12-18 (+0.0070), 2022-12-19 (+0.0065), 2024-12-23 (+0.0052), 2025-06-23 (+0.0051)
+XLE: days differing by >1e-4: 12, >1e-3: 12, max 1.04e-02; largest at 2023-03-20 (+0.0104), 2022-12-19 (+0.0102), 2019-12-20 (+0.0100), 2023-12-18 (+0.0096)
+XLF: days differing by >1e-4: 0, >1e-3: 0, max 0.00e+00; largest at 
+XLI: days differing by >1e-4: 0, >1e-3: 0, max 0.00e+00; largest at 
+XLK: days differing by >1e-4: 11, >1e-3: 11, max 2.88e-03; largest at 2022-12-19 (+0.0029), 2023-12-18 (+0.0022), 2023-03-20 (+0.0022), 2023-09-18 (+0.0021)
+XLP: days differing by >1e-4: 0, >1e-3: 0, max 0.00e+00; largest at 
+XLU: days differing by >1e-4: 1, >1e-3: 1, max 6.93e-03; largest at 2025-06-23 (+0.0069)
+XLV: days differing by >1e-4: 0, >1e-3: 0, max 0.00e+00; largest at 
+XLY: days differing by >1e-4: 11, >1e-3: 11, max 3.05e-03; largest at 2023-03-20 (+0.0030), 2025-03-24 (+0.0028), 2022-12-19 (+0.0027), 2024-03-18 (+0.0022)
+state z differences: median 0.0 99th pct 0.053149359094355995 max 0.5579115245875921
+first daily return differing by >1e-4: 2019-12-20
+days before it with any nonzero difference: 3729 max 3.966885130779474e-05
+analog sets identical (same order) before 2019-12-20: 63.62% of forecast days; after: 11.40%
+analog sets identical (as sets): before 96.72%, after 51.30%
+weekly book identical: before 99.4% of 627 weeks, after 73.3% of 277 weeks
+old store: Test 1 net +0.17 bps/wk (t +0.02); Test 3 net -9.58 bps/wk (t -0.73)
+new store: Test 1 net +0.09 bps/wk (t +0.01); Test 3 net -16.49 bps/wk (t -1.26)

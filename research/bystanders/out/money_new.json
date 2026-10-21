@@ -1,0 +1,58 @@
+{
+ "mismatch": {
+  "cor": {
+   "change": 24.011646847736046,
+   "per_year": [
+    24.01
+   ],
+   "ahead": 1,
+   "years": 1,
+   "se": NaN
+  },
+  "judge_json": "/home/bhoult/.local/share/correlation2/experiments/bystanders/bystanders_mismatch_new__r1_d0_uniform.json"
+ },
+ "sympathy": {
+  "cor": {
+   "change": 7.382759198770003,
+   "per_year": [
+    7.38
+   ],
+   "ahead": 1,
+   "years": 1,
+   "se": NaN
+  },
+  "judge_json": "/home/bhoult/.local/share/correlation2/experiments/bystanders/bystanders_sympathy_new__r1_d0_uniform.json"
+ },
+ "plan_mismatch": {
+  "label": "mismatch",
+  "years": [
+   {
+    "start": "2025-06-30",
+    "trades": 5649,
+    "gross_bps": 0.48647599557517296,
+    "p": 0.4865134865134865
+   }
+  ],
+  "p_all": 0.4865134865134865,
+  "gross_all": 0.48647599557517296,
+  "se": 7.952987660018175,
+  "pos5": 0,
+  "n_years": 1
+ },
+ "plan_sympathy": {
+  "label": "sympathy",
+  "years": [
+   {
+    "start": "2025-06-30",
+    "trades": 17410,
+    "gross_bps": 5.409970868344122,
+    "p": 0.12387612387612387
+   }
+  ],
+  "p_all": 0.12387612387612387,
+  "gross_all": 5.409970868344122,
+  "se": 5.197646471927771,
+  "pos5": 0,
+  "n_years": 1
+ }
+}

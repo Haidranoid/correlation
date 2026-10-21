@@ -1,0 +1,6 @@
+all 2010-2019               : Sharpe WML +0.20, RMOM +0.39, difference +0.195 (95% +0.020 to +0.373), one-sided p 0.016, 2516 days
+all 2006-2019 without 2009  : Sharpe WML +0.08, RMOM +0.35, difference +0.277 (95% +0.072 to +0.486), one-sided p 0.005, 3271 days
+all 2006-2008               : Sharpe WML -0.19, RMOM +0.24, difference +0.423 (95% -0.071 to +0.898), one-sided p 0.037, 755 days
+big 2010-2019               : Sharpe WML +0.18, RMOM +0.29, difference +0.107 (95% -0.033 to +0.247), one-sided p 0.063, 2516 days
+big 2006-2019 without 2009  : Sharpe WML +0.11, RMOM +0.31, difference +0.204 (95% +0.009 to +0.399), one-sided p 0.021, 3271 days
+big 2006-2008               : Sharpe WML -0.04, RMOM +0.38, difference +0.418 (95% -0.113 to +0.931), one-sided p 0.054, 755 days

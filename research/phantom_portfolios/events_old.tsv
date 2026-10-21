@@ -1,0 +1,63 @@
+date	type	z	move_bps	trend21_bps	vol_median_x	fell_or_rose	members	market_bps	description	top_members
+2006-06-13	unwind	-3.22	-177	+336	1.84	84%	19	-162	style beta-0.9 vol-0.6; group purity 0.32	BHP CNI MFC BN IMO MODG
+2007-08-08	unwind	-3.95	-263	+3	2.65	71%	34	+172	group purity 0.18	VZ AXP MA BSX GAP YUM
+2007-08-08	unwind	-4.12	-245	+204	2.19	70%	30	+172	group purity 0.23	EOG MAS NDAQ CB ITT MTW
+2007-08-17	squeeze	+5.95	+231	-552	1.67	84%	25	+246	style beta-1.2 vol-0.9 size-0.8; group purity 0.36	TSN DEO CAKE ARW PWR BDN
+2007-08-17	squeeze	+8.15	+498	-1060	2.06	96%	27	+246	style beta-1.9 size-1.3 vol-1.1; group purity 0.30	BPOP EVV VVR PHK ARLP BRW
+2007-08-17	squeeze	+7.58	+418	-748	1.88	93%	27	+246	style beta-0.9 size-0.7 price-0.7; group purity 0.26	PHM HRB CCI RBBN ROP SOHU
+2008-07-16	squeeze	+3.22	+189	-776	1.64	88%	25	+361	style beta-1.6 vol-1.5 size-1.3; group purity 0.44	PHK EVV JQC EDD BTZ FAX
+2008-07-16	squeeze	+3.23	+227	-1063	1.59	88%	24	+361	style price-1.2 size-1.2 vol-1.1; group purity 0.25	EXG ETY ABR IGR BGY VVR
+2008-09-19	squeeze	+4.71	+320	-1165	2.21	76%	34	+463	+HYG r=+0.38; style price-1.2 size-1.0 rev-0.8; group purity 0.44	BDX OKE WAFD EXG ETY TFSL
+2008-10-13	squeeze	+9.13	+892	-2089	2.57	88%	34	+1086	+HYG r=+0.38; style price-1.2 size-1.0 rev-0.8; group purity 0.44	BDX OKE WAFD EXG ETY TFSL
+2008-09-19	squeeze	+5.10	+368	-1351	2.68	89%	38	+463	+HYG r=+0.50; style price-1.4 beta-1.1 size-1.1; group purity 0.76	KEY SRE OI PAG ET IGR
+2008-10-13	squeeze	+6.00	+609	-2261	2.66	76%	38	+1086	+HYG r=+0.50; style price-1.4 beta-1.1 size-1.1; group purity 0.76	KEY SRE OI PAG ET IGR
+2010-05-05	unwind	-5.34	-187	+124	1.68	92%	52	-117	+HYG r=+0.32; style price-1.3 vol-1.0 size-1.0; group purity 0.21	GE AIV AJG FAX BGY IGD
+2011-08-09	squeeze	+4.56	+240	-857	2.96	91%	46	+606	style beta-1.3 price-1.2 size-1.1; group purity 0.22	DVN KSS IP SIG EXG NFJ
+2011-08-10	unwind	-3.03	-109	+86	2.74	82%	22	-390	group purity 0.18	MRK LMT SCHW CME GD NOC
+2012-11-14	unwind	-6.02	-247	+56	2.34	94%	31	-171	-GLD r=-0.32; style beta-1.5 price-1.2 size-1.0; group purity 0.19	NVDA DAL UAL AAP DAR EVV
+2015-12-09	squeeze	+3.08	+349	-1183	2.00	78%	27	-71	style vol+0.7 rev-0.5; group purity 0.59	KMI WMB BMRN AAP ET EPD
+2015-12-14	unwind	-3.64	-239	+32	1.80	90%	20	-61	-KWEB r=-0.34; style price-0.8 beta-0.7; group purity 0.55	NLY ASH AGNC STWD MRC AMRX
+2016-01-20	squeeze	+3.74	+281	-719	2.16	89%	19	-37	group purity 0.47	CMCSA EXC HLT MAR HST TNL
+2016-11-09	unwind	-5.05	-247	+109	1.66	71%	31	+196	style rev+0.6; group purity 0.23	ACN DG CTSH HPE DLTR BBY
+2017-06-16	squeeze	+3.07	+81	-2	1.81	88%	26	-1	+XLU r=+0.43; style beta-1.7 vol-1.1; group purity 1.00	SO NEE DUK D AEP PCG
+2018-10-25	unwind	-3.66	-258	+569	1.55	74%	34	+191	+GDX r=+0.55; style rev+1.0; group purity 0.41	ALGN NEM B MOS HWM MUR
+2020-03-19	unwind	-5.51	-396	+1054	1.89	77%	35	+566	group purity 0.17	TSLA PYPL NOW AMAT LRCX ALGN
+2020-03-17	squeeze	+3.44	+225	-419	2.65	74%	31	+415	style rev-0.7; group purity 0.16	AAPL GS MS PBR PARA ETR
+2020-03-04	squeeze	+3.81	+231	-291	1.96	76%	33	+309	+JETS r=+0.36; style size+0.7; group purity 0.18	BAC V UNH WMT AMGN LLY
+2020-03-19	unwind	-4.48	-342	+431	1.91	71%	24	+566	+XLI r=+0.43; style beta-0.6 rev+0.6; group purity 0.33	BA JNJ RTX LMT DHR NOC
+2020-02-27	unwind	-3.24	-149	+228	3.30	88%	17	-365	style vol-0.8 beta-0.7; group purity 0.59	NLY LNG TNDM AGNC RITM STWD
+2020-03-02	squeeze	+6.00	+286	-172	2.80	88%	17	+296	style vol-0.8 beta-0.7; group purity 0.59	NLY LNG TNDM AGNC RITM STWD
+2020-03-20	unwind	-3.42	-289	+238	2.62	76%	25	-313	group purity 0.20	ADBE AVGO KR WEC IFF AWK
+2020-02-27	unwind	-3.10	-187	+514	2.20	82%	28	-365	+GDX r=+0.39; style beta-1.8 rev+1.0; group purity 0.50	WFC NEM D B O BMRN
+2020-03-09	unwind	-3.76	-267	+611	1.75	79%	28	-994	+GDX r=+0.39; style beta-1.8 rev+1.0; group purity 0.50	WFC NEM D B O BMRN
+2020-03-06	squeeze	+3.08	+188	-641	2.43	75%	24	-230	+EEM r=+0.33; group purity 0.29	TSM EXC MAR HST RIO CE
+2020-03-20	squeeze	+4.00	+411	-1520	3.36	79%	24	-313	+EEM r=+0.33; group purity 0.29	TSM EXC MAR HST RIO CE
+2020-03-25	squeeze	+4.79	+356	-727	2.06	81%	32	+351	+HYG r=+0.45; group purity 0.12	T AMT EBAY CCI TDG TT
+2020-03-25	unwind	-3.07	-325	+1022	1.70	75%	36	+351	+GDX r=+0.35; group purity 0.14	RTX NEM PNC FCX OKTA MDB
+2020-03-26	squeeze	+4.55	+723	-1275	2.24	81%	36	+579	-GDX r=-0.59; style rev-0.7; group purity 0.14	C ABBV MO WDAY ET CSGP
+2020-03-25	unwind	-4.07	-390	+763	1.79	74%	34	+351	+UUP r=+0.58; group purity 0.15	NFLX CRM FDX HPE AMP ATUS
+2020-03-25	unwind	-3.05	-280	+1180	2.00	80%	30	+351	-QUAL-SPY r=-0.46; group purity 0.17	SCHW EXC DG DLTR TRV SWK
+2020-11-09	squeeze	+4.68	+364	-508	2.35	70%	30	+367	-XLP r=-0.33; style beta+0.7; group purity 0.20	NOW RCL CCL NCLH TAL PAYC
+2020-11-09	squeeze	+3.29	+359	-238	2.14	70%	20	+367	style beta+0.8; group purity 0.50	MET PRU AFL LNC PLUG EQH
+2020-11-09	unwind	-3.50	-301	+585	1.79	77%	22	+367	+GDX r=+0.42; style beta-1.3 price-0.5; group purity 0.77	NEM B DXCM KGC FNV WPM
+2020-11-09	squeeze	+5.79	+561	-22	2.15	79%	34	+367	+TAN r=+0.55; style rev+0.9 vol+0.6; group purity 0.17	TSLA TGT BIIB INTU TJX ROST
+2020-11-09	unwind	-4.29	-295	+141	1.78	77%	31	+367	style rev+0.7; group purity 0.16	LULU F CMG GM SHW MRVL
+2020-11-09	squeeze	+8.47	+874	-688	2.94	78%	27	+367	+VNQ r=+0.62; style beta+0.8 price-0.6 rev-0.5; group purity 0.44	WFC ADSK WELL SNPS VTR DOC
+2021-01-27	unwind	-3.02	-224	+177	1.64	87%	38	-194	group purity 0.13	PG QCOM UPS TDOC FSLY WYNN
+2022-01-19	squeeze	+3.06	+248	-557	2.12	83%	24	-122	+GDX r=+0.47; style price-1.1; group purity 0.83	WDAY NEM B EOG KEY KGC
+2022-02-11	squeeze	+3.69	+319	-210	1.57	83%	24	-136	+GDX r=+0.54; style price-0.9 rev+0.7 beta-0.5; group purity 0.83	WDAY NEM B EOG FANG WPM
+2022-03-09	unwind	-3.05	-311	+909	1.66	95%	21	+317	+GDX r=+0.62; style price-1.0 rev+0.6 beta-0.6; group purity 0.86	NEM B AEM WPM KGC FNV
+2022-04-29	unwind	-3.30	-167	+368	2.04	71%	21	-283	-JETS r=-0.40; style rev+1.1 beta-1.0 vol-0.8; group purity 0.57	PG MDLZ PLD CL KMB PSA
+2022-10-20	unwind	-3.04	-124	+192	1.70	79%	33	-87	+MJ r=+0.39; style rev+0.7 vol-0.6; group purity 0.85	PNC LNG CFG FITB KEY RF
+2022-10-11	squeeze	+3.40	+267	-681	1.71	73%	26	-32	group purity 0.35	RUN CAR ASAN NLY FSLR AGNC
+2023-01-06	unwind	-3.64	-216	+56	1.53	75%	24	+214	style price+0.6; group purity 0.29	TMO DHR A PPG MTD AVTR
+2023-03-13	squeeze	+3.12	+148	-22	1.94	76%	25	-113	style vol-0.6 beta-0.6; group purity 0.28	BAC DE BK CP ENB CNI
+2023-03-13	squeeze	+3.04	+271	-186	2.06	86%	29	-113	+GDX r=+0.43; style rev-1.1 price-0.7; group purity 0.62	NEM B ROST BURL AEM AWK
+2023-10-13	squeeze	+3.26	+267	-106	1.86	90%	20	-63	+GDX r=+0.58; style price-0.8 beta-0.7; group purity 0.85	NEM B NVS AEM WPM FNV
+2023-10-26	squeeze	+3.62	+348	-232	1.75	70%	27	+9	group purity 0.19	ABBV CAT DE URI KDP LUV
+2023-11-14	squeeze	+3.84	+407	-1292	1.68	83%	29	+434	+TAN r=+0.76; style rev-1.1 vol+0.8 beta+0.8; group purity 0.21	ENPH NEE MRNA FSLR SNPS CDNS
+2024-11-07	squeeze	+4.05	+144	-166	1.78	74%	19	+34	group purity 0.16	EXPE PBR NET IR CAH TD
+2025-02-24	unwind	-3.08	-312	+654	1.68	90%	21	-75	+KWEB r=+0.55; style price-0.7; group purity 0.62	BABA PDD JD BIDU YUM TCOM
+2025-04-09	squeeze	+3.27	+309	-486	2.23	74%	27	+926	+XLY r=+0.63; style size+1.4; group purity 0.19	TSLA AAPL MSFT AMZN META GOOGL
+2025-04-09	unwind	-3.73	-181	+114	2.28	90%	31	+926	group purity 0.55	KLAC AON DECK TFC DLR HBAN
+2025-05-06	unwind	-5.84	-617	+504	1.65	93%	29	-85	+XBI r=+0.69; group purity 0.38	LLY NFLX JNJ GE FANG ICLR

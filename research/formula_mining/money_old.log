@@ -1,0 +1,5 @@
+11:14:47 old scored days 2515 from 2015-06-29 stocks scored per day: median 1830 min 1400
+11:14:49 uniform years 10; beat random at p<0.1 (0 bps: 5, 5 bps: 5, 20 bps: 5) of 10; change over random +6.0 pts/yr (se 5.9, ahead 6/10); IC actual returns z +2.42; long-short 3.85 bps/day z +2.14, turnover 86%, costs 0.69 x c bps/day
+11:14:52 volatility years 10; beat random at p<0.1 (0 bps: 4, 5 bps: 4, 20 bps: 4) of 10; change over random +5.8 pts/yr (se 5.7, ahead 8/10); IC actual returns z +2.42; long-short 3.85 bps/day z +2.14, turnover 86%, costs 0.69 x c bps/day
+11:14:52 done
+exit 0

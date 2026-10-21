@@ -1,0 +1,173 @@
+== 2026-10-21 07:24 variant=aligned null=None windows=[7, 14, 21, 30, 40, 60, 90, 180] export=/home/bhoult/.local/share/correlation2/export/full
+  2006-07: training 2001-12-31..2006-06-27, decisions 2006-06-27..2007-06-26
+    w=7: offsets 0..1600, kept relationships at usable offsets 5,035,268 on 1577 offsets; scores on 100% of stock-days, 11,389 terms each; 2 s
+    w=14: offsets 0..1600, kept relationships at usable offsets 12,293,629 on 1579 offsets; scores on 100% of stock-days, 27,970 terms each; 2 s
+    w=21: offsets 0..1600, kept relationships at usable offsets 18,542,732 on 1559 offsets; scores on 100% of stock-days, 42,204 terms each; 2 s
+    w=30: offsets 0..1600, kept relationships at usable offsets 25,959,465 on 1533 offsets; scores on 100% of stock-days, 59,081 terms each; 2 s
+    w=40: offsets 0..1550, kept relationships at usable offsets 32,366,436 on 1495 offsets; scores on 100% of stock-days, 73,598 terms each; 2 s
+    w=60: offsets 0..1550, kept relationships at usable offsets 43,389,283 on 1447 offsets; scores on 100% of stock-days, 98,737 terms each; 2 s
+    w=90: offsets 0..1500, kept relationships at usable offsets 52,565,389 on 1361 offsets; scores on 100% of stock-days, 119,498 terms each; 2 s
+    w=180: offsets 0..1450, kept relationships at usable offsets 58,958,786 on 1104 offsets; scores on 100% of stock-days, 133,710 terms each; 1 s
+  2007-08: training 2001-12-31..2007-06-27, decisions 2007-06-27..2008-06-26
+    w=7: offsets 0..1950, kept relationships at usable offsets 4,181,206 on 1793 offsets; scores on 100% of stock-days, 9,378 terms each; 2 s
+    w=14: offsets 0..1950, kept relationships at usable offsets 11,226,753 on 1932 offsets; scores on 100% of stock-days, 25,311 terms each; 2 s
+    w=21: offsets 0..1950, kept relationships at usable offsets 18,427,962 on 1920 offsets; scores on 100% of stock-days, 41,612 terms each; 2 s
+    w=30: offsets 0..1950, kept relationships at usable offsets 26,575,931 on 1900 offsets; scores on 100% of stock-days, 60,138 terms each; 2 s
+    w=40: offsets 0..1950, kept relationships at usable offsets 34,954,785 on 1872 offsets; scores on 100% of stock-days, 79,042 terms each; 2 s
+    w=60: offsets 0..1900, kept relationships at usable offsets 47,425,384 on 1813 offsets; scores on 100% of stock-days, 107,165 terms each; 2 s
+    w=90: offsets 0..1900, kept relationships at usable offsets 59,368,000 on 1726 offsets; scores on 100% of stock-days, 134,099 terms each; 2 s
+    w=180: offsets 0..1800, kept relationships at usable offsets 74,020,072 on 1469 offsets; scores on 100% of stock-days, 166,974 terms each; 2 s
+  2008-09: training 2001-12-31..2008-06-27, decisions 2008-06-27..2009-06-25
+    w=7: offsets 0..2350, kept relationships at usable offsets 5,327,793 on 1792 offsets; scores on 100% of stock-days, 12,191 terms each; 3 s
+    w=14: offsets 0..2350, kept relationships at usable offsets 11,536,790 on 2312 offsets; scores on 100% of stock-days, 26,397 terms each; 3 s
+    w=21: offsets 0..2300, kept relationships at usable offsets 16,307,501 on 2272 offsets; scores on 100% of stock-days, 37,162 terms each; 3 s
+    w=30: offsets 0..2300, kept relationships at usable offsets 24,537,457 on 2259 offsets; scores on 100% of stock-days, 55,939 terms each; 3 s
+    w=40: offsets 0..2300, kept relationships at usable offsets 33,426,375 on 2237 offsets; scores on 100% of stock-days, 76,399 terms each; 3 s
+    w=60: offsets 0..2300, kept relationships at usable offsets 47,160,558 on 2180 offsets; scores on 100% of stock-days, 107,714 terms each; 3 s
+    w=90: offsets 0..2250, kept relationships at usable offsets 62,327,627 on 2095 offsets; scores on 100% of stock-days, 142,276 terms each; 3 s
+    w=180: offsets 0..2150, kept relationships at usable offsets 82,980,102 on 1835 offsets; scores on 100% of stock-days, 189,203 terms each; 2 s
+  2009-10: training 2002-06-28..2009-06-26, decisions 2009-06-26..2010-06-24
+    w=7: offsets 0..2500, kept relationships at usable offsets 3,873,721 on 1789 offsets; scores on 100% of stock-days, 9,199 terms each; 3 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 8,738,952 on 2482 offsets; scores on 100% of stock-days, 20,866 terms each; 3 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 14,243,450 on 2472 offsets; scores on 100% of stock-days, 33,955 terms each; 3 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 21,113,123 on 2451 offsets; scores on 100% of stock-days, 50,458 terms each; 3 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 26,956,724 on 2422 offsets; scores on 100% of stock-days, 64,313 terms each; 3 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 36,907,454 on 2364 offsets; scores on 100% of stock-days, 88,022 terms each; 3 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 54,877,461 on 2281 offsets; scores on 100% of stock-days, 130,780 terms each; 3 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 80,504,681 on 2018 offsets; scores on 100% of stock-days, 191,837 terms each; 2 s
+  2010-11: training 2003-06-30..2010-06-25, decisions 2010-06-25..2011-06-24
+    w=7: offsets 0..2500, kept relationships at usable offsets 4,057,267 on 1770 offsets; scores on 100% of stock-days, 9,304 terms each; 3 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 11,185,409 on 2467 offsets; scores on 100% of stock-days, 25,647 terms each; 3 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 18,201,875 on 2472 offsets; scores on 100% of stock-days, 41,829 terms each; 3 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 25,423,447 on 2449 offsets; scores on 100% of stock-days, 58,502 terms each; 3 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 32,954,134 on 2421 offsets; scores on 100% of stock-days, 75,801 terms each; 3 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 45,517,873 on 2363 offsets; scores on 100% of stock-days, 104,655 terms each; 3 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 64,541,630 on 2280 offsets; scores on 100% of stock-days, 148,324 terms each; 3 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 91,016,398 on 2017 offsets; scores on 100% of stock-days, 209,024 terms each; 3 s
+  2011-12: training 2004-06-28..2011-06-27, decisions 2011-06-27..2012-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 4,441,329 on 1676 offsets; scores on 100% of stock-days, 9,988 terms each; 3 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 10,956,646 on 2380 offsets; scores on 100% of stock-days, 24,656 terms each; 4 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 18,264,833 on 2472 offsets; scores on 100% of stock-days, 41,056 terms each; 4 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 25,921,302 on 2453 offsets; scores on 100% of stock-days, 58,313 terms each; 3 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 32,954,048 on 2423 offsets; scores on 100% of stock-days, 74,040 terms each; 4 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 47,276,974 on 2366 offsets; scores on 100% of stock-days, 106,062 terms each; 3 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 64,722,548 on 2282 offsets; scores on 100% of stock-days, 145,184 terms each; 3 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 85,215,429 on 2016 offsets; scores on 100% of stock-days, 191,253 terms each; 3 s
+  2012-13: training 2005-06-28..2012-06-27, decisions 2012-06-27..2013-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,439,437 on 1774 offsets; scores on 100% of stock-days, 15,726 terms each; 6 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 29,805,377 on 2477 offsets; scores on 100% of stock-days, 41,042 terms each; 7 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 46,416,301 on 2472 offsets; scores on 100% of stock-days, 63,917 terms each; 7 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 70,147,457 on 2454 offsets; scores on 100% of stock-days, 96,682 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 93,070,909 on 2425 offsets; scores on 100% of stock-days, 128,210 terms each; 7 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 128,820,253 on 2366 offsets; scores on 100% of stock-days, 177,257 terms each; 7 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 172,269,966 on 2283 offsets; scores on 100% of stock-days, 237,306 terms each; 7 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 221,134,281 on 2021 offsets; scores on 100% of stock-days, 304,633 terms each; 6 s
+  2013-14: training 2006-06-28..2013-06-27, decisions 2013-06-27..2014-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,766,444 on 1887 offsets; scores on 100% of stock-days, 16,190 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 29,022,729 on 2482 offsets; scores on 100% of stock-days, 39,918 terms each; 7 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 47,072,209 on 2472 offsets; scores on 100% of stock-days, 64,866 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 69,191,110 on 2454 offsets; scores on 100% of stock-days, 95,523 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 91,102,443 on 2426 offsets; scores on 100% of stock-days, 125,739 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 127,042,216 on 2367 offsets; scores on 100% of stock-days, 175,142 terms each; 7 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 174,726,535 on 2282 offsets; scores on 100% of stock-days, 241,014 terms each; 7 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 232,412,912 on 2017 offsets; scores on 100% of stock-days, 320,271 terms each; 6 s
+  2014-15: training 2007-06-28..2014-06-27, decisions 2014-06-27..2015-06-25
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,145,018 on 2073 offsets; scores on 100% of stock-days, 15,316 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 28,915,465 on 2482 offsets; scores on 100% of stock-days, 39,881 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 47,275,396 on 2472 offsets; scores on 100% of stock-days, 65,209 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 71,359,536 on 2453 offsets; scores on 100% of stock-days, 98,554 terms each; 8 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 94,113,670 on 2425 offsets; scores on 100% of stock-days, 129,901 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 133,723,354 on 2366 offsets; scores on 100% of stock-days, 184,318 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 180,528,960 on 2282 offsets; scores on 100% of stock-days, 248,904 terms each; 7 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 241,581,192 on 2018 offsets; scores on 100% of stock-days, 332,831 terms each; 6 s
+  2015-16: training 2008-06-30..2015-06-26, decisions 2015-06-26..2016-06-24
+    w=7: offsets 0..2500, kept relationships at usable offsets 10,322,038 on 2247 offsets; scores on 100% of stock-days, 14,170 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 27,751,188 on 2482 offsets; scores on 100% of stock-days, 38,198 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 48,136,955 on 2472 offsets; scores on 100% of stock-days, 66,397 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 74,913,500 on 2449 offsets; scores on 100% of stock-days, 103,419 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 103,096,691 on 2421 offsets; scores on 100% of stock-days, 142,266 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 149,516,166 on 2363 offsets; scores on 100% of stock-days, 206,222 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 195,527,632 on 2280 offsets; scores on 100% of stock-days, 269,503 terms each; 7 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 230,572,252 on 2017 offsets; scores on 100% of stock-days, 317,679 terms each; 6 s
+  2016-17: training 2009-06-29..2016-06-27, decisions 2016-06-27..2017-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 12,571,663 on 1786 offsets; scores on 100% of stock-days, 17,355 terms each; 6 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 29,088,505 on 2482 offsets; scores on 100% of stock-days, 40,197 terms each; 7 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 47,798,571 on 2472 offsets; scores on 100% of stock-days, 66,041 terms each; 7 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 67,362,637 on 2453 offsets; scores on 100% of stock-days, 93,161 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 90,309,916 on 2423 offsets; scores on 100% of stock-days, 124,766 terms each; 7 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 128,452,136 on 2366 offsets; scores on 100% of stock-days, 177,184 terms each; 7 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 169,606,764 on 2282 offsets; scores on 100% of stock-days, 233,810 terms each; 7 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 229,834,594 on 2017 offsets; scores on 100% of stock-days, 316,303 terms each; 6 s
+  2017-18: training 2010-06-28..2017-06-27, decisions 2017-06-27..2018-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,452,801 on 1751 offsets; scores on 100% of stock-days, 15,804 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 28,370,449 on 2475 offsets; scores on 100% of stock-days, 39,186 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 45,760,049 on 2472 offsets; scores on 100% of stock-days, 63,083 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 68,193,790 on 2454 offsets; scores on 100% of stock-days, 94,076 terms each; 11 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 92,404,676 on 2426 offsets; scores on 100% of stock-days, 127,336 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 130,788,694 on 2366 offsets; scores on 100% of stock-days, 179,935 terms each; 7 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 177,763,823 on 2284 offsets; scores on 100% of stock-days, 244,628 terms each; 6 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 240,391,365 on 2022 offsets; scores on 100% of stock-days, 330,749 terms each; 5 s
+  2018-19: training 2011-06-28..2018-06-27, decisions 2018-06-27..2019-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 10,591,601 on 1699 offsets; scores on 100% of stock-days, 14,516 terms each; 5 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 28,546,037 on 2477 offsets; scores on 100% of stock-days, 39,136 terms each; 6 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 46,304,357 on 2472 offsets; scores on 100% of stock-days, 63,592 terms each; 6 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 69,553,609 on 2454 offsets; scores on 100% of stock-days, 95,674 terms each; 6 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 91,002,526 on 2425 offsets; scores on 100% of stock-days, 125,150 terms each; 6 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 123,435,748 on 2366 offsets; scores on 100% of stock-days, 169,783 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 166,653,430 on 2284 offsets; scores on 100% of stock-days, 229,449 terms each; 6 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 225,603,074 on 2020 offsets; scores on 100% of stock-days, 310,800 terms each; 5 s
+  2019-20: training 2012-06-28..2019-06-27, decisions 2019-06-27..2020-06-25
+    w=7: offsets 0..2500, kept relationships at usable offsets 11,881,833 on 1976 offsets; scores on 100% of stock-days, 16,285 terms each; 5 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 29,841,540 on 2482 offsets; scores on 100% of stock-days, 41,029 terms each; 6 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 48,017,536 on 2472 offsets; scores on 100% of stock-days, 66,179 terms each; 11 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 68,674,056 on 2453 offsets; scores on 100% of stock-days, 94,791 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 91,280,826 on 2423 offsets; scores on 100% of stock-days, 125,963 terms each; 9 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 128,346,276 on 2365 offsets; scores on 100% of stock-days, 176,984 terms each; 6 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 173,665,588 on 2278 offsets; scores on 100% of stock-days, 239,454 terms each; 6 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 242,743,025 on 2015 offsets; scores on 100% of stock-days, 334,358 terms each; 5 s
+  2020-21: training 2013-06-28..2020-06-26, decisions 2020-06-26..2021-06-24
+    w=7: offsets 0..2500, kept relationships at usable offsets 13,288,136 on 2022 offsets; scores on 100% of stock-days, 18,315 terms each; 5 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 32,182,253 on 2480 offsets; scores on 100% of stock-days, 44,402 terms each; 6 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 49,801,117 on 2472 offsets; scores on 100% of stock-days, 68,701 terms each; 10 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 71,427,709 on 2451 offsets; scores on 100% of stock-days, 98,609 terms each; 6 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 93,174,578 on 2422 offsets; scores on 100% of stock-days, 128,577 terms each; 6 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 121,505,772 on 2364 offsets; scores on 100% of stock-days, 167,522 terms each; 6 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 173,965,211 on 2281 offsets; scores on 100% of stock-days, 239,864 terms each; 6 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 229,413,798 on 2018 offsets; scores on 100% of stock-days, 316,005 terms each; 6 s
+  2021-22: training 2014-06-30..2021-06-25, decisions 2021-06-25..2022-06-24
+    w=7: offsets 0..2500, kept relationships at usable offsets 13,257,839 on 2019 offsets; scores on 100% of stock-days, 18,255 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 30,771,417 on 2482 offsets; scores on 100% of stock-days, 42,415 terms each; 7 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 48,513,505 on 2472 offsets; scores on 100% of stock-days, 66,898 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 65,474,506 on 2449 offsets; scores on 100% of stock-days, 90,384 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 87,867,126 on 2421 offsets; scores on 100% of stock-days, 121,256 terms each; 7 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 127,068,941 on 2363 offsets; scores on 100% of stock-days, 175,299 terms each; 7 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 171,529,262 on 2280 offsets; scores on 100% of stock-days, 236,502 terms each; 8 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 235,238,127 on 2015 offsets; scores on 100% of stock-days, 324,261 terms each; 7 s
+  2022-23: training 2015-06-29..2022-06-27, decisions 2022-06-27..2023-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 12,514,928 on 1950 offsets; scores on 100% of stock-days, 17,217 terms each; 8 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 29,240,900 on 2481 offsets; scores on 100% of stock-days, 40,312 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 50,289,862 on 2472 offsets; scores on 100% of stock-days, 69,313 terms each; 9 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 69,744,729 on 2450 offsets; scores on 100% of stock-days, 96,190 terms each; 7 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 90,387,040 on 2421 offsets; scores on 100% of stock-days, 124,708 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 123,407,305 on 2363 offsets; scores on 100% of stock-days, 170,147 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 173,581,058 on 2280 offsets; scores on 100% of stock-days, 239,280 terms each; 8 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 233,510,853 on 2015 offsets; scores on 100% of stock-days, 321,663 terms each; 8 s
+  2023-24: training 2016-06-28..2023-06-27, decisions 2023-06-27..2024-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 12,232,927 on 1849 offsets; scores on 100% of stock-days, 16,839 terms each; 10 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 31,308,349 on 2482 offsets; scores on 100% of stock-days, 43,123 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 49,255,301 on 2472 offsets; scores on 100% of stock-days, 67,808 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 67,883,856 on 2451 offsets; scores on 100% of stock-days, 93,554 terms each; 8 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 86,657,823 on 2421 offsets; scores on 100% of stock-days, 119,558 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 123,037,481 on 2363 offsets; scores on 100% of stock-days, 169,602 terms each; 10 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 165,859,150 on 2279 offsets; scores on 100% of stock-days, 228,496 terms each; 9 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 235,467,445 on 2015 offsets; scores on 100% of stock-days, 324,223 terms each; 7 s
+  2024-25: training 2017-06-28..2024-06-27, decisions 2024-06-27..2025-06-26
+    w=7: offsets 0..2500, kept relationships at usable offsets 12,256,783 on 1736 offsets; scores on 100% of stock-days, 16,849 terms each; 7 s
+    w=14: offsets 0..2500, kept relationships at usable offsets 30,989,560 on 2478 offsets; scores on 100% of stock-days, 42,620 terms each; 8 s
+    w=21: offsets 0..2500, kept relationships at usable offsets 49,040,462 on 2472 offsets; scores on 100% of stock-days, 67,525 terms each; 8 s
+    w=30: offsets 0..2500, kept relationships at usable offsets 69,815,652 on 2452 offsets; scores on 100% of stock-days, 96,255 terms each; 15 s
+    w=40: offsets 0..2500, kept relationships at usable offsets 89,137,104 on 2423 offsets; scores on 100% of stock-days, 122,801 terms each; 8 s
+    w=60: offsets 0..2450, kept relationships at usable offsets 124,623,005 on 2366 offsets; scores on 100% of stock-days, 171,596 terms each; 8 s
+    w=90: offsets 0..2450, kept relationships at usable offsets 161,985,409 on 2282 offsets; scores on 100% of stock-days, 223,085 terms each; 8 s
+    w=180: offsets 0..2350, kept relationships at usable offsets 224,012,602 on 2023 offsets; scores on 100% of stock-days, 307,983 terms each; 7 s
+  done in 888 s: {7: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w7.npy', 14: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w14.npy', 21: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w21.npy', 30: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w30.npy', 40: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w40.npy', 60: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w60.npy', 90: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w90.npy', 180: '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_w180.npy', 'all': '/home/bhoult/.local/share/correlation2/experiments/v1_pair_finder/aligned_wall.npy'}

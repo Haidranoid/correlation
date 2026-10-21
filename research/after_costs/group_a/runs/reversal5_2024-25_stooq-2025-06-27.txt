@@ -1,0 +1,13 @@
+Holdout 2024-06-28 .. 2025-06-27 (250 trading days), 1s
+Family reversal, rebalanced every 5 trading day(s): 2036 pairs from 0 correlation period(s) that ended before the holdout; 2036 stocks can be picked
+Picks beat the market over their holding period: 51.2% of 1000 picks (coin flip 50%)
+Rank correlation of prediction vs outcome (IC): mean +0.0398, t = +2.16
+Long-short top/bottom 10%: 6.86 bps/day gross, Sharpe 0.97, t = 0.97, book turnover 85% per rebalance
+
+                                              final value    return
+Buy and hold SPY (S&P 500)                          11361     13.6%
+Buy and hold QQQ (Nasdaq-100)                       11432     14.3%
+Buy and hold all 2036 candidates                    10757      7.6%
+Picks, no trading costs                              6545    -34.6%   random guessers: median 10731, 100.0% did at least as well (p = 1.000)
+Picks, 5 bps per trade                               6252    -37.5%   random guessers: median 10255, 100.0% did at least as well (p = 1.000)
+Picks, 20 bps per trade                              5448    -45.5%   random guessers: median 8953, 100.0% did at least as well (p = 1.000)

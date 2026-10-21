@@ -1,0 +1,2 @@
+years 18; beat random at p<0.1 (0 bps: 8, 5 bps: 8, 20 bps: 8) of 18; change over random +11.8 pts/yr (se 7.2, ahead 12/18); IC actual returns z +3.44; long-short 4.39 bps/day z +2.93, turnover 85%, costs 0.68 x c bps/day
+{'change': 11.816243063690509, 'per_year': [-1.58, 22.11, 30.02, 0.23, 21.87, 36.43, 24.22, -11.63, 7.77, 6.12, 39.39, 8.42, 56.99, 78.52, -20.08, -31.11, -13.14, -41.86], 'ahead': 12, 'years': 18, 'se': 7.193902470537942}

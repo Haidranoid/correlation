@@ -1,0 +1,9 @@
+unseen 2025-06-30..2026-10-19: 329 days, 64 TOM days ({-1: 16, 1: 16, 2: 16, 3: 16}), 17 calendar months (partial: June 2025 = 1 day, October 2026 = 13 days)
+SPY excess: TOM +0.199% vs other +0.025%; diff +0.175%, se +0.103%, Welch t +1.69
+  positions: -1: +0.258% t +1.04 (n 16); +1: +0.014% t -0.06 (n 16); +2: +0.190% t +0.80 (n 16); +3: +0.334% t +2.10 (n 16)
+EW market (new export, excess log): TOM +0.182% vs other -0.055%; diff +0.237%, t +1.79; positions -1: -0.020%, +1: +0.042%, +2: +0.226%, +3: +0.481%
+SPY excess log per year: TOM +9.6%, other +4.4%, all +14.0%
+rule vs random at 0 bp/side: rule +14.49%, median random +7.23%, diff +7.26 pts, p 0.0565
+rule vs random at 1 bp/side: rule +14.21%, median random +6.34%, diff +7.87 pts, p 0.0404
+buy-and-hold SPY +19.61%, cash +3.99% (annualized)
+French CRSP VW excess, 2025-06-30..2026-08-31: TOM +0.211% vs other +0.033%; diff +0.179%, t +1.52 (n TOM 56)

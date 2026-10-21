@@ -1,0 +1,1515 @@
+== scripts/30d.sh  2026-10-19T11:58:18-05:00: years 2010-2023, horizon 5; data /home/bhoult/.local/share/correlation2; results results/1w, runs runs/1w
+== rules: momentum, reversal, volatility, the oracle canary
+wrote runs/1w/rules/momentum.npy
+wrote runs/1w/rules/reversal.npy
+wrote runs/1w/rules/high_vol.npy
+wrote runs/1w/rules/low_vol.npy
+wrote runs/1w/rules/oracle.npy
+   rules took 8 s
+== LightGBM on the next week's returns
+stockai-30d LightGBM, horizon 5 days: years 2010..2023; reading days through 2024-06-26 only
+  2010: 869,950 train rows, 237,353 val rows, best iteration 12; val IC vs 5-day returns +0.0116 (t 1.3); 54s
+  2011: 1,107,222 train rows, 253,654 val rows, best iteration 62; val IC vs 5-day returns +0.0332 (t 4.7); 3s
+  2012: 1,361,444 train rows, 270,986 val rows, best iteration 95; val IC vs 5-day returns +0.0634 (t 6.4); 5s
+  2013: 1,630,106 train rows, 277,817 val rows, best iteration 4; val IC vs 5-day returns +0.0009 (t 0.1); 3s
+  2014: 1,906,862 train rows, 316,755 val rows, best iteration 163; val IC vs 5-day returns +0.0426 (t 6.2); 8s
+  2015: 2,220,847 train rows, 342,897 val rows, best iteration 34; val IC vs 5-day returns +0.0259 (t 3.4); 5s
+  2016: 2,562,850 train rows, 357,974 val rows, best iteration 10; val IC vs 5-day returns +0.0271 (t 2.7); 5s
+  2017: 2,921,011 train rows, 377,606 val rows, best iteration 2; val IC vs 5-day returns +0.0016 (t 0.2); 5s
+  2018: 3,296,854 train rows, 413,656 val rows, best iteration 1; val IC vs 5-day returns +0.0109 (t 2.1); 6s
+  2019: 3,707,292 train rows, 435,288 val rows, best iteration 30; val IC vs 5-day returns +0.0347 (t 3.7); 7s
+  2020: 3,999,741 train rows, 451,591 val rows, best iteration 45; val IC vs 5-day returns +0.0403 (t 2.9); 8s
+  2021: 3,999,813 train rows, 509,499 val rows, best iteration 15; val IC vs 5-day returns +0.0148 (t 1.7); 7s
+  2022: 3,999,146 train rows, 557,964 val rows, best iteration 38; val IC vs 5-day returns +0.0550 (t 5.6); 8s
+  2023: 3,998,617 train rows, 557,270 val rows, best iteration 1; val IC vs 5-day returns +0.0086 (t 0.9); 7s
+wrote runs/1w/lgbm/scores.npy (12,554,720 finite scores of 50,261,233, decision days 2010-06-25..2024-06-26) [133s]
+   model took 133 s
+== LightGBM on a sign-flipped target (negative control)
+stockai-30d LightGBM, horizon 5 days, null sign-flip: years 2010..2023; reading days through 2024-06-26 only
+  2010: 869,950 train rows, 237,353 val rows, best iteration 11; val IC vs 5-day returns -0.0171 (t -2.2); 17s
+  2011: 1,107,222 train rows, 253,654 val rows, best iteration 2; val IC vs 5-day returns -0.0014 (t -0.3); 2s
+  2012: 1,361,444 train rows, 270,986 val rows, best iteration 34; val IC vs 5-day returns +0.0034 (t 0.3); 3s
+  2013: 1,630,106 train rows, 277,817 val rows, best iteration 2; val IC vs 5-day returns +0.0073 (t 1.3); 3s
+  2014: 1,906,862 train rows, 316,755 val rows, best iteration 13; val IC vs 5-day returns +0.0001 (t 0.0); 3s
+  2015: 2,220,847 train rows, 342,897 val rows, best iteration 1; val IC vs 5-day returns +0.0041 (t 0.9); 3s
+  2016: 2,562,850 train rows, 357,974 val rows, best iteration 2; val IC vs 5-day returns -0.0471 (t -4.4); 4s
+  2017: 2,921,011 train rows, 377,606 val rows, best iteration 28; val IC vs 5-day returns +0.0065 (t 1.3); 5s
+  2018: 3,296,854 train rows, 413,656 val rows, best iteration 7; val IC vs 5-day returns -0.0010 (t -0.2); 5s
+  2019: 3,707,292 train rows, 435,288 val rows, best iteration 1; val IC vs 5-day returns -0.0080 (t -1.9); 5s
+  2020: 3,999,741 train rows, 451,591 val rows, best iteration 136; val IC vs 5-day returns +0.0071 (t 0.7); 11s
+  2021: 3,999,813 train rows, 509,499 val rows, best iteration 1; val IC vs 5-day returns +0.0157 (t 1.4); 6s
+  2022: 3,999,146 train rows, 557,964 val rows, best iteration 1; val IC vs 5-day returns -0.0323 (t -3.6); 6s
+  2023: 3,998,617 train rows, 557,270 val rows, best iteration 5; val IC vs 5-day returns -0.0058 (t -1.1); 6s
+wrote runs/1w/lgbm_null/scores.npy (12,554,720 finite scores of 50,261,233, decision days 2010-06-25..2024-06-26) [80s]
+   null took 80 s
+== the grader: top 10 positive scores, rebalanced every 5 trading days, 2010-2023
+   graded lgbm (uniform random accounts)
+   graded lgbm (volatility random accounts)
+   graded lgbm_null (uniform random accounts)
+   graded momentum (uniform random accounts)
+   graded momentum (volatility random accounts)
+   graded reversal (uniform random accounts)
+   graded reversal (volatility random accounts)
+   graded high_vol (uniform random accounts)
+   graded low_vol (uniform random accounts)
+   graded oracle (uniform random accounts)
+   judge took 12 s
+== the grader again, tied scores broken at random (seeds 1 2 3 4 5)
+wrote runs/1w/jitter/lgbm_s1.npy
+   graded lgbm, seed 1 (uniform random accounts)
+   graded lgbm, seed 1 (volatility random accounts)
+wrote runs/1w/jitter/lgbm_s2.npy
+   graded lgbm, seed 2 (uniform random accounts)
+   graded lgbm, seed 2 (volatility random accounts)
+wrote runs/1w/jitter/lgbm_s3.npy
+   graded lgbm, seed 3 (uniform random accounts)
+   graded lgbm, seed 3 (volatility random accounts)
+wrote runs/1w/jitter/lgbm_s4.npy
+   graded lgbm, seed 4 (uniform random accounts)
+   graded lgbm, seed 4 (volatility random accounts)
+wrote runs/1w/jitter/lgbm_s5.npy
+   graded lgbm, seed 5 (uniform random accounts)
+   graded lgbm, seed 5 (volatility random accounts)
+wrote runs/1w/jitter/lgbm_null_s1.npy
+   graded lgbm_null, seed 1 (uniform random accounts)
+wrote runs/1w/jitter/lgbm_null_s2.npy
+   graded lgbm_null, seed 2 (uniform random accounts)
+wrote runs/1w/jitter/lgbm_null_s3.npy
+   graded lgbm_null, seed 3 (uniform random accounts)
+wrote runs/1w/jitter/lgbm_null_s4.npy
+   graded lgbm_null, seed 4 (uniform random accounts)
+wrote runs/1w/jitter/lgbm_null_s5.npy
+   graded lgbm_null, seed 5 (uniform random accounts)
+   jitter took 33 s
+== grades: top-10 hits on the week's biggest gainers
+lgbm: 700 days, 0.336 hits a day against 0.076 (uniform) and 0.244 (same volatility); z +25.15 / +5.12; IC +0.0249 (t 4.8); comparable-stock excess +0.21 (t 1.97)
+lgbm_null: 700 days, 0.455 hits a day against 0.076 (uniform) and 0.374 (same volatility); z +36.66 / +3.67; IC -0.0015 (t -0.3); comparable-stock excess +0.13 (t 1.13)
+momentum: 700 days, 0.403 hits a day against 0.076 (uniform) and 0.281 (same volatility); z +31.65 / +6.35; IC +0.0165 (t 2.3); comparable-stock excess -0.03 (t -0.27)
+reversal: 700 days, 0.474 hits a day against 0.076 (uniform) and 0.345 (same volatility); z +38.67 / +6.10; IC +0.0131 (t 2.6); comparable-stock excess +0.33 (t 2.33)
+high_vol: 700 days, 0.793 hits a day against 0.076 (uniform) and 0.655 (same volatility); z +69.56 / +4.78; IC -0.0128 (t -1.5); comparable-stock excess +0.24 (t 1.46)
+low_vol: 700 days, 0.001 hits a day against 0.076 (uniform) and 0.003 (same volatility); z -7.19 / -0.87; IC +0.0128 (t 1.5); comparable-stock excess -0.08 (t -2.32)
+oracle: 700 days, 0.289 hits a day against 0.076 (uniform) and 0.095 (same volatility); z +20.66 / +17.20; IC +0.2018 (t 183.2); comparable-stock excess +2.24 (t 26.27)
+# stockai-1w results (horizon 5 trading days, top 10)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.336 | 0.076 | 0.244 | +25.15 | +5.12 | 232 | 0.241 | 0.234 | 58% | 19.2% / 18.9% | +0.59% vs +0.26% (t 2.4) | +0.0249 (4.8; 415) |
+| lgbm_null | 700 | 0.455 | 0.076 | 0.374 | +36.66 | +3.67 | 412 | 0.415 | 0.353 | 52% | 22.7% / 24.1% | +0.43% vs +0.26% (t 1.1) | -0.0015 (-0.3; 360) |
+| momentum | 700 | 0.403 | 0.076 | 0.281 | +31.65 | +6.35 | 0 | 0.450 | 0.282 | 47% | 23.1% / 24.0% | +0.32% vs +0.26% (t 0.3) | +0.0165 (2.3; 380) |
+| reversal | 700 | 0.474 | 0.076 | 0.345 | +38.67 | +6.10 | 0 | 0.399 | 0.316 | 54% | 23.5% / 23.6% | +0.60% vs +0.26% (t 1.9) | +0.0131 (2.6; 380) |
+| high_vol | 700 | 0.793 | 0.076 | 0.655 | +69.56 | +4.78 | 0 | 0.764 | 0.636 | 51% | 27.4% / 30.6% | +0.62% vs +0.26% (t 1.7) | -0.0128 (-1.5; 335) |
+| low_vol | 700 | 0.001 | 0.076 | 0.003 | -7.19 | -0.87 | 0 | 0.003 | 0.002 | 33% | 3.1% / 3.3% | +0.16% vs +0.26% (t -1.4) | +0.0128 (1.5; 365) |
+| oracle | 700 | 0.289 | 0.076 | 0.095 | +20.66 | +17.20 | 0 | 0.017 | 0.082 | 94% | 23.3% / 2.9% | +2.68% vs +0.26% (t 27.7) | +0.2018 (183.2; 700) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 8.0 | 5.68 | 6.67 | 6.0 | 14% / 15% | +0.64% vs +0.46% | +0.021 |
+| 2011 | 50 | 20.0 | 5.04 | 12.37 | 13.0 | 18% / 14% | +0.77% vs +0.06% | +0.047 |
+| 2012 | 50 | 14.0 | 4.82 | 12.15 | 10.0 | 17% / 15% | +0.92% vs +0.53% | +0.030 |
+| 2013 | 50 | 18.9 | 4.81 | 14.45 | 11.6 | 20% / 17% | +0.73% vs +0.46% | +0.018 |
+| 2014 | 50 | 14.0 | 4.20 | 14.83 | 15.0 | 19% / 24% | -0.29% vs +0.14% | +0.030 |
+| 2015 | 50 | 21.0 | 3.97 | 14.21 | 19.0 | 21% / 22% | +0.03% vs +0.03% | +0.040 |
+| 2016 | 50 | 16.0 | 3.87 | 10.40 | 5.7 | 16% / 17% | +0.92% vs +0.51% | +0.008 |
+| 2017 | 50 | 13.4 | 3.58 | 8.38 | 8.2 | 18% / 16% | +0.51% vs +0.29% | +0.008 |
+| 2018 | 50 | 12.6 | 3.27 | 10.06 | 9.4 | 19% / 18% | +0.33% vs +0.06% | +0.028 |
+| 2019 | 50 | 20.0 | 3.10 | 10.17 | 11.0 | 22% / 19% | +1.55% vs +0.06% | +0.036 |
+| 2020 | 50 | 5.0 | 2.98 | 6.39 | 7.0 | 16% / 15% | +1.34% vs +1.10% | -0.002 |
+| 2021 | 50 | 18.5 | 2.72 | 10.35 | 11.2 | 21% / 21% | +0.32% vs -0.37% | +0.055 |
+| 2022 | 50 | 27.0 | 2.54 | 16.82 | 18.0 | 23% / 26% | +0.17% vs +0.16% | -0.010 |
+| 2023 | 50 | 26.6 | 2.54 | 23.73 | 23.5 | 25% / 27% | +0.26% vs +0.19% | +0.039 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 16.5 | 5.68 | 13.14 | 15.0 | 19% / 19% | +0.41% vs +0.46% | +0.022 |
+| 2011 | 50 | 31.8 | 5.04 | 23.82 | 26.2 | 22% / 23% | +0.29% vs +0.06% | +0.020 |
+| 2012 | 50 | 17.0 | 4.82 | 18.86 | 20.0 | 22% / 20% | +0.71% vs +0.53% | -0.003 |
+| 2013 | 50 | 47.1 | 4.81 | 31.86 | 21.9 | 30% / 24% | +1.44% vs +0.46% | +0.002 |
+| 2014 | 50 | 34.0 | 4.20 | 30.44 | 40.3 | 28% / 31% | +0.05% vs +0.14% | +0.012 |
+| 2015 | 50 | 24.6 | 3.97 | 21.79 | 22.1 | 25% / 28% | +0.19% vs +0.03% | -0.023 |
+| 2016 | 50 | 29.1 | 3.87 | 25.44 | 35.7 | 25% / 31% | +0.37% vs +0.51% | +0.000 |
+| 2017 | 50 | 10.0 | 3.58 | 15.03 | 14.5 | 21% / 22% | +0.19% vs +0.29% | +0.019 |
+| 2018 | 50 | 14.0 | 3.27 | 13.68 | 10.0 | 23% / 19% | +0.45% vs +0.06% | +0.003 |
+| 2019 | 50 | 16.8 | 3.10 | 13.17 | 13.8 | 22% / 20% | +1.03% vs +0.06% | +0.005 |
+| 2020 | 50 | 23.0 | 2.98 | 14.24 | 20.0 | 21% / 26% | +1.02% vs +1.10% | -0.015 |
+| 2021 | 50 | 14.5 | 2.72 | 10.30 | 11.6 | 18% / 24% | -0.30% vs -0.37% | -0.035 |
+| 2022 | 50 | 19.9 | 2.54 | 19.89 | 19.6 | 24% / 26% | -0.05% vs +0.16% | -0.041 |
+| 2023 | 50 | 20.0 | 2.54 | 10.23 | 20.1 | 18% / 23% | +0.16% vs +0.19% | +0.012 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 24.0 | 5.68 | 16.90 | 29.0 | 22% / 24% | +0.50% vs +0.46% | +0.018 |
+| 2011 | 50 | 26.0 | 5.04 | 17.27 | 28.0 | 21% / 25% | -0.13% vs +0.06% | +0.035 |
+| 2012 | 50 | 13.0 | 4.82 | 11.95 | 14.0 | 18% / 19% | +0.49% vs +0.53% | +0.004 |
+| 2013 | 50 | 26.0 | 4.81 | 21.95 | 37.0 | 25% / 28% | +0.32% vs +0.46% | +0.010 |
+| 2014 | 50 | 14.0 | 4.20 | 13.81 | 14.0 | 24% / 22% | +0.06% vs +0.14% | +0.036 |
+| 2015 | 50 | 19.0 | 3.97 | 14.93 | 23.0 | 22% / 23% | -0.61% vs +0.04% | +0.039 |
+| 2016 | 50 | 20.0 | 3.87 | 14.42 | 22.0 | 22% / 27% | +0.31% vs +0.51% | -0.027 |
+| 2017 | 50 | 27.0 | 3.58 | 16.64 | 26.0 | 26% / 25% | +0.38% vs +0.29% | +0.015 |
+| 2018 | 50 | 8.0 | 3.27 | 11.73 | 20.0 | 18% / 23% | -0.67% vs +0.06% | +0.013 |
+| 2019 | 50 | 21.0 | 3.10 | 10.17 | 21.0 | 27% / 21% | +0.96% vs +0.06% | +0.022 |
+| 2020 | 50 | 38.0 | 2.98 | 19.27 | 43.0 | 29% / 31% | +2.13% vs +1.10% | -0.016 |
+| 2021 | 50 | 20.0 | 2.72 | 11.13 | 18.0 | 23% / 25% | -0.40% vs -0.37% | +0.022 |
+| 2022 | 50 | 12.0 | 2.54 | 7.44 | 7.0 | 21% / 22% | +0.12% vs +0.16% | +0.021 |
+| 2023 | 50 | 14.0 | 2.54 | 9.21 | 13.0 | 25% / 22% | +0.97% vs +0.19% | +0.038 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 19.0 | 5.45 | 14.35 | 16.0 | 18% / 20% | +0.47% vs +0.46% | +0.011 |
+| 2011 | 50 | 27.0 | 5.04 | 16.48 | 19.0 | 20% / 17% | +0.62% vs +0.06% | +0.032 |
+| 2012 | 50 | 27.0 | 4.82 | 20.13 | 30.0 | 27% / 18% | +1.38% vs +0.53% | +0.042 |
+| 2013 | 50 | 28.0 | 4.81 | 22.38 | 22.0 | 22% / 21% | +0.86% vs +0.46% | +0.036 |
+| 2014 | 50 | 32.0 | 4.20 | 21.33 | 26.0 | 24% / 26% | +0.06% vs +0.14% | -0.014 |
+| 2015 | 50 | 34.0 | 3.97 | 23.65 | 25.0 | 26% / 28% | +0.62% vs +0.04% | +0.012 |
+| 2016 | 50 | 13.0 | 3.87 | 20.12 | 14.0 | 22% / 23% | +0.84% vs +0.51% | +0.001 |
+| 2017 | 50 | 23.0 | 3.58 | 14.45 | 10.0 | 26% / 20% | +1.14% vs +0.29% | -0.005 |
+| 2018 | 50 | 20.0 | 3.27 | 13.86 | 15.0 | 23% / 21% | +0.62% vs +0.06% | +0.008 |
+| 2019 | 50 | 24.0 | 3.10 | 15.05 | 16.0 | 22% / 27% | +0.66% vs +0.06% | +0.003 |
+| 2020 | 50 | 18.0 | 2.98 | 13.99 | 19.0 | 25% / 23% | +1.92% vs +1.10% | +0.033 |
+| 2021 | 50 | 25.0 | 2.72 | 12.68 | 23.0 | 25% / 29% | -0.39% vs -0.37% | +0.013 |
+| 2022 | 50 | 21.0 | 2.54 | 15.95 | 17.0 | 23% / 28% | -0.50% vs +0.16% | +0.005 |
+| 2023 | 50 | 21.0 | 2.54 | 17.18 | 27.0 | 26% / 28% | +0.10% vs +0.19% | +0.007 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 25.0 | 5.45 | 20.00 | 31.0 | 21% / 24% | +0.14% vs +0.46% | -0.003 |
+| 2011 | 50 | 49.0 | 5.04 | 43.68 | 42.0 | 29% / 30% | +0.58% vs +0.06% | -0.035 |
+| 2012 | 50 | 31.0 | 4.82 | 35.50 | 32.0 | 30% / 26% | +0.93% vs +0.53% | +0.017 |
+| 2013 | 50 | 53.0 | 4.81 | 43.50 | 46.0 | 29% / 33% | +0.83% vs +0.46% | +0.005 |
+| 2014 | 50 | 38.0 | 4.20 | 39.13 | 46.0 | 27% / 36% | -0.65% vs +0.14% | -0.020 |
+| 2015 | 50 | 61.0 | 3.97 | 48.80 | 50.0 | 30% / 34% | +0.96% vs +0.04% | -0.039 |
+| 2016 | 50 | 44.0 | 3.87 | 38.00 | 56.0 | 29% / 33% | +0.26% vs +0.51% | +0.004 |
+| 2017 | 50 | 30.0 | 3.58 | 24.44 | 27.0 | 26% / 26% | +0.49% vs +0.29% | +0.022 |
+| 2018 | 50 | 30.0 | 3.27 | 22.67 | 26.0 | 25% / 28% | +0.30% vs +0.06% | -0.032 |
+| 2019 | 50 | 39.0 | 3.10 | 30.00 | 34.0 | 28% / 30% | +1.13% vs +0.06% | -0.007 |
+| 2020 | 50 | 47.0 | 2.98 | 32.12 | 46.0 | 28% / 30% | +2.65% vs +1.10% | +0.031 |
+| 2021 | 50 | 28.0 | 2.72 | 20.56 | 31.0 | 24% / 32% | -0.19% vs -0.37% | -0.069 |
+| 2022 | 50 | 38.0 | 2.54 | 28.46 | 24.0 | 27% / 33% | +0.61% vs +0.16% | -0.016 |
+| 2023 | 50 | 42.0 | 2.54 | 31.79 | 44.0 | 31% / 34% | +0.68% vs +0.19% | -0.036 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 0.0 | 5.45 | 0.00 | 1.0 | 5% / 5% | +0.35% vs +0.46% | +0.003 |
+| 2011 | 50 | 0.0 | 5.04 | 0.00 | 0.0 | 8% / 4% | +0.35% vs +0.06% | +0.035 |
+| 2012 | 50 | 0.0 | 4.82 | 0.00 | 0.0 | 3% / 7% | +0.21% vs +0.53% | -0.017 |
+| 2013 | 50 | 0.0 | 4.81 | 0.48 | 0.0 | 1% / 3% | +0.28% vs +0.46% | -0.005 |
+| 2014 | 50 | 0.0 | 4.20 | 0.83 | 1.0 | 3% / 3% | +0.10% vs +0.14% | +0.020 |
+| 2015 | 50 | 0.0 | 3.97 | 0.38 | 0.0 | 5% / 2% | +0.29% vs +0.04% | +0.039 |
+| 2016 | 50 | 0.0 | 3.87 | 0.00 | 0.0 | 1% / 2% | +0.41% vs +0.51% | -0.004 |
+| 2017 | 50 | 0.0 | 3.58 | 0.00 | 0.0 | 2% / 0% | +0.10% vs +0.29% | -0.022 |
+| 2018 | 50 | 1.0 | 3.27 | 0.32 | 0.0 | 2% / 3% | +0.19% vs +0.06% | +0.032 |
+| 2019 | 50 | 0.0 | 3.10 | 0.00 | 0.0 | 4% / 5% | -0.19% vs +0.06% | +0.007 |
+| 2020 | 50 | 0.0 | 2.98 | 0.00 | 0.0 | 2% / 3% | +0.42% vs +1.10% | -0.031 |
+| 2021 | 50 | 0.0 | 2.72 | 0.27 | 0.0 | 5% / 3% | -0.18% vs -0.37% | +0.069 |
+| 2022 | 50 | 0.0 | 2.54 | 0.00 | 0.0 | 2% / 4% | -0.24% vs +0.16% | +0.016 |
+| 2023 | 50 | 0.0 | 2.54 | 0.00 | 0.0 | 1% / 3% | +0.10% vs +0.19% | +0.036 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 27.0 | 5.45 | 7.38 | 1.0 | 28% / 3% | +2.72% vs +0.46% | +0.203 |
+| 2011 | 50 | 18.0 | 5.04 | 6.23 | 0.0 | 24% / 3% | +2.44% vs +0.06% | +0.199 |
+| 2012 | 50 | 15.0 | 4.82 | 6.11 | 1.0 | 24% / 2% | +2.31% vs +0.53% | +0.212 |
+| 2013 | 50 | 18.0 | 4.81 | 6.33 | 2.0 | 21% / 3% | +2.32% vs +0.46% | +0.202 |
+| 2014 | 50 | 11.0 | 4.20 | 5.45 | 1.0 | 22% / 3% | +1.92% vs +0.14% | +0.199 |
+| 2015 | 50 | 11.0 | 3.97 | 4.70 | 0.0 | 22% / 3% | +2.32% vs +0.04% | +0.205 |
+| 2016 | 50 | 22.0 | 3.87 | 5.32 | 1.0 | 25% / 3% | +2.95% vs +0.51% | +0.204 |
+| 2017 | 50 | 20.0 | 3.58 | 4.29 | 0.0 | 24% / 4% | +2.41% vs +0.29% | +0.216 |
+| 2018 | 50 | 12.0 | 3.27 | 3.84 | 1.0 | 22% / 2% | +2.26% vs +0.06% | +0.200 |
+| 2019 | 50 | 11.0 | 3.10 | 4.57 | 1.0 | 23% / 3% | +3.23% vs +0.06% | +0.203 |
+| 2020 | 50 | 6.0 | 2.98 | 3.69 | 1.0 | 22% / 2% | +3.76% vs +1.10% | +0.194 |
+| 2021 | 50 | 12.0 | 2.72 | 2.89 | 1.0 | 23% / 4% | +3.28% vs -0.37% | +0.209 |
+| 2022 | 50 | 12.0 | 2.54 | 2.99 | 1.0 | 25% / 3% | +3.06% vs +0.16% | +0.189 |
+| 2023 | 50 | 7.0 | 2.54 | 2.93 | 1.0 | 21% / 4% | +2.56% vs +0.19% | +0.191 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +4.54 | 355 of 700 | +0.12% | 42% | +0.19% (1.59) | 28.6% | +1.03%; +0.90% | +0.41% |
+| lgbm_null | +3.60 | 350 of 700 | -0.00% | 81% | +0.03% (0.23) | 29.9% | +1.20%; +0.52% | +0.09% |
+| momentum | +5.10 | 344 of 700 | -0.06% | 195% | -0.05% (-0.34) | 0.0% | n/a; n/a | +0.32% |
+| reversal | +4.90 | 346 of 700 | -0.06% | 60% | +0.14% (0.90) | 26.1% | +1.45%; +1.04% | +0.30% |
+| high_vol | +5.75 | 339 of 700 | -0.20% | 53% | +0.17% (0.86) | 46.1% | +0.89%; +0.54% | +0.39% |
+| low_vol | -1.15 | 322 of 700 | -0.15% | n/a | -0.15% (-2.11) | 0.0% | +7.34%; +7.34% | +0.15% |
+| oracle | +10.45 | 682 of 700 | +2.03% | 5% | +2.31% (37.90) | 3.6% | +10.02%; +8.98% | +2.41% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.21% (1.97) | 357 of 700 | +0.14% (1.40) |
+| lgbm_null | +0.13% (1.13) | 346 of 700 | +0.05% (0.43) |
+| momentum | -0.03% (-0.27) | 344 of 700 | -0.12% (-1.02) |
+| reversal | +0.33% (2.33) | 362 of 700 | +0.21% (1.57) |
+| high_vol | +0.24% (1.46) | 348 of 700 | +0.12% (0.78) |
+| low_vol | -0.08% (-2.32) | 328 of 700 | -0.08% (-2.56) |
+| oracle | +2.24% (26.27) | 671 of 700 | +2.14% (34.67) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $239,072 | $132,490 | $22,480 | $638 | $48,389 |
+| lgbm_null | $71,393 | $40,414 | $7,309 | $236 | $48,389 |
+| momentum | $32,798 | $28,565 | $18,867 | $8,222 | $48,528 |
+| reversal | $188,450 | $96,344 | $12,824 | $223 | $48,517 |
+| high_vol | $144,111 | $130,295 | $96,284 | $52,545 | $48,514 |
+| low_vol | $27,509 | $24,542 | $17,424 | $8,776 | $48,514 |
+| oracle | $743,687,971,161 | $377,713,275,924 | $49,290,230,468 | $824,491,570 | $48,514 |
+
+## The $10,000 account: top 10 positive scores, rebalanced every week (the grader)
+
+| Scores | Random match | Years beating random, p < 0.1 (0 / 5 / 20 / 50 bps) | Years worse than random, p > 0.9 (0 bps) | Mean yearly return (0 / 5 / 20 / 50 bps) | Random median (0 / 20 bps) | $10,000 after 14 years at 20 bps | SPY: mean year, $10,000 after 14 years | Rank IC z (holding-period returns) |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | uniform | 7 / 7 / 7 / 7 | 2 | +25.3% / +20.1% / +5.5% / -18.6% | +12.9% / -4.7% | $13,953 | +15.0%, $65,036 | 4.92 |
+| lgbm (volatility-matched) | volatility | 4 / 4 / 4 / 4 | 0 | +25.3% / +20.1% / +5.5% / -18.6% | +14.7% / -3.4% | $13,953 | +15.0%, $65,036 | 4.92 |
+| lgbm, ties at random, seed 1 | uniform | 6 / 6 / 6 / 6 | 1 | +28.3% / +22.8% / +7.8% / -17.1% | +13.0% / -4.9% | $19,721 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 1 (volatility-matched) | volatility | 6 / 6 / 6 / 6 | 0 | +28.3% / +22.8% / +7.8% / -17.1% | +14.8% / -3.5% | $19,721 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 2 | uniform | 6 / 6 / 6 / 6 | 2 | +27.3% / +21.9% / +7.0% / -17.7% | +12.9% / -4.9% | $17,084 | +15.0%, $65,036 | 4.93 |
+| lgbm, ties at random, seed 2 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +27.3% / +21.9% / +7.0% / -17.7% | +14.6% / -3.6% | $17,084 | +15.0%, $65,036 | 4.93 |
+| lgbm, ties at random, seed 3 | uniform | 7 / 7 / 7 / 7 | 1 | +30.2% / +24.6% / +9.4% / -15.8% | +13.0% / -4.9% | $24,507 | +15.0%, $65,036 | 4.96 |
+| lgbm, ties at random, seed 3 (volatility-matched) | volatility | 6 / 6 / 6 / 6 | 0 | +30.2% / +24.6% / +9.4% / -15.8% | +14.8% / -3.5% | $24,507 | +15.0%, $65,036 | 4.96 |
+| lgbm, ties at random, seed 4 | uniform | 7 / 7 / 7 / 7 | 1 | +28.0% / +22.5% / +7.5% / -17.3% | +13.0% / -4.8% | $19,052 | +15.0%, $65,036 | 4.97 |
+| lgbm, ties at random, seed 4 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +28.0% / +22.5% / +7.5% / -17.3% | +14.7% / -3.6% | $19,052 | +15.0%, $65,036 | 4.97 |
+| lgbm, ties at random, seed 5 | uniform | 6 / 6 / 6 / 6 | 1 | +27.5% / +22.1% / +7.1% / -17.6% | +13.0% / -4.8% | $17,817 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 5 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +27.5% / +22.1% / +7.1% / -17.6% | +15.0% / -3.3% | $17,817 | +15.0%, $65,036 | 4.95 |
+| lgbm_null | uniform | 3 / 3 / 3 / 3 | 3 | +17.4% / +12.8% / -0.1% / -21.6% | +14.4% / -2.6% | $6,066 | +15.0%, $65,036 | 0.04 |
+| lgbm_null, ties at random, seed 1 | uniform | 6 / 6 / 6 / 6 | 1 | +26.2% / +21.0% / +6.6% / -17.2% | +14.5% / -3.3% | $15,191 | +15.0%, $65,036 | 0.36 |
+| lgbm_null, ties at random, seed 2 | uniform | 3 / 3 / 3 / 3 | 3 | +18.6% / +13.8% / +0.3% / -22.0% | +14.5% / -3.3% | $6,056 | +15.0%, $65,036 | 0.61 |
+| lgbm_null, ties at random, seed 3 | uniform | 3 / 3 / 3 / 3 | 3 | +21.3% / +16.3% / +2.5% / -20.5% | +14.5% / -3.3% | $7,336 | +15.0%, $65,036 | 0.46 |
+| lgbm_null, ties at random, seed 4 | uniform | 4 / 4 / 4 / 4 | 3 | +20.1% / +15.2% / +1.5% / -21.1% | +14.4% / -3.4% | $6,589 | +15.0%, $65,036 | 0.53 |
+| lgbm_null, ties at random, seed 5 | uniform | 2 / 2 / 2 / 2 | 2 | +15.3% / +10.5% / -2.7% / -24.6% | +14.5% / -3.3% | $4,759 | +15.0%, $65,036 | 0.22 |
+| momentum | uniform | 3 / 3 / 3 / 3 | 5 | +15.7% / +14.5% / +11.2% / +4.8% | +12.9% / +8.6% | $20,048 | +15.0%, $65,036 | 2.53 |
+| momentum (volatility-matched) | volatility | 3 / 3 / 3 / 3 | 2 | +15.7% / +14.5% / +11.2% / +4.8% | +13.2% / +8.9% | $20,048 | +15.0%, $65,036 | 2.53 |
+| reversal | uniform | 9 / 9 / 9 / 9 | 1 | +33.6% / +27.3% / +10.0% / -17.9% | +13.0% / -6.8% | $17,798 | +15.0%, $65,036 | 3.05 |
+| reversal (volatility-matched) | volatility | 7 / 7 / 7 / 7 | 1 | +33.6% / +27.3% / +10.0% / -17.9% | +12.9% / -7.0% | $17,798 | +15.0%, $65,036 | 3.05 |
+| high_vol | uniform | 6 / 6 / 6 / 6 | 3 | +32.0% / +31.1% / +28.2% / +22.7% | +12.9% / +9.6% | $113,953 | +15.0%, $65,036 | -1.35 |
+| low_vol | uniform | 0 / 0 / 0 / 0 | 14 | +0.0% / +0.0% / +0.0% / +0.0% | +0.0% / +0.0% | $10,000 | +15.0%, $65,036 | 1.35 |
+| oracle | uniform | 14 / 14 / 14 / 14 | 0 | +280.0% / +261.5% / +211.2% / +130.3% | +12.9% / -7.4% | $53,549,593,072 | +15.0%, $65,036 | 183.45 |
+
+## The checks fixed before the Sharadar run
+
+Written down in test-results-30d.md (Next steps) and docs/sharadar.md before any Sharadar result: under the main delisting rule the picks beat comparable stocks with t >= 2, the sign-flip null doesn't, and the grader's account beats SPY at 20 bps. On Stooq data they are shown for reference.
+
+| Scores | Comparable-stock t >= 2 | Its null's comparable-stock t < 2 | Account at 20 bps vs SPY | All three |
+|---|---|---|---|---|
+| lgbm | 1.97: no | 1.13: yes | $19,052 (median of 5 random tie-breaks) vs $65,036: no | no |
+
+
+   evaluate took 18 s
+== grades inside two subsets known at each decision day: large500, no_collapse
+lgbm: 700 days, 0.479 hits a day against 0.221 (uniform) and 0.426 (same volatility); z +14.82 / +2.37; IC +0.0262 (t 4.2); comparable-stock excess +0.25 (t 3.12)
+lgbm_null: 700 days, 0.804 hits a day against 0.221 (uniform) and 0.713 (same volatility); z +33.49 / +3.22; IC -0.0029 (t -0.6); comparable-stock excess +0.00 (t 0.01)
+momentum: 700 days, 0.847 hits a day against 0.221 (uniform) and 0.659 (same volatility); z +35.99 / +6.87; IC +0.0133 (t 1.6); comparable-stock excess +0.00 (t 0.04)
+reversal: 700 days, 0.656 hits a day against 0.221 (uniform) and 0.622 (same volatility); z +25.01 / +1.27; IC +0.0156 (t 2.5); comparable-stock excess -0.02 (t -0.25)
+high_vol: 700 days, 1.324 hits a day against 0.221 (uniform) and 1.314 (same volatility); z +63.46 / +0.27; IC -0.0029 (t -0.3); comparable-stock excess +0.11 (t 0.78)
+low_vol: 700 days, 0.043 hits a day against 0.221 (uniform) and 0.042 (same volatility); z -10.23 / +0.10; IC +0.0029 (t 0.3); comparable-stock excess -0.02 (t -0.62)
+oracle: 700 days, 0.566 hits a day against 0.221 (uniform) and 0.289 (same volatility); z +19.84 / +14.99; IC +0.1899 (t 104.3); comparable-stock excess +1.62 (t 30.02)
+# stockai-1w results (horizon 5 trading days, top 10, subset large500)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.479 | 0.221 | 0.426 | +14.82 | +2.37 | 247 | 0.417 | 0.396 | 53% | 16.1% / 13.5% | +0.61% vs +0.28% (t 3.2) | +0.0262 (4.2; 406) |
+| lgbm_null | 700 | 0.804 | 0.221 | 0.713 | +33.49 | +3.22 | 424 | 0.813 | 0.708 | 50% | 20.3% / 21.6% | +0.28% vs +0.28% (t 0.0) | -0.0029 (-0.6; 353) |
+| momentum | 700 | 0.847 | 0.221 | 0.659 | +35.99 | +6.87 | 0 | 0.897 | 0.698 | 49% | 22.8% / 22.2% | +0.39% vs +0.28% (t 0.8) | +0.0133 (1.6; 375) |
+| reversal | 700 | 0.656 | 0.221 | 0.622 | +25.01 | +1.27 | 0 | 0.701 | 0.611 | 48% | 19.6% / 19.9% | +0.31% vs +0.28% (t 0.2) | +0.0156 (2.5; 373) |
+| high_vol | 700 | 1.324 | 0.221 | 1.314 | +63.46 | +0.27 | 0 | 1.377 | 1.360 | 49% | 26.4% / 29.0% | +0.44% vs +0.28% (t 0.9) | -0.0029 (-0.3; 355) |
+| low_vol | 700 | 0.043 | 0.221 | 0.042 | -10.23 | +0.10 | 0 | 0.040 | 0.040 | 52% | 4.2% / 4.9% | +0.23% vs +0.28% (t -0.8) | +0.0029 (0.3; 345) |
+| oracle | 700 | 0.566 | 0.221 | 0.289 | +19.84 | +14.99 | 0 | 0.061 | 0.205 | 90% | 20.1% / 4.0% | +2.04% vs +0.28% (t 31.2) | +0.1899 (104.3; 700) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 20.0 | 11.10 | 14.24 | 16.0 | 13% / 13% | +0.81% vs +0.45% | +0.026 |
+| 2011 | 50 | 17.0 | 10.74 | 14.67 | 16.0 | 15% / 11% | +0.39% vs +0.03% | +0.055 |
+| 2012 | 50 | 17.0 | 10.83 | 17.53 | 17.0 | 14% / 12% | +0.60% vs +0.54% | +0.032 |
+| 2013 | 50 | 23.8 | 11.11 | 19.26 | 19.8 | 15% / 12% | +0.90% vs +0.49% | +0.028 |
+| 2014 | 50 | 27.0 | 11.04 | 24.48 | 20.0 | 21% / 17% | +0.38% vs +0.14% | +0.035 |
+| 2015 | 50 | 28.0 | 10.84 | 26.42 | 27.0 | 17% / 15% | +0.25% vs +0.03% | +0.036 |
+| 2016 | 50 | 19.5 | 10.88 | 17.92 | 19.0 | 14% / 12% | +0.75% vs +0.45% | +0.013 |
+| 2017 | 50 | 15.9 | 10.78 | 18.11 | 20.0 | 15% / 12% | +0.37% vs +0.31% | +0.005 |
+| 2018 | 50 | 20.9 | 10.89 | 21.62 | 28.1 | 16% / 17% | -0.01% vs +0.14% | +0.031 |
+| 2019 | 50 | 31.0 | 11.02 | 26.66 | 18.0 | 19% / 13% | +1.36% vs +0.16% | +0.027 |
+| 2020 | 50 | 15.0 | 11.94 | 16.43 | 10.0 | 14% / 10% | +1.28% vs +0.92% | -0.008 |
+| 2021 | 50 | 35.3 | 11.73 | 28.44 | 27.0 | 17% / 16% | -0.16% vs -0.27% | +0.052 |
+| 2022 | 50 | 41.0 | 11.01 | 31.76 | 34.0 | 21% / 20% | +0.81% vs +0.22% | -0.004 |
+| 2023 | 50 | 23.8 | 10.83 | 20.99 | 20.0 | 15% / 11% | +0.82% vs +0.31% | +0.039 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 34.0 | 11.10 | 23.04 | 31.0 | 18% / 17% | +0.63% vs +0.45% | +0.031 |
+| 2011 | 50 | 35.0 | 10.74 | 32.17 | 36.6 | 20% / 19% | -0.31% vs +0.03% | +0.025 |
+| 2012 | 50 | 40.0 | 10.83 | 34.42 | 38.0 | 22% / 22% | +0.66% vs +0.54% | -0.008 |
+| 2013 | 50 | 47.4 | 11.11 | 34.52 | 47.8 | 22% / 22% | +0.56% vs +0.49% | -0.005 |
+| 2014 | 50 | 65.0 | 11.04 | 54.34 | 72.0 | 27% / 29% | -0.01% vs +0.14% | -0.002 |
+| 2015 | 50 | 43.0 | 10.84 | 43.69 | 45.7 | 21% / 25% | -0.08% vs +0.03% | -0.031 |
+| 2016 | 50 | 46.4 | 10.88 | 37.40 | 45.1 | 21% / 25% | +0.36% vs +0.45% | -0.009 |
+| 2017 | 50 | 32.0 | 10.78 | 34.91 | 32.0 | 21% / 20% | +0.43% vs +0.31% | +0.016 |
+| 2018 | 50 | 22.6 | 10.89 | 28.51 | 27.5 | 17% / 18% | +0.02% vs +0.14% | -0.009 |
+| 2019 | 50 | 30.9 | 11.02 | 25.32 | 28.2 | 18% / 15% | +0.86% vs +0.16% | +0.006 |
+| 2020 | 50 | 46.0 | 11.94 | 39.57 | 53.0 | 20% / 23% | +0.80% vs +0.92% | -0.015 |
+| 2021 | 50 | 35.7 | 11.73 | 38.23 | 44.5 | 21% / 26% | -1.04% vs -0.27% | -0.027 |
+| 2022 | 50 | 55.3 | 11.01 | 53.17 | 51.1 | 21% / 25% | +0.45% vs +0.22% | -0.034 |
+| 2023 | 50 | 29.3 | 10.83 | 19.83 | 16.7 | 13% / 14% | +0.63% vs +0.31% | +0.021 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 43.0 | 11.10 | 32.17 | 51.0 | 22% / 25% | +0.44% vs +0.45% | +0.014 |
+| 2011 | 50 | 34.0 | 10.74 | 26.43 | 45.0 | 18% / 20% | -0.36% vs +0.03% | +0.047 |
+| 2012 | 50 | 32.0 | 10.83 | 26.54 | 25.0 | 20% / 18% | +0.65% vs +0.54% | -0.001 |
+| 2013 | 50 | 45.0 | 11.11 | 35.23 | 53.0 | 26% / 23% | +0.59% vs +0.49% | +0.022 |
+| 2014 | 50 | 31.0 | 11.04 | 25.08 | 26.0 | 22% / 17% | +0.46% vs +0.14% | +0.033 |
+| 2015 | 50 | 21.0 | 10.84 | 19.79 | 28.0 | 15% / 18% | -0.37% vs +0.03% | +0.031 |
+| 2016 | 50 | 39.0 | 10.89 | 31.02 | 56.0 | 18% / 26% | -0.09% vs +0.45% | -0.039 |
+| 2017 | 50 | 46.0 | 10.78 | 40.22 | 56.0 | 27% / 25% | +0.35% vs +0.31% | +0.019 |
+| 2018 | 50 | 37.0 | 10.89 | 29.67 | 44.0 | 22% / 20% | -0.04% vs +0.14% | -0.001 |
+| 2019 | 50 | 49.0 | 11.02 | 28.83 | 38.0 | 24% / 18% | +0.83% vs +0.16% | +0.025 |
+| 2020 | 50 | 76.0 | 11.94 | 59.19 | 75.0 | 32% / 29% | +1.58% vs +0.92% | -0.020 |
+| 2021 | 50 | 56.0 | 11.73 | 47.75 | 52.0 | 26% / 24% | +0.05% vs -0.27% | +0.012 |
+| 2022 | 50 | 33.0 | 11.01 | 24.24 | 33.0 | 21% / 23% | +0.24% vs +0.22% | +0.012 |
+| 2023 | 50 | 51.0 | 10.83 | 35.34 | 46.0 | 27% / 24% | +1.16% vs +0.31% | +0.031 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 19.0 | 10.93 | 24.01 | 25.0 | 16% / 17% | +0.18% vs +0.45% | +0.017 |
+| 2011 | 50 | 25.0 | 10.74 | 28.29 | 26.0 | 18% / 15% | +0.24% vs +0.03% | +0.032 |
+| 2012 | 50 | 32.0 | 10.83 | 28.89 | 35.0 | 23% / 19% | +0.85% vs +0.54% | +0.048 |
+| 2013 | 50 | 26.0 | 11.11 | 29.61 | 32.0 | 18% / 19% | +0.59% vs +0.49% | +0.040 |
+| 2014 | 50 | 43.0 | 11.04 | 36.66 | 41.0 | 22% / 22% | +0.13% vs +0.14% | -0.002 |
+| 2015 | 50 | 46.0 | 10.84 | 36.71 | 49.0 | 22% / 26% | -0.25% vs +0.03% | +0.007 |
+| 2016 | 50 | 22.0 | 10.88 | 30.21 | 34.0 | 15% / 21% | -0.14% vs +0.45% | +0.002 |
+| 2017 | 50 | 27.0 | 10.78 | 25.87 | 26.0 | 20% / 20% | +0.44% vs +0.31% | -0.013 |
+| 2018 | 50 | 34.0 | 10.89 | 24.56 | 26.0 | 21% / 15% | +0.68% vs +0.14% | +0.022 |
+| 2019 | 50 | 33.0 | 11.02 | 26.97 | 32.0 | 20% / 20% | +0.40% vs +0.16% | -0.009 |
+| 2020 | 50 | 33.0 | 11.94 | 36.55 | 40.0 | 21% / 19% | +1.09% vs +0.92% | +0.036 |
+| 2021 | 50 | 46.0 | 11.73 | 39.01 | 48.0 | 20% / 24% | -0.45% vs -0.27% | +0.014 |
+| 2022 | 50 | 38.0 | 11.01 | 36.71 | 32.0 | 20% / 20% | +0.50% vs +0.22% | +0.006 |
+| 2023 | 50 | 35.0 | 10.83 | 31.33 | 45.0 | 18% / 24% | +0.06% vs +0.31% | +0.019 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 40.0 | 10.93 | 40.78 | 46.0 | 21% / 24% | +0.09% vs +0.45% | +0.003 |
+| 2011 | 50 | 62.0 | 10.74 | 60.89 | 57.0 | 27% / 29% | -0.16% vs +0.03% | -0.041 |
+| 2012 | 50 | 71.0 | 10.83 | 72.00 | 56.0 | 28% / 25% | +1.08% vs +0.54% | +0.020 |
+| 2013 | 50 | 56.0 | 11.11 | 53.89 | 69.0 | 25% / 28% | +0.36% vs +0.49% | +0.012 |
+| 2014 | 50 | 70.0 | 11.04 | 69.00 | 84.0 | 27% / 32% | -0.21% vs +0.14% | -0.015 |
+| 2015 | 50 | 81.0 | 10.84 | 83.33 | 67.0 | 30% / 32% | +0.41% vs +0.03% | -0.033 |
+| 2016 | 50 | 58.0 | 10.88 | 57.22 | 66.0 | 23% / 27% | +0.53% vs +0.45% | +0.008 |
+| 2017 | 50 | 51.0 | 10.78 | 50.00 | 52.0 | 25% / 24% | +0.55% vs +0.31% | +0.036 |
+| 2018 | 50 | 51.0 | 10.89 | 49.22 | 48.0 | 23% / 23% | +0.24% vs +0.14% | -0.031 |
+| 2019 | 50 | 77.0 | 11.02 | 73.78 | 62.0 | 29% / 28% | +1.06% vs +0.16% | +0.010 |
+| 2020 | 50 | 81.0 | 11.94 | 82.67 | 94.0 | 31% / 33% | +2.16% vs +0.92% | +0.035 |
+| 2021 | 50 | 75.0 | 11.73 | 72.36 | 94.0 | 26% / 37% | -1.40% vs -0.27% | -0.055 |
+| 2022 | 50 | 80.0 | 11.01 | 81.67 | 85.0 | 28% / 31% | +0.69% vs +0.22% | +0.009 |
+| 2023 | 50 | 74.0 | 10.83 | 73.11 | 84.0 | 26% / 33% | +0.81% vs +0.31% | +0.002 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 2.0 | 10.93 | 2.00 | 2.0 | 4% / 5% | +0.33% vs +0.45% | -0.003 |
+| 2011 | 50 | 4.0 | 10.74 | 4.00 | 0.0 | 8% / 4% | +0.35% vs +0.03% | +0.041 |
+| 2012 | 50 | 0.0 | 10.83 | 0.00 | 1.0 | 3% / 6% | +0.30% vs +0.54% | -0.020 |
+| 2013 | 50 | 1.0 | 11.11 | 0.22 | 2.0 | 4% / 4% | +0.31% vs +0.49% | -0.012 |
+| 2014 | 50 | 7.0 | 11.04 | 7.00 | 3.0 | 4% / 4% | +0.13% vs +0.14% | +0.015 |
+| 2015 | 50 | 1.0 | 10.84 | 1.00 | 2.0 | 4% / 4% | +0.21% vs +0.03% | +0.033 |
+| 2016 | 50 | 1.0 | 10.88 | 1.00 | 0.0 | 4% / 2% | +0.40% vs +0.45% | -0.008 |
+| 2017 | 50 | 3.0 | 10.78 | 3.00 | 3.0 | 3% / 8% | +0.00% vs +0.31% | -0.036 |
+| 2018 | 50 | 3.0 | 10.89 | 3.00 | 2.0 | 5% / 4% | +0.50% vs +0.14% | +0.031 |
+| 2019 | 50 | 1.0 | 11.02 | 1.00 | 1.0 | 4% / 7% | -0.09% vs +0.16% | -0.010 |
+| 2020 | 50 | 1.0 | 11.94 | 1.00 | 1.0 | 3% / 4% | +0.35% vs +0.92% | -0.035 |
+| 2021 | 50 | 3.0 | 11.73 | 3.25 | 4.0 | 7% / 4% | +0.16% vs -0.27% | +0.055 |
+| 2022 | 50 | 3.0 | 11.01 | 3.00 | 4.0 | 5% / 7% | +0.06% vs +0.22% | -0.009 |
+| 2023 | 50 | 0.0 | 10.83 | 0.00 | 3.0 | 2% / 4% | +0.15% vs +0.31% | -0.002 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 31.0 | 10.93 | 13.09 | 0.0 | 22% / 5% | +2.11% vs +0.45% | +0.201 |
+| 2011 | 50 | 29.0 | 10.74 | 12.40 | 2.0 | 21% / 4% | +1.68% vs +0.03% | +0.188 |
+| 2012 | 50 | 26.0 | 10.83 | 15.86 | 3.0 | 22% / 3% | +2.20% vs +0.54% | +0.207 |
+| 2013 | 50 | 23.0 | 11.11 | 14.68 | 1.0 | 18% / 4% | +1.89% vs +0.49% | +0.200 |
+| 2014 | 50 | 30.0 | 11.04 | 15.82 | 4.0 | 23% / 3% | +1.86% vs +0.14% | +0.187 |
+| 2015 | 50 | 31.0 | 10.84 | 15.38 | 3.0 | 19% / 4% | +1.86% vs +0.03% | +0.198 |
+| 2016 | 50 | 34.0 | 10.88 | 14.92 | 3.0 | 20% / 3% | +2.05% vs +0.45% | +0.183 |
+| 2017 | 50 | 35.0 | 10.78 | 14.98 | 4.0 | 19% / 5% | +2.11% vs +0.31% | +0.199 |
+| 2018 | 50 | 31.0 | 10.89 | 14.16 | 3.0 | 19% / 4% | +1.62% vs +0.14% | +0.183 |
+| 2019 | 50 | 24.0 | 11.02 | 12.79 | 5.0 | 19% / 6% | +1.98% vs +0.16% | +0.175 |
+| 2020 | 50 | 30.0 | 11.94 | 14.49 | 4.0 | 17% / 3% | +2.99% vs +0.92% | +0.195 |
+| 2021 | 50 | 29.0 | 11.73 | 15.42 | 1.0 | 24% / 3% | +2.18% vs -0.27% | +0.202 |
+| 2022 | 50 | 26.0 | 11.01 | 14.59 | 5.0 | 18% / 4% | +2.04% vs +0.22% | +0.169 |
+| 2023 | 50 | 17.0 | 10.83 | 13.91 | 5.0 | 18% / 5% | +2.03% vs +0.31% | +0.171 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +2.48 | 382 of 700 | +0.18% | 34% | +0.22% (2.38) | 11.2% | +1.41%; +0.54% | +0.51% |
+| lgbm_null | +3.55 | 354 of 700 | +0.01% | 8712% | -0.08% (-0.76) | 14.1% | +1.28%; +1.21% | +0.12% |
+| momentum | +5.83 | 351 of 700 | +0.02% | 91% | +0.01% (0.07) | 0.0% | n/a; n/a | +0.39% |
+| reversal | +1.21 | 344 of 700 | -0.04% | 375% | -0.07% (-0.67) | 10.7% | +1.06%; +0.24% | +0.22% |
+| high_vol | +0.90 | 331 of 700 | -0.25% | 88% | +0.02% (0.12) | 23.8% | +1.02%; +0.54% | +0.26% |
+| low_vol | +0.57 | 333 of 700 | -0.12% | n/a | -0.10% (-1.40) | 0.0% | n/a; n/a | +0.23% |
+| oracle | +11.93 | 642 of 700 | +1.60% | 4% | +1.71% (33.17) | 1.9% | +5.38%; +4.88% | +1.98% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.25% (3.12) | 375 of 700 | +0.18% (2.52) |
+| lgbm_null | +0.00% (0.01) | 340 of 681 | -0.05% (-0.49) |
+| momentum | +0.00% (0.04) | 337 of 700 | -0.07% (-0.73) |
+| reversal | -0.02% (-0.25) | 330 of 700 | -0.10% (-1.11) |
+| high_vol | +0.11% (0.78) | 343 of 700 | -0.01% (-0.11) |
+| low_vol | -0.02% (-0.62) | 344 of 700 | -0.03% (-1.19) |
+| oracle | +1.62% (30.02) | 629 of 700 | +1.58% (30.81) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $352,497 | $200,723 | $36,954 | $1,236 | $56,575 |
+| lgbm_null | $34,027 | $19,939 | $4,001 | $159 | $56,575 |
+| momentum | $65,250 | $57,606 | $39,633 | $18,744 | $56,599 |
+| reversal | $37,035 | $19,286 | $2,714 | $53 | $56,676 |
+| high_vol | $54,304 | $49,402 | $37,191 | $21,066 | $56,663 |
+| low_vol | $44,079 | $38,426 | $25,453 | $11,156 | $56,663 |
+| oracle | $10,636,048,302 | $5,430,002,022 | $719,726,033 | $12,423,356 | $56,663 |
+
+
+lgbm: 700 days, 0.216 hits a day against 0.078 (uniform) and 0.168 (same volatility); z +13.21 / +3.21; IC +0.0252 (t 4.9); comparable-stock excess +0.17 (t 2.01)
+lgbm_null: 700 days, 0.367 hits a day against 0.078 (uniform) and 0.310 (same volatility); z +27.57 / +2.83; IC -0.0004 (t -0.1); comparable-stock excess -0.03 (t -0.38)
+momentum: 700 days, 0.453 hits a day against 0.078 (uniform) and 0.299 (same volatility); z +35.77 / +7.80; IC +0.0148 (t 2.2); comparable-stock excess -0.03 (t -0.21)
+reversal: 700 days, 0.353 hits a day against 0.078 (uniform) and 0.281 (same volatility); z +26.31 / +3.76; IC +0.0140 (t 2.7); comparable-stock excess +0.09 (t 0.84)
+high_vol: 700 days, 0.696 hits a day against 0.078 (uniform) and 0.574 (same volatility); z +59.10 / +4.50; IC -0.0103 (t -1.2); comparable-stock excess +0.15 (t 1.08)
+low_vol: 700 days, 0.003 hits a day against 0.078 (uniform) and 0.005 (same volatility); z -7.16 / -0.80; IC +0.0103 (t 1.2); comparable-stock excess -0.07 (t -2.29)
+oracle: 700 days, 0.283 hits a day against 0.078 (uniform) and 0.098 (same volatility); z +19.62 / +16.20; IC +0.1976 (t 171.3); comparable-stock excess +2.00 (t 35.11)
+# stockai-1w results (horizon 5 trading days, top 10, subset no_collapse)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.216 | 0.078 | 0.168 | +13.21 | +3.21 | 246 | 0.162 | 0.168 | 57% | 16.2% / 15.3% | +0.44% vs +0.25% (t 1.9) | +0.0252 (4.9; 422) |
+| lgbm_null | 700 | 0.367 | 0.078 | 0.310 | +27.57 | +2.83 | 418 | 0.348 | 0.301 | 51% | 20.5% / 21.7% | +0.23% vs +0.25% (t -0.2) | -0.0004 (-0.1; 354) |
+| momentum | 700 | 0.453 | 0.078 | 0.299 | +35.77 | +7.80 | 0 | 0.509 | 0.305 | 47% | 23.7% / 24.6% | +0.32% vs +0.25% (t 0.4) | +0.0148 (2.2; 378) |
+| reversal | 700 | 0.353 | 0.078 | 0.281 | +26.31 | +3.76 | 0 | 0.360 | 0.274 | 49% | 21.8% / 21.2% | +0.29% vs +0.25% (t 0.3) | +0.0140 (2.7; 386) |
+| high_vol | 700 | 0.696 | 0.078 | 0.574 | +59.10 | +4.50 | 0 | 0.679 | 0.568 | 51% | 25.9% / 28.1% | +0.31% vs +0.25% (t 0.4) | -0.0103 (-1.2; 334) |
+| low_vol | 700 | 0.003 | 0.078 | 0.005 | -7.16 | -0.80 | 0 | 0.003 | 0.003 | 50% | 3.3% / 3.6% | +0.16% vs +0.25% (t -1.3) | +0.0103 (1.2; 366) |
+| oracle | 700 | 0.283 | 0.078 | 0.098 | +19.62 | +16.20 | 0 | 0.017 | 0.084 | 94% | 22.7% / 3.0% | +2.41% vs +0.25% (t 37.5) | +0.1976 (171.3; 700) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 8.0 | 5.69 | 6.78 | 6.0 | 14% / 15% | +0.65% vs +0.46% | +0.022 |
+| 2011 | 50 | 11.0 | 5.13 | 8.19 | 8.0 | 15% / 11% | +0.49% vs +0.05% | +0.047 |
+| 2012 | 50 | 9.0 | 4.87 | 9.95 | 9.0 | 16% / 13% | +0.81% vs +0.52% | +0.032 |
+| 2013 | 50 | 14.3 | 4.85 | 11.69 | 10.7 | 16% / 16% | +0.52% vs +0.46% | +0.017 |
+| 2014 | 50 | 16.0 | 4.27 | 11.71 | 16.0 | 18% / 21% | +0.16% vs +0.14% | +0.033 |
+| 2015 | 50 | 18.0 | 4.18 | 10.61 | 11.0 | 19% / 16% | +0.45% vs -0.00% | +0.035 |
+| 2016 | 50 | 6.0 | 3.94 | 4.78 | 5.0 | 11% / 14% | +0.46% vs +0.50% | +0.008 |
+| 2017 | 50 | 15.9 | 3.62 | 7.66 | 6.2 | 16% / 13% | +0.73% vs +0.29% | +0.009 |
+| 2018 | 50 | 9.6 | 3.35 | 8.31 | 9.0 | 18% / 18% | +0.14% vs +0.06% | +0.029 |
+| 2019 | 50 | 8.0 | 3.32 | 7.27 | 0.0 | 17% / 14% | +0.09% vs -0.06% | +0.034 |
+| 2020 | 50 | 3.0 | 3.09 | 4.63 | 9.0 | 14% / 15% | +0.91% vs +1.06% | -0.005 |
+| 2021 | 50 | 13.4 | 2.87 | 6.35 | 11.0 | 18% / 16% | -0.28% vs -0.36% | +0.055 |
+| 2022 | 50 | 9.0 | 2.81 | 8.86 | 6.0 | 20% / 19% | +0.44% vs +0.15% | +0.002 |
+| 2023 | 50 | 10.3 | 2.65 | 11.12 | 6.8 | 18% / 15% | +0.56% vs +0.21% | +0.034 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 15.5 | 5.69 | 12.37 | 12.0 | 18% / 18% | +0.52% vs +0.46% | +0.023 |
+| 2011 | 50 | 19.5 | 5.13 | 15.76 | 16.9 | 19% / 20% | +0.02% vs +0.05% | +0.021 |
+| 2012 | 50 | 15.0 | 4.87 | 16.40 | 17.0 | 20% / 19% | +0.66% vs +0.52% | -0.003 |
+| 2013 | 50 | 41.2 | 4.85 | 27.78 | 23.0 | 28% / 24% | +1.25% vs +0.46% | +0.004 |
+| 2014 | 50 | 26.0 | 4.27 | 28.48 | 42.3 | 26% / 31% | -0.44% vs +0.14% | +0.011 |
+| 2015 | 50 | 22.3 | 4.18 | 18.63 | 21.8 | 20% / 25% | -0.25% vs -0.00% | -0.016 |
+| 2016 | 50 | 17.2 | 3.94 | 16.79 | 22.7 | 23% / 26% | +0.12% vs +0.50% | -0.002 |
+| 2017 | 50 | 11.0 | 3.62 | 14.40 | 13.0 | 20% / 22% | +0.04% vs +0.29% | +0.020 |
+| 2018 | 50 | 14.0 | 3.35 | 11.62 | 11.5 | 21% / 18% | +0.27% vs +0.06% | +0.002 |
+| 2019 | 50 | 8.6 | 3.32 | 7.26 | 10.7 | 17% / 16% | +0.01% vs -0.06% | +0.003 |
+| 2020 | 50 | 27.0 | 3.09 | 14.36 | 19.0 | 22% / 23% | +1.75% vs +1.06% | -0.009 |
+| 2021 | 50 | 10.6 | 2.87 | 8.48 | 10.4 | 17% / 19% | -0.69% vs -0.36% | -0.029 |
+| 2022 | 50 | 21.5 | 2.81 | 17.86 | 10.8 | 21% / 22% | +0.04% vs +0.15% | -0.041 |
+| 2023 | 50 | 7.4 | 2.65 | 6.79 | 12.2 | 15% / 19% | -0.10% vs +0.21% | +0.010 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 24.0 | 5.69 | 16.75 | 30.0 | 22% / 24% | +0.50% vs +0.47% | +0.017 |
+| 2011 | 50 | 27.0 | 5.13 | 16.82 | 33.0 | 21% / 26% | -0.13% vs +0.05% | +0.036 |
+| 2012 | 50 | 13.0 | 4.87 | 12.47 | 15.0 | 19% / 19% | +0.49% vs +0.52% | +0.006 |
+| 2013 | 50 | 29.0 | 4.85 | 22.37 | 38.0 | 26% / 28% | +0.32% vs +0.46% | +0.011 |
+| 2014 | 50 | 15.0 | 4.27 | 16.07 | 17.0 | 25% / 22% | +0.06% vs +0.14% | +0.036 |
+| 2015 | 50 | 24.0 | 4.18 | 14.86 | 29.0 | 24% / 25% | -0.61% vs -0.00% | +0.038 |
+| 2016 | 50 | 23.0 | 3.94 | 14.43 | 23.0 | 22% / 27% | +0.31% vs +0.50% | -0.027 |
+| 2017 | 50 | 28.0 | 3.62 | 16.85 | 28.0 | 26% / 25% | +0.38% vs +0.29% | +0.016 |
+| 2018 | 50 | 9.0 | 3.35 | 10.91 | 20.0 | 18% / 23% | -0.67% vs +0.06% | +0.012 |
+| 2019 | 50 | 29.0 | 3.32 | 12.25 | 24.0 | 27% / 23% | +0.96% vs -0.06% | +0.029 |
+| 2020 | 50 | 39.0 | 3.09 | 20.99 | 45.0 | 30% / 31% | +2.13% vs +1.06% | -0.017 |
+| 2021 | 50 | 22.0 | 2.87 | 12.87 | 21.0 | 24% / 26% | -0.40% vs -0.36% | +0.012 |
+| 2022 | 50 | 15.0 | 2.81 | 10.47 | 13.0 | 23% / 23% | +0.12% vs +0.15% | +0.009 |
+| 2023 | 50 | 20.0 | 2.65 | 10.99 | 20.0 | 26% / 23% | +0.97% vs +0.21% | +0.030 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 15.0 | 5.47 | 13.66 | 15.0 | 18% / 19% | +0.44% vs +0.47% | +0.012 |
+| 2011 | 50 | 15.0 | 5.13 | 14.17 | 18.0 | 18% / 16% | +0.06% vs +0.05% | +0.032 |
+| 2012 | 50 | 26.0 | 4.87 | 18.01 | 28.0 | 27% / 18% | +1.23% vs +0.52% | +0.041 |
+| 2013 | 50 | 24.0 | 4.85 | 20.05 | 18.0 | 20% / 19% | +0.96% vs +0.46% | +0.035 |
+| 2014 | 50 | 27.0 | 4.27 | 18.03 | 28.0 | 23% / 26% | -0.08% vs +0.14% | -0.014 |
+| 2015 | 50 | 24.0 | 4.18 | 14.93 | 29.0 | 22% / 24% | -0.34% vs -0.00% | +0.013 |
+| 2016 | 50 | 11.0 | 3.94 | 15.49 | 11.0 | 21% / 22% | +0.47% vs +0.50% | -0.001 |
+| 2017 | 50 | 20.0 | 3.62 | 12.55 | 13.0 | 25% / 20% | +0.91% vs +0.29% | -0.006 |
+| 2018 | 50 | 15.0 | 3.35 | 11.93 | 13.0 | 21% / 19% | +0.28% vs +0.06% | +0.010 |
+| 2019 | 50 | 14.0 | 3.32 | 11.73 | 14.0 | 19% / 24% | -0.41% vs -0.06% | +0.006 |
+| 2020 | 50 | 16.0 | 3.09 | 12.39 | 16.0 | 25% / 20% | +2.04% vs +1.06% | +0.035 |
+| 2021 | 50 | 21.0 | 2.87 | 10.07 | 18.0 | 24% / 25% | -0.63% vs -0.36% | +0.014 |
+| 2022 | 50 | 8.0 | 2.81 | 11.68 | 12.0 | 20% / 22% | -0.54% vs +0.15% | +0.006 |
+| 2023 | 50 | 11.0 | 2.65 | 11.85 | 19.0 | 22% / 24% | -0.35% vs +0.21% | +0.011 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 25.0 | 5.47 | 18.89 | 27.0 | 22% / 23% | +0.32% vs +0.47% | -0.002 |
+| 2011 | 50 | 45.0 | 5.13 | 38.95 | 32.0 | 28% / 27% | +0.64% vs +0.05% | -0.035 |
+| 2012 | 50 | 31.0 | 4.87 | 36.00 | 32.0 | 27% / 24% | +0.85% vs +0.52% | +0.017 |
+| 2013 | 50 | 51.0 | 4.85 | 41.00 | 48.0 | 28% / 33% | +0.67% vs +0.46% | +0.005 |
+| 2014 | 50 | 40.0 | 4.27 | 37.83 | 46.0 | 28% / 35% | -0.56% vs +0.14% | -0.020 |
+| 2015 | 50 | 44.0 | 4.18 | 34.55 | 34.0 | 26% / 29% | +0.08% vs -0.00% | -0.039 |
+| 2016 | 50 | 28.0 | 3.94 | 27.35 | 44.0 | 26% / 29% | +0.15% vs +0.50% | +0.004 |
+| 2017 | 50 | 28.0 | 3.62 | 21.85 | 21.0 | 25% / 23% | +0.45% vs +0.29% | +0.022 |
+| 2018 | 50 | 21.0 | 3.35 | 19.09 | 17.0 | 23% / 26% | -0.04% vs +0.06% | -0.032 |
+| 2019 | 50 | 28.0 | 3.32 | 22.95 | 27.0 | 25% / 23% | +0.22% vs -0.06% | -0.012 |
+| 2020 | 50 | 45.0 | 3.09 | 30.09 | 49.0 | 28% / 28% | +2.31% vs +1.06% | +0.035 |
+| 2021 | 50 | 23.0 | 2.87 | 17.46 | 36.0 | 25% / 31% | -1.08% vs -0.36% | -0.059 |
+| 2022 | 50 | 35.0 | 2.81 | 28.75 | 28.0 | 25% / 30% | -0.26% vs +0.15% | -0.003 |
+| 2023 | 50 | 43.0 | 2.65 | 27.13 | 34.0 | 27% / 31% | +0.55% vs +0.21% | -0.027 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 0.0 | 5.47 | 0.00 | 1.0 | 5% / 5% | +0.35% vs +0.47% | +0.002 |
+| 2011 | 50 | 1.0 | 5.13 | 0.50 | 0.0 | 8% / 5% | +0.35% vs +0.05% | +0.035 |
+| 2012 | 50 | 0.0 | 4.87 | 0.00 | 0.0 | 3% / 7% | +0.21% vs +0.52% | -0.017 |
+| 2013 | 50 | 0.0 | 4.85 | 0.48 | 0.0 | 1% / 3% | +0.28% vs +0.46% | -0.005 |
+| 2014 | 50 | 0.0 | 4.27 | 0.83 | 1.0 | 3% / 3% | +0.10% vs +0.14% | +0.020 |
+| 2015 | 50 | 0.0 | 4.18 | 0.00 | 0.0 | 5% / 2% | +0.29% vs -0.00% | +0.039 |
+| 2016 | 50 | 0.0 | 3.94 | 0.00 | 0.0 | 1% / 2% | +0.41% vs +0.50% | -0.004 |
+| 2017 | 50 | 0.0 | 3.62 | 0.00 | 0.0 | 2% / 0% | +0.10% vs +0.29% | -0.022 |
+| 2018 | 50 | 1.0 | 3.35 | 0.32 | 0.0 | 2% / 3% | +0.20% vs +0.06% | +0.032 |
+| 2019 | 50 | 0.0 | 3.32 | 0.72 | 0.0 | 4% / 5% | -0.18% vs -0.06% | +0.012 |
+| 2020 | 50 | 0.0 | 3.09 | 0.32 | 0.0 | 2% / 3% | +0.42% vs +1.06% | -0.035 |
+| 2021 | 50 | 0.0 | 2.87 | 0.28 | 0.0 | 5% / 4% | -0.18% vs -0.36% | +0.059 |
+| 2022 | 50 | 0.0 | 2.81 | 0.00 | 0.0 | 3% / 5% | -0.24% vs +0.15% | +0.003 |
+| 2023 | 50 | 0.0 | 2.65 | 0.00 | 0.0 | 1% / 3% | +0.10% vs +0.21% | +0.027 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 28.0 | 5.47 | 8.00 | 0.0 | 28% / 3% | +2.73% vs +0.47% | +0.203 |
+| 2011 | 50 | 15.0 | 5.13 | 5.92 | 0.0 | 24% / 3% | +2.30% vs +0.05% | +0.197 |
+| 2012 | 50 | 16.0 | 4.87 | 6.43 | 1.0 | 24% / 2% | +2.35% vs +0.52% | +0.209 |
+| 2013 | 50 | 19.0 | 4.85 | 6.78 | 3.0 | 20% / 3% | +2.24% vs +0.46% | +0.200 |
+| 2014 | 50 | 11.0 | 4.27 | 5.27 | 0.0 | 22% / 3% | +1.81% vs +0.14% | +0.197 |
+| 2015 | 50 | 13.0 | 4.18 | 4.66 | 1.0 | 23% / 3% | +2.14% vs -0.00% | +0.195 |
+| 2016 | 50 | 21.0 | 3.94 | 4.69 | 2.0 | 25% / 3% | +2.77% vs +0.50% | +0.201 |
+| 2017 | 50 | 17.0 | 3.62 | 4.51 | 0.0 | 23% / 4% | +2.29% vs +0.29% | +0.215 |
+| 2018 | 50 | 14.0 | 3.35 | 4.43 | 1.0 | 22% / 3% | +2.05% vs +0.06% | +0.198 |
+| 2019 | 50 | 9.0 | 3.32 | 3.88 | 1.0 | 21% / 3% | +2.38% vs -0.06% | +0.195 |
+| 2020 | 50 | 9.0 | 3.09 | 4.01 | 1.0 | 22% / 2% | +3.60% vs +1.06% | +0.192 |
+| 2021 | 50 | 11.0 | 2.87 | 3.65 | 1.0 | 22% / 4% | +2.36% vs -0.36% | +0.203 |
+| 2022 | 50 | 11.0 | 2.81 | 3.30 | 0.0 | 23% / 3% | +2.40% vs +0.15% | +0.177 |
+| 2023 | 50 | 4.0 | 2.65 | 3.09 | 1.0 | 21% / 4% | +2.26% vs +0.21% | +0.186 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +2.79 | 378 of 700 | +0.18% | 45% | +0.11% (1.11) | 0.0% | n/a; n/a | +0.44% |
+| lgbm_null | +2.95 | 337 of 700 | -0.13% | n/a | -0.10% (-0.97) | 0.0% | n/a; n/a | +0.23% |
+| momentum | +6.23 | 343 of 700 | -0.08% | 151% | -0.04% (-0.23) | 0.0% | n/a; n/a | +0.32% |
+| reversal | +3.28 | 350 of 700 | -0.00% | 264% | -0.07% (-0.58) | 0.0% | n/a; n/a | +0.29% |
+| high_vol | +5.58 | 352 of 700 | +0.06% | 209% | -0.06% (-0.41) | 0.0% | n/a; n/a | +0.31% |
+| low_vol | -1.10 | 325 of 700 | -0.16% | n/a | -0.13% (-1.93) | 0.0% | n/a; n/a | +0.16% |
+| oracle | +10.15 | 679 of 700 | +1.91% | 3% | +2.11% (39.81) | 0.0% | n/a; n/a | +2.41% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.17% (2.01) | 363 of 700 | +0.10% (1.28) |
+| lgbm_null | -0.03% (-0.38) | 341 of 700 | -0.09% (-1.02) |
+| momentum | -0.03% (-0.21) | 345 of 700 | -0.11% (-0.95) |
+| reversal | +0.09% (0.84) | 350 of 700 | +0.01% (0.11) |
+| high_vol | +0.15% (1.08) | 347 of 700 | +0.04% (0.35) |
+| low_vol | -0.07% (-2.29) | 328 of 700 | -0.08% (-2.54) |
+| oracle | +2.00% (35.11) | 669 of 700 | +1.96% (36.65) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $105,788 | $57,929 | $9,481 | $250 | $44,217 |
+| lgbm_null | $25,731 | $14,308 | $2,452 | $71 | $44,217 |
+| momentum | $32,798 | $28,565 | $18,867 | $8,222 | $44,339 |
+| reversal | $31,612 | $16,046 | $2,090 | $35 | $44,334 |
+| high_vol | $25,265 | $21,790 | $13,974 | $5,740 | $44,329 |
+| low_vol | $27,898 | $24,877 | $17,636 | $8,856 | $44,329 |
+| oracle | $126,324,167,991 | $64,061,591,710 | $8,321,629,815 | $137,919,220 | $44,329 |
+
+
+   subsets took 29 s
+== done in 313 s; see results/1w/summary.md
+== scripts/30d.sh  2026-10-19T14:27:22-05:00: years 2010-2023, horizon 5; data /home/bhoult/.local/share/correlation2; results results/1w, runs runs/1w
+== the grader: top 10 positive scores, rebalanced every 5 trading days, 2010-2023
+   graded lgbm (uniform random accounts)
+   graded lgbm (volatility random accounts)
+   graded lgbm_null (uniform random accounts)
+   graded momentum (uniform random accounts)
+   graded momentum (volatility random accounts)
+   graded reversal (uniform random accounts)
+   graded reversal (volatility random accounts)
+   graded high_vol (uniform random accounts)
+   graded low_vol (uniform random accounts)
+   graded oracle (uniform random accounts)
+   graded gpt (uniform random accounts)
+   graded gpt (volatility random accounts)
+   graded gpt_null (uniform random accounts)
+   judge took 15 s
+== grades: top-10 hits on the week's biggest gainers
+lgbm: 700 days, 0.336 hits a day against 0.076 (uniform) and 0.244 (same volatility); z +25.15 / +5.12; IC +0.0249 (t 4.8); comparable-stock excess +0.21 (t 1.97)
+lgbm_null: 700 days, 0.455 hits a day against 0.076 (uniform) and 0.374 (same volatility); z +36.66 / +3.67; IC -0.0015 (t -0.3); comparable-stock excess +0.13 (t 1.13)
+momentum: 700 days, 0.403 hits a day against 0.076 (uniform) and 0.281 (same volatility); z +31.65 / +6.35; IC +0.0165 (t 2.3); comparable-stock excess -0.03 (t -0.27)
+reversal: 700 days, 0.474 hits a day against 0.076 (uniform) and 0.345 (same volatility); z +38.67 / +6.10; IC +0.0131 (t 2.6); comparable-stock excess +0.33 (t 2.33)
+high_vol: 700 days, 0.793 hits a day against 0.076 (uniform) and 0.655 (same volatility); z +69.56 / +4.78; IC -0.0128 (t -1.5); comparable-stock excess +0.24 (t 1.46)
+low_vol: 700 days, 0.001 hits a day against 0.076 (uniform) and 0.003 (same volatility); z -7.19 / -0.87; IC +0.0128 (t 1.5); comparable-stock excess -0.08 (t -2.32)
+oracle: 700 days, 0.289 hits a day against 0.076 (uniform) and 0.095 (same volatility); z +20.66 / +17.20; IC +0.2018 (t 183.2); comparable-stock excess +2.24 (t 26.27)
+gpt: 700 days, 0.019 hits a day against 0.076 (uniform) and 0.031 (same volatility); z -5.55 / -1.95; IC +0.0117 (t 2.2); comparable-stock excess +0.03 (t 0.64)
+gpt_null: 700 days, 0.250 hits a day against 0.076 (uniform) and 0.201 (same volatility); z +16.85 / +3.02; IC -0.0031 (t -0.5); comparable-stock excess -0.08 (t -0.96)
+# stockai-1w results (horizon 5 trading days, top 10)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.336 | 0.076 | 0.244 | +25.15 | +5.12 | 232 | 0.241 | 0.234 | 58% | 19.2% / 18.9% | +0.59% vs +0.26% (t 2.4) | +0.0249 (4.8; 415) |
+| lgbm_null | 700 | 0.455 | 0.076 | 0.374 | +36.66 | +3.67 | 412 | 0.415 | 0.353 | 52% | 22.7% / 24.1% | +0.43% vs +0.26% (t 1.1) | -0.0015 (-0.3; 360) |
+| momentum | 700 | 0.403 | 0.076 | 0.281 | +31.65 | +6.35 | 0 | 0.450 | 0.282 | 47% | 23.1% / 24.0% | +0.32% vs +0.26% (t 0.3) | +0.0165 (2.3; 380) |
+| reversal | 700 | 0.474 | 0.076 | 0.345 | +38.67 | +6.10 | 0 | 0.399 | 0.316 | 54% | 23.5% / 23.6% | +0.60% vs +0.26% (t 1.9) | +0.0131 (2.6; 380) |
+| high_vol | 700 | 0.793 | 0.076 | 0.655 | +69.56 | +4.78 | 0 | 0.764 | 0.636 | 51% | 27.4% / 30.6% | +0.62% vs +0.26% (t 1.7) | -0.0128 (-1.5; 335) |
+| low_vol | 700 | 0.001 | 0.076 | 0.003 | -7.19 | -0.87 | 0 | 0.003 | 0.002 | 33% | 3.1% / 3.3% | +0.16% vs +0.26% (t -1.4) | +0.0128 (1.5; 365) |
+| oracle | 700 | 0.289 | 0.076 | 0.095 | +20.66 | +17.20 | 0 | 0.017 | 0.082 | 94% | 23.3% / 2.9% | +2.68% vs +0.26% (t 27.7) | +0.2018 (183.2; 700) |
+| gpt | 700 | 0.019 | 0.076 | 0.031 | -5.55 | -1.95 | 0 | 0.041 | 0.035 | 31% | 7.4% / 6.7% | +0.29% vs +0.26% (t 0.4) | +0.0117 (2.2; 386) |
+| gpt_null | 700 | 0.250 | 0.076 | 0.201 | +16.85 | +3.02 | 0 | 0.253 | 0.192 | 50% | 16.8% / 18.0% | +0.16% vs +0.26% (t -0.9) | -0.0031 (-0.5; 343) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 8.0 | 5.68 | 6.67 | 6.0 | 14% / 15% | +0.64% vs +0.46% | +0.021 |
+| 2011 | 50 | 20.0 | 5.04 | 12.37 | 13.0 | 18% / 14% | +0.77% vs +0.06% | +0.047 |
+| 2012 | 50 | 14.0 | 4.82 | 12.15 | 10.0 | 17% / 15% | +0.92% vs +0.53% | +0.030 |
+| 2013 | 50 | 18.9 | 4.81 | 14.45 | 11.6 | 20% / 17% | +0.73% vs +0.46% | +0.018 |
+| 2014 | 50 | 14.0 | 4.20 | 14.83 | 15.0 | 19% / 24% | -0.29% vs +0.14% | +0.030 |
+| 2015 | 50 | 21.0 | 3.97 | 14.21 | 19.0 | 21% / 22% | +0.03% vs +0.03% | +0.040 |
+| 2016 | 50 | 16.0 | 3.87 | 10.40 | 5.7 | 16% / 17% | +0.92% vs +0.51% | +0.008 |
+| 2017 | 50 | 13.4 | 3.58 | 8.38 | 8.2 | 18% / 16% | +0.51% vs +0.29% | +0.008 |
+| 2018 | 50 | 12.6 | 3.27 | 10.06 | 9.4 | 19% / 18% | +0.33% vs +0.06% | +0.028 |
+| 2019 | 50 | 20.0 | 3.10 | 10.17 | 11.0 | 22% / 19% | +1.55% vs +0.06% | +0.036 |
+| 2020 | 50 | 5.0 | 2.98 | 6.39 | 7.0 | 16% / 15% | +1.34% vs +1.10% | -0.002 |
+| 2021 | 50 | 18.5 | 2.72 | 10.35 | 11.2 | 21% / 21% | +0.32% vs -0.37% | +0.055 |
+| 2022 | 50 | 27.0 | 2.54 | 16.82 | 18.0 | 23% / 26% | +0.17% vs +0.16% | -0.010 |
+| 2023 | 50 | 26.6 | 2.54 | 23.73 | 23.5 | 25% / 27% | +0.26% vs +0.19% | +0.039 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 16.5 | 5.68 | 13.14 | 15.0 | 19% / 19% | +0.41% vs +0.46% | +0.022 |
+| 2011 | 50 | 31.8 | 5.04 | 23.82 | 26.2 | 22% / 23% | +0.29% vs +0.06% | +0.020 |
+| 2012 | 50 | 17.0 | 4.82 | 18.86 | 20.0 | 22% / 20% | +0.71% vs +0.53% | -0.003 |
+| 2013 | 50 | 47.1 | 4.81 | 31.86 | 21.9 | 30% / 24% | +1.44% vs +0.46% | +0.002 |
+| 2014 | 50 | 34.0 | 4.20 | 30.44 | 40.3 | 28% / 31% | +0.05% vs +0.14% | +0.012 |
+| 2015 | 50 | 24.6 | 3.97 | 21.79 | 22.1 | 25% / 28% | +0.19% vs +0.03% | -0.023 |
+| 2016 | 50 | 29.1 | 3.87 | 25.44 | 35.7 | 25% / 31% | +0.37% vs +0.51% | +0.000 |
+| 2017 | 50 | 10.0 | 3.58 | 15.03 | 14.5 | 21% / 22% | +0.19% vs +0.29% | +0.019 |
+| 2018 | 50 | 14.0 | 3.27 | 13.68 | 10.0 | 23% / 19% | +0.45% vs +0.06% | +0.003 |
+| 2019 | 50 | 16.8 | 3.10 | 13.17 | 13.8 | 22% / 20% | +1.03% vs +0.06% | +0.005 |
+| 2020 | 50 | 23.0 | 2.98 | 14.24 | 20.0 | 21% / 26% | +1.02% vs +1.10% | -0.015 |
+| 2021 | 50 | 14.5 | 2.72 | 10.30 | 11.6 | 18% / 24% | -0.30% vs -0.37% | -0.035 |
+| 2022 | 50 | 19.9 | 2.54 | 19.89 | 19.6 | 24% / 26% | -0.05% vs +0.16% | -0.041 |
+| 2023 | 50 | 20.0 | 2.54 | 10.23 | 20.1 | 18% / 23% | +0.16% vs +0.19% | +0.012 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 24.0 | 5.68 | 16.90 | 29.0 | 22% / 24% | +0.50% vs +0.46% | +0.018 |
+| 2011 | 50 | 26.0 | 5.04 | 17.27 | 28.0 | 21% / 25% | -0.13% vs +0.06% | +0.035 |
+| 2012 | 50 | 13.0 | 4.82 | 11.95 | 14.0 | 18% / 19% | +0.49% vs +0.53% | +0.004 |
+| 2013 | 50 | 26.0 | 4.81 | 21.95 | 37.0 | 25% / 28% | +0.32% vs +0.46% | +0.010 |
+| 2014 | 50 | 14.0 | 4.20 | 13.81 | 14.0 | 24% / 22% | +0.06% vs +0.14% | +0.036 |
+| 2015 | 50 | 19.0 | 3.97 | 14.93 | 23.0 | 22% / 23% | -0.61% vs +0.04% | +0.039 |
+| 2016 | 50 | 20.0 | 3.87 | 14.42 | 22.0 | 22% / 27% | +0.31% vs +0.51% | -0.027 |
+| 2017 | 50 | 27.0 | 3.58 | 16.64 | 26.0 | 26% / 25% | +0.38% vs +0.29% | +0.015 |
+| 2018 | 50 | 8.0 | 3.27 | 11.73 | 20.0 | 18% / 23% | -0.67% vs +0.06% | +0.013 |
+| 2019 | 50 | 21.0 | 3.10 | 10.17 | 21.0 | 27% / 21% | +0.96% vs +0.06% | +0.022 |
+| 2020 | 50 | 38.0 | 2.98 | 19.27 | 43.0 | 29% / 31% | +2.13% vs +1.10% | -0.016 |
+| 2021 | 50 | 20.0 | 2.72 | 11.13 | 18.0 | 23% / 25% | -0.40% vs -0.37% | +0.022 |
+| 2022 | 50 | 12.0 | 2.54 | 7.44 | 7.0 | 21% / 22% | +0.12% vs +0.16% | +0.021 |
+| 2023 | 50 | 14.0 | 2.54 | 9.21 | 13.0 | 25% / 22% | +0.97% vs +0.19% | +0.038 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 19.0 | 5.45 | 14.35 | 16.0 | 18% / 20% | +0.47% vs +0.46% | +0.011 |
+| 2011 | 50 | 27.0 | 5.04 | 16.48 | 19.0 | 20% / 17% | +0.62% vs +0.06% | +0.032 |
+| 2012 | 50 | 27.0 | 4.82 | 20.13 | 30.0 | 27% / 18% | +1.38% vs +0.53% | +0.042 |
+| 2013 | 50 | 28.0 | 4.81 | 22.38 | 22.0 | 22% / 21% | +0.86% vs +0.46% | +0.036 |
+| 2014 | 50 | 32.0 | 4.20 | 21.33 | 26.0 | 24% / 26% | +0.06% vs +0.14% | -0.014 |
+| 2015 | 50 | 34.0 | 3.97 | 23.65 | 25.0 | 26% / 28% | +0.62% vs +0.04% | +0.012 |
+| 2016 | 50 | 13.0 | 3.87 | 20.12 | 14.0 | 22% / 23% | +0.84% vs +0.51% | +0.001 |
+| 2017 | 50 | 23.0 | 3.58 | 14.45 | 10.0 | 26% / 20% | +1.14% vs +0.29% | -0.005 |
+| 2018 | 50 | 20.0 | 3.27 | 13.86 | 15.0 | 23% / 21% | +0.62% vs +0.06% | +0.008 |
+| 2019 | 50 | 24.0 | 3.10 | 15.05 | 16.0 | 22% / 27% | +0.66% vs +0.06% | +0.003 |
+| 2020 | 50 | 18.0 | 2.98 | 13.99 | 19.0 | 25% / 23% | +1.92% vs +1.10% | +0.033 |
+| 2021 | 50 | 25.0 | 2.72 | 12.68 | 23.0 | 25% / 29% | -0.39% vs -0.37% | +0.013 |
+| 2022 | 50 | 21.0 | 2.54 | 15.95 | 17.0 | 23% / 28% | -0.50% vs +0.16% | +0.005 |
+| 2023 | 50 | 21.0 | 2.54 | 17.18 | 27.0 | 26% / 28% | +0.10% vs +0.19% | +0.007 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 25.0 | 5.45 | 20.00 | 31.0 | 21% / 24% | +0.14% vs +0.46% | -0.003 |
+| 2011 | 50 | 49.0 | 5.04 | 43.68 | 42.0 | 29% / 30% | +0.58% vs +0.06% | -0.035 |
+| 2012 | 50 | 31.0 | 4.82 | 35.50 | 32.0 | 30% / 26% | +0.93% vs +0.53% | +0.017 |
+| 2013 | 50 | 53.0 | 4.81 | 43.50 | 46.0 | 29% / 33% | +0.83% vs +0.46% | +0.005 |
+| 2014 | 50 | 38.0 | 4.20 | 39.13 | 46.0 | 27% / 36% | -0.65% vs +0.14% | -0.020 |
+| 2015 | 50 | 61.0 | 3.97 | 48.80 | 50.0 | 30% / 34% | +0.96% vs +0.04% | -0.039 |
+| 2016 | 50 | 44.0 | 3.87 | 38.00 | 56.0 | 29% / 33% | +0.26% vs +0.51% | +0.004 |
+| 2017 | 50 | 30.0 | 3.58 | 24.44 | 27.0 | 26% / 26% | +0.49% vs +0.29% | +0.022 |
+| 2018 | 50 | 30.0 | 3.27 | 22.67 | 26.0 | 25% / 28% | +0.30% vs +0.06% | -0.032 |
+| 2019 | 50 | 39.0 | 3.10 | 30.00 | 34.0 | 28% / 30% | +1.13% vs +0.06% | -0.007 |
+| 2020 | 50 | 47.0 | 2.98 | 32.12 | 46.0 | 28% / 30% | +2.65% vs +1.10% | +0.031 |
+| 2021 | 50 | 28.0 | 2.72 | 20.56 | 31.0 | 24% / 32% | -0.19% vs -0.37% | -0.069 |
+| 2022 | 50 | 38.0 | 2.54 | 28.46 | 24.0 | 27% / 33% | +0.61% vs +0.16% | -0.016 |
+| 2023 | 50 | 42.0 | 2.54 | 31.79 | 44.0 | 31% / 34% | +0.68% vs +0.19% | -0.036 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 0.0 | 5.45 | 0.00 | 1.0 | 5% / 5% | +0.35% vs +0.46% | +0.003 |
+| 2011 | 50 | 0.0 | 5.04 | 0.00 | 0.0 | 8% / 4% | +0.35% vs +0.06% | +0.035 |
+| 2012 | 50 | 0.0 | 4.82 | 0.00 | 0.0 | 3% / 7% | +0.21% vs +0.53% | -0.017 |
+| 2013 | 50 | 0.0 | 4.81 | 0.48 | 0.0 | 1% / 3% | +0.28% vs +0.46% | -0.005 |
+| 2014 | 50 | 0.0 | 4.20 | 0.83 | 1.0 | 3% / 3% | +0.10% vs +0.14% | +0.020 |
+| 2015 | 50 | 0.0 | 3.97 | 0.38 | 0.0 | 5% / 2% | +0.29% vs +0.04% | +0.039 |
+| 2016 | 50 | 0.0 | 3.87 | 0.00 | 0.0 | 1% / 2% | +0.41% vs +0.51% | -0.004 |
+| 2017 | 50 | 0.0 | 3.58 | 0.00 | 0.0 | 2% / 0% | +0.10% vs +0.29% | -0.022 |
+| 2018 | 50 | 1.0 | 3.27 | 0.32 | 0.0 | 2% / 3% | +0.19% vs +0.06% | +0.032 |
+| 2019 | 50 | 0.0 | 3.10 | 0.00 | 0.0 | 4% / 5% | -0.19% vs +0.06% | +0.007 |
+| 2020 | 50 | 0.0 | 2.98 | 0.00 | 0.0 | 2% / 3% | +0.42% vs +1.10% | -0.031 |
+| 2021 | 50 | 0.0 | 2.72 | 0.27 | 0.0 | 5% / 3% | -0.18% vs -0.37% | +0.069 |
+| 2022 | 50 | 0.0 | 2.54 | 0.00 | 0.0 | 2% / 4% | -0.24% vs +0.16% | +0.016 |
+| 2023 | 50 | 0.0 | 2.54 | 0.00 | 0.0 | 1% / 3% | +0.10% vs +0.19% | +0.036 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 27.0 | 5.45 | 7.38 | 1.0 | 28% / 3% | +2.72% vs +0.46% | +0.203 |
+| 2011 | 50 | 18.0 | 5.04 | 6.23 | 0.0 | 24% / 3% | +2.44% vs +0.06% | +0.199 |
+| 2012 | 50 | 15.0 | 4.82 | 6.11 | 1.0 | 24% / 2% | +2.31% vs +0.53% | +0.212 |
+| 2013 | 50 | 18.0 | 4.81 | 6.33 | 2.0 | 21% / 3% | +2.32% vs +0.46% | +0.202 |
+| 2014 | 50 | 11.0 | 4.20 | 5.45 | 1.0 | 22% / 3% | +1.92% vs +0.14% | +0.199 |
+| 2015 | 50 | 11.0 | 3.97 | 4.70 | 0.0 | 22% / 3% | +2.32% vs +0.04% | +0.205 |
+| 2016 | 50 | 22.0 | 3.87 | 5.32 | 1.0 | 25% / 3% | +2.95% vs +0.51% | +0.204 |
+| 2017 | 50 | 20.0 | 3.58 | 4.29 | 0.0 | 24% / 4% | +2.41% vs +0.29% | +0.216 |
+| 2018 | 50 | 12.0 | 3.27 | 3.84 | 1.0 | 22% / 2% | +2.26% vs +0.06% | +0.200 |
+| 2019 | 50 | 11.0 | 3.10 | 4.57 | 1.0 | 23% / 3% | +3.23% vs +0.06% | +0.203 |
+| 2020 | 50 | 6.0 | 2.98 | 3.69 | 1.0 | 22% / 2% | +3.76% vs +1.10% | +0.194 |
+| 2021 | 50 | 12.0 | 2.72 | 2.89 | 1.0 | 23% / 4% | +3.28% vs -0.37% | +0.209 |
+| 2022 | 50 | 12.0 | 2.54 | 2.99 | 1.0 | 25% / 3% | +3.06% vs +0.16% | +0.189 |
+| 2023 | 50 | 7.0 | 2.54 | 2.93 | 1.0 | 21% / 4% | +2.56% vs +0.19% | +0.191 |
+
+### gpt by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 5.0 | 5.68 | 5.35 | 8.0 | 11% / 11% | +0.33% vs +0.46% | +0.019 |
+| 2011 | 50 | 0.0 | 5.04 | 3.03 | 4.0 | 11% / 8% | +0.40% vs +0.06% | +0.003 |
+| 2012 | 50 | 3.0 | 4.82 | 1.87 | 3.0 | 7% / 7% | +0.69% vs +0.53% | +0.003 |
+| 2013 | 50 | 1.0 | 4.81 | 2.85 | 4.0 | 9% / 8% | +0.48% vs +0.46% | +0.008 |
+| 2014 | 50 | 0.0 | 4.20 | 2.01 | 1.0 | 11% / 7% | +0.36% vs +0.14% | +0.010 |
+| 2015 | 50 | 1.0 | 3.97 | 1.11 | 2.0 | 7% / 5% | +0.19% vs +0.03% | +0.012 |
+| 2016 | 50 | 0.0 | 3.87 | 0.08 | 0.0 | 3% / 3% | +0.38% vs +0.51% | -0.002 |
+| 2017 | 50 | 1.0 | 3.58 | 1.47 | 1.0 | 7% / 7% | +0.37% vs +0.29% | -0.012 |
+| 2018 | 50 | 0.0 | 3.27 | 1.08 | 2.0 | 7% / 6% | +0.18% vs +0.06% | +0.022 |
+| 2019 | 50 | 0.0 | 3.10 | 0.09 | 0.0 | 4% / 4% | -0.25% vs +0.06% | +0.000 |
+| 2020 | 50 | 0.0 | 2.98 | 0.54 | 1.0 | 4% / 7% | +0.37% vs +1.10% | -0.040 |
+| 2021 | 50 | 1.0 | 2.72 | 1.50 | 1.0 | 6% / 7% | -0.18% vs -0.37% | +0.076 |
+| 2022 | 50 | 0.0 | 2.54 | 0.15 | 1.0 | 7% / 7% | +0.08% vs +0.16% | +0.029 |
+| 2023 | 50 | 1.0 | 2.54 | 0.76 | 1.0 | 12% / 8% | +0.65% vs +0.19% | +0.035 |
+
+### gpt_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 4.0 | 5.68 | 6.20 | 8.0 | 9% / 11% | +0.13% vs +0.46% | -0.001 |
+| 2011 | 50 | 40.0 | 5.04 | 30.53 | 40.0 | 27% / 29% | +0.31% vs +0.06% | +0.021 |
+| 2012 | 50 | 7.0 | 4.82 | 6.63 | 5.0 | 14% / 12% | +0.68% vs +0.53% | +0.016 |
+| 2013 | 50 | 64.0 | 4.81 | 35.39 | 42.0 | 32% / 33% | +1.13% vs +0.46% | +0.019 |
+| 2014 | 50 | 6.0 | 4.20 | 7.02 | 7.0 | 18% / 17% | +0.11% vs +0.14% | -0.007 |
+| 2015 | 50 | 6.0 | 3.97 | 3.84 | 4.0 | 9% / 13% | -0.31% vs +0.03% | -0.028 |
+| 2016 | 50 | 12.0 | 3.87 | 11.65 | 24.0 | 14% / 18% | -0.02% vs +0.51% | +0.008 |
+| 2017 | 50 | 1.0 | 3.58 | 1.01 | 1.0 | 7% / 6% | +0.25% vs +0.29% | -0.007 |
+| 2018 | 50 | 11.0 | 3.27 | 11.78 | 15.0 | 21% / 26% | -0.60% vs +0.06% | -0.040 |
+| 2019 | 50 | 4.0 | 3.10 | 4.31 | 4.0 | 14% / 14% | -0.43% vs +0.06% | +0.002 |
+| 2020 | 50 | 3.0 | 2.98 | 4.78 | 6.0 | 16% / 15% | +1.06% vs +1.10% | +0.033 |
+| 2021 | 50 | 3.0 | 2.72 | 5.47 | 5.0 | 19% / 14% | +0.11% vs -0.37% | -0.046 |
+| 2022 | 50 | 1.0 | 2.54 | 2.10 | 3.0 | 13% / 16% | -0.34% vs +0.16% | +0.017 |
+| 2023 | 50 | 13.0 | 2.54 | 10.24 | 13.0 | 23% / 27% | +0.21% vs +0.19% | -0.031 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +4.54 | 355 of 700 | +0.12% | 42% | +0.19% (1.59) | 28.6% | +1.03%; +0.90% | +0.41% |
+| lgbm_null | +3.60 | 350 of 700 | -0.00% | 81% | +0.03% (0.23) | 29.9% | +1.20%; +0.52% | +0.09% |
+| momentum | +5.10 | 344 of 700 | -0.06% | 195% | -0.05% (-0.34) | 0.0% | n/a; n/a | +0.32% |
+| reversal | +4.90 | 346 of 700 | -0.06% | 60% | +0.14% (0.90) | 26.1% | +1.45%; +1.04% | +0.30% |
+| high_vol | +5.75 | 339 of 700 | -0.20% | 53% | +0.17% (0.86) | 46.1% | +0.89%; +0.54% | +0.39% |
+| low_vol | -1.15 | 322 of 700 | -0.15% | n/a | -0.15% (-2.11) | 0.0% | +7.34%; +7.34% | +0.15% |
+| oracle | +10.45 | 682 of 700 | +2.03% | 5% | +2.31% (37.90) | 3.6% | +10.02%; +8.98% | +2.41% |
+| gpt | -2.57 | 366 of 700 | +0.06% | 160% | -0.02% (-0.28) | 0.2% | +5.98%; +6.54% | +0.28% |
+| gpt_null | +2.75 | 334 of 700 | -0.09% | n/a | -0.19% (-1.87) | 10.8% | +0.58%; -0.15% | +0.11% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.21% (1.97) | 357 of 700 | +0.14% (1.40) |
+| lgbm_null | +0.13% (1.13) | 346 of 700 | +0.05% (0.43) |
+| momentum | -0.03% (-0.27) | 344 of 700 | -0.12% (-1.02) |
+| reversal | +0.33% (2.33) | 362 of 700 | +0.21% (1.57) |
+| high_vol | +0.24% (1.46) | 348 of 700 | +0.12% (0.78) |
+| low_vol | -0.08% (-2.32) | 328 of 700 | -0.08% (-2.56) |
+| oracle | +2.24% (26.27) | 671 of 700 | +2.14% (34.67) |
+| gpt | +0.03% (0.64) | 366 of 700 | +0.00% (0.09) |
+| gpt_null | -0.08% (-0.96) | 343 of 700 | -0.15% (-1.80) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $239,072 | $132,490 | $22,480 | $638 | $48,389 |
+| lgbm_null | $71,393 | $40,414 | $7,309 | $236 | $48,389 |
+| momentum | $32,798 | $28,565 | $18,867 | $8,222 | $48,528 |
+| reversal | $188,450 | $96,344 | $12,824 | $223 | $48,517 |
+| high_vol | $144,111 | $130,295 | $96,284 | $52,545 | $48,514 |
+| low_vol | $27,509 | $24,542 | $17,424 | $8,776 | $48,514 |
+| oracle | $743,687,971,161 | $377,713,275,924 | $49,290,230,468 | $824,491,570 | $48,514 |
+| gpt | $57,360 | $31,063 | $4,917 | $121 | $48,395 |
+| gpt_null | $14,828 | $8,233 | $1,405 | $40 | $48,395 |
+
+## The $10,000 account: top 10 positive scores, rebalanced every week (the grader)
+
+| Scores | Random match | Years beating random, p < 0.1 (0 / 5 / 20 / 50 bps) | Years worse than random, p > 0.9 (0 bps) | Mean yearly return (0 / 5 / 20 / 50 bps) | Random median (0 / 20 bps) | $10,000 after 14 years at 20 bps | SPY: mean year, $10,000 after 14 years | Rank IC z (holding-period returns) |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | uniform | 7 / 7 / 7 / 7 | 2 | +25.3% / +20.1% / +5.5% / -18.6% | +12.9% / -4.7% | $13,953 | +15.0%, $65,036 | 4.92 |
+| lgbm (volatility-matched) | volatility | 4 / 4 / 4 / 4 | 0 | +25.3% / +20.1% / +5.5% / -18.6% | +14.7% / -3.4% | $13,953 | +15.0%, $65,036 | 4.92 |
+| lgbm, ties at random, seed 1 | uniform | 6 / 6 / 6 / 6 | 1 | +28.3% / +22.8% / +7.8% / -17.1% | +13.0% / -4.9% | $19,721 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 1 (volatility-matched) | volatility | 6 / 6 / 6 / 6 | 0 | +28.3% / +22.8% / +7.8% / -17.1% | +14.8% / -3.5% | $19,721 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 2 | uniform | 6 / 6 / 6 / 6 | 2 | +27.3% / +21.9% / +7.0% / -17.7% | +12.9% / -4.9% | $17,084 | +15.0%, $65,036 | 4.93 |
+| lgbm, ties at random, seed 2 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +27.3% / +21.9% / +7.0% / -17.7% | +14.6% / -3.6% | $17,084 | +15.0%, $65,036 | 4.93 |
+| lgbm, ties at random, seed 3 | uniform | 7 / 7 / 7 / 7 | 1 | +30.2% / +24.6% / +9.4% / -15.8% | +13.0% / -4.9% | $24,507 | +15.0%, $65,036 | 4.96 |
+| lgbm, ties at random, seed 3 (volatility-matched) | volatility | 6 / 6 / 6 / 6 | 0 | +30.2% / +24.6% / +9.4% / -15.8% | +14.8% / -3.5% | $24,507 | +15.0%, $65,036 | 4.96 |
+| lgbm, ties at random, seed 4 | uniform | 7 / 7 / 7 / 7 | 1 | +28.0% / +22.5% / +7.5% / -17.3% | +13.0% / -4.8% | $19,052 | +15.0%, $65,036 | 4.97 |
+| lgbm, ties at random, seed 4 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +28.0% / +22.5% / +7.5% / -17.3% | +14.7% / -3.6% | $19,052 | +15.0%, $65,036 | 4.97 |
+| lgbm, ties at random, seed 5 | uniform | 6 / 6 / 6 / 6 | 1 | +27.5% / +22.1% / +7.1% / -17.6% | +13.0% / -4.8% | $17,817 | +15.0%, $65,036 | 4.95 |
+| lgbm, ties at random, seed 5 (volatility-matched) | volatility | 5 / 5 / 5 / 5 | 0 | +27.5% / +22.1% / +7.1% / -17.6% | +15.0% / -3.3% | $17,817 | +15.0%, $65,036 | 4.95 |
+| lgbm_null | uniform | 3 / 3 / 3 / 3 | 3 | +17.4% / +12.8% / -0.1% / -21.6% | +14.4% / -2.6% | $6,066 | +15.0%, $65,036 | 0.04 |
+| lgbm_null, ties at random, seed 1 | uniform | 6 / 6 / 6 / 6 | 1 | +26.2% / +21.0% / +6.6% / -17.2% | +14.5% / -3.3% | $15,191 | +15.0%, $65,036 | 0.36 |
+| lgbm_null, ties at random, seed 2 | uniform | 3 / 3 / 3 / 3 | 3 | +18.6% / +13.8% / +0.3% / -22.0% | +14.5% / -3.3% | $6,056 | +15.0%, $65,036 | 0.61 |
+| lgbm_null, ties at random, seed 3 | uniform | 3 / 3 / 3 / 3 | 3 | +21.3% / +16.3% / +2.5% / -20.5% | +14.5% / -3.3% | $7,336 | +15.0%, $65,036 | 0.46 |
+| lgbm_null, ties at random, seed 4 | uniform | 4 / 4 / 4 / 4 | 3 | +20.1% / +15.2% / +1.5% / -21.1% | +14.4% / -3.4% | $6,589 | +15.0%, $65,036 | 0.53 |
+| lgbm_null, ties at random, seed 5 | uniform | 2 / 2 / 2 / 2 | 2 | +15.3% / +10.5% / -2.7% / -24.6% | +14.5% / -3.3% | $4,759 | +15.0%, $65,036 | 0.22 |
+| momentum | uniform | 3 / 3 / 3 / 3 | 5 | +15.7% / +14.5% / +11.2% / +4.8% | +12.9% / +8.6% | $20,048 | +15.0%, $65,036 | 2.53 |
+| momentum (volatility-matched) | volatility | 3 / 3 / 3 / 3 | 2 | +15.7% / +14.5% / +11.2% / +4.8% | +13.2% / +8.9% | $20,048 | +15.0%, $65,036 | 2.53 |
+| reversal | uniform | 9 / 9 / 9 / 9 | 1 | +33.6% / +27.3% / +10.0% / -17.9% | +13.0% / -6.8% | $17,798 | +15.0%, $65,036 | 3.05 |
+| reversal (volatility-matched) | volatility | 7 / 7 / 7 / 7 | 1 | +33.6% / +27.3% / +10.0% / -17.9% | +12.9% / -7.0% | $17,798 | +15.0%, $65,036 | 3.05 |
+| high_vol | uniform | 6 / 6 / 6 / 6 | 3 | +32.0% / +31.1% / +28.2% / +22.7% | +12.9% / +9.6% | $113,953 | +15.0%, $65,036 | -1.35 |
+| low_vol | uniform | 0 / 0 / 0 / 0 | 14 | +0.0% / +0.0% / +0.0% / +0.0% | +0.0% / +0.0% | $10,000 | +15.0%, $65,036 | 1.35 |
+| oracle | uniform | 14 / 14 / 14 / 14 | 0 | +280.0% / +261.5% / +211.2% / +130.3% | +12.9% / -7.4% | $53,549,593,072 | +15.0%, $65,036 | 183.45 |
+| gpt | uniform | 2 / 2 / 2 / 2 | 1 | +14.4% / +9.4% / -4.2% / -26.5% | +13.0% / -5.1% | $4,818 | +15.0%, $65,036 | 2.78 |
+| gpt (volatility-matched) | volatility | 3 / 3 / 3 / 3 | 2 | +14.4% / +9.4% / -4.2% / -26.5% | +12.0% / -6.2% | $4,818 | +15.0%, $65,036 | 2.78 |
+| gpt_null | uniform | 3 / 3 / 3 / 3 | 7 | +6.2% / +2.6% / -7.2% / -23.5% | +12.1% / -2.4% | $2,003 | +15.0%, $65,036 | -0.32 |
+
+## The checks fixed before the Sharadar run
+
+Written down in test-results-30d.md (Next steps) and docs/sharadar.md before any Sharadar result: under the main delisting rule the picks beat comparable stocks with t >= 2, the sign-flip null doesn't, and the grader's account beats SPY at 20 bps. On Stooq data they are shown for reference only.
+
+| Scores | Comparable-stock t >= 2 | Its null's comparable-stock t < 2 | Account at 20 bps vs SPY | All three |
+|---|---|---|---|---|
+| lgbm | 1.97: no | 1.13: yes | $19,052 (median of 5 random tie-breaks) vs $65,036: no | no |
+| gpt | 0.64: no | -0.96: yes | $4,818 (ties by ticker order) vs $65,036: no | no |
+
+
+   evaluate took 23 s
+== grades inside two subsets known at each decision day: large500, no_collapse
+lgbm: 700 days, 0.479 hits a day against 0.221 (uniform) and 0.426 (same volatility); z +14.82 / +2.37; IC +0.0262 (t 4.2); comparable-stock excess +0.25 (t 3.12)
+lgbm_null: 700 days, 0.804 hits a day against 0.221 (uniform) and 0.713 (same volatility); z +33.49 / +3.22; IC -0.0029 (t -0.6); comparable-stock excess +0.00 (t 0.01)
+momentum: 700 days, 0.847 hits a day against 0.221 (uniform) and 0.659 (same volatility); z +35.99 / +6.87; IC +0.0133 (t 1.6); comparable-stock excess +0.00 (t 0.04)
+reversal: 700 days, 0.656 hits a day against 0.221 (uniform) and 0.622 (same volatility); z +25.01 / +1.27; IC +0.0156 (t 2.5); comparable-stock excess -0.02 (t -0.25)
+high_vol: 700 days, 1.324 hits a day against 0.221 (uniform) and 1.314 (same volatility); z +63.46 / +0.27; IC -0.0029 (t -0.3); comparable-stock excess +0.11 (t 0.78)
+low_vol: 700 days, 0.043 hits a day against 0.221 (uniform) and 0.042 (same volatility); z -10.23 / +0.10; IC +0.0029 (t 0.3); comparable-stock excess -0.02 (t -0.62)
+oracle: 700 days, 0.566 hits a day against 0.221 (uniform) and 0.289 (same volatility); z +19.84 / +14.99; IC +0.1899 (t 104.3); comparable-stock excess +1.62 (t 30.02)
+gpt: 700 days, 0.123 hits a day against 0.221 (uniform) and 0.129 (same volatility); z -5.64 / -0.52; IC +0.0028 (t 0.5); comparable-stock excess -0.03 (t -0.72)
+gpt_null: 700 days, 0.517 hits a day against 0.221 (uniform) and 0.449 (same volatility); z +17.02 / +2.97; IC +0.0030 (t 0.4); comparable-stock excess -0.03 (t -0.45)
+# stockai-1w results (horizon 5 trading days, top 10, subset large500)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.479 | 0.221 | 0.426 | +14.82 | +2.37 | 247 | 0.417 | 0.396 | 53% | 16.1% / 13.5% | +0.61% vs +0.28% (t 3.2) | +0.0262 (4.2; 406) |
+| lgbm_null | 700 | 0.804 | 0.221 | 0.713 | +33.49 | +3.22 | 424 | 0.813 | 0.708 | 50% | 20.3% / 21.6% | +0.28% vs +0.28% (t 0.0) | -0.0029 (-0.6; 353) |
+| momentum | 700 | 0.847 | 0.221 | 0.659 | +35.99 | +6.87 | 0 | 0.897 | 0.698 | 49% | 22.8% / 22.2% | +0.39% vs +0.28% (t 0.8) | +0.0133 (1.6; 375) |
+| reversal | 700 | 0.656 | 0.221 | 0.622 | +25.01 | +1.27 | 0 | 0.701 | 0.611 | 48% | 19.6% / 19.9% | +0.31% vs +0.28% (t 0.2) | +0.0156 (2.5; 373) |
+| high_vol | 700 | 1.324 | 0.221 | 1.314 | +63.46 | +0.27 | 0 | 1.377 | 1.360 | 49% | 26.4% / 29.0% | +0.44% vs +0.28% (t 0.9) | -0.0029 (-0.3; 355) |
+| low_vol | 700 | 0.043 | 0.221 | 0.042 | -10.23 | +0.10 | 0 | 0.040 | 0.040 | 52% | 4.2% / 4.9% | +0.23% vs +0.28% (t -0.8) | +0.0029 (0.3; 345) |
+| oracle | 700 | 0.566 | 0.221 | 0.289 | +19.84 | +14.99 | 0 | 0.061 | 0.205 | 90% | 20.1% / 4.0% | +2.04% vs +0.28% (t 31.2) | +0.1899 (104.3; 700) |
+| gpt | 700 | 0.123 | 0.221 | 0.129 | -5.64 | -0.52 | 0 | 0.151 | 0.128 | 45% | 8.1% / 8.1% | +0.21% vs +0.28% (t -1.3) | +0.0028 (0.5; 363) |
+| gpt_null | 700 | 0.517 | 0.221 | 0.449 | +17.02 | +2.97 | 0 | 0.509 | 0.461 | 50% | 16.9% / 17.0% | +0.27% vs +0.28% (t -0.1) | +0.0030 (0.4; 360) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 20.0 | 11.10 | 14.24 | 16.0 | 13% / 13% | +0.81% vs +0.45% | +0.026 |
+| 2011 | 50 | 17.0 | 10.74 | 14.67 | 16.0 | 15% / 11% | +0.39% vs +0.03% | +0.055 |
+| 2012 | 50 | 17.0 | 10.83 | 17.53 | 17.0 | 14% / 12% | +0.60% vs +0.54% | +0.032 |
+| 2013 | 50 | 23.8 | 11.11 | 19.26 | 19.8 | 15% / 12% | +0.90% vs +0.49% | +0.028 |
+| 2014 | 50 | 27.0 | 11.04 | 24.48 | 20.0 | 21% / 17% | +0.38% vs +0.14% | +0.035 |
+| 2015 | 50 | 28.0 | 10.84 | 26.42 | 27.0 | 17% / 15% | +0.25% vs +0.03% | +0.036 |
+| 2016 | 50 | 19.5 | 10.88 | 17.92 | 19.0 | 14% / 12% | +0.75% vs +0.45% | +0.013 |
+| 2017 | 50 | 15.9 | 10.78 | 18.11 | 20.0 | 15% / 12% | +0.37% vs +0.31% | +0.005 |
+| 2018 | 50 | 20.9 | 10.89 | 21.62 | 28.1 | 16% / 17% | -0.01% vs +0.14% | +0.031 |
+| 2019 | 50 | 31.0 | 11.02 | 26.66 | 18.0 | 19% / 13% | +1.36% vs +0.16% | +0.027 |
+| 2020 | 50 | 15.0 | 11.94 | 16.43 | 10.0 | 14% / 10% | +1.28% vs +0.92% | -0.008 |
+| 2021 | 50 | 35.3 | 11.73 | 28.44 | 27.0 | 17% / 16% | -0.16% vs -0.27% | +0.052 |
+| 2022 | 50 | 41.0 | 11.01 | 31.76 | 34.0 | 21% / 20% | +0.81% vs +0.22% | -0.004 |
+| 2023 | 50 | 23.8 | 10.83 | 20.99 | 20.0 | 15% / 11% | +0.82% vs +0.31% | +0.039 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 34.0 | 11.10 | 23.04 | 31.0 | 18% / 17% | +0.63% vs +0.45% | +0.031 |
+| 2011 | 50 | 35.0 | 10.74 | 32.17 | 36.6 | 20% / 19% | -0.31% vs +0.03% | +0.025 |
+| 2012 | 50 | 40.0 | 10.83 | 34.42 | 38.0 | 22% / 22% | +0.66% vs +0.54% | -0.008 |
+| 2013 | 50 | 47.4 | 11.11 | 34.52 | 47.8 | 22% / 22% | +0.56% vs +0.49% | -0.005 |
+| 2014 | 50 | 65.0 | 11.04 | 54.34 | 72.0 | 27% / 29% | -0.01% vs +0.14% | -0.002 |
+| 2015 | 50 | 43.0 | 10.84 | 43.69 | 45.7 | 21% / 25% | -0.08% vs +0.03% | -0.031 |
+| 2016 | 50 | 46.4 | 10.88 | 37.40 | 45.1 | 21% / 25% | +0.36% vs +0.45% | -0.009 |
+| 2017 | 50 | 32.0 | 10.78 | 34.91 | 32.0 | 21% / 20% | +0.43% vs +0.31% | +0.016 |
+| 2018 | 50 | 22.6 | 10.89 | 28.51 | 27.5 | 17% / 18% | +0.02% vs +0.14% | -0.009 |
+| 2019 | 50 | 30.9 | 11.02 | 25.32 | 28.2 | 18% / 15% | +0.86% vs +0.16% | +0.006 |
+| 2020 | 50 | 46.0 | 11.94 | 39.57 | 53.0 | 20% / 23% | +0.80% vs +0.92% | -0.015 |
+| 2021 | 50 | 35.7 | 11.73 | 38.23 | 44.5 | 21% / 26% | -1.04% vs -0.27% | -0.027 |
+| 2022 | 50 | 55.3 | 11.01 | 53.17 | 51.1 | 21% / 25% | +0.45% vs +0.22% | -0.034 |
+| 2023 | 50 | 29.3 | 10.83 | 19.83 | 16.7 | 13% / 14% | +0.63% vs +0.31% | +0.021 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 43.0 | 11.10 | 32.17 | 51.0 | 22% / 25% | +0.44% vs +0.45% | +0.014 |
+| 2011 | 50 | 34.0 | 10.74 | 26.43 | 45.0 | 18% / 20% | -0.36% vs +0.03% | +0.047 |
+| 2012 | 50 | 32.0 | 10.83 | 26.54 | 25.0 | 20% / 18% | +0.65% vs +0.54% | -0.001 |
+| 2013 | 50 | 45.0 | 11.11 | 35.23 | 53.0 | 26% / 23% | +0.59% vs +0.49% | +0.022 |
+| 2014 | 50 | 31.0 | 11.04 | 25.08 | 26.0 | 22% / 17% | +0.46% vs +0.14% | +0.033 |
+| 2015 | 50 | 21.0 | 10.84 | 19.79 | 28.0 | 15% / 18% | -0.37% vs +0.03% | +0.031 |
+| 2016 | 50 | 39.0 | 10.89 | 31.02 | 56.0 | 18% / 26% | -0.09% vs +0.45% | -0.039 |
+| 2017 | 50 | 46.0 | 10.78 | 40.22 | 56.0 | 27% / 25% | +0.35% vs +0.31% | +0.019 |
+| 2018 | 50 | 37.0 | 10.89 | 29.67 | 44.0 | 22% / 20% | -0.04% vs +0.14% | -0.001 |
+| 2019 | 50 | 49.0 | 11.02 | 28.83 | 38.0 | 24% / 18% | +0.83% vs +0.16% | +0.025 |
+| 2020 | 50 | 76.0 | 11.94 | 59.19 | 75.0 | 32% / 29% | +1.58% vs +0.92% | -0.020 |
+| 2021 | 50 | 56.0 | 11.73 | 47.75 | 52.0 | 26% / 24% | +0.05% vs -0.27% | +0.012 |
+| 2022 | 50 | 33.0 | 11.01 | 24.24 | 33.0 | 21% / 23% | +0.24% vs +0.22% | +0.012 |
+| 2023 | 50 | 51.0 | 10.83 | 35.34 | 46.0 | 27% / 24% | +1.16% vs +0.31% | +0.031 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 19.0 | 10.93 | 24.01 | 25.0 | 16% / 17% | +0.18% vs +0.45% | +0.017 |
+| 2011 | 50 | 25.0 | 10.74 | 28.29 | 26.0 | 18% / 15% | +0.24% vs +0.03% | +0.032 |
+| 2012 | 50 | 32.0 | 10.83 | 28.89 | 35.0 | 23% / 19% | +0.85% vs +0.54% | +0.048 |
+| 2013 | 50 | 26.0 | 11.11 | 29.61 | 32.0 | 18% / 19% | +0.59% vs +0.49% | +0.040 |
+| 2014 | 50 | 43.0 | 11.04 | 36.66 | 41.0 | 22% / 22% | +0.13% vs +0.14% | -0.002 |
+| 2015 | 50 | 46.0 | 10.84 | 36.71 | 49.0 | 22% / 26% | -0.25% vs +0.03% | +0.007 |
+| 2016 | 50 | 22.0 | 10.88 | 30.21 | 34.0 | 15% / 21% | -0.14% vs +0.45% | +0.002 |
+| 2017 | 50 | 27.0 | 10.78 | 25.87 | 26.0 | 20% / 20% | +0.44% vs +0.31% | -0.013 |
+| 2018 | 50 | 34.0 | 10.89 | 24.56 | 26.0 | 21% / 15% | +0.68% vs +0.14% | +0.022 |
+| 2019 | 50 | 33.0 | 11.02 | 26.97 | 32.0 | 20% / 20% | +0.40% vs +0.16% | -0.009 |
+| 2020 | 50 | 33.0 | 11.94 | 36.55 | 40.0 | 21% / 19% | +1.09% vs +0.92% | +0.036 |
+| 2021 | 50 | 46.0 | 11.73 | 39.01 | 48.0 | 20% / 24% | -0.45% vs -0.27% | +0.014 |
+| 2022 | 50 | 38.0 | 11.01 | 36.71 | 32.0 | 20% / 20% | +0.50% vs +0.22% | +0.006 |
+| 2023 | 50 | 35.0 | 10.83 | 31.33 | 45.0 | 18% / 24% | +0.06% vs +0.31% | +0.019 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 40.0 | 10.93 | 40.78 | 46.0 | 21% / 24% | +0.09% vs +0.45% | +0.003 |
+| 2011 | 50 | 62.0 | 10.74 | 60.89 | 57.0 | 27% / 29% | -0.16% vs +0.03% | -0.041 |
+| 2012 | 50 | 71.0 | 10.83 | 72.00 | 56.0 | 28% / 25% | +1.08% vs +0.54% | +0.020 |
+| 2013 | 50 | 56.0 | 11.11 | 53.89 | 69.0 | 25% / 28% | +0.36% vs +0.49% | +0.012 |
+| 2014 | 50 | 70.0 | 11.04 | 69.00 | 84.0 | 27% / 32% | -0.21% vs +0.14% | -0.015 |
+| 2015 | 50 | 81.0 | 10.84 | 83.33 | 67.0 | 30% / 32% | +0.41% vs +0.03% | -0.033 |
+| 2016 | 50 | 58.0 | 10.88 | 57.22 | 66.0 | 23% / 27% | +0.53% vs +0.45% | +0.008 |
+| 2017 | 50 | 51.0 | 10.78 | 50.00 | 52.0 | 25% / 24% | +0.55% vs +0.31% | +0.036 |
+| 2018 | 50 | 51.0 | 10.89 | 49.22 | 48.0 | 23% / 23% | +0.24% vs +0.14% | -0.031 |
+| 2019 | 50 | 77.0 | 11.02 | 73.78 | 62.0 | 29% / 28% | +1.06% vs +0.16% | +0.010 |
+| 2020 | 50 | 81.0 | 11.94 | 82.67 | 94.0 | 31% / 33% | +2.16% vs +0.92% | +0.035 |
+| 2021 | 50 | 75.0 | 11.73 | 72.36 | 94.0 | 26% / 37% | -1.40% vs -0.27% | -0.055 |
+| 2022 | 50 | 80.0 | 11.01 | 81.67 | 85.0 | 28% / 31% | +0.69% vs +0.22% | +0.009 |
+| 2023 | 50 | 74.0 | 10.83 | 73.11 | 84.0 | 26% / 33% | +0.81% vs +0.31% | +0.002 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 2.0 | 10.93 | 2.00 | 2.0 | 4% / 5% | +0.33% vs +0.45% | -0.003 |
+| 2011 | 50 | 4.0 | 10.74 | 4.00 | 0.0 | 8% / 4% | +0.35% vs +0.03% | +0.041 |
+| 2012 | 50 | 0.0 | 10.83 | 0.00 | 1.0 | 3% / 6% | +0.30% vs +0.54% | -0.020 |
+| 2013 | 50 | 1.0 | 11.11 | 0.22 | 2.0 | 4% / 4% | +0.31% vs +0.49% | -0.012 |
+| 2014 | 50 | 7.0 | 11.04 | 7.00 | 3.0 | 4% / 4% | +0.13% vs +0.14% | +0.015 |
+| 2015 | 50 | 1.0 | 10.84 | 1.00 | 2.0 | 4% / 4% | +0.21% vs +0.03% | +0.033 |
+| 2016 | 50 | 1.0 | 10.88 | 1.00 | 0.0 | 4% / 2% | +0.40% vs +0.45% | -0.008 |
+| 2017 | 50 | 3.0 | 10.78 | 3.00 | 3.0 | 3% / 8% | +0.00% vs +0.31% | -0.036 |
+| 2018 | 50 | 3.0 | 10.89 | 3.00 | 2.0 | 5% / 4% | +0.50% vs +0.14% | +0.031 |
+| 2019 | 50 | 1.0 | 11.02 | 1.00 | 1.0 | 4% / 7% | -0.09% vs +0.16% | -0.010 |
+| 2020 | 50 | 1.0 | 11.94 | 1.00 | 1.0 | 3% / 4% | +0.35% vs +0.92% | -0.035 |
+| 2021 | 50 | 3.0 | 11.73 | 3.25 | 4.0 | 7% / 4% | +0.16% vs -0.27% | +0.055 |
+| 2022 | 50 | 3.0 | 11.01 | 3.00 | 4.0 | 5% / 7% | +0.06% vs +0.22% | -0.009 |
+| 2023 | 50 | 0.0 | 10.83 | 0.00 | 3.0 | 2% / 4% | +0.15% vs +0.31% | -0.002 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 31.0 | 10.93 | 13.09 | 0.0 | 22% / 5% | +2.11% vs +0.45% | +0.201 |
+| 2011 | 50 | 29.0 | 10.74 | 12.40 | 2.0 | 21% / 4% | +1.68% vs +0.03% | +0.188 |
+| 2012 | 50 | 26.0 | 10.83 | 15.86 | 3.0 | 22% / 3% | +2.20% vs +0.54% | +0.207 |
+| 2013 | 50 | 23.0 | 11.11 | 14.68 | 1.0 | 18% / 4% | +1.89% vs +0.49% | +0.200 |
+| 2014 | 50 | 30.0 | 11.04 | 15.82 | 4.0 | 23% / 3% | +1.86% vs +0.14% | +0.187 |
+| 2015 | 50 | 31.0 | 10.84 | 15.38 | 3.0 | 19% / 4% | +1.86% vs +0.03% | +0.198 |
+| 2016 | 50 | 34.0 | 10.88 | 14.92 | 3.0 | 20% / 3% | +2.05% vs +0.45% | +0.183 |
+| 2017 | 50 | 35.0 | 10.78 | 14.98 | 4.0 | 19% / 5% | +2.11% vs +0.31% | +0.199 |
+| 2018 | 50 | 31.0 | 10.89 | 14.16 | 3.0 | 19% / 4% | +1.62% vs +0.14% | +0.183 |
+| 2019 | 50 | 24.0 | 11.02 | 12.79 | 5.0 | 19% / 6% | +1.98% vs +0.16% | +0.175 |
+| 2020 | 50 | 30.0 | 11.94 | 14.49 | 4.0 | 17% / 3% | +2.99% vs +0.92% | +0.195 |
+| 2021 | 50 | 29.0 | 11.73 | 15.42 | 1.0 | 24% / 3% | +2.18% vs -0.27% | +0.202 |
+| 2022 | 50 | 26.0 | 11.01 | 14.59 | 5.0 | 18% / 4% | +2.04% vs +0.22% | +0.169 |
+| 2023 | 50 | 17.0 | 10.83 | 13.91 | 5.0 | 18% / 5% | +2.03% vs +0.31% | +0.171 |
+
+### gpt by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 15.0 | 11.10 | 13.01 | 17.0 | 12% / 12% | +0.36% vs +0.45% | +0.025 |
+| 2011 | 50 | 12.0 | 10.74 | 9.26 | 7.0 | 12% / 9% | +0.32% vs +0.03% | -0.010 |
+| 2012 | 50 | 6.0 | 10.83 | 5.74 | 8.0 | 8% / 8% | +0.57% vs +0.54% | +0.005 |
+| 2013 | 50 | 11.0 | 11.11 | 9.66 | 9.0 | 10% / 9% | +0.50% vs +0.49% | +0.015 |
+| 2014 | 50 | 4.0 | 11.04 | 8.38 | 2.0 | 11% / 10% | +0.19% vs +0.14% | +0.010 |
+| 2015 | 50 | 3.0 | 10.84 | 5.97 | 7.0 | 8% / 9% | -0.16% vs +0.03% | -0.006 |
+| 2016 | 50 | 3.0 | 10.88 | 1.97 | 1.0 | 4% / 3% | +0.41% vs +0.45% | -0.004 |
+| 2017 | 50 | 8.0 | 10.78 | 6.07 | 10.0 | 8% / 9% | +0.25% vs +0.31% | -0.018 |
+| 2018 | 50 | 2.0 | 10.89 | 6.79 | 14.0 | 7% / 10% | -0.01% vs +0.14% | +0.011 |
+| 2019 | 50 | 2.0 | 11.02 | 1.77 | 4.0 | 4% / 7% | -0.37% vs +0.16% | -0.027 |
+| 2020 | 50 | 0.0 | 11.94 | 2.17 | 8.0 | 4% / 6% | +0.47% vs +0.92% | -0.040 |
+| 2021 | 50 | 4.0 | 11.73 | 7.89 | 7.0 | 7% / 6% | -0.23% vs -0.27% | +0.052 |
+| 2022 | 50 | 3.0 | 11.01 | 4.83 | 4.0 | 8% / 9% | +0.08% vs +0.22% | +0.006 |
+| 2023 | 50 | 13.0 | 10.83 | 7.14 | 8.0 | 12% / 8% | +0.59% vs +0.31% | +0.021 |
+
+### gpt_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 12.0 | 11.10 | 9.97 | 13.0 | 11% / 11% | +0.34% vs +0.45% | +0.002 |
+| 2011 | 50 | 23.0 | 10.74 | 19.86 | 22.0 | 16% / 12% | +0.22% vs +0.03% | +0.031 |
+| 2012 | 50 | 21.0 | 10.83 | 17.69 | 10.0 | 16% / 13% | +0.85% vs +0.54% | +0.010 |
+| 2013 | 50 | 68.0 | 11.11 | 46.10 | 78.0 | 29% / 33% | +0.45% vs +0.49% | +0.030 |
+| 2014 | 50 | 25.0 | 11.04 | 25.62 | 30.0 | 19% / 17% | -0.06% vs +0.14% | -0.008 |
+| 2015 | 50 | 19.0 | 10.84 | 15.91 | 15.0 | 16% / 17% | -0.14% vs +0.03% | -0.045 |
+| 2016 | 50 | 20.0 | 10.88 | 13.26 | 11.0 | 14% / 12% | +0.66% vs +0.45% | +0.016 |
+| 2017 | 50 | 4.0 | 10.78 | 5.76 | 3.0 | 7% / 9% | +0.25% vs +0.31% | -0.012 |
+| 2018 | 50 | 37.0 | 10.89 | 32.66 | 45.0 | 20% / 23% | -0.09% vs +0.14% | -0.036 |
+| 2019 | 50 | 26.0 | 11.02 | 21.88 | 29.0 | 17% / 17% | -0.08% vs +0.16% | +0.030 |
+| 2020 | 50 | 17.0 | 11.94 | 20.89 | 18.0 | 14% / 13% | +0.87% vs +0.92% | +0.043 |
+| 2021 | 50 | 26.0 | 11.73 | 28.15 | 25.0 | 18% / 18% | -0.31% vs -0.27% | -0.040 |
+| 2022 | 50 | 18.0 | 11.01 | 16.23 | 17.0 | 17% / 13% | +0.39% vs +0.22% | +0.018 |
+| 2023 | 50 | 46.0 | 10.83 | 40.30 | 40.0 | 23% / 29% | +0.47% vs +0.31% | +0.002 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +2.48 | 382 of 700 | +0.18% | 34% | +0.22% (2.38) | 11.2% | +1.41%; +0.54% | +0.51% |
+| lgbm_null | +3.55 | 354 of 700 | +0.01% | 8712% | -0.08% (-0.76) | 14.1% | +1.28%; +1.21% | +0.12% |
+| momentum | +5.83 | 351 of 700 | +0.02% | 91% | +0.01% (0.07) | 0.0% | n/a; n/a | +0.39% |
+| reversal | +1.21 | 344 of 700 | -0.04% | 375% | -0.07% (-0.67) | 10.7% | +1.06%; +0.24% | +0.22% |
+| high_vol | +0.90 | 331 of 700 | -0.25% | 88% | +0.02% (0.12) | 23.8% | +1.02%; +0.54% | +0.26% |
+| low_vol | +0.57 | 333 of 700 | -0.12% | n/a | -0.10% (-1.40) | 0.0% | n/a; n/a | +0.23% |
+| oracle | +11.93 | 642 of 700 | +1.60% | 4% | +1.71% (33.17) | 1.9% | +5.38%; +4.88% | +1.98% |
+| gpt | -0.54 | 330 of 700 | -0.11% | n/a | -0.10% (-1.94) | 0.1% | +7.26%; +8.69% | +0.20% |
+| gpt_null | +2.97 | 356 of 700 | +0.04% | n/a | -0.06% (-0.74) | 3.5% | +1.29%; +0.63% | +0.23% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.25% (3.12) | 375 of 700 | +0.18% (2.52) |
+| lgbm_null | +0.00% (0.01) | 340 of 681 | -0.05% (-0.49) |
+| momentum | +0.00% (0.04) | 337 of 700 | -0.07% (-0.73) |
+| reversal | -0.02% (-0.25) | 330 of 700 | -0.10% (-1.11) |
+| high_vol | +0.11% (0.78) | 343 of 700 | -0.01% (-0.11) |
+| low_vol | -0.02% (-0.62) | 344 of 700 | -0.03% (-1.19) |
+| oracle | +1.62% (30.02) | 629 of 700 | +1.58% (30.81) |
+| gpt | -0.03% (-0.72) | 334 of 700 | -0.06% (-1.18) |
+| gpt_null | -0.03% (-0.45) | 350 of 700 | -0.07% (-0.99) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $352,497 | $200,723 | $36,954 | $1,236 | $56,575 |
+| lgbm_null | $34,027 | $19,939 | $4,001 | $159 | $56,575 |
+| momentum | $65,250 | $57,606 | $39,633 | $18,744 | $56,599 |
+| reversal | $37,035 | $19,286 | $2,714 | $53 | $56,676 |
+| high_vol | $54,304 | $49,402 | $37,191 | $21,066 | $56,663 |
+| low_vol | $44,079 | $38,426 | $25,453 | $11,156 | $56,663 |
+| oracle | $10,636,048,302 | $5,430,002,022 | $719,726,033 | $12,423,356 | $56,663 |
+| gpt | $34,123 | $19,035 | $3,294 | $97 | $56,575 |
+| gpt_null | $36,863 | $21,678 | $4,397 | $179 | $56,575 |
+
+
+lgbm: 700 days, 0.216 hits a day against 0.078 (uniform) and 0.168 (same volatility); z +13.21 / +3.21; IC +0.0252 (t 4.9); comparable-stock excess +0.17 (t 2.01)
+lgbm_null: 700 days, 0.367 hits a day against 0.078 (uniform) and 0.310 (same volatility); z +27.57 / +2.83; IC -0.0004 (t -0.1); comparable-stock excess -0.03 (t -0.38)
+momentum: 700 days, 0.453 hits a day against 0.078 (uniform) and 0.299 (same volatility); z +35.77 / +7.80; IC +0.0148 (t 2.2); comparable-stock excess -0.03 (t -0.21)
+reversal: 700 days, 0.353 hits a day against 0.078 (uniform) and 0.281 (same volatility); z +26.31 / +3.76; IC +0.0140 (t 2.7); comparable-stock excess +0.09 (t 0.84)
+high_vol: 700 days, 0.696 hits a day against 0.078 (uniform) and 0.574 (same volatility); z +59.10 / +4.50; IC -0.0103 (t -1.2); comparable-stock excess +0.15 (t 1.08)
+low_vol: 700 days, 0.003 hits a day against 0.078 (uniform) and 0.005 (same volatility); z -7.16 / -0.80; IC +0.0103 (t 1.2); comparable-stock excess -0.07 (t -2.29)
+oracle: 700 days, 0.283 hits a day against 0.078 (uniform) and 0.098 (same volatility); z +19.62 / +16.20; IC +0.1976 (t 171.3); comparable-stock excess +2.00 (t 35.11)
+gpt: 700 days, 0.021 hits a day against 0.078 (uniform) and 0.037 (same volatility); z -5.41 / -2.26; IC +0.0093 (t 1.8); comparable-stock excess +0.03 (t 0.57)
+gpt_null: 700 days, 0.253 hits a day against 0.078 (uniform) and 0.193 (same volatility); z +16.68 / +3.81; IC -0.0023 (t -0.4); comparable-stock excess -0.05 (t -0.56)
+# stockai-1w results (horizon 5 trading days, top 10, subset no_collapse)
+
+Test years 2010-2023, one graded decision every 5 trading days (700 in all). Rebalance days left ungraded: 12 whose week would overlap the next graded week, 1 whose week reaches the locked year.
+
+## Top-10 hits on the week's 10 biggest gainers
+
+| Scores | Graded days | Hits per day | Chance (uniform) | Chance (same volatility) | z vs uniform | z vs same volatility | Days tied at the cut | Hits among the 10 biggest losers per day | Chance of a loser hit (same volatility) | Tail hits that were gainers | Picks in the top / bottom decile | Picks' mean week return vs all | Rank IC (t; days > 0) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgbm | 700 | 0.216 | 0.078 | 0.168 | +13.21 | +3.21 | 246 | 0.162 | 0.168 | 57% | 16.2% / 15.3% | +0.44% vs +0.25% (t 1.9) | +0.0252 (4.9; 422) |
+| lgbm_null | 700 | 0.367 | 0.078 | 0.310 | +27.57 | +2.83 | 418 | 0.348 | 0.301 | 51% | 20.5% / 21.7% | +0.23% vs +0.25% (t -0.2) | -0.0004 (-0.1; 354) |
+| momentum | 700 | 0.453 | 0.078 | 0.299 | +35.77 | +7.80 | 0 | 0.509 | 0.305 | 47% | 23.7% / 24.6% | +0.32% vs +0.25% (t 0.4) | +0.0148 (2.2; 378) |
+| reversal | 700 | 0.353 | 0.078 | 0.281 | +26.31 | +3.76 | 0 | 0.360 | 0.274 | 49% | 21.8% / 21.2% | +0.29% vs +0.25% (t 0.3) | +0.0140 (2.7; 386) |
+| high_vol | 700 | 0.696 | 0.078 | 0.574 | +59.10 | +4.50 | 0 | 0.679 | 0.568 | 51% | 25.9% / 28.1% | +0.31% vs +0.25% (t 0.4) | -0.0103 (-1.2; 334) |
+| low_vol | 700 | 0.003 | 0.078 | 0.005 | -7.16 | -0.80 | 0 | 0.003 | 0.003 | 50% | 3.3% / 3.6% | +0.16% vs +0.25% (t -1.3) | +0.0103 (1.2; 366) |
+| oracle | 700 | 0.283 | 0.078 | 0.098 | +19.62 | +16.20 | 0 | 0.017 | 0.084 | 94% | 22.7% / 3.0% | +2.41% vs +0.25% (t 37.5) | +0.1976 (171.3; 700) |
+| gpt | 700 | 0.021 | 0.078 | 0.037 | -5.41 | -2.26 | 0 | 0.043 | 0.040 | 33% | 7.8% / 7.1% | +0.28% vs +0.25% (t 0.6) | +0.0093 (1.8; 377) |
+| gpt_null | 700 | 0.253 | 0.078 | 0.193 | +16.68 | +3.81 | 0 | 0.237 | 0.180 | 52% | 16.7% / 17.9% | +0.18% vs +0.25% (t -0.7) | -0.0023 (-0.4; 349) |
+
+Chance (uniform): hits expected from 10 random picks among the same stocks. Chance (same volatility): each pick swapped for a random stock from its own fiftieth of the day's stocks by trailing 63-day volatility. Tail hits that were gainers: of the picks that landed among the 10 biggest gainers or the 10 biggest losers, the share that were gainers (picking volatile stocks with no sense of direction lands in both). The top decile is the tenth of stocks that rose most that week; a random pick lands there 10% of the time.
+
+### lgbm by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 8.0 | 5.69 | 6.78 | 6.0 | 14% / 15% | +0.65% vs +0.46% | +0.022 |
+| 2011 | 50 | 11.0 | 5.13 | 8.19 | 8.0 | 15% / 11% | +0.49% vs +0.05% | +0.047 |
+| 2012 | 50 | 9.0 | 4.87 | 9.95 | 9.0 | 16% / 13% | +0.81% vs +0.52% | +0.032 |
+| 2013 | 50 | 14.3 | 4.85 | 11.69 | 10.7 | 16% / 16% | +0.52% vs +0.46% | +0.017 |
+| 2014 | 50 | 16.0 | 4.27 | 11.71 | 16.0 | 18% / 21% | +0.16% vs +0.14% | +0.033 |
+| 2015 | 50 | 18.0 | 4.18 | 10.61 | 11.0 | 19% / 16% | +0.45% vs -0.00% | +0.035 |
+| 2016 | 50 | 6.0 | 3.94 | 4.78 | 5.0 | 11% / 14% | +0.46% vs +0.50% | +0.008 |
+| 2017 | 50 | 15.9 | 3.62 | 7.66 | 6.2 | 16% / 13% | +0.73% vs +0.29% | +0.009 |
+| 2018 | 50 | 9.6 | 3.35 | 8.31 | 9.0 | 18% / 18% | +0.14% vs +0.06% | +0.029 |
+| 2019 | 50 | 8.0 | 3.32 | 7.27 | 0.0 | 17% / 14% | +0.09% vs -0.06% | +0.034 |
+| 2020 | 50 | 3.0 | 3.09 | 4.63 | 9.0 | 14% / 15% | +0.91% vs +1.06% | -0.005 |
+| 2021 | 50 | 13.4 | 2.87 | 6.35 | 11.0 | 18% / 16% | -0.28% vs -0.36% | +0.055 |
+| 2022 | 50 | 9.0 | 2.81 | 8.86 | 6.0 | 20% / 19% | +0.44% vs +0.15% | +0.002 |
+| 2023 | 50 | 10.3 | 2.65 | 11.12 | 6.8 | 18% / 15% | +0.56% vs +0.21% | +0.034 |
+
+### lgbm_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 15.5 | 5.69 | 12.37 | 12.0 | 18% / 18% | +0.52% vs +0.46% | +0.023 |
+| 2011 | 50 | 19.5 | 5.13 | 15.76 | 16.9 | 19% / 20% | +0.02% vs +0.05% | +0.021 |
+| 2012 | 50 | 15.0 | 4.87 | 16.40 | 17.0 | 20% / 19% | +0.66% vs +0.52% | -0.003 |
+| 2013 | 50 | 41.2 | 4.85 | 27.78 | 23.0 | 28% / 24% | +1.25% vs +0.46% | +0.004 |
+| 2014 | 50 | 26.0 | 4.27 | 28.48 | 42.3 | 26% / 31% | -0.44% vs +0.14% | +0.011 |
+| 2015 | 50 | 22.3 | 4.18 | 18.63 | 21.8 | 20% / 25% | -0.25% vs -0.00% | -0.016 |
+| 2016 | 50 | 17.2 | 3.94 | 16.79 | 22.7 | 23% / 26% | +0.12% vs +0.50% | -0.002 |
+| 2017 | 50 | 11.0 | 3.62 | 14.40 | 13.0 | 20% / 22% | +0.04% vs +0.29% | +0.020 |
+| 2018 | 50 | 14.0 | 3.35 | 11.62 | 11.5 | 21% / 18% | +0.27% vs +0.06% | +0.002 |
+| 2019 | 50 | 8.6 | 3.32 | 7.26 | 10.7 | 17% / 16% | +0.01% vs -0.06% | +0.003 |
+| 2020 | 50 | 27.0 | 3.09 | 14.36 | 19.0 | 22% / 23% | +1.75% vs +1.06% | -0.009 |
+| 2021 | 50 | 10.6 | 2.87 | 8.48 | 10.4 | 17% / 19% | -0.69% vs -0.36% | -0.029 |
+| 2022 | 50 | 21.5 | 2.81 | 17.86 | 10.8 | 21% / 22% | +0.04% vs +0.15% | -0.041 |
+| 2023 | 50 | 7.4 | 2.65 | 6.79 | 12.2 | 15% / 19% | -0.10% vs +0.21% | +0.010 |
+
+### momentum by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 24.0 | 5.69 | 16.75 | 30.0 | 22% / 24% | +0.50% vs +0.47% | +0.017 |
+| 2011 | 50 | 27.0 | 5.13 | 16.82 | 33.0 | 21% / 26% | -0.13% vs +0.05% | +0.036 |
+| 2012 | 50 | 13.0 | 4.87 | 12.47 | 15.0 | 19% / 19% | +0.49% vs +0.52% | +0.006 |
+| 2013 | 50 | 29.0 | 4.85 | 22.37 | 38.0 | 26% / 28% | +0.32% vs +0.46% | +0.011 |
+| 2014 | 50 | 15.0 | 4.27 | 16.07 | 17.0 | 25% / 22% | +0.06% vs +0.14% | +0.036 |
+| 2015 | 50 | 24.0 | 4.18 | 14.86 | 29.0 | 24% / 25% | -0.61% vs -0.00% | +0.038 |
+| 2016 | 50 | 23.0 | 3.94 | 14.43 | 23.0 | 22% / 27% | +0.31% vs +0.50% | -0.027 |
+| 2017 | 50 | 28.0 | 3.62 | 16.85 | 28.0 | 26% / 25% | +0.38% vs +0.29% | +0.016 |
+| 2018 | 50 | 9.0 | 3.35 | 10.91 | 20.0 | 18% / 23% | -0.67% vs +0.06% | +0.012 |
+| 2019 | 50 | 29.0 | 3.32 | 12.25 | 24.0 | 27% / 23% | +0.96% vs -0.06% | +0.029 |
+| 2020 | 50 | 39.0 | 3.09 | 20.99 | 45.0 | 30% / 31% | +2.13% vs +1.06% | -0.017 |
+| 2021 | 50 | 22.0 | 2.87 | 12.87 | 21.0 | 24% / 26% | -0.40% vs -0.36% | +0.012 |
+| 2022 | 50 | 15.0 | 2.81 | 10.47 | 13.0 | 23% / 23% | +0.12% vs +0.15% | +0.009 |
+| 2023 | 50 | 20.0 | 2.65 | 10.99 | 20.0 | 26% / 23% | +0.97% vs +0.21% | +0.030 |
+
+### reversal by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 15.0 | 5.47 | 13.66 | 15.0 | 18% / 19% | +0.44% vs +0.47% | +0.012 |
+| 2011 | 50 | 15.0 | 5.13 | 14.17 | 18.0 | 18% / 16% | +0.06% vs +0.05% | +0.032 |
+| 2012 | 50 | 26.0 | 4.87 | 18.01 | 28.0 | 27% / 18% | +1.23% vs +0.52% | +0.041 |
+| 2013 | 50 | 24.0 | 4.85 | 20.05 | 18.0 | 20% / 19% | +0.96% vs +0.46% | +0.035 |
+| 2014 | 50 | 27.0 | 4.27 | 18.03 | 28.0 | 23% / 26% | -0.08% vs +0.14% | -0.014 |
+| 2015 | 50 | 24.0 | 4.18 | 14.93 | 29.0 | 22% / 24% | -0.34% vs -0.00% | +0.013 |
+| 2016 | 50 | 11.0 | 3.94 | 15.49 | 11.0 | 21% / 22% | +0.47% vs +0.50% | -0.001 |
+| 2017 | 50 | 20.0 | 3.62 | 12.55 | 13.0 | 25% / 20% | +0.91% vs +0.29% | -0.006 |
+| 2018 | 50 | 15.0 | 3.35 | 11.93 | 13.0 | 21% / 19% | +0.28% vs +0.06% | +0.010 |
+| 2019 | 50 | 14.0 | 3.32 | 11.73 | 14.0 | 19% / 24% | -0.41% vs -0.06% | +0.006 |
+| 2020 | 50 | 16.0 | 3.09 | 12.39 | 16.0 | 25% / 20% | +2.04% vs +1.06% | +0.035 |
+| 2021 | 50 | 21.0 | 2.87 | 10.07 | 18.0 | 24% / 25% | -0.63% vs -0.36% | +0.014 |
+| 2022 | 50 | 8.0 | 2.81 | 11.68 | 12.0 | 20% / 22% | -0.54% vs +0.15% | +0.006 |
+| 2023 | 50 | 11.0 | 2.65 | 11.85 | 19.0 | 22% / 24% | -0.35% vs +0.21% | +0.011 |
+
+### high_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 25.0 | 5.47 | 18.89 | 27.0 | 22% / 23% | +0.32% vs +0.47% | -0.002 |
+| 2011 | 50 | 45.0 | 5.13 | 38.95 | 32.0 | 28% / 27% | +0.64% vs +0.05% | -0.035 |
+| 2012 | 50 | 31.0 | 4.87 | 36.00 | 32.0 | 27% / 24% | +0.85% vs +0.52% | +0.017 |
+| 2013 | 50 | 51.0 | 4.85 | 41.00 | 48.0 | 28% / 33% | +0.67% vs +0.46% | +0.005 |
+| 2014 | 50 | 40.0 | 4.27 | 37.83 | 46.0 | 28% / 35% | -0.56% vs +0.14% | -0.020 |
+| 2015 | 50 | 44.0 | 4.18 | 34.55 | 34.0 | 26% / 29% | +0.08% vs -0.00% | -0.039 |
+| 2016 | 50 | 28.0 | 3.94 | 27.35 | 44.0 | 26% / 29% | +0.15% vs +0.50% | +0.004 |
+| 2017 | 50 | 28.0 | 3.62 | 21.85 | 21.0 | 25% / 23% | +0.45% vs +0.29% | +0.022 |
+| 2018 | 50 | 21.0 | 3.35 | 19.09 | 17.0 | 23% / 26% | -0.04% vs +0.06% | -0.032 |
+| 2019 | 50 | 28.0 | 3.32 | 22.95 | 27.0 | 25% / 23% | +0.22% vs -0.06% | -0.012 |
+| 2020 | 50 | 45.0 | 3.09 | 30.09 | 49.0 | 28% / 28% | +2.31% vs +1.06% | +0.035 |
+| 2021 | 50 | 23.0 | 2.87 | 17.46 | 36.0 | 25% / 31% | -1.08% vs -0.36% | -0.059 |
+| 2022 | 50 | 35.0 | 2.81 | 28.75 | 28.0 | 25% / 30% | -0.26% vs +0.15% | -0.003 |
+| 2023 | 50 | 43.0 | 2.65 | 27.13 | 34.0 | 27% / 31% | +0.55% vs +0.21% | -0.027 |
+
+### low_vol by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 0.0 | 5.47 | 0.00 | 1.0 | 5% / 5% | +0.35% vs +0.47% | +0.002 |
+| 2011 | 50 | 1.0 | 5.13 | 0.50 | 0.0 | 8% / 5% | +0.35% vs +0.05% | +0.035 |
+| 2012 | 50 | 0.0 | 4.87 | 0.00 | 0.0 | 3% / 7% | +0.21% vs +0.52% | -0.017 |
+| 2013 | 50 | 0.0 | 4.85 | 0.48 | 0.0 | 1% / 3% | +0.28% vs +0.46% | -0.005 |
+| 2014 | 50 | 0.0 | 4.27 | 0.83 | 1.0 | 3% / 3% | +0.10% vs +0.14% | +0.020 |
+| 2015 | 50 | 0.0 | 4.18 | 0.00 | 0.0 | 5% / 2% | +0.29% vs -0.00% | +0.039 |
+| 2016 | 50 | 0.0 | 3.94 | 0.00 | 0.0 | 1% / 2% | +0.41% vs +0.50% | -0.004 |
+| 2017 | 50 | 0.0 | 3.62 | 0.00 | 0.0 | 2% / 0% | +0.10% vs +0.29% | -0.022 |
+| 2018 | 50 | 1.0 | 3.35 | 0.32 | 0.0 | 2% / 3% | +0.20% vs +0.06% | +0.032 |
+| 2019 | 50 | 0.0 | 3.32 | 0.72 | 0.0 | 4% / 5% | -0.18% vs -0.06% | +0.012 |
+| 2020 | 50 | 0.0 | 3.09 | 0.32 | 0.0 | 2% / 3% | +0.42% vs +1.06% | -0.035 |
+| 2021 | 50 | 0.0 | 2.87 | 0.28 | 0.0 | 5% / 4% | -0.18% vs -0.36% | +0.059 |
+| 2022 | 50 | 0.0 | 2.81 | 0.00 | 0.0 | 3% / 5% | -0.24% vs +0.15% | +0.003 |
+| 2023 | 50 | 0.0 | 2.65 | 0.00 | 0.0 | 1% / 3% | +0.10% vs +0.21% | +0.027 |
+
+### oracle by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 28.0 | 5.47 | 8.00 | 0.0 | 28% / 3% | +2.73% vs +0.47% | +0.203 |
+| 2011 | 50 | 15.0 | 5.13 | 5.92 | 0.0 | 24% / 3% | +2.30% vs +0.05% | +0.197 |
+| 2012 | 50 | 16.0 | 4.87 | 6.43 | 1.0 | 24% / 2% | +2.35% vs +0.52% | +0.209 |
+| 2013 | 50 | 19.0 | 4.85 | 6.78 | 3.0 | 20% / 3% | +2.24% vs +0.46% | +0.200 |
+| 2014 | 50 | 11.0 | 4.27 | 5.27 | 0.0 | 22% / 3% | +1.81% vs +0.14% | +0.197 |
+| 2015 | 50 | 13.0 | 4.18 | 4.66 | 1.0 | 23% / 3% | +2.14% vs -0.00% | +0.195 |
+| 2016 | 50 | 21.0 | 3.94 | 4.69 | 2.0 | 25% / 3% | +2.77% vs +0.50% | +0.201 |
+| 2017 | 50 | 17.0 | 3.62 | 4.51 | 0.0 | 23% / 4% | +2.29% vs +0.29% | +0.215 |
+| 2018 | 50 | 14.0 | 3.35 | 4.43 | 1.0 | 22% / 3% | +2.05% vs +0.06% | +0.198 |
+| 2019 | 50 | 9.0 | 3.32 | 3.88 | 1.0 | 21% / 3% | +2.38% vs -0.06% | +0.195 |
+| 2020 | 50 | 9.0 | 3.09 | 4.01 | 1.0 | 22% / 2% | +3.60% vs +1.06% | +0.192 |
+| 2021 | 50 | 11.0 | 2.87 | 3.65 | 1.0 | 22% / 4% | +2.36% vs -0.36% | +0.203 |
+| 2022 | 50 | 11.0 | 2.81 | 3.30 | 0.0 | 23% / 3% | +2.40% vs +0.15% | +0.177 |
+| 2023 | 50 | 4.0 | 2.65 | 3.09 | 1.0 | 21% / 4% | +2.26% vs +0.21% | +0.186 |
+
+### gpt by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 5.0 | 5.69 | 5.51 | 8.0 | 11% / 11% | +0.33% vs +0.46% | +0.019 |
+| 2011 | 50 | 0.0 | 5.13 | 3.63 | 5.0 | 11% / 8% | +0.38% vs +0.05% | +0.002 |
+| 2012 | 50 | 4.0 | 4.87 | 2.18 | 3.0 | 8% / 7% | +0.69% vs +0.52% | +0.005 |
+| 2013 | 50 | 1.0 | 4.85 | 2.76 | 4.0 | 10% / 8% | +0.48% vs +0.46% | +0.009 |
+| 2014 | 50 | 0.0 | 4.27 | 1.96 | 1.0 | 12% / 8% | +0.36% vs +0.14% | +0.010 |
+| 2015 | 50 | 1.0 | 4.18 | 1.81 | 2.0 | 8% / 6% | +0.19% vs -0.00% | +0.010 |
+| 2016 | 50 | 0.0 | 3.94 | 0.12 | 0.0 | 3% / 3% | +0.40% vs +0.50% | -0.002 |
+| 2017 | 50 | 1.0 | 3.62 | 1.41 | 1.0 | 7% / 8% | +0.37% vs +0.29% | -0.011 |
+| 2018 | 50 | 0.0 | 3.35 | 1.51 | 2.0 | 7% / 6% | +0.18% vs +0.06% | +0.022 |
+| 2019 | 50 | 0.0 | 3.32 | 0.66 | 0.0 | 4% / 4% | -0.25% vs -0.06% | +0.001 |
+| 2020 | 50 | 0.0 | 3.09 | 0.69 | 1.0 | 4% / 7% | +0.36% vs +1.06% | -0.044 |
+| 2021 | 50 | 1.0 | 2.87 | 1.96 | 1.0 | 6% / 7% | -0.19% vs -0.36% | +0.066 |
+| 2022 | 50 | 0.0 | 2.81 | 0.73 | 1.0 | 7% / 8% | +0.03% vs +0.15% | +0.019 |
+| 2023 | 50 | 2.0 | 2.65 | 1.30 | 1.0 | 12% / 8% | +0.65% vs +0.21% | +0.026 |
+
+### gpt_null by test year
+
+| Year | Days | Hits | Chance (uniform) | Chance (same volatility) | Loser hits | Top / bottom decile | Picks' week return vs all | Rank IC |
+|---|---|---|---|---|---|---|---|---|
+| 2010 | 50 | 5.0 | 5.69 | 6.03 | 8.0 | 9% / 11% | +0.15% vs +0.46% | -0.002 |
+| 2011 | 50 | 31.0 | 5.13 | 22.62 | 28.0 | 23% / 26% | +0.03% vs +0.05% | +0.022 |
+| 2012 | 50 | 9.0 | 4.87 | 6.90 | 4.0 | 15% / 13% | +0.71% vs +0.52% | +0.017 |
+| 2013 | 50 | 64.0 | 4.85 | 34.85 | 43.0 | 32% / 33% | +1.16% vs +0.46% | +0.020 |
+| 2014 | 50 | 8.0 | 4.27 | 7.49 | 9.0 | 18% / 17% | +0.11% vs +0.14% | -0.007 |
+| 2015 | 50 | 10.0 | 4.18 | 5.63 | 6.0 | 10% / 15% | -0.28% vs -0.00% | -0.035 |
+| 2016 | 50 | 5.0 | 3.94 | 6.16 | 11.0 | 12% / 14% | +0.32% vs +0.50% | +0.010 |
+| 2017 | 50 | 1.0 | 3.62 | 1.37 | 1.0 | 7% / 7% | +0.25% vs +0.29% | -0.007 |
+| 2018 | 50 | 11.0 | 3.35 | 11.69 | 21.0 | 20% / 24% | -0.55% vs +0.06% | -0.039 |
+| 2019 | 50 | 7.0 | 3.32 | 5.99 | 6.0 | 14% / 16% | -0.61% vs -0.06% | +0.004 |
+| 2020 | 50 | 4.0 | 3.09 | 5.33 | 6.0 | 17% / 14% | +1.14% vs +1.06% | +0.036 |
+| 2021 | 50 | 4.0 | 2.87 | 6.52 | 4.0 | 20% / 16% | -0.07% vs -0.36% | -0.042 |
+| 2022 | 50 | 3.0 | 2.81 | 3.43 | 5.0 | 15% / 16% | -0.20% vs +0.15% | +0.014 |
+| 2023 | 50 | 15.0 | 2.65 | 10.77 | 14.0 | 23% / 27% | +0.39% vs +0.21% | -0.024 |
+
+## Week-level view and the collapsed picks
+
+| Scores | Hits vs same-volatility chance, week-level t | Weeks ahead of the average stock | Median week's excess | Share of the total excess from the 5 best weeks | Excess without those 5 (t) | Pick weight on stocks down >50% over the past year | Their return (pooled; averaged by week) | The other picks' return |
+|---|---|---|---|---|---|---|---|---|
+| lgbm | +2.79 | 378 of 700 | +0.18% | 45% | +0.11% (1.11) | 0.0% | n/a; n/a | +0.44% |
+| lgbm_null | +2.95 | 337 of 700 | -0.13% | n/a | -0.10% (-0.97) | 0.0% | n/a; n/a | +0.23% |
+| momentum | +6.23 | 343 of 700 | -0.08% | 151% | -0.04% (-0.23) | 0.0% | n/a; n/a | +0.32% |
+| reversal | +3.28 | 350 of 700 | -0.00% | 264% | -0.07% (-0.58) | 0.0% | n/a; n/a | +0.29% |
+| high_vol | +5.58 | 352 of 700 | +0.06% | 209% | -0.06% (-0.41) | 0.0% | n/a; n/a | +0.31% |
+| low_vol | -1.10 | 325 of 700 | -0.16% | n/a | -0.13% (-1.93) | 0.0% | n/a; n/a | +0.16% |
+| oracle | +10.15 | 679 of 700 | +1.91% | 3% | +2.11% (39.81) | 0.0% | n/a; n/a | +2.41% |
+| gpt | -2.96 | 364 of 700 | +0.07% | 112% | -0.00% (-0.08) | 0.0% | n/a; n/a | +0.28% |
+| gpt_null | +3.22 | 342 of 700 | -0.06% | n/a | -0.14% (-1.51) | 0.0% | n/a; n/a | +0.18% |
+
+## Against comparable stocks
+
+Each pick against the 20 eligible stocks it didn't pick that are closest to it that day in percentile rank of trailing volatility and of past-year fall (stockai.h30.metrics.comparable_excess). Stocks that swung or fell alike as a group cancel out. The 5 best weeks are those with the highest raw excess.
+
+| Scores | Excess over comparable stocks per week (t) | Weeks ahead | Without the 5 best weeks (t) |
+|---|---|---|---|
+| lgbm | +0.17% (2.01) | 363 of 700 | +0.10% (1.28) |
+| lgbm_null | -0.03% (-0.38) | 341 of 700 | -0.09% (-1.02) |
+| momentum | -0.03% (-0.21) | 345 of 700 | -0.11% (-0.95) |
+| reversal | +0.09% (0.84) | 350 of 700 | +0.01% (0.11) |
+| high_vol | +0.15% (1.08) | 347 of 700 | +0.04% (0.35) |
+| low_vol | -0.07% (-2.29) | 328 of 700 | -0.08% (-2.54) |
+| oracle | +2.00% (35.11) | 669 of 700 | +1.96% (36.65) |
+| gpt | +0.03% (0.57) | 363 of 700 | -0.00% (-0.03) |
+| gpt_null | -0.05% (-0.56) | 347 of 700 | -0.10% (-1.27) |
+
+## A simple weekly account in the picks (equal weight, from one graded week to the next)
+
+| Scores | $10,000 at 0 bps | at 5 bps | at 20 bps | at 50 bps | Every eligible stock, equal weight (no costs) |
+|---|---|---|---|---|---|
+| lgbm | $105,788 | $57,929 | $9,481 | $250 | $44,217 |
+| lgbm_null | $25,731 | $14,308 | $2,452 | $71 | $44,217 |
+| momentum | $32,798 | $28,565 | $18,867 | $8,222 | $44,339 |
+| reversal | $31,612 | $16,046 | $2,090 | $35 | $44,334 |
+| high_vol | $25,265 | $21,790 | $13,974 | $5,740 | $44,329 |
+| low_vol | $27,898 | $24,877 | $17,636 | $8,856 | $44,329 |
+| oracle | $126,324,167,991 | $64,061,591,710 | $8,321,629,815 | $137,919,220 | $44,329 |
+| gpt | $55,532 | $30,054 | $4,748 | $117 | $44,217 |
+| gpt_null | $18,058 | $9,977 | $1,677 | $47 | $44,217 |
+
+
+   subsets took 40 s
+== done in 78 s; see results/1w/summary.md

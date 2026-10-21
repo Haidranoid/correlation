@@ -1,0 +1,127 @@
+# Group breadth thrust, new export (9508 stocks x 6240 days, 2001-12-31..2026-10-19)
+refits: 29 (2024-06-11 .. 2026-10-15); group sizes 12-92, groups under 10 members: 0
+group-days: 17730; thrust condition true on 1237 (6.98%); thrusts 217 on 133 dates
+
+## The unseen months: thrusts dated 2025-06-30 on, with a full 21-day outcome
+thrusts dated in the unseen months: 108 on 72 dates
+  2025-07-01 KIE     51 members, 10-day -99 bps, 21-day after -392 bps
+  2025-07-14 XLU     58 members, 10-day -161 bps, 21-day after +345 bps
+  2025-07-01 IYK     68 members, 10-day -92 bps, 21-day after -288 bps
+  2025-08-13 IJH     37 members, 10-day +129 bps, 21-day after -40 bps
+  2025-08-12 KRE     46 members, 10-day -145 bps, 21-day after +103 bps
+  2025-08-04 GDX     26 members, 10-day +134 bps, 21-day after +1357 bps
+  2025-08-13 IBB     70 members, 10-day -179 bps, 21-day after -195 bps
+  2025-08-13 IJR     88 members, 10-day +222 bps, 21-day after -214 bps
+  2025-08-22 IJH     60 members, 10-day +163 bps, 21-day after -489 bps
+  2025-08-18 IWP     70 members, 10-day +235 bps, 21-day after -106 bps
+  2025-08-19 KIE     54 members, 10-day +114 bps, 21-day after -472 bps
+  2025-09-08 SKYY    50 members, 10-day +596 bps, 21-day after -562 bps
+  2025-08-22 IYR     65 members, 10-day -38 bps, 21-day after -47 bps
+  2025-08-22 SOXX    38 members, 10-day +230 bps, 21-day after +173 bps
+  2025-08-22 XOP     60 members, 10-day -30 bps, 21-day after +214 bps
+  2025-09-24 XLU     56 members, 10-day -39 bps, 21-day after +291 bps
+  2025-09-15 QTUM    33 members, 10-day +1025 bps, 21-day after +3040 bps
+  2025-09-23 MLPX    33 members, 10-day +312 bps, 21-day after -70 bps
+  2025-10-01 IBB     54 members, 10-day +461 bps, 21-day after +48 bps
+  2025-10-27 KWEB    33 members, 10-day +111 bps, 21-day after -581 bps
+  2025-10-23 XOP     57 members, 10-day +228 bps, 21-day after +653 bps
+  2025-11-10 GDX     32 members, 10-day +745 bps, 21-day after +669 bps
+  2025-10-21 IJH     46 members, 10-day +229 bps, 21-day after -80 bps
+  2025-11-28 IJH     51 members, 10-day -22 bps, 21-day after +4 bps
+  2025-11-25 IYT     54 members, 10-day +102 bps, 21-day after +96 bps
+  2025-11-14 MLPX    38 members, 10-day +772 bps, 21-day after -768 bps
+  2025-12-03 SOXX    46 members, 10-day +727 bps, 21-day after +105 bps
+  2025-12-04 SMH     59 members, 10-day +119 bps, 21-day after -150 bps
+  2025-11-26 XRT     53 members, 10-day +413 bps, 21-day after +51 bps
+  2025-11-25 KRE     40 members, 10-day +364 bps, 21-day after +396 bps
+  2025-12-03 ITB     55 members, 10-day +365 bps, 21-day after -298 bps
+  2025-12-03 KBWB    46 members, 10-day +182 bps, 21-day after +600 bps
+  2026-01-05 XHB     63 members, 10-day -155 bps, 21-day after +636 bps
+  2026-01-06 IYR     48 members, 10-day -18 bps, 21-day after +393 bps
+  2025-12-22 ITA     40 members, 10-day +132 bps, 21-day after +649 bps
+  2026-01-12 DAPP    43 members, 10-day +318 bps, 21-day after -1812 bps
+  2026-01-08 QTUM    44 members, 10-day +694 bps, 21-day after -1404 bps
+  2025-12-22 TAN     30 members, 10-day +484 bps, 21-day after +214 bps
+  2026-01-12 AIRR    67 members, 10-day -2 bps, 21-day after +1287 bps
+  2026-01-06 RSP     42 members, 10-day -308 bps, 21-day after -807 bps
+  2026-01-13 XOP     56 members, 10-day +323 bps, 21-day after +1682 bps
+  2026-01-05 KWEB    30 members, 10-day +466 bps, 21-day after -725 bps
+  2026-01-09 XLP     52 members, 10-day -116 bps, 21-day after +643 bps
+  2026-01-14 MLPX    34 members, 10-day -481 bps, 21-day after +1330 bps
+  2026-02-06 REM     40 members, 10-day -161 bps, 21-day after -688 bps
+  2026-01-14 FXU     57 members, 10-day -281 bps, 21-day after +1063 bps
+  2026-02-06 KIE     48 members, 10-day +577 bps, 21-day after -110 bps
+  2026-02-26 JETS    46 members, 10-day +36 bps, 21-day after -324 bps
+  2026-02-26 KRE     41 members, 10-day -271 bps, 21-day after -208 bps
+  2026-04-14 GDX     26 members, 10-day +802 bps, 21-day after -102 bps
+  2026-04-08 AIRR    65 members, 10-day +95 bps, 21-day after +1063 bps
+  2026-04-14 RWR     32 members, 10-day -243 bps, 21-day after +394 bps
+  2026-04-08 EUFN    49 members, 10-day +360 bps, 21-day after -387 bps
+  2026-04-09 IHF     53 members, 10-day +193 bps, 21-day after -321 bps
+  2026-04-08 XBI     52 members, 10-day +526 bps, 21-day after -261 bps
+  2026-04-15 ARKQ    52 members, 10-day +755 bps, 21-day after +1016 bps
+  2026-04-09 IJH     68 members, 10-day +167 bps, 21-day after -161 bps
+  2026-04-13 DAPP    35 members, 10-day +1138 bps, 21-day after +1733 bps
+  2026-04-14 SCHH    29 members, 10-day -305 bps, 21-day after -37 bps
+  2026-04-14 KBWB    43 members, 10-day +214 bps, 21-day after -6 bps
+  2026-04-14 IWP     37 members, 10-day +377 bps, 21-day after -118 bps
+  2026-04-15 XLF     56 members, 10-day -26 bps, 21-day after +35 bps
+  2026-04-08 SMH     48 members, 10-day +296 bps, 21-day after +1894 bps
+  2026-04-15 IJR     54 members, 10-day +333 bps, 21-day after -962 bps
+  2026-04-02 XME     23 members, 10-day +723 bps, 21-day after -267 bps
+  2026-04-08 KRE     46 members, 10-day +267 bps, 21-day after -219 bps
+  2026-04-20 ITB     56 members, 10-day +145 bps, 21-day after -1031 bps
+  2026-04-17 WCLD    70 members, 10-day -310 bps, 21-day after -241 bps
+  2026-04-17 MOAT    54 members, 10-day -185 bps, 21-day after -452 bps
+  2026-04-16 KIE     53 members, 10-day -167 bps, 21-day after -55 bps
+  2026-05-01 WCLD    67 members, 10-day +590 bps, 21-day after +1306 bps
+  2026-04-30 FXU     47 members, 10-day -35 bps, 21-day after -834 bps
+  2026-04-29 MLPX    29 members, 10-day +451 bps, 21-day after -953 bps
+  2026-04-16 CWEB    32 members, 10-day +214 bps, 21-day after -777 bps
+  2026-04-17 XRT     60 members, 10-day +211 bps, 21-day after -887 bps
+  2026-06-15 ITB     66 members, 10-day +427 bps, 21-day after +245 bps
+  2026-06-02 KRE     45 members, 10-day -173 bps, 21-day after +692 bps
+  2026-06-12 AIRR    57 members, 10-day -40 bps, 21-day after -865 bps
+  2026-05-22 XLI     31 members, 10-day -185 bps, 21-day after +973 bps
+  2026-05-26 XRT     86 members, 10-day +433 bps, 21-day after +603 bps
+  2026-06-01 WCLD    64 members, 10-day +474 bps, 21-day after -749 bps
+  2026-06-10 KIE     49 members, 10-day +454 bps, 21-day after +569 bps
+  2026-07-06 VFH     43 members, 10-day -119 bps, 21-day after +557 bps
+  2026-06-22 XBI     53 members, 10-day +744 bps, 21-day after +314 bps
+  2026-07-07 WCLD    56 members, 10-day +893 bps, 21-day after +722 bps
+  2026-07-01 WCLD    56 members, 10-day +439 bps, 21-day after +1259 bps
+  2026-06-23 FXU     40 members, 10-day +198 bps, 21-day after +133 bps
+  2026-07-02 SPLV    40 members, 10-day +68 bps, 21-day after +216 bps
+  2026-07-01 SPLV    52 members, 10-day -64 bps, 21-day after +410 bps
+  2026-08-05 GDX     31 members, 10-day +656 bps, 21-day after +1968 bps
+  2026-07-22 XOP     67 members, 10-day +723 bps, 21-day after +334 bps
+  2026-07-28 FXI     25 members, 10-day +329 bps, 21-day after -115 bps
+  2026-07-27 XHB     88 members, 10-day +231 bps, 21-day after -465 bps
+  2026-08-06 SHLD    37 members, 10-day +471 bps, 21-day after -713 bps
+  2026-07-31 MLPX    27 members, 10-day +104 bps, 21-day after +52 bps
+  2026-09-03 EUFN    38 members, 10-day +609 bps, 21-day after +104 bps
+  2026-09-03 STCE    37 members, 10-day +530 bps, 21-day after +583 bps
+  2026-10-13 XOP     73 members, 10-day +885 bps, no full outcome
+  2026-10-05 AIRR    50 members, 10-day +502 bps, no full outcome
+  2026-09-25 PSI     66 members, 10-day +743 bps, no full outcome
+  2026-10-14 IHF     17 members, 10-day +762 bps, no full outcome
+  2026-09-21 RSPT    28 members, 10-day +974 bps, no full outcome
+  2026-10-13 SPLV    34 members, 10-day +400 bps, no full outcome
+  2026-10-15 WCLD    80 members, 10-day +900 bps, no full outcome
+  2026-10-15 IHI     62 members, 10-day +581 bps, no full outcome
+  2026-10-16 XLP     73 members, 10-day +1019 bps, no full outcome
+  2026-10-16 KIE     49 members, 10-day +909 bps, no full outcome
+  2026-10-16 FXU     41 members, 10-day +799 bps, no full outcome
+unseen months: 97 thrusts on 65 dates; mean +117.6 bps (se 76.3, t +1.54; t by 21-day block +1.54), 51% positive
+   (a) ordinary group-days +10.4 bps over 9143 group-days; thrust minus (a) +107.1 bps, t +1.40
+   (b) momentum-matched non-thrusts (7194 group-days): thrust minus (b) +132.7 bps, t +1.71  [regression with decile effects, both sides clustered by date: +132.5 bps, t +1.71]
+   thrusts by momentum decile (1 = lowest): 1 3 6 10 9 3 13 14 20 18; control means by decile (bps): -15 +23 -31 -11 -6 +2 +10 +12 +40 -126
+
+## The judge on the unseen months (holdout from 2025-06-30, rebalance=1)
+decision days: 328; with no scored stock 4, with 1-19 0, >= 20 324
+uniform  0 bps: picks +82.9% vs random median +15.5% (p 0.0), change +67.34
+uniform  5 bps: picks +77.8% vs random median +12.4% (p 0.0), change +65.47
+uniform 20 bps: picks +63.6% vs random median +3.4% (p 0.0), change +60.18
+volatility  0 bps: picks +82.9% vs random median +16.7% (p 0.0), change +66.22
+volatility  5 bps: picks +77.8% vs random median +13.4% (p 0.0), change +64.40
+volatility 20 bps: picks +63.6% vs random median +4.3% (p 0.0), change +59.22

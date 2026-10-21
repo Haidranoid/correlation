@@ -1,0 +1,4 @@
+SUMMARY years 18; beat random at p<0.1 (0 bps: 6, 5 bps: 6, 20 bps: 6) of 18; change over random +2.7 pts/yr (se 2.8, ahead 10/18); IC actual returns z +3.79; long-short 2.88 bps/day z +2.60, turnover 75%, costs 0.60 x c bps/day
+CHANGE OVER RANDOM (uniform, 0 bps): +2.69; per year [18.49, -14.85, 9.19, 4.13, 9.6, 14.13, 0.91, 21.33, -0.59, -12.55, 13.7, -13.35, 0.44, -5.09, -2.61, -10.95, -4.67, 21.17]; ahead 10/18; se 2.82; at 0/5/20 bps [2.69, 2.5, 1.99]
+SUMMARY years 18; beat random at p<0.1 (0 bps: 6, 5 bps: 6, 20 bps: 6) of 18; change over random +4.1 pts/yr (se 2.7, ahead 10/18); IC actual returns z +3.79; long-short 2.88 bps/day z +2.60, turnover 75%, costs 0.60 x c bps/day
+CHANGE OVER RANDOM (volatility, 0 bps): +4.08; per year [19.33, -11.44, 5.74, 5.93, 12.28, 13.27, 0.05, 23.53, -0.14, -4.65, 13.62, -6.84, 6.11, -3.12, -5.37, -13.48, -3.53, 22.07]; ahead 10/18; se 2.66; at 0/5/20 bps [4.08, 3.9, 3.42]

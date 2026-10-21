@@ -1,0 +1,3 @@
+scores = -1 x P -> /home/bhoult/.local/share/correlation2/experiments/close_location/score_new.npy
+uniform: change over random -25.68 pts (per year [-25.68], ahead 0/1, se nan); by cost 0/5/20 bps [-25.68, -24.19, -20.17]
+volatility: change over random -28.11 pts (per year [-28.11], ahead 0/1, se nan); by cost 0/5/20 bps [-28.11, -26.4, -21.84]

@@ -1,0 +1,9 @@
+universe 500 stocks (A, AA, AAL, AAP, AAPL, ABBV, ABT, ACN, ...); training 2015-06-29..2022-06-27 (1762 days, span 2555 calendar days); later data to 2025-06-27; 494 of 500 have every later close; 5 training closes carried forward
+w=7: offsets 0..2500; tested 6.24e+08; kept 1.3e+07 (2.1%), null kept 1.2e+07; kept same sign later 0.524 (all 0.502, null-picked 0.491); 44 s
+w=14: offsets 0..2500; tested 6.24e+08; kept 3.02e+07 (4.8%), null kept 3.12e+07; kept same sign later 0.523 (all 0.505, null-picked 0.479); 44 s
+w=21: offsets 0..2500; tested 6.24e+08; kept 5.17e+07 (8.3%), null kept 5.31e+07; kept same sign later 0.527 (all 0.507, null-picked 0.479); 44 s
+w=30: offsets 0..2500; tested 6.22e+08; kept 7.17e+07 (11.5%), null kept 7.39e+07; kept same sign later 0.523 (all 0.506, null-picked 0.484); 45 s
+w=40: offsets 0..2500; tested 6.18e+08; kept 9.29e+07 (15.0%), null kept 9.57e+07; kept same sign later 0.515 (all 0.504, null-picked 0.492); 39 s
+w=60: offsets 0..2450; tested 6.11e+08; kept 1.27e+08 (20.8%), null kept 1.31e+08; kept same sign later 0.508 (all 0.503, null-picked 0.502); 41 s
+w=90: offsets 0..2450; tested 6.01e+08; kept 1.8e+08 (29.9%), null kept 1.77e+08; kept same sign later 0.512 (all 0.505, null-picked 0.505); 43 s
+w=180: offsets 0..2350; tested 5.67e+08; kept 2.54e+08 (44.7%), null kept 2.5e+08; kept same sign later 0.509 (all 0.506, null-picked 0.488); 39 s

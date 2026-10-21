@@ -1,0 +1,107 @@
+## New export: the unseen months (return months 2025-07..2026-10, through 2026-10-19)
+
+#### unseen, divfix (all: liquid set)
+
+| Series | Months | Mean %/month | t | t NW(3) | Volatility %/yr | Sharpe (monthly) | Sharpe (daily) | FF5+UMD alpha %/month (t) | Worst month | Max drawdown (pts) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| WML gross | 2025-07..2026-10 (16) | +0.276 | +0.13 | +0.18 | 30.0 | +0.11 | +0.10 | +1.455 (+0.82; 14 mo) | -21.8% (2026-07) | -29.0 |
+| WML net | 2025-07..2026-10 (16) | +0.215 | +0.10 | +0.14 | 30.0 | +0.09 | +0.08 | +1.394 (+0.79; 14 mo) | -21.9% (2026-07) | -29.1 |
+| RMOM gross | 2025-07..2026-10 (16) | +0.277 | +0.34 | +0.46 | 11.4 | +0.29 | +0.24 | +1.341 (+1.83; 14 mo) | -7.2% (2026-07) | -9.1 |
+| RMOM net | 2025-07..2026-10 (16) | +0.251 | +0.30 | +0.41 | 11.4 | +0.26 | +0.22 | +1.313 (+1.79; 14 mo) | -7.2% (2026-07) | -9.1 |
+
+Sharpe RMOM − WML, net, daily: +0.133 (95% -0.167 to +0.365), one-sided p 0.128, two-sided p 0.318, 328 days; monthly convention +0.178.
+Sharpe RMOM − WML, gross, daily: +0.135 (95% -0.166 to +0.368), one-sided p 0.126, two-sided p 0.313, 328 days; monthly convention +0.182.
+Scale (12% ÷ σ̂, set at each month-end): mean 0.42, min 0.26 (2026-09), max 0.53 (2025-07), above 1 in 0% of months; mean σ̂ 30.1%. Turnover a month (sum of |Δposition|): WML 1.21, RMOM 0.53; costs a year: WML 0.73%, RMOM 0.32%.
+RMOM net on WML net: alpha +0.171% a month (t +0.89), beta 0.37, R² 0.95; adding FF5 + UMD: alpha +0.756% (t +3.60, 14 months).
+
+#### unseen, divfix (big: 500 largest)
+
+| Series | Months | Mean %/month | t | t NW(3) | Volatility %/yr | Sharpe (monthly) | Sharpe (daily) | FF5+UMD alpha %/month (t) | Worst month | Max drawdown (pts) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| WML gross | 2025-07..2026-10 (16) | +2.007 | +0.56 | +0.79 | 49.2 | +0.49 | +0.50 | +1.931 (+0.67; 14 mo) | -33.3% (2026-07) | -45.5 |
+| WML net | 2025-07..2026-10 (16) | +1.950 | +0.55 | +0.77 | 49.3 | +0.48 | +0.49 | +1.877 (+0.66; 14 mo) | -33.4% (2026-07) | -45.6 |
+| RMOM gross | 2025-07..2026-10 (16) | +0.856 | +0.93 | +1.27 | 12.8 | +0.80 | +0.75 | +1.786 (+1.87; 14 mo) | -7.3% (2026-07) | -9.4 |
+| RMOM net | 2025-07..2026-10 (16) | +0.838 | +0.91 | +1.24 | 12.8 | +0.79 | +0.73 | +1.768 (+1.85; 14 mo) | -7.3% (2026-07) | -9.4 |
+
+Sharpe RMOM − WML, net, daily: +0.245 (95% -0.154 to +0.603), one-sided p 0.082, two-sided p 0.201, 328 days; monthly convention +0.311.
+Sharpe RMOM − WML, gross, daily: +0.247 (95% -0.153 to +0.606), one-sided p 0.082, two-sided p 0.199, 328 days; monthly convention +0.314.
+Scale (12% ÷ σ̂, set at each month-end): mean 0.30, min 0.17 (2026-09), max 0.44 (2025-10), above 1 in 0% of months; mean σ̂ 44.2%. Turnover a month (sum of |Δposition|): WML 1.15, RMOM 0.36; costs a year: WML 0.69%, RMOM 0.22%.
+RMOM net on WML net: alpha +0.353% a month (t +1.26), beta 0.25, R² 0.92; adding FF5 + UMD: alpha +1.181% (t +3.20, 14 months).
+
+Yearly (all), summed monthly returns, %: year | WML gross | WML net | RMOM gross | RMOM net | mean scale
+  2005 (5 mo) |   +4.9 |   +4.7 |   +3.8 |   +3.5 | 0.86
+  2006 (12 mo) |  -19.9 |  -20.6 |  -10.5 |  -11.0 | 0.66
+  2007 (12 mo) |  +27.3 |  +26.5 |  +26.0 |  +25.1 | 1.07
+  2008 (12 mo) |  -20.2 |  -21.0 |   -7.8 |   -8.2 | 0.40
+  2009 (12 mo) | -111.5 | -112.3 |  -23.7 |  -24.0 | 0.25
+  2010 (12 mo) |   +4.8 |   +3.9 |   +3.0 |   +2.3 | 0.74
+  2011 (12 mo) |  +14.3 |  +13.5 |  +18.4 |  +17.6 | 1.06
+  2012 (12 mo) |   -3.6 |   -4.4 |   -2.4 |   -3.0 | 0.71
+  2013 (12 mo) |  +25.9 |  +25.1 |  +22.0 |  +21.4 | 0.87
+  2014 (12 mo) |   -4.0 |   -4.8 |   -2.1 |   -2.8 | 0.87
+  2015 (12 mo) |  +30.1 |  +29.4 |  +19.4 |  +18.9 | 0.67
+  2016 (12 mo) |  -37.6 |  -38.3 |  -16.6 |  -17.0 | 0.45
+  2017 (12 mo) |   +5.2 |   +4.5 |   +4.2 |   +3.5 | 0.85
+  2018 (12 mo) |   +0.2 |   -0.5 |   +0.1 |   -0.5 | 0.90
+  2019 (12 mo) |   -0.5 |   -1.2 |   +1.3 |   +0.8 | 0.72
+  2020 (12 mo) |   +0.1 |   -0.7 |   +3.4 |   +3.1 | 0.36
+  2021 (12 mo) |  -12.7 |  -13.4 |   -1.3 |   -1.6 | 0.37
+  2022 (12 mo) |  +38.7 |  +38.0 |  +15.7 |  +15.4 | 0.38
+  2023 (12 mo) |   -7.4 |   -8.1 |   -1.2 |   -1.6 | 0.45
+  2024 (12 mo) |   +9.9 |   +9.2 |   +4.3 |   +3.9 | 0.47
+  2025 (12 mo) |   +8.8 |   +8.1 |   +5.1 |   +4.7 | 0.53
+  2026 (10 mo) |   +6.8 |   +6.2 |   +5.7 |   +5.5 | 0.38
+
+#### unseen, plain (all: liquid set)
+
+| Series | Months | Mean %/month | t | t NW(3) | Volatility %/yr | Sharpe (monthly) | Sharpe (daily) | FF5+UMD alpha %/month (t) | Worst month | Max drawdown (pts) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| WML gross | 2025-07..2026-10 (16) | +0.408 | +0.19 | +0.27 | 29.9 | +0.16 | +0.15 | +1.572 (+0.90; 14 mo) | -21.1% (2026-07) | -27.9 |
+| WML net | 2025-07..2026-10 (16) | +0.348 | +0.16 | +0.23 | 29.9 | +0.14 | +0.13 | +1.511 (+0.86; 14 mo) | -21.1% (2026-07) | -28.0 |
+| RMOM gross | 2025-07..2026-10 (16) | +0.321 | +0.39 | +0.55 | 11.4 | +0.34 | +0.28 | +1.359 (+1.85; 14 mo) | -6.9% (2026-07) | -8.7 |
+| RMOM net | 2025-07..2026-10 (16) | +0.295 | +0.36 | +0.51 | 11.4 | +0.31 | +0.26 | +1.331 (+1.81; 14 mo) | -6.9% (2026-07) | -8.7 |
+
+Sharpe RMOM − WML, net, daily: +0.126 (95% -0.169 to +0.356), one-sided p 0.138, two-sided p 0.335, 328 days; monthly convention +0.171.
+Sharpe RMOM − WML, gross, daily: +0.127 (95% -0.168 to +0.359), one-sided p 0.136, two-sided p 0.330, 328 days; monthly convention +0.175.
+Scale (12% ÷ σ̂, set at each month-end): mean 0.42, min 0.26 (2026-09), max 0.52 (2025-07), above 1 in 0% of months; mean σ̂ 30.1%. Turnover a month (sum of |Δposition|): WML 1.20, RMOM 0.52; costs a year: WML 0.72%, RMOM 0.31%.
+RMOM net on WML net: alpha +0.166% a month (t +0.87), beta 0.37, R² 0.95; adding FF5 + UMD: alpha +0.717% (t +3.47, 14 months).
+
+#### unseen, plain (big: 500 largest)
+
+| Series | Months | Mean %/month | t | t NW(3) | Volatility %/yr | Sharpe (monthly) | Sharpe (daily) | FF5+UMD alpha %/month (t) | Worst month | Max drawdown (pts) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| WML gross | 2025-07..2026-10 (16) | +1.938 | +0.55 | +0.77 | 49.0 | +0.47 | +0.48 | +1.699 (+0.63; 14 mo) | -32.9% (2026-07) | -45.0 |
+| WML net | 2025-07..2026-10 (16) | +1.881 | +0.53 | +0.75 | 49.0 | +0.46 | +0.47 | +1.644 (+0.61; 14 mo) | -33.0% (2026-07) | -45.1 |
+| RMOM gross | 2025-07..2026-10 (16) | +0.816 | +0.90 | +1.25 | 12.6 | +0.78 | +0.71 | +1.692 (+1.88; 14 mo) | -7.1% (2026-07) | -9.2 |
+| RMOM net | 2025-07..2026-10 (16) | +0.798 | +0.88 | +1.22 | 12.6 | +0.76 | +0.70 | +1.674 (+1.86; 14 mo) | -7.2% (2026-07) | -9.3 |
+
+Sharpe RMOM − WML, net, daily: +0.230 (95% -0.175 to +0.592), one-sided p 0.099, two-sided p 0.235, 328 days; monthly convention +0.298.
+Sharpe RMOM − WML, gross, daily: +0.232 (95% -0.173 to +0.595), one-sided p 0.098, two-sided p 0.232, 328 days; monthly convention +0.301.
+Scale (12% ÷ σ̂, set at each month-end): mean 0.30, min 0.17 (2026-09), max 0.44 (2025-10), above 1 in 0% of months; mean σ̂ 44.2%. Turnover a month (sum of |Δposition|): WML 1.14, RMOM 0.36; costs a year: WML 0.68%, RMOM 0.22%.
+RMOM net on WML net: alpha +0.334% a month (t +1.22), beta 0.25, R² 0.92; adding FF5 + UMD: alpha +1.167% (t +3.22, 14 months).
+
+Yearly (all), summed monthly returns, %: year | WML gross | WML net | RMOM gross | RMOM net | mean scale
+  2005 (5 mo) |   +4.9 |   +4.7 |   +3.8 |   +3.5 | 0.86
+  2006 (12 mo) |  -19.9 |  -20.6 |  -10.5 |  -11.0 | 0.66
+  2007 (12 mo) |  +27.3 |  +26.5 |  +26.0 |  +25.1 | 1.07
+  2008 (12 mo) |  -20.2 |  -21.0 |   -7.8 |   -8.2 | 0.40
+  2009 (12 mo) | -111.5 | -112.3 |  -23.7 |  -24.0 | 0.25
+  2010 (12 mo) |   +4.8 |   +3.9 |   +3.0 |   +2.3 | 0.74
+  2011 (12 mo) |  +14.3 |  +13.5 |  +18.4 |  +17.6 | 1.06
+  2012 (12 mo) |   -3.6 |   -4.4 |   -2.4 |   -3.0 | 0.71
+  2013 (12 mo) |  +25.9 |  +25.1 |  +22.0 |  +21.4 | 0.87
+  2014 (12 mo) |   -4.0 |   -4.8 |   -2.1 |   -2.8 | 0.87
+  2015 (12 mo) |  +30.1 |  +29.4 |  +19.4 |  +18.9 | 0.67
+  2016 (12 mo) |  -37.6 |  -38.3 |  -16.6 |  -17.0 | 0.45
+  2017 (12 mo) |   +5.2 |   +4.5 |   +4.2 |   +3.5 | 0.85
+  2018 (12 mo) |   +0.2 |   -0.5 |   +0.1 |   -0.5 | 0.90
+  2019 (12 mo) |   -0.5 |   -1.2 |   +1.3 |   +0.8 | 0.72
+  2020 (12 mo) |   +0.1 |   -0.7 |   +3.4 |   +3.1 | 0.36
+  2021 (12 mo) |  -12.7 |  -13.4 |   -1.3 |   -1.6 | 0.37
+  2022 (12 mo) |  +38.8 |  +38.0 |  +15.7 |  +15.4 | 0.38
+  2023 (12 mo) |   -7.4 |   -8.2 |   -1.1 |   -1.4 | 0.45
+  2024 (12 mo) |  +10.4 |   +9.7 |   +4.5 |   +4.1 | 0.47
+  2025 (12 mo) |   +9.0 |   +8.3 |   +5.1 |   +4.7 | 0.53
+  2026 (10 mo) |   +8.4 |   +7.8 |   +6.2 |   +5.9 | 0.38
+
+Test 3b (unseen months, net, divfix): Sharpe difference +0.133 (plain +0.126); same sign as test 1 (+1) needed -> PASS

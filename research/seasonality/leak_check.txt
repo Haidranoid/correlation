@@ -1,0 +1,10 @@
+2011-11-01 (holds 2011-11): stocks 988, same NaN pattern True, max |score diff| 2.98e-08
+2012-12-24 (holds 2012-12): stocks 996, same NaN pattern True, max |score diff| 2.98e-08
+2015-09-30 (holds 2015-10): stocks 1222, same NaN pattern True, max |score diff| 2.98e-08
+2016-06-30 (holds 2016-07): stocks 1241, same NaN pattern True, max |score diff| 2.96e-08
+2020-11-30 (holds 2020-12): stocks 1614, same NaN pattern True, max |score diff| 2.98e-08
+2023-02-07 (holds 2023-02): stocks 1853, same NaN pattern True, max |score diff| 2.97e-08
+2024-07-17 (holds 2024-07): stocks 1904, same NaN pattern True, max |score diff| 2.98e-08
+2024-07-31 (holds 2024-08): stocks 1918, same NaN pattern True, max |score diff| 2.98e-08
+by hand: A March 2006..2015 mean log return +0.033486, panel +0.033486
+LEAK CHECK PASSED

@@ -1,0 +1,86 @@
+== Test 1: 2008-01..2019-12, mean monthly excess return net of 2 bps a side; pass t >= 2
+   mean +0.147%/month (+1.76%/yr), t +1.47 (Newey-West 6 lags +1.65), Sharpe 0.43, vol 4.1%/yr, max drawdown -7.5%
+   -> FAIL
+   without 2008 (2009-01..2019-12): mean +0.118%/month, t +1.14, Sharpe 0.34
+
+== Test 2: crisis years, compounded net excess return (2 bps) positive in 2008 and 2022
+   2008: strategy +5.64% (sum of months +5.59%); SPY excess -37.7%, 60/40 excess -19.2%, AQR TSMOM +24.6%
+   2022: strategy +6.50% (sum of months +6.51%); SPY excess -19.9%, 60/40 excess -18.4%, AQR TSMOM +24.7%
+   -> PASS
+
+== Test 3: 2020-01..2025-06, same (positive) sign; the unseen months come at the end
+   mean +0.045%/month (+0.55%/yr), t +0.33, Sharpe 0.14, max drawdown -8.7%
+   -> PASS (unseen months pending)
+
+== The number: account CAGR (T-bill + overlay, 0 bps) minus the median of 1,000 random-sign portfolios
+   2008-2025-06: strategy 2.67%/yr, random median 1.27%/yr (5-95%: 0.43 .. 2.13) -> +1.40 points (arithmetic +1.43); share of random portfolios at or above the strategy 0.002
+   2008-2019: strategy 2.37%/yr, random median 0.59%/yr (5-95%: -0.39 .. 1.61) -> +1.79 points (arithmetic +1.83); share of random portfolios at or above the strategy 0.001
+   2020-2025-06: strategy 3.32%/yr, random median 2.79%/yr (5-95%: 1.18 .. 4.37) -> +0.53 points (arithmetic +0.57); share of random portfolios at or above the strategy 0.284
+   2009-2025-06 (no 2008): strategy 2.40%/yr, random median 1.26%/yr (5-95%: 0.40 .. 2.09) -> +1.14 points (arithmetic +1.18); share of random portfolios at or above the strategy 0.015
+   NUMBER FOR THE FILE NAME: +1.4
+
+== Extra (added after results): always-long, same funds and weights, 0 bps
+   2008-2025-06: always-long 2.42%/yr (+1.15 points over the random median, share of random at or above 0.016; Sharpe 0.24); strategy minus always-long +0.25 points (monthly difference t +0.12); correlation +0.03
+   2008-2019: always-long 2.49%/yr (+1.90 points over the random median, share of random at or above 0.000; Sharpe 0.41); strategy minus always-long -0.11 points (monthly difference t -0.08); correlation +0.16
+   2020-2025-06: always-long 2.28%/yr (-0.51 points over the random median, share of random at or above 0.696; Sharpe -0.05); strategy minus always-long +1.04 points (monthly difference t +0.26); correlation -0.22
+
+== By period (net of 2 bps unless stated); correlations of monthly excess returns
+   2006-2019: 168 months, 21.6 funds; net +2.27%/yr t +2.01 (gross +2.33 t +2.07; 5 bps +2.17 t +1.93; 20 bps +1.70 t +1.51); Sharpe 0.54, vol 4.2%, max DD -7.5%; corr SPY -0.06, 60/40 -0.01, AQR +0.76; gross exposure 0.91 (max 1.43), turnover 0.26/month
+      FF5+UMD alpha +1.38%/yr t +1.29 (168 months), betas {'Mkt-RF': 0.052, 'SMB': 0.005, 'HML': -0.063, 'RMW': 0.066, 'CMA': 0.149, 'UMD': 0.119}
+      AQR TSMOM same months: +7.02%/yr t +2.01 Sharpe 0.54, vol 13.1%; SPY Sharpe 0.61, 60/40 Sharpe 0.82
+   2008-2019: 144 months, 22.8 funds; net +1.76%/yr t +1.47 (gross +1.82 t +1.53; 5 bps +1.67 t +1.40; 20 bps +1.22 t +1.02); Sharpe 0.43, vol 4.1%, max DD -7.5%; corr SPY -0.11, 60/40 -0.04, AQR +0.77; gross exposure 0.89 (max 1.43), turnover 0.25/month
+      FF5+UMD alpha +1.16%/yr t +1.03 (144 months), betas {'Mkt-RF': 0.04, 'SMB': -0.033, 'HML': -0.086, 'RMW': 0.036, 'CMA': 0.187, 'UMD': 0.1}
+      AQR TSMOM same months: +6.10%/yr t +1.57 Sharpe 0.45, vol 13.5%; SPY Sharpe 0.61, 60/40 Sharpe 0.83
+   2009-2019 (no 2008): 132 months, 23.0 funds; net +1.42%/yr t +1.14 (gross +1.48 t +1.19; 5 bps +1.32 t +1.07; 20 bps +0.86 t +0.69); Sharpe 0.34, vol 4.1%, max DD -7.5%; corr SPY +0.00, 60/40 +0.08, AQR +0.79; gross exposure 0.92 (max 1.43), turnover 0.26/month
+      FF5+UMD alpha +0.25%/yr t +0.21 (132 months), betas {'Mkt-RF': 0.078, 'SMB': -0.047, 'HML': -0.135, 'RMW': 0.008, 'CMA': 0.221, 'UMD': 0.094}
+      AQR TSMOM same months: +4.49%/yr t +1.16 Sharpe 0.35, vol 12.9%; SPY Sharpe 1.04, 60/40 Sharpe 1.24
+   2020-2025-06: 66 months, 23.0 funds; net +0.55%/yr t +0.33 (gross +0.61 t +0.36; 5 bps +0.45 t +0.27; 20 bps -0.02 t -0.01); Sharpe 0.14, vol 3.9%, max DD -8.7%; corr SPY -0.20, 60/40 -0.27, AQR +0.73; gross exposure 0.81 (max 1.26), turnover 0.26/month
+      FF5+UMD alpha +1.10%/yr t +0.66 (66 months), betas {'Mkt-RF': -0.016, 'SMB': 0.022, 'HML': 0.043, 'RMW': -0.093, 'CMA': -0.018, 'UMD': 0.096}
+      AQR TSMOM same months: +0.91%/yr t +0.15 Sharpe 0.07, vol 13.9%; SPY Sharpe 0.69, 60/40 Sharpe 0.52
+   2008-2025-06: 210 months, 22.9 funds; net +1.38%/yr t +1.42 (gross +1.44 t +1.48; 5 bps +1.29 t +1.33; 20 bps +0.83 t +0.86); Sharpe 0.34, vol 4.1%, max DD -8.7%; corr SPY -0.14, 60/40 -0.13, AQR +0.76; gross exposure 0.87 (max 1.43), turnover 0.25/month
+      FF5+UMD alpha +1.43%/yr t +1.53 (210 months), betas {'Mkt-RF': 0.002, 'SMB': 0.009, 'HML': -0.017, 'RMW': -0.034, 'CMA': 0.061, 'UMD': 0.102}
+      AQR TSMOM same months: +4.47%/yr t +1.37 Sharpe 0.33, vol 13.6%; SPY Sharpe 0.64, 60/40 Sharpe 0.70
+   2009-2025-06 (no 2008): 198 months, 23.0 funds; net +1.13%/yr t +1.13 (gross +1.19 t +1.19; 5 bps +1.03 t +1.04; 20 bps +0.57 t +0.57); Sharpe 0.28, vol 4.0%, max DD -8.7%; corr SPY -0.07, 60/40 -0.06, AQR +0.77; gross exposure 0.89 (max 1.43), turnover 0.26/month
+      FF5+UMD alpha +1.08%/yr t +1.11 (198 months), betas {'Mkt-RF': 0.018, 'SMB': 0.003, 'HML': -0.023, 'RMW': -0.051, 'CMA': 0.065, 'UMD': 0.099}
+      AQR TSMOM same months: +3.29%/yr t +1.01 Sharpe 0.25, vol 13.2%; SPY Sharpe 0.89, 60/40 Sharpe 0.90
+
+== Contribution by kind of fund (net of each fund's own 2 bps costs), %/yr and t
+   2006-2019: Equities +1.12 (t +1.95); Bonds +0.48 (t +0.96); Commodities +0.46 (t +1.10); Currencies +0.02 (t +0.07); Real estate +0.19 (t +1.55)
+   2008-2019: Equities +0.64 (t +1.15); Bonds +0.70 (t +1.31); Commodities +0.35 (t +0.75); Currencies -0.06 (t -0.21); Real estate +0.13 (t +1.13)
+   2009-2019 (no 2008): Equities +0.40 (t +0.70); Bonds +0.58 (t +1.03); Commodities +0.41 (t +0.90); Currencies -0.08 (t -0.29); Real estate +0.11 (t +0.93)
+   2020-2025-06: Equities -0.12 (t -0.13); Bonds +0.13 (t +0.15); Commodities +0.62 (t +1.02); Currencies +0.18 (t +0.38); Real estate -0.27 (t -1.31)
+   2008-2025-06: Equities +0.40 (t +0.86); Bonds +0.52 (t +1.14); Commodities +0.44 (t +1.16); Currencies +0.02 (t +0.07); Real estate +0.00 (t +0.03)
+   2009-2025-06 (no 2008): Equities +0.22 (t +0.47); Bonds +0.43 (t +0.91); Commodities +0.48 (t +1.31); Currencies +0.00 (t +0.02); Real estate -0.02 (t -0.16)
+
+== Per fund, 2008-01..2025-06: contribution %/yr (net), share of months long
+   SPY +0.21 (80% long); IWM +0.03 (62% long); EFA +0.00 (57% long); EEM +0.07 (56% long); EWJ +0.07 (62% long); VGK +0.01 (56% long); FXI +0.00 (51% long); TLT +0.06 (57% long); IEF +0.15 (60% long); LQD +0.20 (67% long); HYG +0.08 (74% long); TIP +0.04 (62% long); EMB -0.01 (69% long); GLD +0.08 (62% long); SLV -0.01 (50% long); USO +0.06 (44% long); UNG +0.15 (25% long); DBC +0.11 (43% long); DBA +0.05 (43% long); UUP -0.18 (52% long); FXE -0.02 (38% long); FXY +0.22 (40% long); VNQ +0.00 (67% long)
+
+== Calendar years: compounded excess return, % (strategy net of 2 bps; 2025 = Jan-Jun)
+   year  strategy  gross   SPY    60/40   AQR TSMOM  funds
+   2006    +8.52    +8.58   +10.4    +5.2    +11.8   12.8
+   2007    +2.18    +2.29    +0.6    +2.8    +13.7   16.2
+   2008    +5.64    +5.70   -37.7   -19.2    +24.6   20.8
+   2009    -2.15    -2.12   +26.2   +12.4     -9.9   23.0
+   2010    +2.04    +2.09   +14.9   +13.4    +12.6   23.0
+   2011    +1.07    +1.10    +1.8    +7.6     -0.1   23.0
+   2012    +3.08    +3.13   +15.9   +11.1     -0.2   23.0
+   2013    +5.64    +5.72   +32.2   +15.5    +18.2   23.0
+   2014    +1.04    +1.12   +13.4   +11.8    +19.1   23.0
+   2015    +4.26    +4.31    +1.2    +1.6    +18.1   23.0
+   2016    -5.84    -5.78   +11.6    +7.4    -11.1   23.0
+   2017    +7.17    +7.25   +20.6   +12.7     +6.6   23.0
+   2018    -2.28    -2.19    -6.4    -3.9     -9.0   23.0
+   2019    +1.42    +1.49   +28.5   +19.3     +3.2   23.0
+   2020    -0.89    -0.82   +17.9   +15.6     -6.7   23.0
+   2021    +1.70    +1.74   +28.7   +15.0     -4.6   23.0
+   2022    +6.50    +6.53   -19.9   -18.4    +24.7   23.0
+   2023    -3.63    -3.57   +19.8   +10.9     -8.1   23.0
+   2024    -0.30    -0.22   +18.7    +8.4     +3.5   23.0
+   2025    -0.51    -0.45    +3.9    +3.7     -5.5   23.0
+   positive years 2008-2024: 11 of 17
+
+== AQR TSMOM (current vintage) over other windows
+   1985-2009 (MOP sample): 300 months, +16.84%/yr, vol 11.9%, Sharpe 1.41, t +7.06
+   1985-2025-06: 486 months, +11.98%/yr, vol 12.6%, Sharpe 0.95, t +6.06
+
+== Verdict so far: test 1 FAIL, test 2 PASS, test 3 (2020-2025-06) PASS

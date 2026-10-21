@@ -1,0 +1,9 @@
+Mean weekly return (bps) by tenth, lowest score first, 2008-2019; then top-tenth and bottom-tenth volatility ÷ the week's median, and top minus bottom
+composite                     +15.4  +20.3  +17.8  +18.9  +27.4  +26.1  +24.8  +30.6  +30.2  +29.5 | vol top 1.11, bottom 1.27 | top-bottom +14.1
+5-day reversal                +11.1  +16.3  +19.3  +19.9  +24.8  +25.5  +25.7  +29.0  +29.3  +40.1 | vol top 1.40, bottom 1.38 | top-bottom +29.0
+12-1 momentum                 +35.5  +28.1  +26.2  +25.8  +24.3  +20.1  +20.6  +19.1  +23.3  +17.5 | vol top 1.37, bottom 1.62 | top-bottom -18.0
+Twin residual reversal        +13.0  +19.2  +19.8  +22.7  +24.2  +27.3  +26.6  +26.9  +29.0  +34.0 | vol top 1.09, bottom 1.07 | top-bottom +21.0
+Low correlation               +21.0  +20.7  +24.8  +25.6  +24.6  +24.4  +23.5  +26.6  +26.7  +23.2 | vol top 1.17, bottom 1.06 | top-bottom +2.3
+LightGBM (actual returns)     +23.1  +21.1  +26.6  +26.9  +26.4  +28.6  +29.8  +29.8  +30.6  +32.5 | vol top 1.08, bottom 1.60 | top-bottom +9.5
+QURE largest 5-day moves after 2025-06-30: 2025-09-22..2025-09-29 +330%, 2025-09-23..2025-09-30 +327%, 2025-09-19..2025-09-26 +292%
+QURE largest day: 2025-09-24 +248%

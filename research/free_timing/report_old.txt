@@ -1,0 +1,117 @@
+# free timing report: old export
+rebalances 210: 2008-01-03 .. 2025-06-13; trades 9,962 (P1 6,792, P2 3,170); buys 5,020, sells 4,942
+priced (next-open): 0.9997
+priced (same-close): 0.9999
+trades touching a bad open: 2; executions at an open equal to the close: 0.0057
+liquid set per rebalance: median 1469, min 878, max 2398
+P1 turnover (sum of trade sizes) per rebalance: 0.133; P2: 0.756
+S1: timable 0.989 (P1 0.984, P2 1.000); mean window day 1.87; executed before day 4: 0.626; day histogram [4172, 833, 625, 532, 3688]
+S2: timable 1.000 (P1 1.000, P2 1.000); mean window day 1.62; executed before day 4: 0.687; day histogram [4865, 830, 638, 513, 3115]
+S3: timable 0.761 (P1 0.746, P2 0.791); mean window day 1.75; executed before day 4: 0.693; day histogram [2936, 1143, 680, 495, 2324]
+sanity: mean over window days of (captured - random) = 0; always-favourable = day-0: ok
+
+## Test 1: S1, next-open, P1+P2 pooled, 2008-2019, market-relative (pass: >= +5 bps and t >= 3)
++4.90 bps (se 6.18, t +0.79; 6,322 trades, 144 dates)
+
+## Test 2: same, 2020-2025-06 (pass: same sign, t >= 2)
++4.37 bps (se 16.60, t +0.26; 3,525 trades, 66 dates)
+
+## Test 3: P2 extra yearly return against random-day execution, S1, next-open, raw, 2008-2025 (pass: ahead in >= 2/3 of years)
++0.68 points a year (se 0.73, t +0.93, 210 rebalances); ahead 12 of 18 years
+per year (points; rebalances): 2008 +1.12 (12), 2009 -1.58 (12), 2010 +3.12 (12), 2011 +2.46 (12), 2012 +1.82 (12), 2013 +1.12 (12), 2014 -2.83 (12), 2015 -0.30 (12), 2016 +0.98 (12), 2017 +0.84 (12), 2018 +0.95 (12), 2019 +0.12 (12), 2020 +8.22 (12), 2021 -5.83 (12), 2022 -4.21 (12), 2023 +3.73 (12), 2024 -1.29 (12), 2025 +3.44 (6)
+
+## Per trade, all signals and executions, P1+P2 pooled (bps; t)
+| Signal | Execution | Measure | 2008-2019 | 2020-2025 | 2008-2025 |
+|---|---|---|---|---|---|
+| S1 | next-open | market-relative | +4.90 (+0.8) | +4.37 (+0.3) | +4.73 (+0.7) |
+| S1 | next-open | raw | +9.01 (+1.3) | +7.36 (+0.4) | +8.48 (+1.2) |
+| S1 | same-close | market-relative | -0.21 (-0.0) | +13.89 (+0.9) | +4.33 (+0.7) |
+| S1 | same-close | raw | +2.80 (+0.4) | +21.31 (+1.3) | +8.76 (+1.2) |
+| S2 | next-open | market-relative | +6.55 (+0.8) | +4.80 (+0.3) | +5.99 (+0.8) |
+| S2 | next-open | raw | +8.67 (+1.0) | +9.14 (+0.5) | +8.82 (+1.1) |
+| S2 | same-close | market-relative | +2.26 (+0.3) | +2.80 (+0.2) | +2.44 (+0.3) |
+| S2 | same-close | raw | +3.05 (+0.3) | +10.85 (+0.6) | +5.57 (+0.7) |
+| S3 | next-open | market-relative | +9.91 (+1.4) | +17.71 (+0.8) | +12.48 (+1.4) |
+| S3 | next-open | raw | +4.87 (+0.6) | +18.17 (+0.8) | +9.25 (+1.0) |
+| S3 | same-close | market-relative | +7.93 (+1.2) | +19.74 (+0.9) | +11.82 (+1.4) |
+| S3 | same-close | raw | +1.46 (+0.2) | +24.61 (+1.1) | +9.10 (+1.0) |
+| day 0 | next-open | market-relative | +7.38 (+1.1) | -32.05 (-1.9) | -5.34 (-0.7) |
+| day 0 | next-open | raw | +7.50 (+1.1) | -31.39 (-1.8) | -5.04 (-0.7) |
+| day 0 | same-close | market-relative | +10.39 (+1.5) | -27.64 (-1.6) | -1.88 (-0.3) |
+| day 0 | same-close | raw | +10.49 (+1.5) | -27.81 (-1.6) | -1.87 (-0.3) |
+
+## P1 and P2 separately, per trade, market-relative, 2008-2025 (bps; t)
+| Signal | Execution | P1 | P2 |
+|---|---|---|---|
+| S1 | next-open | +11.66 (+2.3) | +3.54 (+0.5) |
+| S1 | same-close | +10.35 (+1.9) | +3.30 (+0.4) |
+| S2 | next-open | +10.18 (+1.5) | +5.25 (+0.6) |
+| S2 | same-close | +8.56 (+1.2) | +1.36 (+0.2) |
+| S3 | next-open | -0.63 (-0.1) | +14.70 (+1.5) |
+| S3 | same-close | +0.72 (+0.1) | +13.70 (+1.4) |
+| day 0 | next-open | -1.34 (-0.2) | -6.05 (-0.7) |
+| day 0 | same-close | -0.82 (-0.1) | -2.07 (-0.3) |
+
+## Buys and sells separately, P1+P2, 2008-2025 (bps; t): market-relative / raw
+| Signal | Execution | Buys mr | Sells mr | Buys raw | Sells raw |
+|---|---|---|---|---|---|
+| S1 | next-open | +16.87 (+1.8) | -7.33 (-0.8) | +13.65 (+1.3) | +3.35 (+0.3) |
+| S1 | same-close | +16.83 (+1.8) | -8.09 (-0.9) | +15.86 (+1.5) | +1.70 (+0.2) |
+| S2 | next-open | +13.12 (+1.3) | -1.12 (-0.1) | +12.96 (+1.2) | +4.71 (+0.5) |
+| S2 | same-close | +5.81 (+0.6) | -0.93 (-0.1) | +7.31 (+0.7) | +3.84 (+0.3) |
+| S3 | next-open | +25.84 (+2.0) | -0.75 (-0.1) | +22.57 (+1.6) | -3.94 (-0.4) |
+| S3 | same-close | +20.01 (+1.5) | +3.70 (+0.4) | +18.52 (+1.3) | -0.24 (-0.0) |
+| day 0 | next-open | -22.52 (-1.5) | +11.77 (+0.9) | -14.27 (-0.7) | +4.15 (+0.2) |
+| day 0 | same-close | -16.64 (-1.2) | +12.82 (+1.0) | -7.72 (-0.4) | +3.96 (+0.2) |
+
+## Portfolio effect: extra yearly return against random-day execution (points a year; se; years ahead), raw, 2008-2025
+| Signal | Execution | P1 | P2 |
+|---|---|---|---|
+| S1 | next-open | +0.22 (se 0.09; 13/18) | +0.68 (se 0.73; 12/18) |
+| S1 | same-close | +0.22 (se 0.10; 15/18) | +0.71 (se 0.74; 9/18) |
+| S2 | next-open | +0.18 (se 0.11; 9/18) | +0.76 (se 0.84; 13/18) |
+| S2 | same-close | +0.16 (se 0.12; 7/18) | +0.43 (se 0.87; 10/18) |
+| S3 | next-open | -0.03 (se 0.08; 5/18) | +0.81 (se 0.77; 8/18) |
+| S3 | same-close | +0.02 (se 0.08; 7/18) | +0.75 (se 0.74; 9/18) |
+| day 0 | next-open | -0.02 (se 0.10; 8/18) | -0.52 (se 0.75; 9/18) |
+| day 0 | same-close | -0.01 (se 0.11; 8/18) | -0.19 (se 0.75; 10/18) |
+(S3 rows: its rebalances outside 2010-07..2024-06 add 0, as the trades are untimable there.)
+
+## S3's span: 168 rebalances, 2010-07-06 .. 2024-06-11
+| Signal | Execution | Per trade mr, pooled | Per trade raw, pooled | P2 portfolio (points a year) | P1 portfolio |
+|---|---|---|---|---|---|
+| S1 | next-open | +5.27 (+0.7) | +7.68 (+0.9) | +0.67 (se 0.83) | +0.14 (se 0.09) |
+| S1 | same-close | +6.76 (+0.9) | +10.30 (+1.2) | +0.94 (se 0.85) | +0.14 (se 0.09) |
+| S2 | next-open | +7.72 (+1.0) | +9.63 (+1.1) | +0.85 (se 0.87) | +0.17 (se 0.11) |
+| S2 | same-close | +4.50 (+0.5) | +6.62 (+0.7) | +0.56 (se 0.91) | +0.14 (se 0.13) |
+| S3 | next-open | +12.48 (+1.4) | +9.25 (+1.0) | +1.01 (se 0.96) | -0.04 (se 0.10) |
+| S3 | same-close | +11.82 (+1.4) | +9.10 (+1.0) | +0.93 (se 0.92) | +0.02 (se 0.11) |
+| day 0 | next-open | -4.65 (-0.6) | -4.47 (-0.5) | -0.45 (se 0.83) | -0.02 (se 0.09) |
+| day 0 | same-close | +0.88 (+0.1) | +0.69 (+0.1) | +0.08 (se 0.84) | -0.01 (se 0.10) |
+
+## Per year: S1, next-open
+| Year | Rebalances | P2 portfolio, raw (points) | P1 portfolio, raw | Per trade mr, pooled (bps; t) | Per trade raw, pooled | Day 0, P2 portfolio |
+|---|---|---|---|---|---|---|
+| 2008 | 12 | +1.12 | +1.32 | +4.08 (+0.2) | +25.36 (+1.0) | +1.25 |
+| 2009 | 12 | -1.58 | +0.84 | -15.50 (-0.7) | -5.93 (-0.3) | +0.57 |
+| 2010 | 12 | +3.12 | +0.02 | +12.97 (+0.6) | +29.51 (+1.1) | +1.06 |
+| 2011 | 12 | +2.46 | +0.39 | +12.94 (+0.5) | +31.81 (+0.8) | -2.89 |
+| 2012 | 12 | +1.82 | +0.35 | +30.37 (+2.9) | +21.43 (+1.6) | -1.24 |
+| 2013 | 12 | +1.12 | +0.31 | +17.62 (+0.9) | +15.13 (+0.7) | -3.05 |
+| 2014 | 12 | -2.83 | -0.01 | -29.46 (-0.9) | -30.29 (-0.8) | +3.19 |
+| 2015 | 12 | -0.30 | +0.07 | -9.83 (-0.7) | -2.02 (-0.1) | +2.34 |
+| 2016 | 12 | +0.98 | +0.04 | +11.05 (+0.5) | +8.07 (+0.3) | +2.68 |
+| 2017 | 12 | +0.84 | +0.20 | +11.56 (+0.6) | +9.30 (+0.4) | +1.64 |
+| 2018 | 12 | +0.95 | -0.06 | +13.00 (+0.5) | +9.25 (+0.4) | +3.77 |
+| 2019 | 12 | +0.12 | +0.06 | +3.22 (+0.2) | +1.73 (+0.1) | +1.74 |
+| 2020 | 12 | +8.22 | -0.12 | +47.33 (+1.3) | +70.71 (+2.1) | -2.37 |
+| 2021 | 12 | -5.83 | -0.04 | -53.85 (-1.1) | -58.28 (-1.2) | -1.97 |
+| 2022 | 12 | -4.21 | +0.15 | -27.64 (-0.6) | -37.42 (-0.9) | -2.98 |
+| 2023 | 12 | +3.73 | +0.53 | +32.40 (+2.0) | +37.54 (+1.9) | -0.36 |
+| 2024 | 12 | -1.29 | -0.38 | -10.89 (-0.3) | -15.67 (-0.4) | -9.92 |
+| 2025 | 6 | +3.44 | +0.21 | +55.77 (+1.4) | +65.71 (+1.6) | -2.54 |
+
+## Market-relative portfolio effect (points a year), for comparison with the raw one
+S1 next-open: P1 +0.18 (se 0.08), P2 +0.32 (se 0.69)
+S2 next-open: P1 +0.16 (se 0.11), P2 +0.48 (se 0.78)
+S3 next-open: P1 -0.01 (se 0.07), P2 +1.06 (se 0.72)

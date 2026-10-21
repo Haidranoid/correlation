@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triple Pendulum</title>
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f6f8fa; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0;
+    --a: #0969da; --b: #bf3989; --c: #9a6700; --pivot: #1f2328;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --panel: #161b22; --fg: #e6edf3; --muted: #8b949e; --line: #30363d;
+      --a: #58a6ff; --b: #f778ba; --c: #e3b341; --pivot: #e6edf3;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1117; --panel: #161b22; --fg: #e6edf3; --muted: #8b949e; --line: #30363d;
+    --a: #58a6ff; --b: #f778ba; --c: #e3b341; --pivot: #e6edf3;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 16px; }
+  .stage { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  canvas { display: block; width: 100%; }
+  #sim { aspect-ratio: 1 / 1; }
+  #chart { aspect-ratio: 3 / 1; margin-top: 8px; }
+  .readout { display: flex; flex-wrap: wrap; gap: 4px 18px; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.9rem; margin: 8px 2px 0; }
+  .readout b { color: var(--fg); font-weight: 600; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; margin: 14px 0 6px; }
+  label { font-size: 0.95rem; }
+  select, button { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+  button { cursor: pointer; }
+  button:hover, select:hover { border-color: var(--muted); }
+  .key { display: flex; gap: 14px; font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  dl { margin: 20px 0 0; }
+  dt { font-weight: 600; margin-top: 10px; }
+  dd { margin: 2px 0 0; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>One law, three futures</h1>
+  <p class="lead">Three identical triple pendulums, started a tiny distance apart. Nothing here is random: every step is Newton's laws.</p>
+
+  <div class="stage">
+    <canvas id="sim" aria-label="Three triple pendulums swinging"></canvas>
+    <div class="key">
+      <span><span class="dot" style="background:var(--a)"></span>pendulum A</span>
+      <span><span class="dot" style="background:var(--b)"></span>B</span>
+      <span><span class="dot" style="background:var(--c)"></span>C</span>
+    </div>
+    <canvas id="chart" aria-label="How far apart the three tips are over time, on a log scale"></canvas>
+    <div class="readout">
+      <span>t = <b id="t">0.0</b> s</span>
+      <span>tips apart: <b id="sep">0</b></span>
+      <span>prediction lasted: <b id="horizon">–</b></span>
+      <span>energy change: <b id="drift">0</b></span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label>Starting difference
+      <select id="eps">
+        <option value="1e-3">0.001 rad</option>
+        <option value="1e-6">0.000001 rad</option>
+        <option value="1e-9" selected>0.000000001 rad</option>
+        <option value="1e-12">0.000000000001 rad</option>
+      </select>
+    </label>
+    <label>Swing
+      <select id="mode">
+        <option value="big" selected>Big (chaotic)</option>
+        <option value="small">Small (orderly)</option>
+      </select>
+    </label>
+    <button id="restart" type="button">Restart</button>
+    <button id="pause" type="button">Pause</button>
+  </div>
+
+  <dl>
+    <dt>Try the starting difference</dt>
+    <dd>Each step down the list measures the start a thousand times more precisely, and buys only about three more seconds of agreement. A billion times better measurement stretches the forecast from 3.5 seconds to 11.6.</dd>
+    <dt>Try the small swing</dt>
+    <dd>With little energy the motion is orderly and the copies stay together. Prediction is possible in calm regimes, and that is when it is least valuable.</dd>
+    <dt>What never changes</dt>
+    <dd>The rods never stretch, the energy stays fixed, and the tip never leaves the dashed circle. The structure and the size of the swings stay predictable. The position doesn't.</dd>
+  </dl>
+</main>
+
+<script src="pendulum.js"></script>
+<script>
+(() => {
+  'use strict';
+  const P = window.Pendulum;
+  const SYS = P.system([1, 1, 1], [1, 1, 1]);
+  const START = { big: [1.9, 2.2, 2.4], small: [0.25, 0.25, 0.25] };
+  const DT = 0.0005, VISIBLE = 0.15, TRAIL = 360, CHART_SECONDS = 30;
+
+  const sim = document.getElementById('sim'), chart = document.getElementById('chart');
+  const out = { t: document.getElementById('t'), sep: document.getElementById('sep'),
+                horizon: document.getElementById('horizon'), drift: document.getElementById('drift') };
+  const epsSel = document.getElementById('eps'), modeSel = document.getElementById('mode');
+  const pauseBtn = document.getElementById('pause');
+
+  let copies, e0, t, trails, history, horizon, paused = false, last = null;
+
+  function reset() {
+    const eps = Number(epsSel.value), th = START[modeSel.value];
+    copies = [0, eps, -eps].map(e => P.state([th[0], th[1], th[2] + e]));
+    e0 = copies.map(s => P.energy(s, SYS));
+    t = 0; trails = copies.map(() => []); history = []; horizon = null; last = null;
+    out.horizon.textContent = '–';
+  }
+
+  function colors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n) => cs.getPropertyValue(n).trim();
+    return { a: [v('--a'), v('--b'), v('--c')], line: v('--line'), muted: v('--muted'), fg: v('--fg'), pivot: v('--pivot') };
+  }
+
+  function fit(canvas) {
+    const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    }
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w, h };
+  }
+
+  function separation() {
+    const ps = copies.map(s => P.positions(s, SYS));
+    let m = 0;
+    for (let a = 0; a < 3; a++) for (let b = a + 1; b < 3; b++) m = Math.max(m, Math.hypot(ps[a][4] - ps[b][4], ps[a][5] - ps[b][5]));
+    return { ps, m };
+  }
+
+  function advance(seconds) {
+    const n = Math.max(1, Math.round(seconds / DT));
+    for (let k = 0; k < n; k++) for (const s of copies) P.step(s, SYS, DT);
+    t += n * DT;
+  }
+
+  function drawSim(c, ps) {
+    const { ctx, w, h } = fit(sim);
+    const cx = w / 2, cy = h / 2, scale = (Math.min(w, h) / 2 - 12) / 3;
+    ctx.clearRect(0, 0, w, h);
+    ctx.setLineDash([4, 6]); ctx.strokeStyle = c.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, 3 * scale, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    trails.forEach((tr, i) => {
+      ctx.strokeStyle = c.a[i]; ctx.lineWidth = 1.3;
+      for (let k = 1; k < tr.length; k++) {
+        ctx.globalAlpha = 0.6 * (k / tr.length);
+        ctx.beginPath(); ctx.moveTo(cx + scale * tr[k - 1][0], cy + scale * tr[k - 1][1]);
+        ctx.lineTo(cx + scale * tr[k][0], cy + scale * tr[k][1]); ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
+    ps.forEach((p, i) => {
+      ctx.strokeStyle = c.a[i]; ctx.fillStyle = c.a[i]; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(cx, cy);
+      for (let k = 0; k < 3; k++) ctx.lineTo(cx + scale * p[2 * k], cy + scale * p[2 * k + 1]);
+      ctx.stroke();
+      for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.arc(cx + scale * p[2 * k], cy + scale * p[2 * k + 1], 6, 0, 2 * Math.PI); ctx.fill(); }
+    });
+    ctx.fillStyle = c.pivot; ctx.beginPath(); ctx.arc(cx, cy, 4.5, 0, 2 * Math.PI); ctx.fill();
+  }
+
+  function drawChart(c) {
+    const { ctx, w, h } = fit(chart);
+    const padL = 44, padB = 22, padT = 8, padR = 8;
+    const x = (s) => padL + (w - padL - padR) * Math.min(s, CHART_SECONDS) / CHART_SECONDS;
+    const y = (lg) => padT + (h - padT - padB) * (1 - (lg + 13) / 14);   // log10 from -13 to +1
+    ctx.clearRect(0, 0, w, h);
+    ctx.font = '11px -apple-system, Segoe UI, Helvetica, Arial, sans-serif'; ctx.fillStyle = c.muted;
+    ctx.strokeStyle = c.line; ctx.lineWidth = 1;
+    for (const lg of [-12, -9, -6, -3, 0]) {
+      ctx.beginPath(); ctx.moveTo(padL, y(lg)); ctx.lineTo(w - padR, y(lg)); ctx.stroke();
+      ctx.fillText(lg === 0 ? '1' : `1e${lg}`, 6, y(lg) + 4);
+    }
+    for (let s = 0; s <= CHART_SECONDS; s += 5) ctx.fillText(`${s}s`, Math.min(x(s) - 8, w - padR - 24), h - 6);
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = c.muted;
+    ctx.beginPath(); ctx.moveTo(padL, y(Math.log10(VISIBLE))); ctx.lineTo(w - padR, y(Math.log10(VISIBLE))); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillText('visibly different', w - padR - 96, y(Math.log10(VISIBLE)) - 5);
+    if (history.length > 1) {
+      ctx.strokeStyle = c.fg; ctx.lineWidth = 1.6; ctx.beginPath();
+      history.forEach(([s, lg], k) => (k ? ctx.lineTo(x(s), y(lg)) : ctx.moveTo(x(s), y(lg))));
+      ctx.stroke();
+    }
+    if (horizon !== null && horizon <= CHART_SECONDS) {
+      ctx.strokeStyle = c.a[1]; ctx.beginPath(); ctx.moveTo(x(horizon), padT); ctx.lineTo(x(horizon), h - padB); ctx.stroke();
+    }
+  }
+
+  function frame(now) {
+    if (!paused) {
+      const elapsed = last === null ? 1 / 60 : Math.min((now - last) / 1000, 1 / 20);
+      advance(elapsed);
+    }
+    last = now;
+    const c = colors(), { ps, m } = separation();
+    if (!paused) {
+      ps.forEach((p, i) => { trails[i].push([p[4], p[5]]); if (trails[i].length > TRAIL) trails[i].shift(); });
+      if (t <= CHART_SECONDS) history.push([t, Math.log10(Math.max(m, 1e-13))]);
+      if (horizon === null && m > VISIBLE) { horizon = t; out.horizon.textContent = `${horizon.toFixed(1)} s`; }
+    }
+    let drift = 0;
+    copies.forEach((s, i) => { drift = Math.max(drift, Math.abs((P.energy(s, SYS) - e0[i]) / e0[i])); });
+    out.t.textContent = t.toFixed(1);
+    out.sep.textContent = m < 1e-3 ? m.toExponential(0) : m.toFixed(2);
+    out.drift.textContent = drift.toExponential(0);
+    drawSim(c, ps); drawChart(c);
+    requestAnimationFrame(frame);
+  }
+
+  document.getElementById('restart').addEventListener('click', reset);
+  epsSel.addEventListener('change', reset);
+  modeSel.addEventListener('change', reset);
+  pauseBtn.addEventListener('click', () => { paused = !paused; pauseBtn.textContent = paused ? 'Resume' : 'Pause'; });
+
+  reset();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

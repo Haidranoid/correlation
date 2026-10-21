@@ -1,0 +1,70 @@
+== 1m: 520 symbols, 21 dates 2026-09-22..2026-10-20, 390 bars a day; panel rows 4138787, outside session 0, other UTC offset 0, NaN close 0, duplicates 0
+volume-0 bars 579 of 4,138,787; of them at the previous close (set missing) 14
+full days (SPY has all 390 bars): 21 of 21; dropped []
+2% rule: symbol-days with bars 10,909; without a daily close 10 (['WBD']); last-bar close off by > 2%: 5 ([('CTVA', '2026-09-22'), ('CTVA', '2026-09-23'), ('CTVA', '2026-09-24'), ('CTVA', '2026-09-25'), ('CTVA', '2026-09-28')])
+bars missing after the rules (absent, or symbol-day dropped): 2.9555%; absent bars only on kept symbol-days: 2.7239%
+days: selection 10 (2026-09-22..2026-10-05), test 11 (2026-10-06..2026-10-20); 389 returns a day, 388 lag-1 slots
+beta (selection half): median 0.82, 10-90% 0.27..1.76; symbols in the adjusted pair set 518
+
+-- Test 1: selection half, market-adjusted returns
+[adjusted] pairs with >= 1000 bar pairs: 267,791; null shifts [1, 2, 3, 4, 5, 6, 7, 8, 9]; threshold |corr| > 0.0985 (99.9th pct of 2,410,075 null values)
+[adjusted] above threshold: 909 pairs; null mean 267.9 per shift (min 226, max 312); ratio 3.393; (count/null - 1) x 100 = +239.3; shifts with a count >= the actual: 0 of 9
+TEST 1: PASS (needs count >= 2 x null = 535.8); the number +239.3
+fast path vs direct computation on 7 real pairs and 3 shifted ones: max |diff| 2.95e-17
+
+Top 20 ordered pairs (leader -> follower) by |corr| in the selection half:
+leader -> follower     corr      n test corr  dv rank L/F
+   XLF -> BLK       +0.1901   2905   +0.0620  27/204
+  ONTO -> MKSI      +0.1893   1491   +0.1060  493/450
+    BX -> BLK       +0.1885   2905   +0.0680  172/204
+  CPRT -> VRSK      +0.1733   2684   +0.0711  503/507
+   WFC -> BLK       +0.1724   2905   +0.0403  103/204
+  SMTC -> SITM      +0.1714   2265   +0.1174  220/460
+   DIA -> BLK       +0.1637   2901   +0.0602  57/204
+   XLI -> JBHT      +0.1624   2258   +0.0990  66/497
+   FIS -> VRSK      +0.1616   2690   +0.0882  474/507
+   GWW -> JBHT      +0.1615   2161   +0.0720  293/497
+   QQQ -> BLK       -0.1609   2905   -0.0565  1/204
+   STM -> MKSI      +0.1588   2489   +0.1408  202/450
+    GS -> BLK       +0.1581   2898   +0.0599  70/204
+  KLAC -> MKSI      +0.1575   2489   +0.1513  94/450
+  DLTR -> DG        +0.1565   3313   +0.0657  489/461
+   XLI -> DOV       +0.1541   3133   +0.1764  66/475
+   COF -> MTB       +0.1536   2803   +0.0604  183/511
+   QQQ -> PH        -0.1531   2879   -0.0502  1/306
+   XLB -> DOV       +0.1529   3134   +0.1067  100/475
+     V -> SITM      -0.1525   2307   -0.0930  52/460
+
+selected pairs 909: leaders 323, followers 235; positive corr 71.2%; in the test half same sign 78.2%, mean sign-aligned test corr +0.0400; leader more traded than follower (Yahoo $ volume, selection half) 74.7%
+
+Funds vs stocks (selection half): share of pairs above the threshold, actual vs null mean; mean |corr|
+   fund -> stock: pairs   9,481; above   139; share 1.4661% vs null 0.0551% (x26.62); mean |corr| 0.0280 vs null 0.0215; mean corr +0.0071
+   fund -> fund : pairs     342; above     1; share 0.2924% vs null 0.0000% (xnan); mean |corr| 0.0225 vs null 0.0200; mean corr +0.0014
+  stock -> stock: pairs 248,487; above   757; share 0.3046% vs null 0.1033% (x2.95); mean |corr| 0.0245 vs null 0.0224; mean corr +0.0020
+  stock -> fund : pairs   9,481; above    12; share 0.1266% vs null 0.0621% (x2.04); mean |corr| 0.0225 vs null 0.0215; mean corr -0.0014
+
+Same-bar correlation corr(r_A(k), r_B(k)), selection half, pairs A < B:
+  raw: pairs 134,413; mean +0.0977, median +0.0863, 10-90% -0.0397..+0.2452, max +0.9179
+  adjusted: pairs 133,895; mean +0.0436, median +0.0314, 10-90% -0.0796..+0.1761, max +0.8593
+  median raw same-bar corr of a symbol with SPY: +0.2463
+
+-- Robustness (not graded): adjusted returns divided by each symbol's own same-day sd
+[day-normalized] pairs with >= 1000 bar pairs: 267,791; null shifts [1, 2, 3, 4, 5, 6, 7, 8, 9]; threshold |corr| > 0.0947 (99.9th pct of 2,410,075 null values)
+[day-normalized] above threshold: 1,063 pairs; null mean 267.9 per shift (min 231, max 329); ratio 3.968; (count/null - 1) x 100 = +296.8; shifts with a count >= the actual: 0 of 9
+
+-- Context (not graded): the same count in the test half with its own null
+[test half] pairs with >= 1000 bar pairs: 267,806; null shifts [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; threshold |corr| > 0.0952 (99.9th pct of 2,678,059 null values)
+[test half] above threshold: 1,903 pairs; null mean 267.9 per shift (min 216, max 317); ratio 7.103; (count/null - 1) x 100 = +610.3; shifts with a count >= the actual: 0 of 10
+[test half] pairs above threshold in both halves: 136 (same sign 136); expected by chance 6.46
+
+-- Test 2: test half, out of sample
+followers with a selected leader: 235; bars with >= 10 followers: 4268 on 11 days; median followers per bar 206
+rank IC (adjusted target): mean +0.02910, day-clustered t +14.01; raw target: +0.02938, t +14.96
+baseline SPY lag-1 beta IC (same followers): mean +0.02070, t +7.09; paired difference +0.00840, t +2.27
+TEST 2: PASS (needs IC t >= 3 and paired t >= 2)
+
+-- Test 3: money (raw returns, long top tenth / short bottom tenth, one bar)
+bars traded 4268; gross +1.420 bp/bar (day-clustered t +15.82); mean turnover 3.19 per bar (4 = whole book); cost at 1.0 bp/side 3.191 bp/bar; net -1.771 bp/bar; break-even cost +0.445 bp per side
+TEST 3: FAIL (needs net > 0)
+
+first failure: test 3

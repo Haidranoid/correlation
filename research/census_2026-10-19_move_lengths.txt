@@ -1,0 +1,40 @@
+Real vs chance by move-length pair, census main-2026-10-19 (prices through 2026-10-19), made 2026-10-21
+Strong correlations (|z| >= 4) at predictive offsets (offset >= B's move length), summed over every correlation period and offset, against the sign-flip null.
+Command: /usr/bin/python3 research/census_summary.py main-2026-10-19 (full per-offset tables), summed per pair.
+
+A over  1 days -> B over  1 days: real  5,673,186  chance    5,426,100  real/chance 1.05
+A over  1 days -> B over  3 days: real  2,815,258  chance    2,841,402  real/chance 0.99
+A over  1 days -> B over  5 days: real  2,047,090  chance    1,982,516  real/chance 1.03
+A over  1 days -> B over 10 days: real  1,050,098  chance    1,032,910  real/chance 1.02
+A over  1 days -> B over 21 days: real    381,394  chance      374,088  real/chance 1.02
+A over  1 days -> B over 63 days: real      1,671  chance        1,681  real/chance 0.99
+A over  3 days -> B over  1 days: real  5,235,924  chance    5,195,074  real/chance 1.01
+A over  3 days -> B over  3 days: real  2,822,777  chance    2,759,880  real/chance 1.02
+A over  3 days -> B over  5 days: real  1,785,398  chance    1,731,292  real/chance 1.03
+A over  3 days -> B over 10 days: real    912,592  chance      890,954  real/chance 1.02
+A over  3 days -> B over 21 days: real    363,846  chance      359,440  real/chance 1.01
+A over  3 days -> B over 63 days: real      1,495  chance        1,577  real/chance 0.95
+A over  5 days -> B over  1 days: real  4,598,105  chance    4,543,333  real/chance 1.01
+A over  5 days -> B over  3 days: real  2,476,467  chance    2,417,548  real/chance 1.02
+A over  5 days -> B over  5 days: real  1,660,040  chance    1,616,493  real/chance 1.03
+A over  5 days -> B over 10 days: real    859,056  chance      831,962  real/chance 1.03
+A over  5 days -> B over 21 days: real    349,729  chance      337,978  real/chance 1.03
+A over  5 days -> B over 63 days: real      1,545  chance        1,563  real/chance 0.99
+A over 10 days -> B over  1 days: real  2,910,763  chance    2,895,025  real/chance 1.01
+A over 10 days -> B over  3 days: real  1,612,739  chance    1,563,017  real/chance 1.03
+A over 10 days -> B over  5 days: real  1,164,395  chance    1,126,533  real/chance 1.03
+A over 10 days -> B over 10 days: real    783,854  chance      754,017  real/chance 1.04
+A over 10 days -> B over 21 days: real    337,623  chance      316,121  real/chance 1.07
+A over 10 days -> B over 63 days: real      1,700  chance        1,560  real/chance 1.09
+A over 21 days -> B over  1 days: real  1,278,247  chance    1,231,729  real/chance 1.04
+A over 21 days -> B over  3 days: real    825,635  chance      817,551  real/chance 1.01
+A over 21 days -> B over  5 days: real    659,208  chance      643,455  real/chance 1.02
+A over 21 days -> B over 10 days: real    422,402  chance      403,482  real/chance 1.05
+A over 21 days -> B over 21 days: real    317,994  chance      287,588  real/chance 1.11
+A over 21 days -> B over 63 days: real      1,852  chance        1,563  real/chance 1.18
+A over 63 days -> B over  1 days: real      4,829  chance        4,836  real/chance 1.00
+A over 63 days -> B over  3 days: real      3,603  chance        3,495  real/chance 1.03
+A over 63 days -> B over  5 days: real      3,129  chance        3,050  real/chance 1.03
+A over 63 days -> B over 10 days: real      2,549  chance        2,180  real/chance 1.17
+A over 63 days -> B over 21 days: real      2,388  chance        1,834  real/chance 1.30
+A over 63 days -> B over 63 days: real      3,508  chance        1,497  real/chance 2.34

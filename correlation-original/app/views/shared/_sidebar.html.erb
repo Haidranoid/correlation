@@ -1,0 +1,84 @@
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-header-content">
+      <h2>Stock Correlation</h2>
+      <p>Analysis Platform</p>
+    </div>
+    <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle Sidebar">
+      <span class="toggle-icon">‹</span>
+    </button>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <ul>
+      <li class="<%= 'active' if request.path == '/' %>">
+        <%= link_to root_path, class: "nav-link" do %>
+          <i class="icon">🏠</i>
+          <span>Home</span>
+        <% end %>
+      </li>
+      
+      <li class="<%= 'active' if request.path.start_with?('/documentation') %>">
+        <%= link_to documentation_path, class: "nav-link" do %>
+          <i class="icon">📚</i>
+          <span>Documentation</span>
+        <% end %>
+      </li>
+      
+      <li class="<%= 'active' if request.path.start_with?('/visualizations') %>">
+        <%= link_to visualizations_path, class: "nav-link" do %>
+          <i class="icon">📊</i>
+          <span>Visualizations</span>
+        <% end %>
+      </li>
+      
+      <li class="<%= 'active' if request.path.start_with?('/tools') %>">
+        <%= link_to tools_path, class: "nav-link" do %>
+          <i class="icon">🛠️</i>
+          <span>Tools</span>
+        <% end %>
+      </li>
+      
+      <% if current_user&.admin? %>
+        <li class="<%= 'active' if request.path.start_with?('/admin/users') %>">
+          <%= link_to admin_users_path, class: "nav-link" do %>
+            <i class="icon">👥</i>
+            <span>User Management</span>
+          <% end %>
+        </li>
+      <% end %>
+      
+      <li>
+        <%= link_to destroy_user_session_path, method: :delete, class: "nav-link", data: { turbo_method: :delete } do %>
+          <i class="icon">🚪</i>
+          <span>Logout</span>
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="sidebar-footer">
+    <div class="stats-summary">
+      <div class="quick-stat">
+        <span class="stat-label">Symbols</span>
+        <span class="stat-value">
+          <% begin %>
+            <%= number_with_delimiter(StockPrice.distinct.count(:symbol)) %>
+          <% rescue => e %>
+            0
+          <% end %>
+        </span>
+      </div>
+      <div class="quick-stat">
+        <span class="stat-label">Correlations</span>
+        <span class="stat-value">
+          <% begin %>
+            <%= number_with_delimiter(StockCorrelation.count) %>
+          <% rescue => e %>
+            0
+          <% end %>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

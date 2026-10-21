@@ -1,0 +1,26 @@
+HEADLINE w=30, rebalance 21: change over random -3.2 pts; picks 15.8% vs median random 19.0%; IC actual t -1.34; long-short -5.18 bps/day t -1.00; p (share of random at least as good) 0.588; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 15.8%/yr vs median random 19.0%; change at 5 bps -3.2, 20 bps -3.1; per year [-3.18]
+w=30, rebalance 30: change over random -12.1 pts; picks 6.8% vs median random 18.9%; IC actual t -0.59; long-short 0.12 bps/day t +0.03; p (share of random at least as good) 0.845; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 6.8%/yr vs median random 18.9%; change at 5 bps -12.0, 20 bps -11.8; per year [-12.09]
+w=7, rebalance 5: change over random -8.0 pts; picks 9.3% vs median random 17.3%; IC actual t +0.91; long-short 3.16 bps/day t +0.73; p (share of random at least as good) 0.737; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 9.3%/yr vs median random 17.3%; change at 5 bps -7.7, 20 bps -6.8; per year [-8.02]
+w=14, rebalance 10: change over random +12.2 pts; picks 31.6% vs median random 19.4%; IC actual t +0.64; long-short 5.11 bps/day t +1.25; p (share of random at least as good) 0.190; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 31.6%/yr vs median random 19.4%; change at 5 bps +11.9, 20 bps +11.0; per year [12.21]
+w=21, rebalance 15: change over random +4.4 pts; picks 23.1% vs median random 18.7%; IC actual t -0.03; long-short -2.28 bps/day t -0.42; p (share of random at least as good) 0.372; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 23.1%/yr vs median random 18.7%; change at 5 bps +4.3, 20 bps +4.0; per year [4.39]
+w=40, rebalance 28: change over random -25.9 pts; picks -6.0% vs median random 19.9%; IC actual t -1.63; long-short -11.03 bps/day t -2.17; p (share of random at least as good) 0.984; SPY 24.6%, all candidates 20.7%
+    0 bps: picks -6.0%/yr vs median random 19.9%; change at 5 bps -25.6, 20 bps -24.9; per year [-25.89]
+w=60, rebalance 42: change over random -29.8 pts; picks -11.6% vs median random 18.2%; IC actual t -1.96; long-short -10.86 bps/day t -2.11; p (share of random at least as good) 0.996; SPY 24.6%, all candidates 20.7%
+    0 bps: picks -11.6%/yr vs median random 18.2%; change at 5 bps -29.6, 20 bps -29.0; per year [-29.81]
+w=90, rebalance 63: change over random -21.2 pts; picks -2.3% vs median random 18.9%; IC actual t -1.13; long-short -7.98 bps/day t -1.63; p (share of random at least as good) 0.948; SPY 24.6%, all candidates 20.7%
+    0 bps: picks -2.3%/yr vs median random 18.9%; change at 5 bps -21.1, 20 bps -20.8; per year [-21.21]
+w=180, rebalance 126: change over random +0.1 pts; picks 19.6% vs median random 19.5%; IC actual t +1.70; long-short 5.36 bps/day t +1.39; p (share of random at least as good) 0.495; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 19.6%/yr vs median random 19.5%; change at 5 bps +0.1, 20 bps +0.1; per year [0.1]
+all 8 windows summed, rebalance 21: change over random -3.8 pts; picks 16.0% vs median random 19.8%; IC actual t -0.61; long-short -2.52 bps/day t -0.46; p (share of random at least as good) 0.603; SPY 24.6%, all candidates 20.7%
+    0 bps: picks 16.0%/yr vs median random 19.8%; change at 5 bps -3.8, 20 bps -3.7; per year [-3.8]
+universe control (random scores on the same 500), seed 1: change over random -20.4 pts; picks -2.0% vs median random 18.4%; IC actual t -1.97; long-short -2.63 bps/day t -1.50; p (share of random at least as good) 0.959; SPY 24.6%, all candidates 20.7%
+universe control (random scores on the same 500), seed 2: change over random -2.2 pts; picks 16.8% vs median random 19.0%; IC actual t -0.39; long-short -0.46 bps/day t -0.23; p (share of random at least as good) 0.564; SPY 24.6%, all candidates 20.7%
+universe control (random scores on the same 500), seed 3: change over random +11.6 pts; picks 30.7% vs median random 19.1%; IC actual t +1.56; long-short 0.93 bps/day t +0.44; p (share of random at least as good) 0.206; SPY 24.6%, all candidates 20.7%
+universe control (random scores on the same 500), seed 4: change over random -23.6 pts; picks -4.8% vs median random 18.8%; IC actual t -1.80; long-short -1.74 bps/day t -0.57; p (share of random at least as good) 0.958; SPY 24.6%, all candidates 20.7%
+universe control (random scores on the same 500), seed 5: change over random -1.6 pts; picks 17.5% vs median random 19.1%; IC actual t -1.87; long-short -0.88 bps/day t -0.39; p (share of random at least as good) 0.545; SPY 24.6%, all candidates 20.7%
+universe control: mean change over random -7.2 pts (seeds -20.4, -2.2, +11.6, -23.6, -1.6)

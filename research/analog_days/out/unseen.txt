@@ -1,0 +1,102 @@
+data (new store): forward-filled: SPY 2011-02-17
+data (new store): forward-filled: XLB 2011-02-17
+data (new store): forward-filled: XLE 2011-02-17
+data (new store): forward-filled: XLF 2011-02-17
+data (new store): forward-filled: XLI 2011-02-17
+data (new store): forward-filled: XLK 2011-02-17
+data (new store): forward-filled: XLP 2011-02-17
+data (new store): forward-filled: XLU 2011-02-17
+data (new store): forward-filled: XLV 2011-02-17
+data (new store): forward-filled: XLY 2011-02-17
+new store: first forecast 2007-06-12, book from 2007-07-11; unseen weeks 65, formed 2025-06-27 .. 2026-10-06, returns through 2026-10-13
+new vs old store before 2025-06-27: largest gap in a daily log return 1.04e-02; analog sets identical on 47.65% of days; weekly analog net returns differ by at most 337.587 bps (mean 7.1242); old-store weekly net mean -2.793 vs new -4.953 bps
+
+--- Test 4, the unseen weeks ---
+                                           bps/wk      t    n   sum %
+analog gross                                +3.36  +0.13   65   +2.18
+analog net                                  -1.42  -0.06   65   -0.92
+                                         turnover 2.39/wk
+momentum gross                              -9.47  -0.41   65   -6.16
+momentum net                               -12.13  -0.53   65   -7.88
+                                         turnover 1.33/wk
+reversal gross                             +36.69  +1.42   65  +23.85
+reversal net                               +31.26  +1.21   65  +20.32
+                                         turnover 2.72/wk
+analog - momentum (net, paired)            +10.71  +0.31   65
+analog - momentum (gross, paired)          +12.83  +0.38   65
+analog - reversal (net, paired)            -32.68  -1.21   65
+analog - reversal (gross, paired)          -33.34  -1.23   65
+random (10,000): net median -6.09 bps/wk (5-95%: -42.50..+30.67); analog p net 0.419, gross 0.430
+
+Test 4: analog net -1.42 bps/wk -> FAIL (needs positive)
+
+by week (analog gross, net; momentum net; reversal net), bps; longs / shorts:
+  2025-06-27    -23.4   -27.5    +32.0     +4.8   long XLE+XLP+XLU / short XLF+XLI+XLK
+  2025-07-07    +50.7   +44.0    +48.9   +122.6   long XLF+XLV+XLY / short XLB+XLI+XLP
+  2025-07-14   +236.9  +232.8   +262.8   +164.3   long XLF+XLK+XLU / short XLE+XLI+XLP
+  2025-07-21    -95.0  -100.4    -51.8   +166.7   long XLB+XLU+XLV / short XLE+XLK+XLY
+  2025-07-28   -101.8  -109.8    -74.8   +251.6   long XLE+XLK+XLY / short XLI+XLP+XLV
+  2025-08-04   -112.4  -120.3   -132.9     +0.1   long XLI+XLU+XLV / short XLE+XLF+XLK
+  2025-08-11   +108.1  +102.7   -249.1    +55.1   long XLB+XLI+XLK / short XLE+XLP+XLU
+  2025-08-18   +102.3   +98.2   -236.7   -160.9   long XLB+XLF+XLI / short XLU+XLV+XLY
+  2025-08-25   +124.3  +118.9    +42.0   -185.9   long XLE+XLF+XLI / short XLB+XLK+XLP
+  2025-09-02    +65.4   +61.4    -29.6   +215.9   long XLF+XLI+XLU / short XLB+XLE+XLV
+  2025-09-09   +179.0  +175.1   +101.1    -19.3   long XLF+XLI+XLK / short XLP+XLU+XLV
+  2025-09-16    -20.5   -24.5    +27.3   -122.0   long XLF+XLI+XLP / short XLB+XLE+XLV
+  2025-09-23    +48.7   +44.7    +10.1   -102.6   long XLK+XLP+XLY / short XLB+XLE+XLF
+  2025-09-30   -256.1  -260.1   +111.1   -247.8   long XLF+XLK+XLY / short XLE+XLU+XLV
+  2025-10-07    +76.5   +71.1    -47.0    +41.6   long XLB+XLP+XLV / short XLE+XLF+XLU
+  2025-10-14   +160.2  +156.2    +43.7   +202.5   long XLB+XLI+XLK / short XLF+XLP+XLU
+  2025-10-21   -116.2  -120.2    +84.7   -182.7   long XLB+XLF+XLI / short XLK+XLU+XLV
+  2025-10-28   +103.0   +96.3    +61.2    -64.2   long XLE+XLU+XLV / short XLF+XLK+XLY
+  2025-11-04   +102.3   +95.7   -191.0   -186.5   long XLB+XLE+XLF / short XLP+XLU+XLV
+  2025-11-11   -337.1  -341.2    -29.0   -339.3   long XLE+XLK+XLY / short XLB+XLP+XLV
+  2025-11-18    -39.7   -43.7   -174.2   +135.6   long XLE+XLK+XLV / short XLF+XLP+XLU
+  2025-11-25   +153.7  +149.7    -63.4   +136.4   long XLE+XLK+XLU / short XLP+XLV+XLY
+  2025-12-03    -84.5   -88.6    -73.6   -286.9   long XLF+XLU+XLV / short XLB+XLP+XLY
+  2025-12-10   +115.6  +110.3   +179.1   +314.3   long XLE+XLU+XLY / short XLB+XLI+XLK
+  2025-12-17   +147.9  +142.7     -6.0   +179.3   long XLK+XLV+XLY / short XLB+XLE+XLF
+  2025-12-24   -175.8  -179.9   -263.0   +184.5   long XLP+XLU+XLY / short XLB+XLE+XLK
+  2026-01-02     +1.8    -3.6   +224.6    +76.5   long XLF+XLK+XLY / short XLB+XLP+XLV
+  2026-01-09    -65.6   -69.7   -103.8    -56.6   long XLF+XLK+XLU / short XLB+XLE+XLY
+  2026-01-16   -110.8  -114.8   +155.7   -101.2   long XLK+XLP+XLY / short XLB+XLE+XLI
+  2026-01-26     -4.8   -10.2    +87.0    +97.7   long XLP+XLU+XLV / short XLB+XLF+XLY
+  2026-02-02   -438.2  -442.2   +446.6   -232.2   long XLK+XLV+XLY / short XLB+XLF+XLI
+  2026-02-09   -208.1  -210.8   +195.9   -312.4   long XLE+XLK+XLY / short XLB+XLI+XLV
+  2026-02-17   +162.8  +158.8   +220.0   -199.3   long XLK+XLP+XLU / short XLB+XLF+XLV
+  2026-02-24     -8.8   -10.2   +120.9    -81.0   long XLK+XLP+XLU / short XLB+XLF+XLY
+  2026-03-03   +203.2  +201.9   -177.0    -46.7   long XLK+XLP+XLU / short XLB+XLE+XLF
+  2026-03-10   -276.8  -283.4   +301.4   -135.6   long XLF+XLI+XLV / short XLE+XLP+XLY
+  2026-03-17   +361.1  +355.8   +226.1   -209.5   long XLE+XLF+XLI / short XLB+XLK+XLU
+  2026-03-24    +27.5   +24.8   -234.1   +149.8   long XLE+XLF+XLU / short XLB+XLK+XLP
+  2026-03-31    +39.4   +32.7   -270.8   +195.3   long XLK+XLV+XLY / short XLB+XLF+XLU
+  2026-04-08   -634.3  -641.1   -204.8   -266.4   long XLB+XLP+XLU / short XLF+XLK+XLY
+  2026-04-15    -74.4   -77.1   +184.6   -192.8   long XLB+XLE+XLU / short XLF+XLP+XLY
+  2026-04-22   -226.2  -230.2   -222.1   -248.7   long XLB+XLU+XLV / short XLE+XLF+XLK
+  2026-04-29   +284.8  +280.8   +502.7   +296.3   long XLI+XLU+XLY / short XLE+XLF+XLV
+  2026-05-06   -209.3  -212.0    +49.3   -151.9   long XLE+XLI+XLU / short XLF+XLK+XLV
+  2026-05-13   -389.7  -395.0   +117.0   -168.2   long XLB+XLI+XLY / short XLE+XLK+XLP
+  2026-05-20   +508.2  +504.1   -113.8   +507.5   long XLB+XLK+XLY / short XLE+XLF+XLV
+  2026-05-28   -243.6  -247.7   -109.5    +64.3   long XLK+XLP+XLU / short XLE+XLF+XLI
+  2026-06-04   +146.3  +139.6   -196.7   +343.8   long XLF+XLU+XLV / short XLB+XLK+XLP
+  2026-06-11   +198.9  +194.9    -12.4    +91.9   long XLK+XLU+XLV / short XLB+XLE+XLF
+  2026-06-18   -213.8  -217.8   -361.4   +474.0   long XLK+XLU+XLY / short XLF+XLI+XLP
+  2026-06-26    +11.5    +7.5   +161.1   +223.1   long XLB+XLK+XLV / short XLE+XLF+XLP
+  2026-07-06   +270.8  +265.4   -205.3   +421.8   long XLE+XLK+XLP / short XLF+XLI+XLU
+  2026-07-13   -130.8  -136.1   -134.3   -151.2   long XLB+XLI+XLY / short XLE+XLF+XLU
+  2026-07-20    +48.4   +44.4     -2.0    +15.9   long XLB+XLE+XLI / short XLP+XLU+XLV
+  2026-07-27   +159.0  +154.9   -239.7   +316.0   long XLE+XLK+XLV / short XLF+XLP+XLU
+  2026-08-03   -125.6  -132.3    -62.2    -52.5   long XLI+XLK+XLY / short XLB+XLE+XLV
+  2026-08-10    +65.4   +58.6    -99.7    +66.7   long XLE+XLF+XLP / short XLB+XLI+XLK
+  2026-08-17   -190.8  -196.2   -367.5   +499.8   long XLK+XLU+XLY / short XLB+XLE+XLI
+  2026-08-24   +247.0  +241.7    -59.0   +191.9   long XLF+XLI+XLK / short XLB+XLP+XLV
+  2026-08-31   +139.0  +132.4    -47.8    -57.7   long XLE+XLU+XLY / short XLF+XLI+XLP
+  2026-09-08   +148.0  +144.0   +269.3    +14.9   long XLE+XLK+XLY / short XLB+XLP+XLU
+  2026-09-15   +414.6  +410.6   -296.3   +207.9   long XLI+XLK+XLY / short XLF+XLP+XLV
+  2026-09-22    +95.9   +89.2   +154.8    -25.8   long XLE+XLU+XLV / short XLB+XLK+XLP
+  2026-09-29    -67.5   -72.8    +11.3   +140.7   long XLB+XLV+XLY / short XLE+XLF+XLP
+  2026-10-06   -108.8  -114.2    -78.8    +48.4   long XLK+XLU+XLV / short XLB+XLE+XLI
+
+--- Story check, unseen weeks ---
+dispersion analogs 1.643% vs random 1.736% (ratio 0.947; tighter in 72% of weeks)
+agreement analogs +0.0024 vs random +0.0019 (higher in 46% of weeks); share of analogs from the 63 days before t 3.0% (random 1.1%)

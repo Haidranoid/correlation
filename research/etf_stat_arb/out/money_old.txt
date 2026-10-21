@@ -1,0 +1,9 @@
+scores: stock-days with a score 6537820; per day median (2006+) 1302
+money r1 uniform years 18; beat random at p<0.1 (0 bps: 9, 5 bps: 9, 20 bps: 8) of 18; change over random +7.8 pts/yr (se 2.9, ahead 12/18); IC actual returns z +4.70; long-short 4.11 bps/day z +4.78, turnover 28%, costs 1.12 x c bps/day
+  money r1 uniform  0 bps: change over random +7.82 pts/yr (se 2.86, ahead 12/18); per year [-3.09, 24.1, 14.11, 10.57, 9.61, -1.24, -0.9, 15.8, 5.86, -15.3, 6.51, -8.09, 17.57, 28.38, -9.73, 18.91, 17.86, 9.76]
+  money r1 uniform  5 bps: change over random +6.81 pts/yr (se 2.53, ahead 12/18); per year [-3.0, 21.93, 12.43, 9.28, 8.41, -1.23, -0.94, 13.88, 5.1, -13.66, 5.64, -7.2, 15.35, 24.7, -8.56, 16.43, 15.56, 8.48]
+  money r1 uniform 20 bps: change over random +4.50 pts/yr (se 1.76, ahead 12/18); per year [-2.68, 16.45, 8.48, 6.27, 5.58, -1.15, -0.9, 9.38, 3.34, -9.7, 3.64, -5.07, 10.21, 16.34, -5.85, 10.79, 10.26, 5.57]
+money r1 volatility years 18; beat random at p<0.1 (0 bps: 10, 5 bps: 10, 20 bps: 10) of 18; change over random +8.8 pts/yr (se 3.1, ahead 13/18); IC actual returns z +4.70; long-short 4.11 bps/day z +4.78, turnover 28%, costs 1.12 x c bps/day
+  money r1 volatility  0 bps: change over random +8.79 pts/yr (se 3.07, ahead 13/18); per year [-3.7, 19.84, 17.25, 9.52, 11.77, 0.52, -1.82, 15.93, 3.98, -16.63, 3.43, -6.94, 23.62, 32.71, -6.82, 21.24, 20.43, 13.86]
+  money r1 volatility  5 bps: change over random +7.76 pts/yr (se 2.71, ahead 13/18); per year [-3.39, 18.19, 15.37, 8.48, 10.42, 0.46, -1.62, 14.09, 3.51, -14.72, 3.02, -6.11, 20.72, 28.66, -5.97, 18.54, 17.87, 12.15]
+  money r1 volatility 20 bps: change over random +5.35 pts/yr (se 1.87, ahead 13/18); per year [-2.62, 14.02, 10.87, 5.99, 7.23, 0.32, -1.12, 9.73, 2.41, -10.22, 2.07, -4.17, 13.99, 19.25, -3.99, 12.33, 11.95, 8.18]
