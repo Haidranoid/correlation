@@ -1,0 +1,25 @@
+(a) noise, one-lag benchmark, 1 series: R2 median -0.1717, 95th +0.1451, 99th +0.2558; t median +0.38, 95th +2.50; t >= 3 in 2.5%, t >= 2 in 9.5%, bootstrap p < 0.0013 in 11.0%, the full bar in 1.5%; bootstrap p 5th pct 0.0002
+(a) noise, one-lag benchmark, 2 series: R2 median -0.0295, 95th +0.2403, 99th +0.3744; t median +0.84, 95th +2.32; t >= 3 in 1.0%, t >= 2 in 12.0%, bootstrap p < 0.0013 in 21.0%, the full bar in 1.0%; bootstrap p 5th pct 0.0001
+(a) noise, one-lag benchmark, 3 series: R2 median +0.0403, 95th +0.2275, 99th +0.3366; t median +1.14, 95th +2.41; t >= 3 in 1.0%, t >= 2 in 13.0%, bootstrap p < 0.0013 in 23.5%, the full bar in 1.0%; bootstrap p 5th pct 0.0001
+(a) noise, one-lag benchmark, 9 series: R2 median +0.0961, 95th +0.2380, 99th +0.2694; t median +1.39, 95th +2.43; t >= 3 in 1.0%, t >= 2 in 12.5%, bootstrap p < 0.0013 in 33.0%, the full bar in 0.5%; bootstrap p 5th pct 0.0000
+(a) noise, two-lag benchmark, 1 series: R2 median +0.0172, 95th +0.3515, 99th +0.4750; t median +1.11, 95th +2.31; t >= 3 in 2.0%, t >= 2 in 10.5%, bootstrap p < 0.0013 in 2.0%, the full bar in 1.0%; bootstrap p 5th pct 0.0032
+(a) noise, two-lag benchmark, 2 series: R2 median +0.1350, 95th +0.3699, 99th +0.4360; t median +1.42, 95th +2.35; t >= 3 in 2.0%, t >= 2 in 12.5%, bootstrap p < 0.0013 in 2.5%, the full bar in 1.5%; bootstrap p 5th pct 0.0023
+(a) noise, two-lag benchmark, 3 series: R2 median +0.1613, 95th +0.3559, 99th +0.4050; t median +1.54, 95th +2.37; t >= 3 in 0.0%, t >= 2 in 12.0%, bootstrap p < 0.0013 in 2.5%, the full bar in 0.0%; bootstrap p 5th pct 0.0037
+(a) noise, two-lag benchmark, 9 series: R2 median +0.1921, 95th +0.3290, 99th +0.3650; t median +1.65, 95th +2.07; t >= 3 in 0.0%, t >= 2 in 8.0%, bootstrap p < 0.0013 in 0.0%, the full bar in 0.0%; bootstrap p 5th pct 0.0054
+(b) oracle, noise 0.5x, one-lag: its own forecast n 121, R2 +0.5408, Clark-West t +2.46 (normal p 0.0069, bootstrap p 0.0002; R2 95% +0.264..+0.566), MAE 2.34 -> 1.48 pts
+    as a tenth input in the combination: n 121, R2 +0.0682, Clark-West t +2.28 (normal p 0.0113, bootstrap p 0.0000; R2 95% +0.015..+0.147), MAE 2.34 -> 2.22 pts
+(b) oracle, noise 0.5x, two-lag: its own forecast n 121, R2 +0.5607, Clark-West t +2.69 (normal p 0.0036, bootstrap p 0.0018; R2 95% +0.492..+0.650), MAE 3.23 -> 2.01 pts
+    as a tenth input in the combination: n 121, R2 +0.0915, Clark-West t +1.14 (normal p 0.1279, bootstrap p 0.0000; R2 95% -0.046..+0.216), MAE 3.23 -> 3.04 pts
+(b) oracle, noise 1.0x, one-lag: its own forecast n 121, R2 +0.2802, Clark-West t +2.54 (normal p 0.0055, bootstrap p 0.0006; R2 95% +0.059..+0.302), MAE 2.34 -> 1.92 pts
+    as a tenth input in the combination: n 121, R2 +0.0233, Clark-West t +1.92 (normal p 0.0276, bootstrap p 0.0000; R2 95% -0.021..+0.100), MAE 2.34 -> 2.27 pts
+(b) oracle, noise 1.0x, two-lag: its own forecast n 121, R2 +0.2387, Clark-West t +3.19 (normal p 0.0007, bootstrap p 0.0031; R2 95% +0.233..+0.336), MAE 3.23 -> 2.75 pts
+    as a tenth input in the combination: n 121, R2 +0.0449, Clark-West t +0.79 (normal p 0.2155, bootstrap p 0.0000; R2 95% -0.087..+0.160), MAE 3.23 -> 3.12 pts
+(b) oracle, noise 2.0x, one-lag: its own forecast n 121, R2 +0.0841, Clark-West t +2.70 (normal p 0.0035, bootstrap p 0.0007; R2 95% -0.104..+0.126), MAE 2.34 -> 2.20 pts
+    as a tenth input in the combination: n 121, R2 -0.0048, Clark-West t +1.24 (normal p 0.1071, bootstrap p 0.0009; R2 95% -0.049..+0.064), MAE 2.34 -> 2.31 pts
+(b) oracle, noise 2.0x, two-lag: its own forecast n 121, R2 +0.0911, Clark-West t +3.32 (normal p 0.0004, bootstrap p 0.0023; R2 95% +0.064..+0.141), MAE 3.23 -> 3.04 pts
+    as a tenth input in the combination: n 121, R2 +0.0267, Clark-West t +0.60 (normal p 0.2739, bootstrap p 0.0000; R2 95% -0.108..+0.130), MAE 3.23 -> 3.16 pts
+(b) oracle, noise 4.0x, one-lag: its own forecast n 121, R2 +0.0320, Clark-West t +1.91 (normal p 0.0277, bootstrap p 0.0087; R2 95% -0.057..+0.045), MAE 2.34 -> 2.29 pts
+    as a tenth input in the combination: n 121, R2 -0.0169, Clark-West t +0.87 (normal p 0.1919, bootstrap p 0.0055; R2 95% -0.063..+0.051), MAE 2.34 -> 2.33 pts
+(b) oracle, noise 4.0x, two-lag: its own forecast n 121, R2 +0.0002, Clark-West t +0.81 (normal p 0.2103, bootstrap p 0.2702; R2 95% -0.008..+0.030), MAE 3.23 -> 3.19 pts
+    as a tenth input in the combination: n 121, R2 +0.0166, Clark-West t +0.50 (normal p 0.3098, bootstrap p 0.0000; R2 95% -0.118..+0.115), MAE 3.23 -> 3.18 pts
+the oracles pass their sanity checks

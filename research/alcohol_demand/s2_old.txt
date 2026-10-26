@@ -1,0 +1,19 @@
+S2: decisions 2008-04-04..2025-05-14 (206); the rule holds ALC in 0.94 of them, the excess variant in 0.35; switches 9 (variant 41)
+  rule            at 5 bps: 2008-2009 CAR -0.060 Sharpe -0.02 maxDD -0.60; 2010-2014 CAR +0.298 Sharpe 1.34 maxDD -0.28; 2015-2019 CAR +0.140 Sharpe 0.81 maxDD -0.24; 2020-2025-06 CAR -0.047 Sharpe -0.07 maxDD -0.52; all CAR +0.097 Sharpe 0.52 maxDD -0.60; costs 0.0008 a year
+  excess variant  at 5 bps: 2008-2009 CAR +0.051 Sharpe 0.32 maxDD -0.51; 2010-2014 CAR +0.183 Sharpe 1.05 maxDD -0.19; 2015-2019 CAR +0.144 Sharpe 0.96 maxDD -0.19; 2020-2025-06 CAR +0.084 Sharpe 0.46 maxDD -0.34; all CAR +0.126 Sharpe 0.66 maxDD -0.51; costs 0.0025 a year
+  always ALC      at 5 bps: 2008-2009 CAR +0.092 Sharpe 0.42 maxDD -0.60; 2010-2014 CAR +0.311 Sharpe 1.39 maxDD -0.28; 2015-2019 CAR +0.140 Sharpe 0.81 maxDD -0.24; 2020-2025-06 CAR -0.040 Sharpe -0.04 maxDD -0.50; all CAR +0.120 Sharpe 0.60 maxDD -0.60; costs 0.0004 a year
+  always SPY      at 5 bps: 2008-2009 CAR -0.080 Sharpe -0.05 maxDD -0.51; 2010-2014 CAR +0.145 Sharpe 0.93 maxDD -0.19; 2015-2019 CAR +0.122 Sharpe 0.93 maxDD -0.19; 2020-2025-06 CAR +0.136 Sharpe 0.70 maxDD -0.34; all CAR +0.111 Sharpe 0.62 maxDD -0.51; costs 0.0000 a year
+  development, rule minus always ALC: mean monthly log return -0.00219, paired block-bootstrap p 0.837
+  development, rule minus always SPY: mean monthly log return +0.00528, paired block-bootstrap p 0.120
+  S2 bar met (counts only if P1 passes; P1 failed): False
+  vs random, rule, 2008-2025-06: +0.0982 against median +0.1199 -> -2.17 points a year, random p 0.975 (206 decisions)
+  vs random, excess variant, 2008-2025-06: +0.1289 against median +0.1140 -> +1.49 points a year, random p 0.262 (206 decisions)
+  vs random, rule, 2008-2019: +0.1719 against median +0.1966 -> -2.47 points a year, random p 0.968 (141 decisions)
+  vs random, excess variant, 2008-2019: +0.1493 against median +0.1327 -> +1.66 points a year, random p 0.252 (141 decisions)
+  vs random, rule, 2020-2025-06: -0.0461 against median -0.0297 -> -1.63 points a year, random p 0.782 (65 decisions)
+  vs random, excess variant, 2020-2025-06: +0.0858 against median +0.0683 -> +1.75 points a year, random p 0.356 (65 decisions)
+  after costs vs SPY, rule: +1.19 points a year over 18 calendar years (2008..2025)
+  after costs vs SPY, excess variant: +2.45 points a year over 18 calendar years (2008..2025)
+  after costs vs SPY, always ALC: +4.33 points a year over 18 calendar years (2008..2025)
+  by year (rule): 2008 -9.7, 2009 +29.6, 2010 +25.4, 2011 -12.4, 2012 +0.2, 2013 +26.6, 2014 +44.9, 2015 +21.2, 2016 +2.4, 2017 +9.0, 2018 -9.1, 2019 -8.8, 2020 +12.9, 2021 -27.0, 2022 +14.3, 2023 -22.3, 2024 -48.9, 2025 -26.9
+  daily returns from 2008-04-08 to 2025-06-16

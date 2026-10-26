@@ -1,0 +1,6 @@
+noise iid: 200 sets; Clark-West t >= 3 in 0.000, t >= 2 in 0.015, 95th percentile t 1.55; R2 > 0 in 0.260, median R2 -0.0040, 95th percentile +0.0119
+noise ar095: 200 sets; Clark-West t >= 3 in 0.000, t >= 2 in 0.020, 95th percentile t 1.46; R2 > 0 in 0.285, median R2 -0.0036, 95th percentile +0.0104
+leaky oracle (future y plus noise 1.0 times its size, six copies): n 141, Clark-West t 4.64, bootstrap p 0.0014, R2 +0.692
+leaky oracle (future y plus noise 0.5 times its size, six copies): n 141, Clark-West t 5.20, bootstrap p 0.0001, R2 +0.927
+leaky oracle (future y plus noise 2.0 times its size, six copies): n 141, Clark-West t 5.08, bootstrap p 0.0004, R2 +0.319
+leaky oracle (future y plus noise 4.0 times its size, six copies): n 141, Clark-West t 4.79, bootstrap p 0.0001, R2 +0.134

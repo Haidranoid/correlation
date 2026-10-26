@@ -1,0 +1,10 @@
+lag check: outcome end offset 6 days -> fit uses decisions k-1 and earlier; latest training outcome ends 15 days before t0 at the closest
+lag check: outcome end offset 5 days -> fit uses decisions k-1 and earlier; latest training outcome ends 16 days before t0 at the closest
+lag check: outcome end offset 22 days -> fit uses decisions k-2 and earlier; latest training outcome ends 20 days before t0 at the closest
+lag check: outcome end offset 21 days -> fit uses decisions k-1 and earlier; latest training outcome ends 0 days before t0 at the closest
+perfect signal, stock: R2 vs hist mean 1.000000; b range 1.0000..1.0000
+perfect signal, b100: R2 vs hist mean 1.000000; b range 1.0000..1.0000
+perfect signal, market: R2 vs hist mean 1.000000; b range 1.0000..1.0000
+pure noise, market: mean OOS R2 -0.790% (sd 1.064%, 200 draws); share of draws above 0: 0.17
+pure noise, stock: mean OOS R2 -0.002% (sd 0.001%, 20 draws); share of draws above 0: 0.10
+pure noise, b100: mean OOS R2 -0.000% (sd 0.001%, 20 draws); share of draws above 0: 0.45

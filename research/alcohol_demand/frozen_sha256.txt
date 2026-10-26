@@ -1,0 +1,13 @@
+# sha256 of the scripts as run, 2026-10-26 (alcohol-demand test; held outside the repo in correlation-pending/).
+# codecheck.py was edited before P1 was read (oracle strengths; Decisions 1); events.py after its first run (the event day's own column; Decisions 2).
+3e962d2d203b613eb4a3b456a2408cdc25a55d0b9b9942a0a5a8811de11673d2  ad_common.py
+f75129adc4f69b3adcedef2d9d56b9ece868057845015ceb02d6398f81d8a2cd  inputs.py
+c2cd69441ef99893b73b053f8156c41e34bedf6531e6b176d602838ebe5d6475  codecheck.py
+ecf51fc9f857cf51f40b4fd6ba31da5c064cc3e66215eaf3eddd877b951aab1c  forecast.py
+955a065e8d500255b1c0004f9e877b30ec157fe3f50b5ee6cb0420d9fc0f4698  timing.py
+6e35bbbe4d718101571bf4304a4a726f80882e0d250b68b1b4cc6741215de90c  events.py
+9035a90af2ca838ae806e5752b60467e0308d29cb6f4fa34bd27805a3a9f6b58  sales.py
+39bac832886845bdc500e5083c05bdbd247e0e8f02f6583c2bb9aa41d230446c  news_build.py
+e837f8511a1e04805a56ed592fe22d1b5e16e5862297f014c0b91e2dc832fa7b  news.py
+42b8cbfb2c8e2406951be6c91d65a7dd76f91da6d10e60cb63373010478fdeb6  unseen.py
+899062fad42399badbb6d27dfe009333c9aad21b25193e63b83108e543d39431  fetch_data.py

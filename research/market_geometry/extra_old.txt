@@ -1,0 +1,19 @@
+Months with 500 stocks: 241 (from 2005-06-02)
+ollivier, 500-stock months: odd vs even +0.463; 63 vs 252 days +0.341; odd vs full window +0.808, even vs full +0.822
+forman, 500-stock months: odd vs even +0.616; 63 vs 252 days +0.364; odd vs full window +0.875, even vs full +0.835
+B1 on 500-stock months, ollivier: yardsticks R2 0.276, plain statistics R2 0.930
+B1 on 500-stock months, forman: yardsticks R2 0.435, plain statistics R2 1.000
+
+Drawdowns >= 15% with the peak reset after each trough (a trough ends when SPY rises 15% off it or regains the peak):
+2007-10-09 -> 2008-10-27 (45.2%): Ollivier z -6m +0.43, -3m -0.15, peak -0.07, trough +1.94, first > +1 at 6; Forman z -1.57, -1.84, -1.84, +1.58, first < -1 at -12
+2008-11-04 -> 2008-11-20 (24.9%): Ollivier z -6m +1.04, -3m +3.39, peak +0.51, trough +0.51, first > +1 at -7; Forman z +0.04, +2.59, -0.21, -0.21, first < -1 at -12
+2009-01-06 -> 2009-03-09 (27.1%): Ollivier z -6m +1.29, -3m +1.94, peak +0.60, trough +0.61, first > +1 at -9; Forman z -0.04, +1.58, -0.52, -0.64, first < -1 at None
+2010-04-23 -> 2010-07-02 (15.7%): Ollivier z -6m +0.58, -3m +0.10, peak +0.02, trough +0.24, first > +1 at -10; Forman z -0.84, -1.12, -1.23, -1.07, first < -1 at -3
+2011-04-29 -> 2011-10-03 (18.6%): Ollivier z -6m +1.42, -3m -0.21, peak -0.92, trough +0.35, first > +1 at -8; Forman z +0.25, -1.03, -1.63, -0.42, first < -1 at -12
+2018-09-20 -> 2018-12-24 (19.3%): Ollivier z -6m +0.85, -3m +1.22, peak -1.42, trough +0.06, first > +1 at -5; Forman z -0.04, +0.55, +0.14, -0.48, first < -1 at None
+2020-02-19 -> 2020-03-23 (33.7%): Ollivier z -6m -0.15, -3m +1.58, peak +0.57, trough +0.57, first > +1 at -3; Forman z -0.55, +2.06, -0.04, -0.50, first < -1 at -11
+2022-01-03 -> 2022-06-16 (23.0%): Ollivier z -6m -0.21, -3m +2.02, peak -0.56, trough +0.33, first > +1 at -12; Forman z +0.32, +2.52, -0.01, +0.01, first < -1 at None
+2022-08-16 -> 2022-10-12 (16.7%): Ollivier z -6m -0.18, -3m +0.34, peak -0.15, trough +0.41, first > +1 at -11; Forman z +0.08, -0.19, -0.55, -0.28, first < -1 at None
+2025-02-19 -> 2025-04-08 (18.8%): Ollivier z -6m -1.09, -3m -0.23, peak -0.98, trough -0.37, first > +1 at None; Forman z -0.56, +0.27, -0.29, -0.21, first < -1 at -10
+base rate, ollivier: beyond 1 on the crisis side in 15% of months; at least once in 71% of all 13-month spans (the span searched from peak - 12 months to the peak)
+base rate, forman: beyond 1 on the crisis side in 19% of months; at least once in 61% of all 13-month spans (the span searched from peak - 12 months to the peak)

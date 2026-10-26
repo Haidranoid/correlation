@@ -1,0 +1,5 @@
+trend_h5: observed groups - matched +0.418 pts (recomputed +0.418); sign-flip null mean +0.272 sd 0.329 (200 draws); share of null >= observed 0.265
+trend_h21: observed groups - matched +1.310 pts (recomputed +1.310); sign-flip null mean +0.545 sd 0.488 (200 draws); share of null >= observed 0.065
+reversal_h5: observed groups - matched +0.929 pts (recomputed +0.929); sign-flip null mean +0.700 sd 0.364 (200 draws); share of null >= observed 0.220
+reversal_h21: observed groups - matched +0.874 pts (recomputed +0.874); sign-flip null mean +0.516 sd 0.403 (200 draws); share of null >= observed 0.130
+ar1_h21: observed groups - matched +0.091 pts (recomputed +0.091); sign-flip null mean +0.291 sd 0.270 (200 draws); share of null >= observed 0.850

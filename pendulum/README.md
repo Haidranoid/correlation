@@ -87,7 +87,7 @@ The tip, where the stock price ends up, is the sum of all three swings.
 
 **5. Twenty years is fewer swings than it looks.**
 - Twenty years of daily data sounds like 5,000 observations per stock, but the market has a handful of genuinely independent episodes in that time: 2008, 2020, 2022 and a few rotations.
-- Many results in this project were mostly one crisis. With 71 tests at the usual bar, three or four false passes are expected by luck, which is why every pass here had to survive 16 months of data it had never seen.
+- Many results in this project were mostly one crisis. With 74 tests at the usual bar, three or four false passes are expected by luck, which is why every pass here had to survive 16 months of data it had never seen.
 - In pendulum terms, you've watched only a few of its swings, and each one went somewhere new.
 
 ## What does work: knowing the reach

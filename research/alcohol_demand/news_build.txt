@@ -1,0 +1,18 @@
+reuters: 96 months 2007-01..2014-12; headlines 4748525, alcohol headlines 13580 (0.0029); months with tone (>= 5 alcohol headlines) 96
+  e.g. 2007-06-01 Liquor Barn CEO on leave in takeover battle twist
+  e.g. 2007-06-01 DuPont raises polyvinyl alcohol, resin prices
+  e.g. 2007-06-04 Carlsberg to hold talks on future of UK Tetley brewery
+  e.g. 2007-06-05 Brown-Forman profit tops estimates
+  e.g. 2007-06-05 Molson does not see impact from Edmonton strike
+  e.g. 2007-06-05 Ontario gets record C$1.28 bln from liquor sales
+  e.g. 2007-06-05 Brown-Forman 4th-qtr earnings fall
+  e.g. 2007-06-05 EU court rejects Swedish ban on alcohol imports
+huffpost: 129 months 2012-01..2022-09; headlines 209527, alcohol headlines 1279 (0.0061); months with tone (>= 5 alcohol headlines) 71
+  e.g. 2019-06-22 Nancy Pelosi Gives Justin Trudeau Wine And Chocolate In Lost NBA Bet
+  e.g. 2018-06-09 Milwaukee Brewers Kill It In This 'Dumb And Dumber' Tribute
+  e.g. 2017-06-29 These Wine Spritzer Recipes Are Coming For You, Whether You Like It Or Not
+  e.g. 2017-06-28 Here's How Many People Would Give Up Alcohol To See Donald Trump Impeached
+  e.g. 2017-06-21 So, George Clooney's Tequila Brand Just Sold For $1 Billion
+  e.g. 2017-06-12 Rebuilding Our Downtowns. One Cocktail At A Time.
+  e.g. 2017-06-12 How Is Natural Wine Different From The Stuff You're Drinking?
+  e.g. 2017-06-01 These New Wine Coolers Are Actually Worth Drinking

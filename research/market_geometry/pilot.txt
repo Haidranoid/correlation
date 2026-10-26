@@ -1,0 +1,23 @@
+pilot year 2008: 12 months (2008-01-03 .. 2008-12-02); also one calm month 2017-06
+2008-01-03 n 500 m 6237 max deg 147 | published graph m 960 | prep 0.06s forman+stats 0.07s apsp 0.02s ollivier primary 1.7s published 0.1s rewire 0.1s (10 rounds, 29051 swaps)
+2008-02-04 n 500 m 6237 max deg 121 | published graph m 1097 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.4s published 0.1s rewire 0.1s (10 rounds, 33839 swaps)
+2008-03-05 n 500 m 6237 max deg 113 | published graph m 915 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.4s published 0.1s rewire 0.1s (10 rounds, 36096 swaps)
+2008-04-04 n 500 m 6237 max deg 143 | published graph m 1528 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.5s published 0.1s rewire 0.1s (13 rounds, 43259 swaps)
+2008-05-05 n 500 m 6237 max deg 167 | published graph m 1177 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.6s published 0.1s rewire 0.1s (10 rounds, 31879 swaps)
+2008-06-04 n 500 m 6237 max deg 138 | published graph m 1195 | prep 0.04s forman+stats 0.00s apsp 0.03s ollivier primary 1.7s published 0.1s rewire 0.1s (10 rounds, 27441 swaps)
+2008-07-03 n 500 m 6237 max deg 135 | published graph m 676 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.7s published 0.1s rewire 0.1s (10 rounds, 29970 swaps)
+2008-08-04 n 500 m 6237 max deg 142 | published graph m 1451 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.9s published 0.1s rewire 0.1s (10 rounds, 22291 swaps)
+2008-09-03 n 500 m 6237 max deg 137 | published graph m 2239 | prep 0.05s forman+stats 0.00s apsp 0.02s ollivier primary 2.0s published 0.3s rewire 0.1s (10 rounds, 21134 swaps)
+2008-10-02 n 500 m 6237 max deg 129 | published graph m 4556 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.4s published 0.7s rewire 0.1s (10 rounds, 34339 swaps)
+2008-10-31 n 500 m 6237 max deg 170 | published graph m 10635 | prep 0.04s forman+stats 0.00s apsp 0.02s ollivier primary 1.6s published 4.7s rewire 0.1s (14 rounds, 44104 swaps)
+2008-12-02 n 500 m 6237 max deg 160 | published graph m 16129 | prep 0.03s forman+stats 0.00s apsp 0.02s ollivier primary 1.9s published 13.0s rewire 0.1s (10 rounds, 26051 swaps)
+2017-06-07 n 500 m 6237 max deg 137 | published graph m 758 | prep 0.03s forman+stats 0.00s apsp 0.03s ollivier primary 1.5s published 0.1s rewire 0.1s (10 rounds, 36161 swaps)
+
+per month in 2008 (one process): prep 0.0s forman 0.0s oll_primary 1.7s oll_pub 1.6s rewire 0.1s apsp 0.0s
+extrapolated at the 2008 rate (worst case), 286 months: 7 Ollivier passes on 5% graphs 0.92 h serial, 0.31 h on 3 processes; published graph 0.13 h serial, 0.04 h on 3 processes
+
+B5 2008-01-03: n 500; 3 LW fits 0.2s (incl. universe); 3 logs 0.05s; 66 exps 1.0s; 6 cold solves 0.7s (pg iters [520, 680, 630, 650, 720, 610]); 66 Euclidean solves warm 7.7s (median pg iters 610); 66 log-Euclidean solves warm 8.0s
+B5 per month about 17s; about 1.2 h serial for 262 months, 0.4 h on 3 processes
+
+B5 2017-06-07: n 500; 3 LW fits 0.2s (incl. universe); 3 logs 0.05s; 66 exps 1.1s; 6 cold solves 0.7s (pg iters [640, 660, 620, 610, 680, 600]); 66 Euclidean solves warm 7.2s (median pg iters 580); 66 log-Euclidean solves warm 6.9s
+B5 per month about 15s; about 1.1 h serial for 262 months, 0.4 h on 3 processes

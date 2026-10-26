@@ -1,0 +1,5 @@
+C6: decisions with both news inputs and the six: 97, 2010-02-03..2018-05-08
+  N1 (share of alcohol headlines) alone: development n 82 R2 -0.0624 Clark-West t -1.36; check n 34 R2 -0.0003 Clark-West t -0.34
+  N2 (their tone) alone: development n 60 R2 -0.1056 Clark-West t -0.54; check n 0 R2 +nan Clark-West t +nan
+  eight vs mean: development n 60 R2 -0.0186 Clark-West t -1.61; check n 0 R2 +nan Clark-West t +nan
+  eight vs six: development n 60 R2 -0.0112 Clark-West t -1.31; check n 0 R2 +nan Clark-West t +nan

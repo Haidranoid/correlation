@@ -1,0 +1,20 @@
+fred UNRATENSA: 946 lines
+fred UMCSENT: 888 lines
+fred CPIAUCNS: 1366 lines
+fred CUUR0000SAF116: 887 lines
+fred MRTSSM4453USS: 417 lines
+fred MRTSSM44X72USS: 417 lines
+{"ev": "cookie", "code": 429, "cookies": ["NID"], "t": "2026-10-26T16:13:43Z"}
+{"ev": "saved", "what": "alcohol", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/alcohol.json", "bytes": 37886, "t": "2026-10-26T16:14:17Z"}
+trends alcohol: fetched, 274 months 2004-01-01..2026-10-01
+{"ev": "saved", "what": "moderation", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/moderation.json", "bytes": 37886, "t": "2026-10-26T16:14:46Z"}
+trends moderation: fetched, 274 months 2004-01-01..2026-10-01
+{"ev": "saved", "what": "new_markets", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/new_markets.json", "bytes": 37886, "t": "2026-10-26T16:15:17Z"}
+trends new_markets: fetched, 274 months 2004-01-01..2026-10-01
+{"ev": "saved", "what": "wine", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/wine.json", "bytes": 37886, "t": "2026-10-26T16:15:47Z"}
+trends wine: fetched, 274 months 2004-01-01..2026-10-01
+{"ev": "saved", "what": "hard_seltzer", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/hard_seltzer.json", "bytes": 37703, "t": "2026-10-26T16:16:21Z"}
+trends hard_seltzer: fetched, 274 months 2004-01-01..2026-10-01
+{"ev": "saved", "what": "cannabis", "path": "/home/bhoult/.local/share/correlation2/experiments/alcohol_demand/trends/cannabis.json", "bytes": 37886, "t": "2026-10-26T16:16:53Z"}
+trends cannabis: fetched, 274 months 2004-01-01..2026-10-01
+DONE

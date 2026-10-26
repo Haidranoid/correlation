@@ -1,0 +1,48 @@
+old: axis 1993-01-29..2025-06-27 (8159 days); export 2001-12-31..2025-06-27 (5911 days); offset 2248; axis == export days from the export start: True
+  STZ   first 1993-01-29  filled days 0
+  BF-B  first 1993-01-29  filled days 0
+  TAP   first 1993-01-29  filled days 0
+  SAM   first 1995-11-21  filled days 0
+  MGPI  first 1993-01-29  filled days 0
+  DEO   first 1993-01-29  filled days 0
+  BUD   first 2009-07-01  filled days 0
+  CCU   first 1993-01-29  filled days 0
+  ABEV  first 1997-03-05  filled days 0
+  TLRY  first 2018-07-19  filled days 0
+  CGC   first 2014-04-07  filled days 0
+  ACB   first 2014-07-15  filled days 0
+  CRON  first 2018-02-27  filled days 0
+  SNDL  first 2019-08-01  filled days 0
+  SPY   first 1993-01-29  filled days 0
+  XLP   first 1998-12-22  filled days 0
+  XLY   first 1998-12-22  filled days 0
+  QQQ   first 1999-03-10  filled days 0
+decisions: 388 from 1993-02-01 to 2025-05-14 (hold ends 2025-06-16)
+  input E1: first decision with a value 1993-02-01; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input E2: first decision with a value 1993-02-01; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input P: first decision with a value 1993-02-01; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input T1: first decision with a value 2005-03-03; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input T2: first decision with a value 2005-03-03; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input T3: first decision with a value 2005-03-03; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  input R: first decision with a value 1993-04-01; decisions without one after it 0; decisions using an earlier month than the rule (late or missing release) 0 []
+  decision 2008-01-03: E1 2007-11, E2 2007-11, P 2007-11, T1 2007-11, T2 2007-11, T3 2007-11, R 2007-10
+  decision 2013-11-04: E1 2013-09, E2 2013-09, P 2013-09, T1 2013-09, T2 2013-09, T3 2013-09, R 2013-08
+  decision 2020-04-08: E1 2020-02, E2 2020-02, P 2020-02, T1 2020-03, T2 2020-03, T3 2020-03, R 2020-01
+  target ALC-SPY: decisions with a value 388, first 1993-02-01
+  target ALC: decisions with a value 388, first 1993-02-01
+  target ALC-XLP: decisions with a value 317, first 1998-12-24
+  target GLOBAL-SPY: decisions with a value 388, first 1993-02-01
+  target XLP-SPY: decisions with a value 317, first 1998-12-24
+  target XLY-SPY: decisions with a value 317, first 1998-12-24
+  target QQQ-SPY: decisions with a value 314, first 1999-03-29
+  target SPY: decisions with a value 388, first 1993-02-01
+  target WIDE-SPY: decisions with a value 388, first 1993-02-01
+  target GLOBAL: decisions with a value 388, first 1993-02-01
+  target XLP: decisions with a value 317, first 1998-12-24
+  target XLY: decisions with a value 317, first 1998-12-24
+  target QQQ: decisions with a value 314, first 1999-03-29
+  ALC names per decision from 2005: min 5 max 5
+  decisions with all six inputs and the primary target: 243, first 2005-03-03
+  development: 144 decisions
+  check: 65 decisions
+  unseen: 0 decisions

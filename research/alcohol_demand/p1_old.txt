@@ -1,0 +1,49 @@
+P1: ALC - SPY, the six inputs combined against the prevailing mean. First forecast 2008-04-04.
+  development: n 141, R2 -0.0307 [-0.070, +0.005], Clark-West t -0.94 (normal p 0.826, bootstrap p 0.8235)
+  check: n 65, R2 +0.0085 [-0.017, +0.045], Clark-West t +0.88 (normal p 0.191, bootstrap p 0.2431)
+  P1 passes (t >= 3, bootstrap p < 0.0013, R2 > 0 over development): False; check consistent: False
+  by year (R2): 2009 -0.090, 2010 -0.141, 2011 +0.012, 2012 +0.007, 2013 -0.000, 2014 -0.055, 2015 +0.004, 2016 +0.010, 2017 -0.026, 2018 +0.011, 2019 -0.004, 2020 +0.017, 2021 +0.058, 2022 -0.037, 2023 -0.008, 2024 +0.014
+  development without 2008-2009: n 120, R2 -0.0090 [-0.020, +0.007], Clark-West t -0.90 (normal p 0.815, bootstrap p 0.9485)
+  check without 2020: n 53, R2 +0.0075 [-0.027, +0.036], Clark-West t +0.70 (normal p 0.242, bootstrap p 0.1471)
+  slopes (first, median over development, last; share of fits positive): E1 -0.0481 +0.0036 +0.0033 0.93; E2 -0.1051 +0.0056 -0.0349 0.66; P -1.1815 +0.5036 +0.3942 0.94; T1 -0.0534 -0.0371 +0.0499 0.11; T2 -0.0077 +0.0098 +0.0089 0.95; T3 -0.1694 +0.0216 +0.0147 0.93
+
+C1: each input alone against the prevailing mean (same decisions as P1); Holm across the six (normal p, development).
+  E1: development: n 141, R2 -0.1157 [-0.260, +0.017], Clark-West t -0.42 (normal p 0.662, bootstrap p 0.6502), Holm 1.000; check: n 65, R2 +0.0040 [-0.070, +0.127], Clark-West t +0.71 (normal p 0.239, bootstrap p 0.3265)
+  E2: development: n 141, R2 -0.0442 [-0.064, -0.001], Clark-West t -1.37 (normal p 0.915, bootstrap p 0.9736), Holm 1.000; check: n 65, R2 -0.0008 [-0.013, +0.054], Clark-West t +0.07 (normal p 0.472, bootstrap p 0.8312)
+  P: development: n 141, R2 -0.0136 [-0.053, +0.042], Clark-West t +0.38 (normal p 0.353, bootstrap p 0.5191), Holm 1.000; check: n 65, R2 -0.0088 [-0.173, +0.098], Clark-West t +0.59 (normal p 0.279, bootstrap p 0.2834)
+  T1: development: n 141, R2 -0.0068 [-0.018, +0.010], Clark-West t -0.54 (normal p 0.706, bootstrap p 0.8329), Holm 1.000; check: n 65, R2 +0.0047 [-0.019, +0.013], Clark-West t +0.72 (normal p 0.236, bootstrap p 0.0512)
+  T2: development: n 141, R2 -0.0226 [-0.074, +0.005], Clark-West t -1.08 (normal p 0.861, bootstrap p 0.8920), Holm 1.000; check: n 65, R2 +0.0012 [-0.011, +0.006], Clark-West t +0.40 (normal p 0.343, bootstrap p 0.0890)
+  T3: development: n 141, R2 -0.1109 [-0.240, -0.013], Clark-West t -0.98 (normal p 0.836, bootstrap p 0.8141), Holm 1.000; check: n 65, R2 +0.0045 [-0.003, +0.009], Clark-West t +1.50 (normal p 0.066, bootstrap p 0.0158)
+  kitchen sink (one regression on all six): development: n 141, R2 -0.5041 [-1.171, -0.007], Clark-West t -0.83 (normal p 0.795, bootstrap p 0.7578); check: n 65, R2 +0.0041 [-0.135, +0.121], Clark-West t +0.75 (normal p 0.227, bootstrap p 0.3158)
+
+C2: the P1 pipeline on each target, with the six inputs and with the economy pair (E1, E2) only.
+  ALC-SPY    six: development: n 141, R2 -0.0307 [-0.070, +0.005], Clark-West t -0.94 (normal p 0.826, bootstrap p 0.8235); check: n 65, R2 +0.0085 [-0.017, +0.045], Clark-West t +0.88 (normal p 0.191, bootstrap p 0.2431)
+             economy: development: n 144, R2 -0.0039 [-0.054, +0.058], Clark-West t +0.46 (normal p 0.324, bootstrap p 0.3515); check: n 65, R2 +0.0151 [-0.017, +0.118], Clark-West t +0.95 (normal p 0.172, bootstrap p 0.3160)
+  ALC        six: development: n 141, R2 -0.0493 [-0.115, +0.024], Clark-West t -0.61 (normal p 0.730, bootstrap p 0.7370); check: n 65, R2 +0.0230 [-0.014, +0.082], Clark-West t +1.84 (normal p 0.033, bootstrap p 0.0637)
+             economy: development: n 144, R2 -0.0472 [-0.096, +0.011], Clark-West t -0.89 (normal p 0.813, bootstrap p 0.8271); check: n 65, R2 +0.0256 [-0.016, +0.125], Clark-West t +1.43 (normal p 0.076, bootstrap p 0.1777)
+  ALC-XLP    six: development: n 141, R2 -0.0442 [-0.089, +0.002], Clark-West t -0.84 (normal p 0.799, bootstrap p 0.8062); check: n 65, R2 +0.0183 [-0.013, +0.069], Clark-West t +1.43 (normal p 0.076, bootstrap p 0.1304)
+             economy: development: n 144, R2 -0.0376 [-0.069, +0.016], Clark-West t -1.07 (normal p 0.857, bootstrap p 0.8614); check: n 65, R2 +0.0193 [-0.017, +0.112], Clark-West t +1.15 (normal p 0.126, bootstrap p 0.2613)
+  GLOBAL-SPY six: development: n 141, R2 -0.0245 [-0.060, +0.001], Clark-West t -1.48 (normal p 0.930, bootstrap p 0.8968); check: n 65, R2 -0.0039 [-0.027, +0.030], Clark-West t -0.18 (normal p 0.573, bootstrap p 0.7575)
+             economy: development: n 144, R2 +0.0027 [-0.014, +0.020], Clark-West t +1.15 (normal p 0.124, bootstrap p 0.1218); check: n 65, R2 -0.0326 [-0.102, +0.031], Clark-West t -0.83 (normal p 0.796, bootstrap p 0.8649)
+  XLP-SPY    six: development: n 141, R2 -0.0104 [-0.039, +0.005], Clark-West t -0.17 (normal p 0.567, bootstrap p 0.3828); check: n 65, R2 +0.0069 [-0.002, +0.023], Clark-West t +1.33 (normal p 0.092, bootstrap p 0.2081)
+             economy: development: n 144, R2 -0.0303 [-0.076, +0.008], Clark-West t -0.74 (normal p 0.771, bootstrap p 0.8295); check: n 65, R2 +0.0016 [-0.009, +0.019], Clark-West t +0.43 (normal p 0.334, bootstrap p 0.5959)
+  XLY-SPY    six: development: n 141, R2 -0.0393 [-0.068, -0.010], Clark-West t -1.92 (normal p 0.972, bootstrap p 0.9421); check: n 65, R2 +0.0029 [-0.007, +0.012], Clark-West t +0.66 (normal p 0.256, bootstrap p 0.1735)
+             economy: development: n 144, R2 -0.0192 [-0.076, +0.007], Clark-West t +0.42 (normal p 0.335, bootstrap p 0.1591); check: n 65, R2 -0.0040 [-0.039, +0.012], Clark-West t +0.31 (normal p 0.379, bootstrap p 0.2022)
+  QQQ-SPY    six: development: n 141, R2 +0.0037 [-0.090, +0.054], Clark-West t +0.86 (normal p 0.195, bootstrap p 0.2081); check: n 65, R2 +0.0127 [-0.009, +0.041], Clark-West t +1.40 (normal p 0.080, bootstrap p 0.1660)
+             economy: development: n 144, R2 -0.0549 [-0.115, -0.004], Clark-West t -1.25 (normal p 0.894, bootstrap p 0.8972); check: n 65, R2 -0.0019 [-0.013, +0.016], Clark-West t +0.06 (normal p 0.476, bootstrap p 0.6328)
+  SPY        six: development: n 141, R2 -0.0253 [-0.073, +0.023], Clark-West t -0.31 (normal p 0.621, bootstrap p 0.5844); check: n 65, R2 +0.0065 [-0.021, +0.031], Clark-West t +0.81 (normal p 0.210, bootstrap p 0.2962)
+             economy: development: n 144, R2 -0.0406 [-0.164, +0.066], Clark-West t -0.13 (normal p 0.552, bootstrap p 0.5674); check: n 65, R2 -0.0101 [-0.070, +0.027], Clark-West t -0.30 (normal p 0.619, bootstrap p 0.7566)
+  how speculative each asset is (21-day log returns, decisions 2008-01..2025-06):
+    ALC     volatility 0.242 a year, beta 0.97, correlation 0.68, share of variance from SPY 0.46
+    GLOBAL  volatility 0.215 a year, beta 0.79, correlation 0.63, share of variance from SPY 0.39
+    XLP     volatility 0.125 a year, beta 0.52, correlation 0.71, share of variance from SPY 0.51
+    XLY     volatility 0.213 a year, beta 1.15, correlation 0.92, share of variance from SPY 0.84
+    QQQ     volatility 0.197 a year, beta 1.07, correlation 0.92, share of variance from SPY 0.85
+    SPY     volatility 0.170 a year, beta 1.00, correlation 1.00, share of variance from SPY 1.00
+
+C3: retail sales at beer, wine and liquor stores (share of all retail; final vintage, revised).
+  seven: development: n 141, R2 -0.0288 [-0.067, +0.008], Clark-West t -0.80 (normal p 0.789, bootstrap p 0.8064); check: n 65, R2 +0.0176 [-0.020, +0.069], Clark-West t +1.27 (normal p 0.102, bootstrap p 0.1233)
+  alone: development: n 141, R2 -0.0315 [-0.073, +0.016], Clark-West t +0.08 (normal p 0.468, bootstrap p 0.4732); check: n 65, R2 +0.0499 [-0.083, +0.173], Clark-West t +1.75 (normal p 0.040, bootstrap p 0.0373)
+
+C7: every input a month older: development: n 140, R2 -0.0209 [-0.050, +0.015], Clark-West t -0.69 (normal p 0.754, bootstrap p 0.8342); check: n 65, R2 +0.0158 [-0.009, +0.036], Clark-West t +1.80 (normal p 0.036, bootstrap p 0.0009)
+C8: ALC + GLOBAL (nine names) - SPY: development: n 141, R2 -0.0166 [-0.044, +0.006], Clark-West t -0.57 (normal p 0.717, bootstrap p 0.7679); check: n 65, R2 +0.0082 [-0.020, +0.048], Clark-West t +0.85 (normal p 0.199, bootstrap p 0.2982)

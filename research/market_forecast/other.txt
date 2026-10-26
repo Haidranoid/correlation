@@ -1,0 +1,51 @@
+C4: other measures of the alcohol market, the model (nine inputs) against own history
+  months TTB withheld (missing): {'spirits': ['2025-07', '2025-08', '2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03']}
+  liquor-store sales (MRTS, NSA), h=12, one-lag, dev: n 121, R2 +0.2721, Clark-West t +0.95 (normal p 0.1700, bootstrap p 0.0008; R2 95% -0.651..+0.269), MAE 1.10 -> 1.01 pts; own history vs the mean R2 -0.168
+  liquor-store sales (MRTS, NSA), h=12, one-lag, check: n 66, R2 -0.0439, Clark-West t -2.98 (normal p 0.9986, bootstrap p 0.9884; R2 95% -0.104..-0.030), MAE 5.75 -> 5.92 pts; own history vs the mean R2 -0.092
+  liquor-store sales (MRTS, NSA), h=12, two-lag, dev: n 121, R2 +0.2144, Clark-West t +0.87 (normal p 0.1914, bootstrap p 0.0008; R2 95% -0.469..+0.226), MAE 1.32 -> 1.21 pts; own history vs the mean R2 -0.769
+  liquor-store sales (MRTS, NSA), h=12, two-lag, check: n 66, R2 -0.0615, Clark-West t -2.52 (normal p 0.9941, bootstrap p 0.9559; R2 95% -0.131..-0.038), MAE 6.25 -> 6.45 pts; own history vs the mean R2 -0.246
+  liquor-store sales (MRTS, NSA), h=3, one-lag, dev: n 139, R2 +0.1048, Clark-West t +1.45 (normal p 0.0739, bootstrap p 0.0350; R2 95% -0.023..+0.216), MAE 1.23 -> 1.18 pts; own history vs the mean R2 +0.264
+  liquor-store sales (MRTS, NSA), h=3, one-lag, check: n 66, R2 -0.0139, Clark-West t -0.55 (normal p 0.7074, bootstrap p 0.9253; R2 95% -0.025..+0.034), MAE 2.80 -> 2.79 pts; own history vs the mean R2 +0.712
+  liquor-store sales (MRTS, NSA), h=3, two-lag, dev: n 139, R2 +0.1297, Clark-West t +1.57 (normal p 0.0578, bootstrap p 0.0250; R2 95% -0.005..+0.241), MAE 1.24 -> 1.17 pts; own history vs the mean R2 +0.253
+  liquor-store sales (MRTS, NSA), h=3, two-lag, check: n 66, R2 -0.0117, Clark-West t -0.42 (normal p 0.6641, bootstrap p 0.9151; R2 95% -0.025..+0.047), MAE 3.01 -> 3.00 pts; own history vs the mean R2 +0.677
+  TTB wine taxable withdrawals, h=12, one-lag, dev: n 14, R2 +0.2262, Clark-West t +6.30 (normal p 0.0000), MAE 3.12 -> 2.64 pts; own history vs the mean R2 -1.497
+  TTB wine taxable withdrawals, h=12, one-lag, check: n 66, R2 -0.0285, Clark-West t +0.77 (normal p 0.2213, bootstrap p 0.3276; R2 95% -0.109..+0.079), MAE 4.16 -> 4.28 pts; own history vs the mean R2 +0.237
+  TTB wine taxable withdrawals, h=12, two-lag, dev: n 2: too few
+  TTB wine taxable withdrawals, h=12, two-lag, check: n 66, R2 +0.0634, Clark-West t +2.73 (normal p 0.0031, bootstrap p 0.0000; R2 95% -0.110..+0.119), MAE 4.46 -> 4.19 pts; own history vs the mean R2 +0.092
+  TTB wine taxable withdrawals, h=3, one-lag, dev: n 41, R2 +0.0673, Clark-West t +2.05 (normal p 0.0201), MAE 2.85 -> 2.74 pts; own history vs the mean R2 +0.136
+  TTB wine taxable withdrawals, h=3, one-lag, check: n 66, R2 -0.1419, Clark-West t -0.90 (normal p 0.8170, bootstrap p 0.9722; R2 95% -0.274..+0.034), MAE 3.32 -> 3.56 pts; own history vs the mean R2 +0.545
+  TTB wine taxable withdrawals, h=3, two-lag, dev: n 29, R2 +0.0144, Clark-West t +0.64 (normal p 0.2625), MAE 3.32 -> 3.38 pts; own history vs the mean R2 -0.076
+  TTB wine taxable withdrawals, h=3, two-lag, check: n 66, R2 -0.1472, Clark-West t -0.86 (normal p 0.8049, bootstrap p 0.9660; R2 95% -0.275..+0.036), MAE 3.21 -> 3.41 pts; own history vs the mean R2 +0.533
+  TTB beer taxable removals, h=12, one-lag, dev: n 14, R2 +0.1216, Clark-West t +1.44 (normal p 0.0746), MAE 1.08 -> 1.02 pts; own history vs the mean R2 -2.651
+  TTB beer taxable removals, h=12, one-lag, check: n 66, R2 -0.0626, Clark-West t -0.43 (normal p 0.6667, bootstrap p 0.7507; R2 95% -0.319..+0.110), MAE 3.35 -> 3.42 pts; own history vs the mean R2 -0.137
+  TTB beer taxable removals, h=12, two-lag, dev: n 2: too few
+  TTB beer taxable removals, h=12, two-lag, check: n 66, R2 -0.0449, Clark-West t -0.01 (normal p 0.5034, bootstrap p 0.5156; R2 95% -0.584..+0.185), MAE 3.77 -> 3.76 pts; own history vs the mean R2 -0.397
+  TTB beer taxable removals, h=3, one-lag, dev: n 41, R2 -0.0077, Clark-West t -0.10 (normal p 0.5394), MAE 2.13 -> 2.13 pts; own history vs the mean R2 -0.090
+  TTB beer taxable removals, h=3, one-lag, check: n 66, R2 +0.0382, Clark-West t +1.04 (normal p 0.1494, bootstrap p 0.3386; R2 95% -0.023..+0.139), MAE 3.78 -> 3.71 pts; own history vs the mean R2 +0.118
+  TTB beer taxable removals, h=3, two-lag, dev: n 29, R2 +0.0104, Clark-West t +1.03 (normal p 0.1514), MAE 2.08 -> 2.04 pts; own history vs the mean R2 -0.295
+  TTB beer taxable removals, h=3, two-lag, check: n 66, R2 +0.0623, Clark-West t +1.38 (normal p 0.0843, bootstrap p 0.2439; R2 95% -0.019..+0.158), MAE 3.72 -> 3.61 pts; own history vs the mean R2 +0.126
+  TTB spirits taxable withdrawals, h=12, one-lag, dev: n 14, R2 -0.0270, Clark-West t -2.91 (normal p 0.9982), MAE 12.07 -> 12.22 pts; own history vs the mean R2 +0.168
+  TTB spirits taxable withdrawals, h=12, one-lag, check: n 66, R2 -0.2195, Clark-West t -1.54 (normal p 0.9385, bootstrap p 0.9182; R2 95% -0.428..-0.099), MAE 9.60 -> 10.43 pts; own history vs the mean R2 -0.772
+  TTB spirits taxable withdrawals, h=12, two-lag, dev: n 2: too few
+  TTB spirits taxable withdrawals, h=12, two-lag, check: n 66, R2 -0.1439, Clark-West t -1.72 (normal p 0.9571, bootstrap p 0.8397; R2 95% -0.240..-0.099), MAE 12.06 -> 13.08 pts; own history vs the mean R2 -1.996
+  TTB spirits taxable withdrawals, h=3, one-lag, dev: n 41, R2 -0.0091, Clark-West t -1.05 (normal p 0.8531), MAE 12.65 -> 12.66 pts; own history vs the mean R2 -0.103
+  TTB spirits taxable withdrawals, h=3, one-lag, check: n 66, R2 -0.1169, Clark-West t -1.02 (normal p 0.8463, bootstrap p 0.9300; R2 95% -0.701..+0.049), MAE 6.21 -> 6.66 pts; own history vs the mean R2 +0.009
+  TTB spirits taxable withdrawals, h=3, two-lag, dev: n 29, R2 -0.0017, Clark-West t -0.00 (normal p 0.5000), MAE 15.15 -> 14.99 pts; own history vs the mean R2 -0.189
+  TTB spirits taxable withdrawals, h=3, two-lag, check: n 66, R2 -0.1483, Clark-West t -1.07 (normal p 0.8581, bootstrap p 0.9117; R2 95% -0.699..+0.055), MAE 7.00 -> 7.63 pts; own history vs the mean R2 -0.225
+
+C6: the news (N1 headline share, N2 tone) as two more inputs, on the origins they cover (h = 12)
+  forecasts with the news exist for target ends 2014-12..2019-07
+  dev, eleven vs bench: n 56, R2 -0.0321, Clark-West t -0.91 (normal p 0.8197, bootstrap p 0.9230; R2 95% -0.043..+0.056), MAE 1.76 -> 1.79 pts
+  dev, eleven vs nine: n 56, R2 +0.0094, Clark-West t +1.19 (normal p 0.1178, bootstrap p 0.3601; R2 95% +0.004..+0.067), MAE 1.81 -> 1.79 pts
+  dev, N1: n 56, R2 -0.1309, Clark-West t -1.11 (normal p 0.8655, bootstrap p 0.9732; R2 95% -0.229..+0.008), MAE 1.76 -> 1.86 pts
+  dev, N2: n 56, R2 -0.1335, Clark-West t +0.72 (normal p 0.2354, bootstrap p 0.4957; R2 95% -0.438..-0.035), MAE 1.76 -> 1.87 pts
+  check, eleven vs bench: n 0: too few
+  check, eleven vs nine: n 0: too few
+  check, N1: n 0: too few
+  check, N2: n 0: too few
+
+C8: cannabis, Massachusetts adult-use retail sales (dollars), inputs E1 E2 E3 P(price per gram) T3, at least 24 eligible origins per fit, all months together
+  h=3: targets ending ['2022-07', '2026-09']: n 51, R2 +0.2628, Clark-West t +0.94 (normal p 0.1730, bootstrap p 0.0311; R2 95% -0.740..+0.482), MAE 21.62 -> 19.99 pts
+        own history against the mean: R2 +0.236; MAE (pts) mean 26.71, no change 1.69, own history 21.62, model 19.99
+  h=12: targets ending ['2024-10', '2026-09']: n 24, R2 -9.1523, Clark-West t -2.84 (normal p 0.9978), MAE 5.19 -> 15.52 pts
+        own history against the mean: R2 +0.897; MAE (pts) mean 16.76, no change 2.35, own history 5.19, model 15.52

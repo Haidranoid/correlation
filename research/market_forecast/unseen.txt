@@ -1,0 +1,25 @@
+unseen: targets ending 2025-07..2026-08 (14 origins, 2024-07..2025-08)
+P1: n 14, R2 -0.0837, Clark-West t -3.02 (normal p 0.9987), MAE 1.26 -> 1.34 pts
+  economy: R2 -0.1319 t -0.98
+  prices: R2 -0.0287 t +10.42
+  social trends: R2 +0.0389 t +10.40
+  new markets: R2 -0.0229 t +0.10
+  age: R2 -1.0456 t -4.48
+  wine: R2 -0.0983 t -1.32, MAE 1.16 -> 1.22 pts
+  beer: R2 +0.5395 t +2.10, MAE 0.21 -> 0.13 pts
+  spirits: R2 -0.0636 t -2.13, MAE 3.10 -> 3.22 pts
+  restaurants and bars: R2 -0.4853 t -1.14, MAE 0.58 -> 0.80 pts
+P1': n 14, R2 -0.1249, Clark-West t -6.29 (normal p 1.0000), MAE 1.65 -> 1.82 pts
+  economy: R2 -0.0201 t +0.12
+  prices: R2 -0.0196 t +2.20
+  social trends: R2 +0.0559 t +7.21
+  new markets: R2 -0.0455 t -0.80
+  age: R2 -2.4419 t -8.63
+  wine: R2 -0.2645 t -4.59, MAE 1.96 -> 2.21 pts
+  beer: R2 -2.0937 t -11.14, MAE 0.40 -> 0.77 pts
+  spirits: R2 -0.0584 t -2.04, MAE 3.46 -> 3.58 pts
+  restaurants and bars: R2 +0.0184 t +0.71, MAE 0.77 -> 0.70 pts
+C5 wine: mean 1.60; no change 0.43; own history 1.16; model 1.22
+C5 beer: mean 0.80; no change 0.88; own history 0.21; model 0.13
+C5 spirits: mean 3.81; no change 1.71; own history 3.10; model 3.22
+C5 restaurants and bars: mean 0.58; no change 0.82; own history 0.58; model 0.80

@@ -1,0 +1,92 @@
+P1: the model (nine inputs) against own history, next 12 months, spending adjusted for prices, wine + beer + spirits + restaurants pooled
+  dev: n 121, R2 -0.0320, Clark-West t +0.69 (normal p 0.2459, bootstrap p 0.0126; R2 95% -0.083..+0.045), MAE 2.34 -> 2.35 pts
+  check: n 66, R2 +0.0008, Clark-West t +0.15 (normal p 0.4419, bootstrap p 0.4860; R2 95% -0.108..+0.053), MAE 6.08 -> 6.17 pts
+  dev among noise: R2 above 8.0% (noise 95th +0.2380), t above 16.5%, bootstrap p below 22.5%
+  pass (t >= 3, bootstrap p < 0.0013, R2 > 0): False; check consistent (R2 > 0, normal p < 0.05): False
+  wine: dev n 121, R2 -0.3509, Clark-West t -1.47 (normal p 0.9299, bootstrap p 0.9946; R2 95% -0.380..-0.126), MAE 2.54 -> 2.81 pts
+        check n 66, R2 -0.0174, Clark-West t -0.48 (normal p 0.6849, bootstrap p 0.6780; R2 95% -0.147..+0.008), MAE 3.71 -> 3.78 pts
+  beer: dev n 121, R2 -0.1216, Clark-West t +0.08 (normal p 0.4677, bootstrap p 0.2347; R2 95% -0.269..+0.113), MAE 1.96 -> 2.06 pts
+        check n 66, R2 -0.0272, Clark-West t -0.81 (normal p 0.7920, bootstrap p 0.7936; R2 95% -0.062..+0.020), MAE 3.51 -> 3.63 pts
+  spirits: dev n 121, R2 +0.2376, Clark-West t +1.68 (normal p 0.0467, bootstrap p 0.0015; R2 95% +0.045..+0.299), MAE 2.50 -> 2.19 pts
+           check n 66, R2 -0.0286, Clark-West t -0.58 (normal p 0.7192, bootstrap p 0.6063; R2 95% -0.208..+0.001), MAE 4.63 -> 4.79 pts
+  restaurants and bars: dev n 121, R2 +0.0243, Clark-West t +1.76 (normal p 0.0392, bootstrap p 0.0473; R2 95% +0.002..+0.165), MAE 2.37 -> 2.34 pts
+                        check n 66, R2 +0.0088, Clark-West t +0.25 (normal p 0.4030, bootstrap p 0.4559; R2 95% -0.108..+0.077), MAE 12.47 -> 12.46 pts
+  by year of target end, pooled R2: 2010 -0.13, 2011 +0.09, 2012 -0.20, 2013 -0.05, 2014 +0.02, 2015 +0.00, 2016 -0.11, 2017 -0.10, 2018 +0.33, 2019 -0.02, 2020 +0.02, 2021 +0.03, 2022 +0.06, 2023 -0.10, 2024 -0.30
+  check without targets whose windows touch 2020: n 31, R2 -0.1170, Clark-West t -1.73 (normal p 0.9581), MAE 3.78 -> 4.09 pts
+
+P1': the same against the two-lag benchmark (own growth now and a year earlier; Decisions 2)
+  dev: n 121, R2 +0.0126, Clark-West t +0.48 (normal p 0.3140, bootstrap p 0.0000; R2 95% -0.138..+0.118), MAE 3.23 -> 3.18 pts
+  check: n 66, R2 +0.0281, Clark-West t +0.91 (normal p 0.1820, bootstrap p 0.2132; R2 95% -0.027..+0.078), MAE 7.09 -> 7.06 pts
+  dev among noise: R2 above 1.0% (noise 95th +0.3290), t above 0.0%, bootstrap p below 100.0%
+  wine: dev R2 -0.3589 t -1.21; check R2 +0.0036 t +0.35
+  beer: dev R2 +0.0798 t +2.09; check R2 +0.0269 t +1.16
+  spirits: dev R2 +0.0890 t +0.60; check R2 +0.0127 t +0.69
+  restaurants and bars: dev R2 +0.0015 t +0.43; check R2 +0.0311 t +0.82
+  the two-lag benchmark against the one-lag one, dev: n 121, R2 -1.1287, Clark-West t +0.92 (normal p 0.1799, bootstrap p 0.1056; R2 95% -2.803..-0.227), MAE 2.34 -> 3.23 pts
+  the two-lag benchmark against the one-lag one, check: n 66, R2 -0.3852, Clark-West t -0.83 (normal p 0.7954, bootstrap p 0.8810; R2 95% -1.238..-0.002), MAE 6.08 -> 7.09 pts
+
+P2: each thesis alone against own history (same pooled test); Holm across the five on the bootstrap p
+  economy: dev n 121, R2 -0.2305, Clark-West t +1.06 (normal p 0.1449, bootstrap p 0.0008; R2 95% -0.391..+0.150), MAE 2.34 -> 2.49 pts; Holm p 0.0040; pass False
+           dev among noise: R2 above 2.5% (noise 95th +0.2275), t above 46.0%, bootstrap p below 80.0%
+           check n 66, R2 +0.0373, Clark-West t +0.60 (normal p 0.2735, bootstrap p 0.4162; R2 95% -0.296..+0.208), MAE 6.08 -> 5.99 pts; consistent False
+  prices: dev n 121, R2 -0.3446, Clark-West t -1.31 (normal p 0.9049, bootstrap p 0.9834; R2 95% -0.398..+0.030), MAE 2.34 -> 2.57 pts; Holm p 1.0000; pass False
+          dev among noise: R2 above 23.5% (noise 95th +0.1451), t above 5.5%, bootstrap p below 8.0%
+          check n 66, R2 -0.0416, Clark-West t -1.02 (normal p 0.8454, bootstrap p 0.8021; R2 95% -0.064..+0.015), MAE 6.08 -> 6.30 pts; consistent False
+  social trends: dev n 121, R2 -0.0895, Clark-West t -1.16 (normal p 0.8775, bootstrap p 0.9996; R2 95% -0.091..+0.044), MAE 2.34 -> 2.37 pts; Holm p 1.0000; pass False
+                 dev among noise: R2 above 38.5% (noise 95th +0.2403), t above 6.0%, bootstrap p below 1.0%
+                 check n 66, R2 -0.0060, Clark-West t -1.11 (normal p 0.8671, bootstrap p 0.7143; R2 95% -0.020..+0.001), MAE 6.08 -> 6.07 pts; consistent False
+  new markets: dev n 121, R2 -0.0756, Clark-West t +0.38 (normal p 0.3526, bootstrap p 0.4238; R2 95% -0.405..-0.028), MAE 2.34 -> 2.45 pts; Holm p 1.0000; pass False
+               dev among noise: R2 above 41.5% (noise 95th +0.2403), t above 34.5%, bootstrap p below 23.5%
+               check n 66, R2 -0.0511, Clark-West t -1.44 (normal p 0.9257, bootstrap p 0.7171; R2 95% -0.099..-0.016), MAE 6.08 -> 6.30 pts; consistent False
+  age: dev n 121, R2 -0.3784, Clark-West t +0.65 (normal p 0.2578, bootstrap p 0.0458; R2 95% -3.289..-0.106), MAE 2.34 -> 2.96 pts; Holm p 0.1832; pass False
+       dev among noise: R2 above 17.0% (noise 95th +0.1451), t above 58.0%, bootstrap p below 59.0%
+       check n 66, R2 -0.1409, Clark-West t -1.42 (normal p 0.9219, bootstrap p 0.7500; R2 95% -0.229..-0.076), MAE 6.08 -> 6.87 pts; consistent False
+P2': each thesis against the two-lag benchmark
+  economy: dev R2 -0.1741 t +0.20 boot p 0.0024 (among noise: R2 above 1.0% (noise 95th +0.3559), t above 12.5%, bootstrap p below 97.0%); check R2 +0.0496 t +0.76
+  prices: dev R2 -0.2024 t -1.67 boot p 0.9656 (among noise: R2 above 9.5% (noise 95th +0.3515), t above 2.0%, bootstrap p below 19.0%); check R2 -0.0052 t +0.05
+  social trends: dev R2 -0.0169 t -0.74 boot p 0.9996 (among noise: R2 above 22.5% (noise 95th +0.3699), t above 9.5%, bootstrap p below 1.0%); check R2 -0.0087 t -0.94
+  new markets: dev R2 +0.0023 t +1.49 boot p 0.0303 (among noise: R2 above 27.0% (noise 95th +0.3699), t above 58.0%, bootstrap p below 48.5%); check R2 -0.0114 t -0.24
+  age: dev R2 +0.1523 t +1.66 boot p 0.0017 (among noise: R2 above 69.0% (noise 95th +0.3515), t above 78.5%, bootstrap p below 97.0%); check R2 -0.0350 t +0.31
+
+C1: each input alone (pooled; Holm across nine for information), the kitchen sink, and both against the mean
+  E1: pooled dev R2 -3.3279 t -0.17 (Holm p 1.000); check R2 +0.0070 t +0.84 | wine dev R2 -3.2536 t -1.30, check R2 +0.0586 t +1.53
+  E2: pooled dev R2 -0.2069 t +1.25 (Holm p 0.624); check R2 -0.1436 t -1.97 | wine dev R2 -1.0102 t -1.27, check R2 -0.0534 t +0.28
+  E3: pooled dev R2 -0.1127 t +1.44 (Holm p 0.321); check R2 +0.0625 t +1.08 | wine dev R2 -0.3472 t +0.15, check R2 +0.0136 t +0.98
+  P: pooled dev R2 -0.3446 t -1.31 (Holm p 1.000); check R2 -0.0416 t -1.02 | wine dev R2 -0.6183 t -1.32, check R2 -0.0485 t -0.52
+  T1: pooled dev R2 -0.1213 t -1.08 (Holm p 1.000); check R2 -0.0101 t -0.80 | wine dev R2 -0.0732 t -0.84, check R2 +0.0068 t +0.76
+  T2: pooled dev R2 -0.0799 t -1.07 (Holm p 1.000); check R2 -0.0025 t -0.88 | wine dev R2 +0.0063 t +0.32, check R2 +0.0262 t +3.27
+  T3: pooled dev R2 -0.1156 t -1.77 (Holm p 1.000); check R2 -0.0123 t -3.34 | wine dev R2 -0.0260 t -0.11, check R2 -0.0406 t -1.39
+  LG: pooled dev R2 -0.2110 t +1.48 (Holm p 0.624); check R2 -0.0969 t -1.30 | wine dev R2 -0.1212 t +0.15, check R2 -0.0980 t -1.23
+  A: pooled dev R2 -0.3784 t +0.65 (Holm p 0.366); check R2 -0.1409 t -1.42 | wine dev R2 -0.3422 t +0.15, check R2 -0.2592 t -1.88
+  kitchen sink: dev n 121, R2 -2.9092, Clark-West t -0.80 (normal p 0.7878, bootstrap p 0.8405; R2 95% -3.337..-1.244), MAE 2.34 -> 4.26 pts
+                check n 66, R2 -0.2259, Clark-West t +0.35 (normal p 0.3621, bootstrap p 0.4759; R2 95% -1.001..+0.145), MAE 6.08 -> 7.30 pts
+  bench vs mean, dev: n 121, R2 -0.5609, Clark-West t +1.95 (normal p 0.0256, bootstrap p 0.0185; R2 95% -1.765..+0.513), MAE 2.22 -> 2.34 pts
+  bench vs mean, check: n 66, R2 -0.3787, Clark-West t -0.91 (normal p 0.8174, bootstrap p 0.6125; R2 95% -2.811..-0.056), MAE 5.27 -> 6.08 pts
+  model vs mean, dev: n 121, R2 -0.6109, Clark-West t +1.92 (normal p 0.0272, bootstrap p 0.0000; R2 95% -1.904..+0.510), MAE 2.22 -> 2.35 pts
+  model vs mean, check: n 66, R2 -0.3776, Clark-West t -0.63 (normal p 0.7371, bootstrap p 0.5996; R2 95% -3.231..-0.007), MAE 5.27 -> 6.17 pts
+
+C2: three months ahead (the next quarter against the same quarter a year earlier)
+  P1 dev: n 139, R2 +0.0065, Clark-West t +0.83 (normal p 0.2044, bootstrap p 0.2439; R2 95% -0.014..+0.037), MAE 1.12 -> 1.12 pts
+  P1 check: n 66, R2 +0.0044, Clark-West t +1.45 (normal p 0.0730, bootstrap p 0.1146; R2 95% -0.002..+0.017), MAE 3.57 -> 3.59 pts
+  economy: dev R2 +0.0073 t +1.39; check R2 +0.0102 t +1.11
+  prices: dev R2 -0.0594 t +0.22; check R2 -0.0092 t -0.30
+  social trends: dev R2 -0.0191 t -0.37; check R2 -0.0025 t -1.49
+  new markets: dev R2 -0.0579 t -1.32; check R2 +0.0032 t +0.71
+  age: dev R2 -0.1767 t +0.04; check R2 -0.0439 t -1.10
+  own history against the mean: dev R2 +0.7679, check R2 +0.3193
+
+C3: current dollars, dev: n 121, R2 +0.0381, Clark-West t +1.81 (normal p 0.0352, bootstrap p 0.0028; R2 95% -0.025..+0.071), MAE 1.97 -> 1.94 pts
+C3: current dollars, check: n 66, R2 -0.0335, Clark-West t -1.33 (normal p 0.9085, bootstrap p 0.7889; R2 95% -0.100..-0.000), MAE 6.26 -> 6.44 pts
+
+C5: mean absolute error of next-12-month growth, percentage points (direction right: share of origins where the forecast and the outcome were on the same side of last year's growth)
+  dev wine (n 121): mean 2.27 (70% dir); no change 1.94; own history 2.54 (58% dir); model 2.81 (55% dir); own history, 2 lags 2.72 (53% dir); model, 2 lags 3.01 (48% dir)
+  dev beer (n 121): mean 2.24 (69% dir); no change 1.87; own history 1.96 (68% dir); model 2.06 (64% dir); own history, 2 lags 2.73 (55% dir); model, 2 lags 2.58 (57% dir)
+  dev spirits (n 121): mean 2.43 (58% dir); no change 1.66; own history 2.50 (45% dir); model 2.19 (53% dir); own history, 2 lags 4.55 (64% dir); model, 2 lags 4.32 (63% dir)
+  dev restaurants and bars (n 121): mean 1.94 (61% dir); no change 1.74; own history 2.37 (51% dir); model 2.34 (61% dir); own history, 2 lags 2.91 (47% dir); model, 2 lags 2.83 (55% dir)
+  check wine (n 66): mean 3.64 (68% dir); no change 4.41; own history 3.71 (68% dir); model 3.78 (67% dir); own history, 2 lags 3.41 (80% dir); model, 2 lags 3.50 (80% dir)
+  check beer (n 66): mean 4.15 (62% dir); no change 3.82; own history 3.51 (62% dir); model 3.63 (61% dir); own history, 2 lags 3.51 (64% dir); model, 2 lags 3.47 (62% dir)
+  check spirits (n 66): mean 4.35 (70% dir); no change 5.01; own history 4.63 (68% dir); model 4.79 (65% dir); own history, 2 lags 4.75 (55% dir); model, 2 lags 4.84 (65% dir)
+  check restaurants and bars (n 66): mean 8.95 (91% dir); no change 13.74; own history 12.47 (91% dir); model 12.46 (89% dir); own history, 2 lags 16.67 (92% dir); model, 2 lags 16.42 (94% dir)
+
+C7: inputs one month older, dev: n 120, R2 -0.1242, Clark-West t -0.88 (normal p 0.8118, bootstrap p 0.9478; R2 95% -0.171..+0.043), MAE 2.32 -> 2.40 pts
+C7: inputs one month older, check: n 66, R2 -0.0063, Clark-West t -0.04 (normal p 0.5142, bootstrap p 0.5145; R2 95% -0.125..+0.050), MAE 6.08 -> 6.18 pts

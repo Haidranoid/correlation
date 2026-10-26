@@ -1,0 +1,12 @@
+Universe check against research/market_timing states_old.npz: max |avg corr diff| 0.00e+00, max |absorption diff| 0.00e+00, universe sizes equal: True
+Forman closed form (main): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.13e-14
+Forman closed form (pub): max |edge mean - (4 - sum d^2/m + 9T/m)| = 4.97e-14
+Forman closed form (shift): max |edge mean - (4 - sum d^2/m + 9T/m)| = 7.11e-15
+Forman closed form (factor): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.31e-14
+Forman closed form (rewire): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.84e-14
+Forman closed form (odd): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.49e-14
+Forman closed form (even): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.13e-14
+Forman closed form (long): max |edge mean - (4 - sum d^2/m + 9T/m)| = 2.53e-14
+Rewiring: rounds min 10 median 10 max 14; every degree sequence kept: True
+Months 270: 2002-12-31 .. 2025-06-13; n min 314; primary m 2457..6237; published m 324..44925
+Groups with >= 10 internal edges per month: min 1 median 16 max 23

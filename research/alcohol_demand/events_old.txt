@@ -1,0 +1,24 @@
+C5: log returns against SPY around cannabis legalization events (event day = e; windows by closes).
+date        kind     ALC: pre(-20..e) day e   +1..+2   +1..+21    cannabis: day e  +1..+2   +1..+21  names  event
+2012-11-06  ballot   +0.0164  -0.0029  +0.0109  +0.0164    +nan  +nan  +nan  0  Colorado, Washington
+2014-11-04  ballot   +0.0288  +0.0066  +0.0142  +0.0171    +nan  +nan  +nan  0  Alaska, Oregon, DC
+2016-11-08  ballot   -0.0098  +0.0017  -0.0355  -0.0252    +nan  +nan  +nan  0  California, Nevada, Massachusetts, Maine
+2018-01-22  law      -0.0530  -0.0094  +0.0115  +0.0515    +nan  +nan  +nan  0  Vermont
+2018-06-19  law      +0.0544  +0.0011  +0.0006  -0.0259    +0.0340  +0.1099  -0.1615  3  Canada's Senate passes C-45
+2018-11-06  ballot   +0.0145  +0.0065  -0.0107  -0.0256    +0.0483  +0.0095  +0.0067  4  Michigan
+2019-06-25  law      -0.0316  +0.0188  +0.0160  +0.0230    -0.0079  +0.0157  -0.1384  4  Illinois
+2020-11-03  ballot   +0.0303  -0.0037  -0.0373  -0.0031    +0.0105  +0.0979  +0.6708  5  Arizona, Montana, New Jersey, South Dakota; Oregon's psilocybin measure
+2021-03-31  law      +0.0177  -0.0206  -0.0043  -0.0011    +0.0112  -0.0494  -0.2179  5  New York
+2021-04-07  law      -0.0111  -0.0036  -0.0186  +0.0004    -0.0471  -0.0028  -0.2233  5  Virginia
+2021-04-12  law      -0.0051  +0.0115  +0.0038  +0.0074    -0.0878  -0.0035  -0.1149  5  New Mexico
+2021-06-22  law      -0.0701  -0.0068  +0.0041  -0.0704    -0.0117  +0.0603  -0.1966  5  Connecticut
+2022-05-25  law      +0.0236  +0.0019  -0.0071  +0.0601    +0.0229  -0.1221  -0.1667  5  Rhode Island
+2022-11-08  ballot   -0.0036  -0.0115  -0.0105  -0.0153    -0.0136  +0.0240  -0.0507  5  Maryland, Missouri; Colorado's psychedelics measure
+2023-04-24  law      -0.0010  -0.0071  +0.0183  +0.0422    -0.0104  -0.0268  +0.0348  5  Delaware
+2023-05-30  law      -0.0078  +0.0154  +0.0114  +0.0014    -0.0267  -0.0368  -0.1678  5  Minnesota
+2023-08-30  federal  -0.0149  -0.0093  -0.0002  +0.0071    +0.0798  +0.0879  +0.2475  5  HHS recommends Schedule III
+2023-11-07  ballot   -0.0162  +0.0027  -0.0110  -0.0757    -0.0030  -0.0536  +0.0214  5  Ohio
+2024-04-30  federal  -0.0498  -0.0268  +0.0057  -0.0960    +0.3562  -0.2065  -0.3378  5  reports that the DEA will reschedule
+all: alc_pre n 19 mean -0.0046 t -0.65 negative 0.63; alc_day n 19 mean -0.0019 t -0.71 negative 0.53; alc_2 n 19 mean -0.0020 t -0.56 negative 0.47; alc_21 n 19 mean -0.0059 t -0.62 negative 0.47; can_day n 15 mean +0.0237 t +0.92 negative 0.53; can_2 n 15 mean -0.0064 t -0.30 negative 0.53; can_21 n 15 mean -0.0530 t -0.84 negative 0.67
+2008-2019: alc_pre n 7 mean +0.0028 t +0.20 negative 0.43; alc_day n 7 mean +0.0032 t +0.96 negative 0.29; alc_2 n 7 mean +0.0010 t +0.14 negative 0.29; alc_21 n 7 mean +0.0045 t +0.39 negative 0.43; can_day n 3 mean +0.0248 t +1.47 negative 0.33; can_2 n 3 mean +0.0450 t +1.39 negative 0.00; can_21 n 3 mean -0.0977 t -1.86 negative 0.67
+2020-2025-06: alc_pre n 12 mean -0.0090 t -1.09 negative 0.75; alc_day n 12 mean -0.0048 t -1.39 negative 0.67; alc_2 n 12 mean -0.0038 t -0.89 negative 0.58; alc_21 n 12 mean -0.0119 t -0.88 negative 0.50; can_day n 12 mean +0.0234 t +0.72 negative 0.58; can_2 n 12 mean -0.0193 t -0.77 negative 0.67; can_21 n 12 mean -0.0418 t -0.53 negative 0.67

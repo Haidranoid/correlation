@@ -1,0 +1,44 @@
+B5 months 2004-12-31 .. 2025-05-14; scored from 2006-02-01 (12 months of loss history); MV-LW check {'months': 245, 'max_abs_weight_diff': 0.0, 'lists_differ': 0}; worst KKT 1.5e-15; affine step min eigenvalue 7.17e-09, condition median 1.2e+05 max 1.55e+09
+
+2006-2019 (167 months): annualized realized vol of the MV portfolio: Euclidean 12.37%, log-Euclidean 12.38%, LW-252 12.38%, affine step 13.01%
+  Euclidean - log-Euclidean: mean -1.908e-06 (NW se 1.27e-05), t -0.15, p 0.5597, boot p 0.5979, 90% NW -2.28e-05..+1.90e-05, boot -2.07e-05..+1.39e-05
+  LW-252 - log-Euclidean: mean -3.801e-07 (NW se 8.61e-06), t -0.04, p 0.5176, boot p 0.5436, 90% NW -1.45e-05..+1.38e-05, boot -1.43e-05..+1.14e-05
+  LW-252 - Euclidean: mean +1.528e-06 (NW se 7.47e-06), t +0.20, p 0.4189, boot p 0.3772, 90% NW -1.08e-05..+1.38e-05, boot -7.41e-06..+1.04e-05
+  LW-252 - affine step: mean -1.337e-04 (NW se 4.03e-05), t -3.32, p 0.9995, boot p 0.9920, 90% NW -2.00e-04..-6.74e-05, boot -2.18e-04..-7.75e-05
+  QLIKE Euclidean - log-Euclidean: mean -4.853e+00 (NW se 9.34e+00), t -0.52, p 0.6982, boot p 0.6872, 90% NW -2.02e+01..+1.05e+01, boot -2.58e+01..+1.11e+01
+  QLIKE means (167 months with a defined target): Euclidean 626.56, log-Euclidean 631.42, LW-252 800.48, affine 1240.20; log-Euclidean had the lower realized variance in 50% of months
+
+2020-2025-06 (65 months): annualized realized vol of the MV portfolio: Euclidean 16.18%, log-Euclidean 16.16%, LW-252 16.53%, affine step 16.32%
+  Euclidean - log-Euclidean: mean +7.369e-06 (NW se 2.01e-05), t +0.37, p 0.3572, boot p 0.3521, 90% NW -2.58e-05..+4.05e-05, boot -1.50e-05..+3.09e-05
+  LW-252 - log-Euclidean: mean +1.017e-04 (NW se 6.59e-05), t +1.54, p 0.0615, boot p 0.0109, 90% NW -6.79e-06..+2.10e-04, boot +1.11e-06..+1.58e-04
+  LW-252 - Euclidean: mean +9.428e-05 (NW se 7.89e-05), t +1.19, p 0.1161, boot p 0.0182, 90% NW -3.56e-05..+2.24e-04, boot -8.90e-06..+1.67e-04
+  LW-252 - affine step: mean +5.842e-05 (NW se 1.21e-04), t +0.48, p 0.3149, boot p 0.1024, 90% NW -1.41e-04..+2.58e-04, boot -1.16e-04..+1.72e-04
+  QLIKE Euclidean - log-Euclidean: mean -1.038e+02 (NW se 1.92e+01), t -5.41, p 1.0000, boot p 0.9998, 90% NW -1.35e+02..-7.22e+01, boot -1.53e+02..-6.78e+01
+  QLIKE means (62 months with a defined target): Euclidean 613.06, log-Euclidean 716.86, LW-252 888.92, affine 1633.48; log-Euclidean had the lower realized variance in 66% of months
+
+2006-2009 (47 months): annualized realized vol of the MV portfolio: Euclidean 16.90%, log-Euclidean 16.93%, LW-252 16.92%, affine step 17.74%
+  Euclidean - log-Euclidean: mean -9.241e-06 (NW se 4.31e-05), t -0.21, p 0.5849, boot p 0.6081, 90% NW -8.01e-05..+6.17e-05, boot -7.50e-05..+4.28e-05
+  LW-252 - log-Euclidean: mean -2.881e-06 (NW se 2.69e-05), t -0.11, p 0.5426, boot p 0.5661, 90% NW -4.72e-05..+4.14e-05, boot -5.01e-05..+3.08e-05
+  LW-252 - Euclidean: mean +6.360e-06 (NW se 2.55e-05), t +0.25, p 0.4016, boot p 0.3720, 90% NW -3.56e-05..+4.83e-05, boot -2.45e-05..+3.63e-05
+  LW-252 - affine step: mean -2.369e-04 (NW se 1.32e-04), t -1.80, p 0.9637, boot p 0.9069, 90% NW -4.54e-04..-1.98e-05, boot -5.40e-04..-6.01e-05
+  QLIKE Euclidean - log-Euclidean: mean -5.603e+01 (NW se 2.87e+01), t -1.95, p 0.9745, boot p 0.9074, 90% NW -1.03e+02..-8.80e+00, boot -1.26e+02..-1.55e+01
+  QLIKE means (47 months with a defined target): Euclidean 533.39, log-Euclidean 589.42, LW-252 789.68, affine 1110.39; log-Euclidean had the lower realized variance in 51% of months
+
+2010-2014 (60 months): annualized realized vol of the MV portfolio: Euclidean 10.37%, log-Euclidean 10.31%, LW-252 10.38%, affine step 10.79%
+  Euclidean - log-Euclidean: mean +1.124e-05 (NW se 8.46e-06), t +1.33, p 0.0922, boot p 0.1122, 90% NW -2.69e-06..+2.52e-05, boot -4.26e-06..+2.78e-05
+  LW-252 - log-Euclidean: mean +1.214e-05 (NW se 8.07e-06), t +1.50, p 0.0662, boot p 0.0680, 90% NW -1.13e-06..+2.54e-05, boot -1.61e-06..+2.59e-05
+  LW-252 - Euclidean: mean +9.048e-07 (NW se 3.77e-06), t +0.24, p 0.4052, boot p 0.3719, 90% NW -5.30e-06..+7.11e-06, boot -3.96e-06..+5.18e-06
+  LW-252 - affine step: mean -7.307e-05 (NW se 1.86e-05), t -3.92, p 1.0000, boot p 1.0000, 90% NW -1.04e-04..-4.24e-05, boot -9.88e-05..-3.89e-05
+  QLIKE Euclidean - log-Euclidean: mean +1.961e+01 (NW se 1.40e+00), t +14.02, p 0.0000, boot p 0.0000, 90% NW +1.73e+01..+2.19e+01, boot +1.75e+01..+2.18e+01
+  QLIKE means (60 months with a defined target): Euclidean 682.04, log-Euclidean 662.43, LW-252 824.47, affine 1482.72; log-Euclidean had the lower realized variance in 60% of months
+
+2015-2019 (60 months): annualized realized vol of the MV portfolio: Euclidean 9.72%, log-Euclidean 9.78%, LW-252 9.71%, affine step 10.39%
+  Euclidean - log-Euclidean: mean -9.309e-06 (NW se 5.03e-06), t -1.85, p 0.9679, boot p 0.9781, 90% NW -1.76e-05..-1.03e-06, boot -1.66e-05..-1.35e-06
+  LW-252 - log-Euclidean: mean -1.094e-05 (NW se 7.20e-06), t -1.52, p 0.9356, boot p 0.9570, 90% NW -2.28e-05..+9.06e-07, boot -2.14e-05..-3.43e-07
+  LW-252 - Euclidean: mean -1.633e-06 (NW se 4.16e-06), t -0.39, p 0.6526, boot p 0.6776, 90% NW -8.48e-06..+5.21e-06, boot -7.91e-06..+4.64e-06
+  LW-252 - affine step: mean -1.136e-04 (NW se 3.00e-05), t -3.79, p 0.9999, boot p 0.9999, 90% NW -1.63e-04..-6.43e-05, boot -1.68e-04..-7.25e-05
+  QLIKE Euclidean - log-Euclidean: mean +1.077e+01 (NW se 4.46e+00), t +2.42, p 0.0078, boot p 0.0000, 90% NW +3.44e+00..+1.81e+01, boot +1.48e+00..+1.63e+01
+  QLIKE means (60 months with a defined target): Euclidean 644.07, log-Euclidean 633.30, LW-252 784.96, affine 1099.37; log-Euclidean had the lower realized variance in 40% of months
+
+Chosen weights 2006-2019 (w21, w63, w252): Euclidean mean [0.09, 0.06, 0.85], last [0.1, 0.0, 0.9]; log-Euclidean mean [0.18, 0.04, 0.78], last [0.2, 0.0, 0.8]
+Pass (Euclidean - log-Euclidean, t >= 3, 2006-2019): FAIL

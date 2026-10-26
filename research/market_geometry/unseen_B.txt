@@ -1,0 +1,54 @@
+New vs old export over the old span: {'main_ollivier': {'corr': 0.997757684917495, 'max_abs_diff': 0.008319128356005373}, 'main_forman': {'corr': 0.9955160763257189, 'max_abs_diff': 3.1385281385281374}, 'avg_corr': {'corr': 0.9998564495750641, 'max_abs_diff': 0.006525484185291752}}
+
+## B2 on the unseen months (Clark-West; models fitted on every earlier month of the new export)
+SPY y_dir m2->m3 key: model 3 vs 2 (Ollivier beyond graph statistics) [2025-07-16..2026-09-16]: CW t +0.45 (p 0.3247, boot p 0.2856); MSE improvement +2.111e-06 (90% NW -3.99e-05..+4.42e-05); OOS R2 vs smaller +0.27%; n 15
+SPY y_dir m1->m4 model 4 vs 1 (Forman, read as graph statistics) [2025-07-16..2026-09-16]: CW t -1.75 (p 0.9597, boot p 0.9602); MSE improvement -5.813e-05 (90% NW -1.06e-04..-9.79e-06); OOS R2 vs smaller -7.92%; n 15
+SPY y_dir m1->m2 model 2 vs 1 (plain graph statistics) [2025-07-16..2026-09-16]: CW t -0.86 (p 0.8058, boot p 0.6721); MSE improvement -5.702e-05 (90% NW -1.26e-04..+1.16e-05); OOS R2 vs smaller -7.76%; n 15
+SPY y_dir m1->m3 model 3 vs 1 [2025-07-16..2026-09-16]: CW t -0.77 (p 0.7782, boot p 0.5991); MSE improvement -5.491e-05 (90% NW -1.13e-04..+3.28e-06); OOS R2 vs smaller -7.48%; n 15
+SPY y_dir m1->m_samal Samal et al.'s Forman vs 1 [2025-07-16..2026-09-16]: CW t +0.34 (p 0.3680, boot p 0.0609); MSE improvement +2.376e-06 (90% NW -1.50e-05..+1.98e-05); OOS R2 vs smaller +0.32%; n 15
+SPY y_dir m1->m_pub_oll published graph Ollivier vs 1 [2025-07-16..2026-09-16]: CW t -0.39 (p 0.6532, boot p 0.8608); MSE improvement -7.178e-06 (90% NW -2.83e-05..+1.40e-05); OOS R2 vs smaller -0.98%; n 15
+SPY y_dir m1->m_pub_for published graph Forman vs 1 [2025-07-16..2026-09-16]: CW t +2.83 (p 0.0024, boot p 0.0000); MSE improvement +1.705e-05 (90% NW +7.00e-06..+2.71e-05); OOS R2 vs smaller +2.32%; n 15
+SPY y_risk m2->m3 key: model 3 vs 2 (Ollivier beyond graph statistics) [2025-07-16..2026-09-16]: CW t +1.20 (p 0.1159, boot p 0.0239); MSE improvement +1.381e-03 (90% NW -5.33e-04..+3.29e-03); OOS R2 vs smaller +1.35%; n 15
+SPY y_risk m1->m4 model 4 vs 1 (Forman, read as graph statistics) [2025-07-16..2026-09-16]: CW t -0.65 (p 0.7415, boot p 0.5770); MSE improvement -8.138e-03 (90% NW -1.98e-02..+3.56e-03); OOS R2 vs smaller -8.67%; n 15
+SPY y_risk m1->m2 model 2 vs 1 (plain graph statistics) [2025-07-16..2026-09-16]: CW t -0.33 (p 0.6301, boot p 0.4031); MSE improvement -8.662e-03 (90% NW -2.49e-02..+7.55e-03); OOS R2 vs smaller -9.23%; n 15
+SPY y_risk m1->m3 model 3 vs 1 [2025-07-16..2026-09-16]: CW t -0.15 (p 0.5586, boot p 0.3022); MSE improvement -7.281e-03 (90% NW -2.49e-02..+1.03e-02); OOS R2 vs smaller -7.76%; n 15
+SPY y_risk m1->m_samal Samal et al.'s Forman vs 1 [2025-07-16..2026-09-16]: CW t +1.61 (p 0.0532, boot p 0.0000); MSE improvement +4.688e-03 (90% NW -1.50e-04..+9.53e-03); OOS R2 vs smaller +4.99%; n 15
+SPY y_risk m1->m_pub_oll published graph Ollivier vs 1 [2025-07-16..2026-09-16]: CW t -0.26 (p 0.6019, boot p 0.8148); MSE improvement -4.807e-04 (90% NW -2.50e-03..+1.54e-03); OOS R2 vs smaller -0.51%; n 15
+SPY y_risk m1->m_pub_for published graph Forman vs 1 [2025-07-16..2026-09-16]: CW t -2.04 (p 0.9795, boot p 1.0000); MSE improvement -4.218e-04 (90% NW -7.60e-04..-8.38e-05); OOS R2 vs smaller -0.45%; n 15
+SPY y_mdd m2->m3 key: model 3 vs 2 (Ollivier beyond graph statistics) [2025-07-16..2026-09-16]: CW t -1.01 (p 0.8440, boot p 0.8269); MSE improvement -1.210e-05 (90% NW -3.07e-05..+6.45e-06); OOS R2 vs smaller -2.41%; n 15
+SPY y_mdd m1->m4 model 4 vs 1 (Forman, read as graph statistics) [2025-07-16..2026-09-16]: CW t -2.54 (p 0.9944, boot p 0.9962); MSE improvement -7.010e-05 (90% NW -1.11e-04..-2.90e-05); OOS R2 vs smaller -17.44%; n 15
+SPY y_mdd m1->m2 model 2 vs 1 (plain graph statistics) [2025-07-16..2026-09-16]: CW t -0.98 (p 0.8359, boot p 0.6263); MSE improvement -9.926e-05 (90% NW -2.21e-04..+2.28e-05); OOS R2 vs smaller -24.70%; n 15
+SPY y_mdd m1->m3 model 3 vs 1 [2025-07-16..2026-09-16]: CW t -1.36 (p 0.9127, boot p 0.7192); MSE improvement -1.114e-04 (90% NW -2.22e-04..-1.08e-06); OOS R2 vs smaller -27.71%; n 15
+SPY y_mdd m1->m_samal Samal et al.'s Forman vs 1 [2025-07-16..2026-09-16]: CW t +1.57 (p 0.0579, boot p 0.0009); MSE improvement +2.628e-05 (90% NW -2.02e-06..+5.46e-05); OOS R2 vs smaller +6.54%; n 15
+SPY y_mdd m1->m_pub_oll published graph Ollivier vs 1 [2025-07-16..2026-09-16]: CW t -1.22 (p 0.8878, boot p 0.9693); MSE improvement -2.286e-06 (90% NW -5.33e-06..+7.53e-07); OOS R2 vs smaller -0.57%; n 15
+SPY y_mdd m1->m_pub_for published graph Forman vs 1 [2025-07-16..2026-09-16]: CW t +2.02 (p 0.0217, boot p 0.0323); MSE improvement +1.099e-05 (90% NW +1.93e-06..+2.00e-05); OOS R2 vs smaller +2.73%; n 15
+funds y_dir m2->m3: CW t +0.25 (p 0.4000, boot p 0.7852); MSE improvement -2.828e-07 (90% NW -6.38e-05..+6.33e-05); OOS R2 vs smaller +0.04%; n 15
+funds y_dir m1->m4: CW t +1.13 (p 0.1300, boot p 0.3810); MSE improvement +2.809e-05 (90% NW -1.83e-05..+7.45e-05); OOS R2 vs smaller +0.94%; n 15
+funds y_dir m1->m2: CW t +0.48 (p 0.3150, boot p 0.2386); MSE improvement +3.635e-06 (90% NW -1.31e-05..+2.03e-05); OOS R2 vs smaller +0.04%; n 15
+funds y_dir m1->m3: CW t +0.60 (p 0.2745, boot p 0.6760); MSE improvement +1.169e-05 (90% NW -4.45e-05..+6.79e-05); OOS R2 vs smaller +0.34%; n 15
+funds y_risk m2->m3: CW t -0.08 (p 0.5304, boot p 0.0920); MSE improvement -5.763e-04 (90% NW -2.77e-03..+1.62e-03); OOS R2 vs smaller -1.64%; n 15
+funds y_risk m1->m4: CW t +0.19 (p 0.4228, boot p 0.0315); MSE improvement -7.446e-04 (90% NW -3.47e-03..+1.98e-03); OOS R2 vs smaller -2.14%; n 15
+funds y_risk m1->m2: CW t +0.26 (p 0.3984, boot p 0.6601); MSE improvement -9.573e-05 (90% NW -5.68e-04..+3.76e-04); OOS R2 vs smaller -0.13%; n 15
+funds y_risk m1->m3: CW t -0.63 (p 0.7353, boot p 0.3149); MSE improvement -1.288e-03 (90% NW -3.30e-03..+7.27e-04); OOS R2 vs smaller -3.12%; n 15
+funds y_mdd m2->m3: CW t +0.20 (p 0.4191, boot p 0.8033); MSE improvement -9.281e-06 (90% NW -3.81e-05..+1.96e-05); OOS R2 vs smaller -1.65%; n 15
+funds y_mdd m1->m4: CW t +1.04 (p 0.1494, boot p 0.1658); MSE improvement +2.300e-06 (90% NW -1.93e-05..+2.39e-05); OOS R2 vs smaller +0.02%; n 15
+funds y_mdd m1->m2: CW t -0.50 (p 0.6931, boot p 0.7930); MSE improvement -3.735e-06 (90% NW -1.18e-05..+4.37e-06); OOS R2 vs smaller -0.29%; n 15
+funds y_mdd m1->m3: CW t +0.19 (p 0.4248, boot p 0.7902); MSE improvement -9.192e-06 (90% NW -3.77e-05..+1.93e-05); OOS R2 vs smaller -1.72%; n 15
+
+## B3 on the unseen months: 15 months (2025-07-16..2026-09-16); rule weights [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5]
+  rule (Ollivier): gross +16.2%, 5 bps +16.1%, Sharpe 1.11, max DD 8.9%, exposure 80%
+  buy and hold: gross +18.2%, 5 bps +18.1%, Sharpe 1.10, max DD 8.9%, exposure 100%
+  constant: gross +15.2%, 5 bps +15.2%, Sharpe 1.09, max DD 7.0%, exposure 80%
+  volatility threshold: gross +18.1%, 5 bps +17.9%, Sharpe 1.15, max DD 7.3%, exposure 90%
+  volatility-managed: gross +14.8%, 5 bps +14.6%, Sharpe 1.00, max DD 7.0%, exposure 80%
+  avg-correlation rule (-3.2): gross +10.9%, 5 bps +10.9%, Sharpe 1.08, max DD 4.2%, exposure 50%
+  absorption rule (-3.2): gross +17.9%, 5 bps +17.7%, Sharpe 1.27, max DD 6.5%, exposure 77%
+  Forman rule: gross +15.2%, 5 bps +15.2%, Sharpe 0.98, max DD 8.9%, exposure 83%
+  random timing median +15.3%, rule - median +0.9 pts, p 0.345
+  rule - constant: +0.075% a month, t +0.60
+  rule - volatility threshold: -0.123% a month, t -0.73
+  rule - absorption rule (-3.2): -0.109% a month, t -0.60
+  after costs, annualized over the span: -2.0 pts vs SPY
+  fund risk scaling: 15 months; vol with curvature 11.93%, without 11.90%, trailing 11.60%; RV diff without - with -6.937e-06, t -2.19
+
+## B5 on the unseen months: 15 months (2025-07-16..2026-09-16); annualized MV vol Euclidean 8.05%, log-Euclidean 8.13%, LW-252 8.04%, affine 8.85%; Euclidean - log-Euclidean -1.049e-05, t -1.31, p 0.905

@@ -1,0 +1,94 @@
+
+## 2005-04..2025-06: 242 months (2005-04-04 .. 2025-05-14), bought at t0+1, T-bill cash
+| | Annual (gross) | Annual 5 bps | Annual 20 bps | Sharpe 5 bps | Vol | Max DD | Exposure | Turnover/yr |
+|---|---|---|---|---|---|---|---|---|
+| rule (Ollivier) | +8.0% | +8.0% | +7.7% | 0.51 | 13.4% | -31.3% | 74% | 1.61 |
+| Forman rule | +7.7% | +7.6% | +7.3% | 0.46 | 14.4% | -42.3% | 74% | 1.48 |
+| buy and hold | +10.5% | +10.4% | +10.4% | 0.52 | 19.3% | -55.2% | 100% | 0.05 |
+| constant | +8.4% | +8.4% | +8.4% | 0.52 | 14.2% | -44.0% | 74% | 0.12 |
+| volatility threshold | +8.2% | +8.1% | +7.9% | 0.56 | 12.2% | -31.3% | 75% | 1.75 |
+| avg-correlation rule (-3.2) | +8.4% | +8.3% | +8.1% | 0.45 | 17.1% | -54.4% | 73% | 1.03 |
+| absorption rule (-3.2) | +8.2% | +8.2% | +8.1% | 0.56 | 12.4% | -32.6% | 75% | 0.78 |
+| volatility-managed | +7.5% | +7.4% | +7.1% | 0.55 | 11.1% | -22.5% | 74% | 2.06 |
+random timing median +8.3% (5-95%: +6.7%..+9.9%); rule - median -0.3 pts, p 0.610
+better -3.2 rule here: avg-correlation rule (-3.2)
+  rule - constant: -0.044% a month net, t -0.59, p 0.721, boot p 0.775, 90% -0.166..+0.079
+  rule - volatility threshold: -0.008% a month net, t -0.12, p 0.547, boot p 0.584, 90% -0.115..+0.099
+  rule - avg-correlation rule (-3.2): -0.059% a month net, t -0.46, p 0.677, boot p 0.744, 90% -0.271..+0.153
+  rule - volatility-managed: +0.051% a month net, t +0.48, p 0.316, boot p 0.284, 90% -0.123..+0.225
+  rule - buy and hold: -0.248% a month net, t -2.08, p 0.981, boot p 0.985, 90% -0.445..-0.052
+  rule - absorption rule (-3.2): -0.019% a month net, t -0.26, p 0.603, boot p 0.666, 90% -0.139..+0.101
+
+## 2005-04..2019-12: 177 months (2005-04-04 .. 2019-12-06), bought at t0+1, T-bill cash
+| | Annual (gross) | Annual 5 bps | Annual 20 bps | Sharpe 5 bps | Vol | Max DD | Exposure | Turnover/yr |
+|---|---|---|---|---|---|---|---|---|
+| rule (Ollivier) | +6.4% | +6.4% | +6.1% | 0.45 | 12.4% | -31.3% | 73% | 1.64 |
+| Forman rule | +7.3% | +7.2% | +7.0% | 0.48 | 13.9% | -42.3% | 74% | 1.53 |
+| buy and hold | +9.3% | +9.3% | +9.3% | 0.50 | 18.4% | -55.2% | 100% | 0.07 |
+| constant | +7.3% | +7.3% | +7.3% | 0.50 | 13.2% | -43.2% | 73% | 0.13 |
+| volatility threshold | +7.5% | +7.4% | +7.1% | 0.55 | 11.9% | -31.3% | 77% | 1.87 |
+| avg-correlation rule (-3.2) | +7.5% | +7.4% | +7.2% | 0.43 | 16.7% | -54.4% | 74% | 1.15 |
+| absorption rule (-3.2) | +7.7% | +7.6% | +7.5% | 0.57 | 11.9% | -32.6% | 77% | 0.87 |
+| volatility-managed | +7.6% | +7.5% | +7.1% | 0.64 | 10.1% | -18.8% | 73% | 2.28 |
+random timing median +7.2% (5-95%: +5.4%..+9.0%); rule - median -0.8 pts, p 0.767
+better -3.2 rule here: absorption rule (-3.2)
+  rule - constant: -0.083% a month net, t -1.04, p 0.850, boot p 0.853, 90% -0.216..+0.049
+  rule - volatility threshold: -0.079% a month net, t -1.22, p 0.888, boot p 0.955, 90% -0.186..+0.028
+  rule - absorption rule (-3.2): -0.100% a month net, t -1.70, p 0.956, boot p 0.982, 90% -0.197..-0.004
+  rule - volatility-managed: -0.071% a month net, t -0.63, p 0.736, boot p 0.837, 90% -0.255..+0.114
+  rule - buy and hold: -0.286% a month net, t -1.99, p 0.977, boot p 0.979, 90% -0.522..-0.050
+  rule - avg-correlation rule (-3.2): -0.120% a month net, t -0.78, p 0.784, boot p 0.776, 90% -0.373..+0.132
+
+## 2020-01..2025-06: 65 months (2020-01-08 .. 2025-05-14), bought at t0+1, T-bill cash
+| | Annual (gross) | Annual 5 bps | Annual 20 bps | Sharpe 5 bps | Vol | Max DD | Exposure | Turnover/yr |
+|---|---|---|---|---|---|---|---|---|
+| rule (Ollivier) | +12.6% | +12.5% | +12.2% | 0.65 | 15.8% | -18.8% | 79% | 1.60 |
+| Forman rule | +8.6% | +8.5% | +8.2% | 0.42 | 15.6% | -26.3% | 72% | 1.53 |
+| buy and hold | +13.6% | +13.6% | +13.6% | 0.57 | 21.5% | -33.7% | 100% | 0.18 |
+| constant | +11.6% | +11.5% | +11.5% | 0.57 | 16.9% | -27.3% | 79% | 0.22 |
+| volatility threshold | +10.3% | +10.2% | +9.9% | 0.61 | 12.9% | -17.7% | 71% | 1.63 |
+| avg-correlation rule (-3.2) | +10.9% | +10.8% | +10.7% | 0.50 | 18.3% | -26.0% | 71% | 0.80 |
+| absorption rule (-3.2) | +9.8% | +9.7% | +9.6% | 0.55 | 13.6% | -26.3% | 69% | 0.72 |
+| volatility-managed | +7.4% | +7.3% | +7.0% | 0.37 | 14.3% | -20.7% | 79% | 1.90 |
+random timing median +11.4% (5-95%: +8.0%..+15.0%); rule - median +1.1 pts, p 0.298
+better -3.2 rule here: avg-correlation rule (-3.2)
+  rule - constant: +0.054% a month net, t +0.34, p 0.367, boot p 0.351, 90% -0.209..+0.317
+  rule - volatility threshold: +0.187% a month net, t +1.21, p 0.114, boot p 0.114, 90% -0.068..+0.442
+  rule - avg-correlation rule (-3.2): +0.108% a month net, t +0.47, p 0.319, boot p 0.534, 90% -0.270..+0.487
+  rule - volatility-managed: +0.377% a month net, t +1.47, p 0.070, boot p 0.037, 90% -0.044..+0.799
+  rule - buy and hold: -0.146% a month net, t -0.68, p 0.751, boot p 0.749, 90% -0.502..+0.209
+  rule - absorption rule (-3.2): +0.203% a month net, t +0.93, p 0.176, boot p 0.105, 90% -0.156..+0.562
+
+## By period (random timing within each)
+2005-04..2009: rule +2.3%, B&H +1.2%, random median +2.3%, diff -0.0 (p 0.50); Sharpe rule 0.02, B&H 0.06, vol thr 0.06, vol-man 0.15; exposure 62%
+2010-2014: rule +8.7%, B&H +14.5%, random median +11.1%, diff -2.4 (p 0.93); Sharpe rule 0.70, B&H 0.93, vol thr 0.80, vol-man 0.81; exposure 77%
+2015-2019: rule +8.3%, B&H +12.2%, random median +9.8%, diff -1.5 (p 0.89); Sharpe rule 0.66, B&H 0.85, vol thr 0.84, vol-man 0.86; exposure 78%
+2020-2025-06: rule +12.6%, B&H +13.6%, random median +11.4%, diff +1.1 (p 0.30); Sharpe rule 0.65, B&H 0.57, vol thr 0.61, vol-man 0.37; exposure 79%
+traded at t0 (upper bound): rule +8.0% vs random median +8.3% (-0.3, p 0.613)
+cash at 0: rule +7.7% vs random median +7.9% (-0.2, p 0.574)
+
+After costs (5 bps, T-bill cash, 21 calendar years 2005-04-06..2025-06-16): -3.05 pts a year vs SPY; cash at 0: -3.40
+File-name number (rule - median random, 2005-04..2025-06, before costs): -0.3
+B3 market rule (2005-04..2019-12): all three differences positive: False; largest p 0.956
+
+## Fund risk scaling 2008-2019: 113 months (2010-08-04..2019-12-06), median 12 funds
+  with curvature (model 3): vol 14.80%, Sharpe 0.68, annual +10.0%, turnover/yr 3.90
+  without curvature (model 2): vol 14.77%, Sharpe 0.68, annual +10.0%, turnover/yr 3.92
+  trailing 63-day volatility: vol 14.74%, Sharpe 0.69, annual +10.2%, turnover/yr 3.85
+  monthly RV without - with curvature: -7.337e-06, t -3.84, p 1.000, boot p 0.997
+  monthly RV trailing - with curvature: -1.449e-05, t -4.28
+
+## Fund risk scaling 2020-2025-06: 65 months (2020-01-08..2025-05-14), median 10 funds
+  with curvature (model 3): vol 21.09%, Sharpe 0.48, annual +11.2%, turnover/yr 3.97
+  without curvature (model 2): vol 21.07%, Sharpe 0.48, annual +11.1%, turnover/yr 3.99
+  trailing 63-day volatility: vol 20.86%, Sharpe 0.47, annual +10.8%, turnover/yr 4.04
+  monthly RV without - with curvature: -7.336e-06, t -2.17, p 0.985, boot p 0.997
+  monthly RV trailing - with curvature: -8.025e-05, t -3.93
+
+## Holm across B's secondary family (6 tests; A2 joins at the merge)
+  SPY max drawdown, model 3 vs 2: p 0.4858, Holm p 1.0000, fail
+  funds excess return, model 3 vs 2: p 0.9014, Holm p 1.0000, fail
+  funds log RV, model 3 vs 2: p 0.5988, Holm p 1.0000, fail
+  funds max drawdown, model 3 vs 2: p 0.7248, Holm p 1.0000, fail
+  B3 market rule (largest of its 3 p): p 0.9559, Holm p 1.0000, fail
+  B3 fund risk scaling: p 0.9999, Holm p 1.0000, fail

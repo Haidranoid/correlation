@@ -1,0 +1,4 @@
+unseen decisions: 15, 2025-07-16..2026-09-16 (holds end by 2026-10-16); old-span forecasts unchanged in this run: True
+P1: n 15, R2 -0.0132, Clark-West t -1.24 (normal p 0.893)
+each input alone: E1 R2 -0.008 t -2.15; E2 R2 -0.025 t -1.83; P R2 +0.023 t +2.10; T1 R2 -0.030 t -0.98; T2 R2 -0.006 t -1.42; T3 R2 -0.041 t -1.49
+S2: the rule holds ALC in 0.80 of the unseen decisions; total return at 5 bps: rule -0.127, always ALC -0.173, SPY +0.231

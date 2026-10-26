@@ -1,0 +1,2 @@
+2008-2019: forecasting sales growth 3 months ahead: latest growth alone R2 +0.105 (n 142); with the inputs R2 +0.172; the inputs over the latest growth alone: R2 +0.075, Clark-West t +1.97
+2020-2025: forecasting sales growth 3 months ahead: latest growth alone R2 +0.635 (n 63); with the inputs R2 +0.623; the inputs over the latest growth alone: R2 -0.032, Clark-West t -0.84
