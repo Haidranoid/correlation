@@ -1,0 +1,6 @@
+After costs and before costs vs random (new): calendar years by return date, percent
+year  span                     days     SPY R1d net5 R1m net5  B1 net5  R1d-SPY   B1-SPY R1d-B1 gross
+2025  2025-06-30..2025-12-31  128  +11.00    +8.26    +8.23    +8.48    -2.74    -2.52        -0.12
+2026  2025-12-31..2026-10-19  200  +13.28    +9.74    +9.26    +8.73    -3.54    -4.54        +1.21
+After costs (P1's rebalanced portfolio at 5 bps minus SPY, mean of 2 years): -3.14 (buy-and-hold -3.53, monthly -3.39); portfolio +9.00, SPY +12.14
+Before costs, vs random (rebalanced minus buy-and-hold, gross): +0.54 points a year (se 0.67; ahead in 1 of 2 years)

@@ -1,0 +1,243 @@
+[13:48:59]   series 1/110 (g1_spring_real): 3s
+[13:49:33]   series 11/110 (g1_4_c_real): 37s
+[13:50:10]   series 21/110 (g1_9_c_real): 74s
+[13:50:45]   series 31/110 (g2_9_real): 109s
+[13:51:13]   series 41/110 (g3_0_c_real): 136s
+[13:51:49]   series 51/110 (g3_5_c_real): 173s
+[13:52:23]   series 61/110 (g1_2_random): 207s
+[13:53:00]   series 71/110 (g1_7_random): 244s
+[13:53:37]   series 81/110 (g2_4_random): 281s
+[13:54:05]   series 91/110 (g2_14_random): 309s
+[13:54:41]   series 101/110 (g3_3_random): 345s
+[13:55:18] Six primaries (2008-2019; Romano-Wolf within the stage, Holm across the six at 0.0027):
+[13:55:18]   G1-S: best G1 p=0: est +0.002745, t +0.82, RW p 0.3818, Holm p 1.0000 -> fail
+[13:55:18]   G1-M: best G1 p=0: est +0.000013, t +0.11, RW p 0.6741, Holm p 1.0000 -> fail
+[13:55:18]   G2-S: best G2 N=10 a=1: est +0.002703, t +1.85, RW p 0.2294, Holm p 1.0000 -> fail
+[13:55:18]   G2-M: best G2 N=10 a=0.5: est -0.000161, t -1.59, RW p 1.0000, Holm p 1.0000 -> fail
+[13:55:18]   G3-S: best G3 N=5 a=2 p=1 eps=0.3: est -0.001686, t -0.93, RW p 0.9586, Holm p 1.0000 -> fail
+[13:55:18]   G3-M: best G3 N=5 a=1 p=1 eps=0.3: est -0.000494, t -3.78, RW p 1.0000, Holm p 1.0000 -> fail
+[13:55:18] Verdict in order: [{'stage': 'G1', 'pass': False}]
+[13:55:18] --- 2008-2019 (2008-03-26..2019-12-31, 2964 days)
+[13:55:18]                G1 spring (benchmark): S +nan (t +nan); raw -0.00275 (t -1.32); IC +0.00037 (t +0.16); M5 +0.38 bps/day (t +0.30); gross +3.46 bps, turnover 0.62
+[13:55:18]                               G1 p=0: S +0.00274 (t +0.82); raw -0.00208 (t -1.10); IC -0.00012 (t -0.05); M5 +0.13 bps/day (t +0.11); gross +2.98 bps, turnover 0.57
+[13:55:18]                   G1 p=0 closes only: S +0.00274 (t +0.82); raw -0.00208 (t -1.10); IC -0.00012 (t -0.05); M5 +0.13 bps/day (t +0.11); gross +2.98 bps, turnover 0.57
+[13:55:18]                       G1 p=1 eps=0.1: S -0.00292 (t -2.14); raw -0.00319 (t -2.23); IC +0.00041 (t +0.22); M5 -8.61 bps/day (t -8.19); gross +2.10 bps, turnover 2.14
+[13:55:18]           G1 p=1 eps=0.1 closes only: S +0.00032 (t +0.28); raw -0.00125 (t -0.93); IC -0.00078 (t -0.48); M5 -8.52 bps/day (t -11.32); gross +0.46 bps, turnover 1.80
+[13:55:18]                       G1 p=1 eps=0.3: S -0.00267 (t -1.79); raw -0.00278 (t -1.81); IC +0.00000 (t +0.00); M5 -6.36 bps/day (t -6.10); gross +2.15 bps, turnover 1.70
+[13:55:18]           G1 p=1 eps=0.3 closes only: S -0.00054 (t -0.40); raw -0.00189 (t -1.24); IC -0.00124 (t -0.69); M5 -6.19 bps/day (t -6.92); gross +0.88 bps, turnover 1.41
+[13:55:18]                         G1 p=1 eps=1: S -0.00180 (t -1.01); raw -0.00236 (t -1.43); IC -0.00022 (t -0.11); M5 -3.41 bps/day (t -3.15); gross +2.67 bps, turnover 1.22
+[13:55:18]             G1 p=1 eps=1 closes only: S -0.00092 (t -0.52); raw -0.00217 (t -1.31); IC -0.00122 (t -0.62); M5 -3.70 bps/day (t -3.46); gross +1.55 bps, turnover 1.05
+[13:55:18]                       G1 p=2 eps=0.1: S -0.00284 (t -2.20); raw -0.00329 (t -2.47); IC +0.00097 (t +0.56); M5 -10.02 bps/day (t -9.10); gross +2.46 bps, turnover 2.50
+[13:55:18]           G1 p=2 eps=0.1 closes only: S +0.00078 (t +0.95); raw -0.00013 (t -0.14); IC -0.00018 (t -0.18); M5 -11.93 bps/day (t -24.05); gross +0.65 bps, turnover 2.51
+[13:55:18]                       G1 p=2 eps=0.3: S -0.00287 (t -2.21); raw -0.00320 (t -2.36); IC +0.00041 (t +0.24); M5 -9.04 bps/day (t -8.98); gross +1.95 bps, turnover 2.20
+[13:55:18]           G1 p=2 eps=0.3 closes only: S +0.00012 (t +0.12); raw -0.00096 (t -0.84); IC -0.00088 (t -0.67); M5 -10.49 bps/day (t -17.07); gross +0.09 bps, turnover 2.12
+[13:55:18]                         G1 p=2 eps=1: S -0.00260 (t -1.78); raw -0.00271 (t -1.79); IC -0.00018 (t -0.09); M5 -6.23 bps/day (t -6.18); gross +1.89 bps, turnover 1.62
+[13:55:18]             G1 p=2 eps=1 closes only: S -0.00086 (t -0.66); raw -0.00191 (t -1.30); IC -0.00151 (t -0.86); M5 -6.80 bps/day (t -7.76); gross +0.42 bps, turnover 1.44
+[13:55:18]                       G1 p=3 eps=0.1: S -0.00282 (t -2.17); raw -0.00326 (t -2.45); IC +0.00111 (t +0.63); M5 -10.17 bps/day (t -8.97); gross +2.62 bps, turnover 2.56
+[13:55:18]           G1 p=3 eps=0.1 closes only: S +0.00108 (t +1.41); raw +0.00039 (t +0.47); IC +0.00024 (t +0.26); M5 -12.46 bps/day (t -25.42); gross +0.55 bps, turnover 2.60
+[13:55:18]                       G1 p=3 eps=0.3: S -0.00277 (t -2.17); raw -0.00319 (t -2.43); IC +0.00085 (t +0.50); M5 -9.74 bps/day (t -9.08); gross +2.28 bps, turnover 2.40
+[13:55:18]           G1 p=3 eps=0.3 closes only: S +0.00050 (t +0.62); raw -0.00031 (t -0.34); IC -0.00040 (t -0.39); M5 -11.82 bps/day (t -22.22); gross +0.55 bps, turnover 2.47
+[13:55:18]                         G1 p=3 eps=1: S -0.00281 (t -2.10); raw -0.00297 (t -2.10); IC -0.00002 (t -0.01); M5 -7.65 bps/day (t -7.80); gross +1.79 bps, turnover 1.89
+[13:55:18]             G1 p=3 eps=1 closes only: S -0.00042 (t -0.40); raw -0.00147 (t -1.14); IC -0.00135 (t -0.89); M5 -8.75 bps/day (t -12.04); gross +0.12 bps, turnover 1.77
+[13:55:18]                         G2 N=5 a=0.5: S +0.00038 (t +0.27); raw +0.00027 (t +0.19); IC -0.00005 (t -0.03); M5 -4.56 bps/day (t -5.29); gross +0.39 bps, turnover 0.99
+[13:55:18]                           G2 N=5 a=1: S -0.00014 (t -0.11); raw -0.00026 (t -0.20); IC -0.00071 (t -0.48); M5 -6.39 bps/day (t -7.66); gross +0.27 bps, turnover 1.33
+[13:55:18]                           G2 N=5 a=2: S -0.00093 (t -0.63); raw -0.00085 (t -0.63); IC -0.00108 (t -0.73); M5 -11.10 bps/day (t -12.42); gross +0.22 bps, turnover 2.26
+[13:55:18]                           G2 N=5 a=3: S +0.00037 (t +0.20); raw -0.00039 (t -0.30); IC -0.00065 (t -0.45); M5 -13.55 bps/day (t -14.61); gross +0.22 bps, turnover 2.75
+[13:55:18]                        G2 N=10 a=0.5: S +0.00262 (t +1.75); raw +0.00264 (t +1.75); IC +0.00267 (t +1.63); M5 -1.61 bps/day (t -1.59); gross +1.98 bps, turnover 0.72
+[13:55:18]                          G2 N=10 a=1: S +0.00270 (t +1.85); raw +0.00288 (t +1.97); IC +0.00262 (t +1.67); M5 -4.07 bps/day (t -3.85); gross +1.98 bps, turnover 1.21
+[13:55:18]                          G2 N=10 a=2: S +0.00288 (t +1.74); raw +0.00302 (t +2.20); IC +0.00311 (t +1.98); M5 -9.32 bps/day (t -8.38); gross +1.97 bps, turnover 2.26
+[13:55:18]                          G2 N=10 a=3: S +0.00285 (t +1.41); raw +0.00277 (t +2.01); IC +0.00286 (t +1.80); M5 -11.64 bps/day (t -10.89); gross +2.10 bps, turnover 2.75
+[13:55:18]                        G2 N=21 a=0.5: S -0.00146 (t -0.89); raw -0.00170 (t -1.01); IC -0.00113 (t -0.64); M5 -3.67 bps/day (t -3.97); gross -1.02 bps, turnover 0.53
+[13:55:18]                          G2 N=21 a=1: S -0.00103 (t -0.61); raw -0.00140 (t -0.80); IC -0.00128 (t -0.71); M5 -6.56 bps/day (t -6.26); gross -0.87 bps, turnover 1.14
+[13:55:18]                          G2 N=21 a=2: S +0.00042 (t +0.24); raw -0.00058 (t -0.38); IC -0.00035 (t -0.21); M5 -10.10 bps/day (t -9.83); gross +1.14 bps, turnover 2.25
+[13:55:18]                          G2 N=21 a=3: S +0.00377 (t +1.83); raw -0.00003 (t -0.02); IC +0.00026 (t +0.16); M5 -12.46 bps/day (t -11.39); gross +1.23 bps, turnover 2.74
+[13:55:18]             G2 N=5 a=inf (benchmark): S +nan (t +nan); raw -0.00069 (t -0.52); IC -0.00091 (t -0.62); M5 -15.47 bps/day (t -15.85); gross +0.36 bps, turnover 3.17
+[13:55:18]            G2 N=10 a=inf (benchmark): S +nan (t +nan); raw +0.00240 (t +1.75); IC +0.00232 (t +1.51); M5 -14.66 bps/day (t -14.40); gross +1.16 bps, turnover 3.16
+[13:55:18]            G2 N=21 a=inf (benchmark): S +nan (t +nan); raw -0.00117 (t -0.84); IC -0.00097 (t -0.60); M5 -15.57 bps/day (t -13.96); gross +0.20 bps, turnover 3.15
+[13:55:18]                           G2 N=5 a=0: S +0.00150 (t +1.05); raw +0.00141 (t +0.98); IC +0.00115 (t +0.73); M5 -4.36 bps/day (t -4.68); gross +1.15 bps, turnover 1.10
+[13:55:18]                          G2 N=10 a=0: S +0.00330 (t +2.14); raw +0.00335 (t +2.16); IC +0.00352 (t +2.07); M5 -1.57 bps/day (t -1.59); gross +2.25 bps, turnover 0.76
+[13:55:18]                          G2 N=21 a=0: S -0.00255 (t -1.50); raw -0.00259 (t -1.49); IC -0.00153 (t -0.81); M5 -2.97 bps/day (t -3.14); gross -0.50 bps, turnover 0.49
+[13:55:18]               G3 N=5 a=1 p=1 eps=0.3: S -0.00246 (t -1.21); raw -0.00284 (t -1.72); IC +0.00066 (t +0.32); M5 -4.94 bps/day (t -3.78); gross +3.57 bps, turnover 1.70
+[13:55:18]   G3 N=5 a=1 p=1 eps=0.3 closes only: S -0.00070 (t -0.35); raw -0.00119 (t -0.73); IC +0.00016 (t +0.08); M5 -3.24 bps/day (t -2.96); gross +2.89 bps, turnover 1.23
+[13:55:18]               G3 N=5 a=2 p=1 eps=0.3: S -0.00169 (t -0.93); raw -0.00267 (t -1.67); IC +0.00054 (t +0.27); M5 -5.47 bps/day (t -4.41); gross +3.28 bps, turnover 1.75
+[13:55:18]   G3 N=5 a=2 p=1 eps=0.3 closes only: S -0.00018 (t -0.10); raw -0.00103 (t -0.65); IC +0.00027 (t +0.14); M5 -4.13 bps/day (t -4.04); gross +2.71 bps, turnover 1.37
+[13:55:18]              G3 N=21 a=1 p=1 eps=0.3: S -0.00428 (t -2.03); raw -0.00408 (t -2.25); IC -0.00239 (t -1.18); M5 -7.19 bps/day (t -6.37); gross +0.36 bps, turnover 1.51
+[13:55:18]   G3 N=21 a=1 p=1 eps=0.3 closes only: S -0.00165 (t -0.74); raw -0.00158 (t -0.86); IC -0.00209 (t -1.00); M5 -4.41 bps/day (t -3.66); gross +0.40 bps, turnover 0.96
+[13:55:18]              G3 N=21 a=2 p=1 eps=0.3: S -0.00346 (t -1.84); raw -0.00383 (t -2.21); IC -0.00269 (t -1.37); M5 -7.66 bps/day (t -7.32); gross -0.06 bps, turnover 1.52
+[13:55:18]   G3 N=21 a=2 p=1 eps=0.3 closes only: S -0.00142 (t -0.71); raw -0.00158 (t -0.90); IC -0.00212 (t -1.05); M5 -5.81 bps/day (t -5.16); gross -0.04 bps, turnover 1.15
+[13:55:18]               G3 N=5 a=1 p=2 eps=0.3: S -0.00341 (t -2.15); raw -0.00423 (t -2.75); IC +0.00016 (t +0.08); M5 -8.54 bps/day (t -6.88); gross +2.51 bps, turnover 2.21
+[13:55:18]   G3 N=5 a=1 p=2 eps=0.3 closes only: S -0.00180 (t -1.31); raw -0.00173 (t -1.27); IC -0.00104 (t -0.64); M5 -6.90 bps/day (t -7.95); gross +1.61 bps, turnover 1.70
+[13:55:18]               G3 N=5 a=2 p=2 eps=0.3: S -0.00234 (t -1.63); raw -0.00373 (t -2.56); IC +0.00016 (t +0.08); M5 -8.74 bps/day (t -7.50); gross +2.43 bps, turnover 2.24
+[13:55:18]   G3 N=5 a=2 p=2 eps=0.3 closes only: S -0.00155 (t -1.23); raw -0.00161 (t -1.25); IC -0.00100 (t -0.66); M5 -8.51 bps/day (t -10.88); gross +0.98 bps, turnover 1.90
+[13:55:18]              G3 N=21 a=1 p=2 eps=0.3: S -0.00688 (t -3.97); raw -0.00684 (t -4.07); IC -0.00374 (t -1.97); M5 -10.63 bps/day (t -10.05); gross -0.37 bps, turnover 2.05
+[13:55:18]   G3 N=21 a=1 p=2 eps=0.3 closes only: S -0.00255 (t -1.61); raw -0.00239 (t -1.55); IC -0.00347 (t -1.94); M5 -7.27 bps/day (t -7.15); gross -0.79 bps, turnover 1.30
+[13:55:18]              G3 N=21 a=2 p=2 eps=0.3: S -0.00573 (t -3.75); raw -0.00610 (t -3.93); IC -0.00413 (t -2.33); M5 -10.77 bps/day (t -11.81); gross -0.76 bps, turnover 2.00
+[13:55:18]   G3 N=21 a=2 p=2 eps=0.3 closes only: S -0.00200 (t -1.38); raw -0.00197 (t -1.36); IC -0.00293 (t -1.75); M5 -8.69 bps/day (t -9.54); gross -0.72 bps, turnover 1.59
+[13:55:18] --- 2020-2025-06 (2020-01-02..2025-06-25, 1377 days)
+[13:55:18]                G1 spring (benchmark): S +nan (t +nan); raw -0.00949 (t -2.88); IC -0.00387 (t -1.10); M5 +0.50 bps/day (t +0.18); gross +3.54 bps, turnover 0.61
+[13:55:18]                               G1 p=0: S +0.00895 (t +1.78); raw -0.00786 (t -2.58); IC -0.00373 (t -1.09); M5 +0.53 bps/day (t +0.21); gross +3.40 bps, turnover 0.57
+[13:55:18]                   G1 p=0 closes only: S +0.00895 (t +1.78); raw -0.00786 (t -2.58); IC -0.00373 (t -1.09); M5 +0.53 bps/day (t +0.21); gross +3.40 bps, turnover 0.57
+[13:55:18]                       G1 p=1 eps=0.1: S -0.00190 (t -0.90); raw -0.00754 (t -3.19); IC -0.00251 (t -0.87); M5 -9.65 bps/day (t -5.48); gross +1.15 bps, turnover 2.16
+[13:55:18]           G1 p=1 eps=0.1 closes only: S +0.00111 (t +0.65); raw -0.00572 (t -2.63); IC -0.00355 (t -1.43); M5 -7.46 bps/day (t -5.09); gross +1.50 bps, turnover 1.79
+[13:55:18]                       G1 p=1 eps=0.3: S -0.00032 (t -0.14); raw -0.00747 (t -2.93); IC -0.00305 (t -1.01); M5 -6.21 bps/day (t -3.46); gross +2.32 bps, turnover 1.71
+[13:55:18]           G1 p=1 eps=0.3 closes only: S +0.00197 (t +0.92); raw -0.00633 (t -2.58); IC -0.00386 (t -1.38); M5 -4.74 bps/day (t -2.61); gross +2.29 bps, turnover 1.41
+[13:55:18]                         G1 p=1 eps=1: S +0.00285 (t +0.99); raw -0.00711 (t -2.60); IC -0.00321 (t -1.01); M5 -2.84 bps/day (t -1.37); gross +3.22 bps, turnover 1.21
+[13:55:18]             G1 p=1 eps=1 closes only: S +0.00361 (t +1.29); raw -0.00675 (t -2.51); IC -0.00391 (t -1.27); M5 -2.43 bps/day (t -1.19); gross +2.76 bps, turnover 1.04
+[13:55:18]                       G1 p=2 eps=0.1: S -0.00284 (t -1.50); raw -0.00671 (t -3.22); IC -0.00137 (t -0.51); M5 -12.61 bps/day (t -7.36); gross -0.02 bps, turnover 2.52
+[13:55:18]           G1 p=2 eps=0.1 closes only: S +0.00040 (t +0.30); raw -0.00302 (t -2.03); IC -0.00188 (t -1.15); M5 -11.28 bps/day (t -12.21); gross +1.33 bps, turnover 2.52
+[13:55:18]                       G1 p=2 eps=0.3: S -0.00175 (t -0.89); raw -0.00682 (t -3.08); IC -0.00202 (t -0.73); M5 -9.66 bps/day (t -5.63); gross +1.44 bps, turnover 2.22
+[13:55:18]           G1 p=2 eps=0.3 closes only: S +0.00078 (t +0.55); raw -0.00444 (t -2.45); IC -0.00309 (t -1.51); M5 -8.97 bps/day (t -7.98); gross +1.64 bps, turnover 2.12
+[13:55:18]                         G1 p=2 eps=1: S +0.00016 (t +0.07); raw -0.00715 (t -2.85); IC -0.00309 (t -1.03); M5 -6.13 bps/day (t -3.42); gross +2.03 bps, turnover 1.63
+[13:55:18]             G1 p=2 eps=1 closes only: S +0.00180 (t +0.90); raw -0.00607 (t -2.57); IC -0.00394 (t -1.46); M5 -4.96 bps/day (t -2.88); gross +2.22 bps, turnover 1.44
+[13:55:18]                       G1 p=3 eps=0.1: S -0.00308 (t -1.63); raw -0.00666 (t -3.23); IC -0.00133 (t -0.50); M5 -12.86 bps/day (t -7.67); gross +0.05 bps, turnover 2.58
+[13:55:18]           G1 p=3 eps=0.1 closes only: S +0.00002 (t +0.01); raw -0.00239 (t -1.76); IC -0.00133 (t -0.91); M5 -11.67 bps/day (t -13.01); gross +1.37 bps, turnover 2.61
+[13:55:18]                       G1 p=3 eps=0.3: S -0.00251 (t -1.33); raw -0.00661 (t -3.19); IC -0.00153 (t -0.57); M5 -11.64 bps/day (t -7.04); gross +0.49 bps, turnover 2.43
+[13:55:18]           G1 p=3 eps=0.3 closes only: S +0.00023 (t +0.18); raw -0.00312 (t -2.11); IC -0.00215 (t -1.32); M5 -11.28 bps/day (t -12.00); gross +1.12 bps, turnover 2.48
+[13:55:18]                         G1 p=3 eps=1: S -0.00093 (t -0.45); raw -0.00701 (t -2.98); IC -0.00276 (t -0.97); M5 -7.62 bps/day (t -4.39); gross +1.91 bps, turnover 1.91
+[13:55:18]             G1 p=3 eps=1 closes only: S +0.00117 (t +0.73); raw -0.00515 (t -2.52); IC -0.00361 (t -1.55); M5 -7.27 bps/day (t -5.17); gross +1.61 bps, turnover 1.78
+[13:55:18]                         G2 N=5 a=0.5: S -0.00043 (t -0.15); raw -0.00007 (t -0.02); IC -0.00130 (t -0.41); M5 -7.45 bps/day (t -3.44); gross -2.49 bps, turnover 0.99
+[13:55:18]                           G2 N=5 a=1: S +0.00096 (t +0.33); raw +0.00137 (t +0.47); IC -0.00018 (t -0.06); M5 -7.43 bps/day (t -3.16); gross -0.79 bps, turnover 1.33
+[13:55:18]                           G2 N=5 a=2: S +0.00302 (t +0.97); raw +0.00268 (t +1.03); IC +0.00126 (t +0.41); M5 -11.54 bps/day (t -5.03); gross -0.37 bps, turnover 2.23
+[13:55:18]                           G2 N=5 a=3: S +0.00725 (t +2.15); raw +0.00285 (t +1.15); IC +0.00139 (t +0.46); M5 -13.47 bps/day (t -6.20); gross +0.13 bps, turnover 2.72
+[13:55:18]                        G2 N=10 a=0.5: S +0.00158 (t +0.60); raw +0.00206 (t +0.76); IC +0.00300 (t +1.05); M5 -2.39 bps/day (t -1.21); gross +1.21 bps, turnover 0.72
+[13:55:18]                          G2 N=10 a=1: S +0.00344 (t +1.34); raw +0.00418 (t +1.57); IC +0.00511 (t +1.73); M5 -3.04 bps/day (t -1.46); gross +2.99 bps, turnover 1.21
+[13:55:18]                          G2 N=10 a=2: S +0.00337 (t +1.18); raw +0.00444 (t +1.80); IC +0.00548 (t +1.92); M5 -9.08 bps/day (t -4.41); gross +2.08 bps, turnover 2.23
+[13:55:18]                          G2 N=10 a=3: S +0.00256 (t +0.69); raw +0.00389 (t +1.56); IC +0.00479 (t +1.67); M5 -11.17 bps/day (t -5.41); gross +2.44 bps, turnover 2.72
+[13:55:18]                        G2 N=21 a=0.5: S -0.00647 (t -2.14); raw -0.00706 (t -2.28); IC -0.00627 (t -1.89); M5 -6.62 bps/day (t -2.80); gross -3.92 bps, turnover 0.54
+[13:55:18]                          G2 N=21 a=1: S -0.00336 (t -1.28); raw -0.00420 (t -1.58); IC -0.00391 (t -1.35); M5 -8.93 bps/day (t -4.54); gross -3.21 bps, turnover 1.14
+[13:55:18]                          G2 N=21 a=2: S -0.00325 (t -1.25); raw -0.00429 (t -1.74); IC -0.00492 (t -1.80); M5 -15.16 bps/day (t -8.08); gross -4.02 bps, turnover 2.23
+[13:55:18]                          G2 N=21 a=3: S -0.00314 (t -0.92); raw -0.00399 (t -1.64); IC -0.00472 (t -1.70); M5 -17.25 bps/day (t -8.85); gross -3.67 bps, turnover 2.72
+[13:55:18]             G2 N=5 a=inf (benchmark): S +nan (t +nan); raw +0.00111 (t +0.46); IC -0.00044 (t -0.15); M5 -16.96 bps/day (t -8.05); gross -1.33 bps, turnover 3.13
+[13:55:18]            G2 N=10 a=inf (benchmark): S +nan (t +nan); raw +0.00356 (t +1.40); IC +0.00455 (t +1.55); M5 -13.43 bps/day (t -6.80); gross +2.22 bps, turnover 3.13
+[13:55:18]            G2 N=21 a=inf (benchmark): S +nan (t +nan); raw -0.00368 (t -1.58); IC -0.00468 (t -1.76); M5 -20.27 bps/day (t -10.60); gross -4.62 bps, turnover 3.13
+[13:55:18]                           G2 N=5 a=0: S +0.00056 (t +0.20); raw +0.00084 (t +0.30); IC -0.00013 (t -0.04); M5 -7.24 bps/day (t -3.41); gross -1.76 bps, turnover 1.10
+[13:55:18]                          G2 N=10 a=0: S +0.00023 (t +0.09); raw +0.00017 (t +0.06); IC +0.00107 (t +0.39); M5 -5.98 bps/day (t -2.93); gross -2.19 bps, turnover 0.76
+[13:55:18]                          G2 N=21 a=0: S -0.00459 (t -1.45); raw -0.00479 (t -1.48); IC -0.00390 (t -1.13); M5 -5.63 bps/day (t -2.35); gross -3.09 bps, turnover 0.51
+[13:55:18]               G3 N=5 a=1 p=1 eps=0.3: S -0.00497 (t -1.76); raw -0.00750 (t -2.99); IC -0.00164 (t -0.52); M5 -7.14 bps/day (t -3.59); gross +1.41 bps, turnover 1.71
+[13:55:18]   G3 N=5 a=1 p=1 eps=0.3 closes only: S -0.00384 (t -1.38); raw -0.00590 (t -2.46); IC -0.00158 (t -0.53); M5 -3.02 bps/day (t -1.55); gross +3.10 bps, turnover 1.22
+[13:55:18]               G3 N=5 a=2 p=1 eps=0.3: S -0.00464 (t -1.77); raw -0.00719 (t -2.98); IC -0.00152 (t -0.50); M5 -7.02 bps/day (t -3.55); gross +1.76 bps, turnover 1.76
+[13:55:18]   G3 N=5 a=2 p=1 eps=0.3 closes only: S -0.00305 (t -1.19); raw -0.00552 (t -2.41); IC -0.00124 (t -0.43); M5 -3.63 bps/day (t -2.02); gross +3.18 bps, turnover 1.36
+[13:55:18]              G3 N=21 a=1 p=1 eps=0.3: S -0.00387 (t -1.13); raw -0.00715 (t -2.55); IC -0.00267 (t -0.88); M5 -7.95 bps/day (t -4.11); gross -0.47 bps, turnover 1.50
+[13:55:18]   G3 N=21 a=1 p=1 eps=0.3 closes only: S -0.00252 (t -0.69); raw -0.00562 (t -1.93); IC -0.00285 (t -0.94); M5 -4.71 bps/day (t -2.47); gross -0.03 bps, turnover 0.94
+[13:55:18]              G3 N=21 a=2 p=1 eps=0.3: S -0.00247 (t -0.80); raw -0.00628 (t -2.26); IC -0.00234 (t -0.79); M5 -7.51 bps/day (t -3.97); gross -0.03 bps, turnover 1.50
+[13:55:18]   G3 N=21 a=2 p=1 eps=0.3 closes only: S -0.00112 (t -0.33); raw -0.00489 (t -1.67); IC -0.00226 (t -0.74); M5 -5.81 bps/day (t -3.07); gross -0.15 bps, turnover 1.13
+[13:55:18]               G3 N=5 a=1 p=2 eps=0.3: S -0.00623 (t -2.79); raw -0.00783 (t -3.30); IC -0.00202 (t -0.67); M5 -10.86 bps/day (t -5.50); gross +0.32 bps, turnover 2.24
+[13:55:18]   G3 N=5 a=1 p=2 eps=0.3 closes only: S -0.00329 (t -1.78); raw -0.00453 (t -2.33); IC -0.00192 (t -0.80); M5 -6.57 bps/day (t -4.60); gross +1.93 bps, turnover 1.70
+[13:55:18]               G3 N=5 a=2 p=2 eps=0.3: S -0.00556 (t -2.75); raw -0.00729 (t -3.27); IC -0.00201 (t -0.69); M5 -11.74 bps/day (t -6.33); gross -0.44 bps, turnover 2.26
+[13:55:18]   G3 N=5 a=2 p=2 eps=0.3 closes only: S -0.00252 (t -1.49); raw -0.00392 (t -2.16); IC -0.00149 (t -0.65); M5 -7.60 bps/day (t -5.84); gross +1.91 bps, turnover 1.90
+[13:55:18]              G3 N=21 a=1 p=2 eps=0.3: S -0.00541 (t -2.13); raw -0.00730 (t -2.90); IC -0.00260 (t -0.89); M5 -11.82 bps/day (t -6.41); gross -1.49 bps, turnover 2.07
+[13:55:18]   G3 N=21 a=1 p=2 eps=0.3 closes only: S -0.00292 (t -1.15); raw -0.00422 (t -1.73); IC -0.00293 (t -1.09); M5 -7.45 bps/day (t -4.32); gross -1.08 bps, turnover 1.27
+[13:55:18]              G3 N=21 a=2 p=2 eps=0.3: S -0.00435 (t -1.86); raw -0.00627 (t -2.62); IC -0.00252 (t -0.93); M5 -11.14 bps/day (t -6.46); gross -1.19 bps, turnover 1.99
+[13:55:18]   G3 N=21 a=2 p=2 eps=0.3 closes only: S -0.00213 (t -0.93); raw -0.00352 (t -1.53); IC -0.00225 (t -0.89); M5 -8.27 bps/day (t -5.08); gross -0.48 bps, turnover 1.56
+[13:55:18] --- 2023-01..2025-06 (2023-01-03..2025-06-25, 621 days)
+[13:55:18]                G1 spring (benchmark): S +nan (t +nan); raw -0.00748 (t -1.57); IC -0.00109 (t -0.29); M5 -0.16 bps/day (t -0.08); gross +2.81 bps, turnover 0.59
+[13:55:18]                               G1 p=0: S +0.00954 (t +1.39); raw -0.00578 (t -1.34); IC -0.00070 (t -0.18); M5 +1.43 bps/day (t +0.61); gross +4.17 bps, turnover 0.55
+[13:55:18]                   G1 p=0 closes only: S +0.00954 (t +1.39); raw -0.00578 (t -1.34); IC -0.00070 (t -0.18); M5 +1.43 bps/day (t +0.61); gross +4.17 bps, turnover 0.55
+[13:55:18]                       G1 p=1 eps=0.1: S -0.00382 (t -1.31); raw -0.00727 (t -2.35); IC -0.00257 (t -0.77); M5 -8.83 bps/day (t -4.47); gross +1.74 bps, turnover 2.12
+[13:55:18]           G1 p=1 eps=0.1 closes only: S +0.00075 (t +0.30); raw -0.00425 (t -1.37); IC -0.00119 (t -0.37); M5 -5.97 bps/day (t -3.49); gross +2.72 bps, turnover 1.74
+[13:55:18]                       G1 p=1 eps=0.3: S -0.00255 (t -0.79); raw -0.00678 (t -2.01); IC -0.00236 (t -0.68); M5 -5.39 bps/day (t -2.86); gross +2.91 bps, turnover 1.66
+[13:55:18]           G1 p=1 eps=0.3 closes only: S +0.00191 (t +0.64); raw -0.00448 (t -1.30); IC -0.00107 (t -0.31); M5 -3.29 bps/day (t -1.64); gross +3.53 bps, turnover 1.36
+[13:55:18]                         G1 p=1 eps=1: S +0.00108 (t +0.28); raw -0.00579 (t -1.54); IC -0.00140 (t -0.38); M5 -1.81 bps/day (t -0.83); gross +4.08 bps, turnover 1.18
+[13:55:18]             G1 p=1 eps=1 closes only: S +0.00386 (t +0.99); raw -0.00473 (t -1.24); IC -0.00094 (t -0.25); M5 -0.90 bps/day (t -0.38); gross +4.16 bps, turnover 1.01
+[13:55:18]                       G1 p=2 eps=0.1: S -0.00438 (t -1.65); raw -0.00710 (t -2.63); IC -0.00243 (t -0.76); M5 -12.22 bps/day (t -6.20); gross +0.19 bps, turnover 2.48
+[13:55:18]           G1 p=2 eps=0.1 closes only: S +0.00013 (t +0.07); raw -0.00241 (t -1.11); IC -0.00059 (t -0.25); M5 -10.39 bps/day (t -7.79); gross +1.97 bps, turnover 2.47
+[13:55:18]                       G1 p=2 eps=0.3: S -0.00354 (t -1.29); raw -0.00677 (t -2.35); IC -0.00235 (t -0.73); M5 -9.26 bps/day (t -4.61); gross +1.63 bps, turnover 2.18
+[13:55:18]           G1 p=2 eps=0.3 closes only: S +0.00008 (t +0.04); raw -0.00368 (t -1.40); IC -0.00152 (t -0.54); M5 -8.02 bps/day (t -5.18); gross +2.29 bps, turnover 2.06
+[13:55:18]                         G1 p=2 eps=1: S -0.00197 (t -0.62); raw -0.00642 (t -1.92); IC -0.00228 (t -0.66); M5 -5.37 bps/day (t -2.82); gross +2.56 bps, turnover 1.59
+[13:55:18]             G1 p=2 eps=1 closes only: S +0.00149 (t +0.54); raw -0.00438 (t -1.31); IC -0.00131 (t -0.38); M5 -3.35 bps/day (t -1.62); gross +3.61 bps, turnover 1.39
+[13:55:18]                       G1 p=3 eps=0.1: S -0.00469 (t -1.81); raw -0.00727 (t -2.75); IC -0.00264 (t -0.83); M5 -12.60 bps/day (t -6.51); gross +0.13 bps, turnover 2.55
+[13:55:18]           G1 p=3 eps=0.1 closes only: S +0.00024 (t +0.12); raw -0.00161 (t -0.83); IC +0.00007 (t +0.03); M5 -10.49 bps/day (t -7.84); gross +2.34 bps, turnover 2.57
+[13:55:18]                       G1 p=3 eps=0.3: S -0.00401 (t -1.51); raw -0.00680 (t -2.53); IC -0.00234 (t -0.74); M5 -11.17 bps/day (t -5.87); gross +0.78 bps, turnover 2.39
+[13:55:18]           G1 p=3 eps=0.3 closes only: S -0.00003 (t -0.01); raw -0.00252 (t -1.16); IC -0.00083 (t -0.36); M5 -10.39 bps/day (t -7.64); gross +1.76 bps, turnover 2.43
+[13:55:18]                         G1 p=3 eps=1: S -0.00306 (t -1.06); raw -0.00671 (t -2.15); IC -0.00262 (t -0.78); M5 -6.38 bps/day (t -3.37); gross +2.92 bps, turnover 1.86
+[13:55:18]             G1 p=3 eps=1 closes only: S +0.00061 (t +0.27); raw -0.00395 (t -1.34); IC -0.00147 (t -0.47); M5 -6.01 bps/day (t -3.20); gross +2.60 bps, turnover 1.72
+[13:55:18]                         G2 N=5 a=0.5: S -0.00355 (t -1.16); raw -0.00266 (t -0.86); IC -0.00277 (t -0.86); M5 -6.96 bps/day (t -3.38); gross -1.93 bps, turnover 1.01
+[13:55:18]                           G2 N=5 a=1: S -0.00121 (t -0.39); raw +0.00005 (t +0.01); IC -0.00020 (t -0.06); M5 -7.80 bps/day (t -3.71); gross -1.13 bps, turnover 1.33
+[13:55:18]                           G2 N=5 a=2: S -0.00021 (t -0.07); raw +0.00228 (t +0.73); IC +0.00249 (t +0.75); M5 -9.60 bps/day (t -3.85); gross +1.61 bps, turnover 2.24
+[13:55:18]                           G2 N=5 a=3: S +0.00167 (t +0.41); raw +0.00323 (t +1.02); IC +0.00303 (t +0.89); M5 -12.15 bps/day (t -5.28); gross +1.53 bps, turnover 2.74
+[13:55:18]                        G2 N=10 a=0.5: S +0.00094 (t +0.29); raw +0.00146 (t +0.44); IC +0.00374 (t +1.11); M5 -1.02 bps/day (t -0.46); gross +2.66 bps, turnover 0.74
+[13:55:18]                          G2 N=10 a=1: S +0.00130 (t +0.33); raw +0.00176 (t +0.45); IC +0.00316 (t +0.76); M5 -4.00 bps/day (t -1.68); gross +2.12 bps, turnover 1.22
+[13:55:18]                          G2 N=10 a=2: S -0.00028 (t -0.07); raw +0.00107 (t +0.33); IC +0.00218 (t +0.61); M5 -11.23 bps/day (t -5.47); gross -0.09 bps, turnover 2.23
+[13:55:18]                          G2 N=10 a=3: S +0.00213 (t +0.42); raw +0.00190 (t +0.61); IC +0.00285 (t +0.81); M5 -12.06 bps/day (t -5.99); gross +1.58 bps, turnover 2.73
+[13:55:18]                        G2 N=21 a=0.5: S -0.00917 (t -2.40); raw -0.00977 (t -2.56); IC -0.00705 (t -1.72); M5 -4.70 bps/day (t -1.95); gross -1.97 bps, turnover 0.55
+[13:55:18]                          G2 N=21 a=1: S -0.00669 (t -1.97); raw -0.00718 (t -2.12); IC -0.00505 (t -1.38); M5 -7.70 bps/day (t -3.69); gross -1.98 bps, turnover 1.14
+[13:55:18]                          G2 N=21 a=2: S -0.00467 (t -1.52); raw -0.00522 (t -1.70); IC -0.00433 (t -1.38); M5 -13.25 bps/day (t -7.10); gross -2.13 bps, turnover 2.22
+[13:55:18]                          G2 N=21 a=3: S -0.00555 (t -1.52); raw -0.00514 (t -1.65); IC -0.00429 (t -1.33); M5 -14.60 bps/day (t -7.22); gross -1.06 bps, turnover 2.71
+[13:55:18]             G2 N=5 a=inf (benchmark): S +nan (t +nan); raw +0.00331 (t +1.03); IC +0.00299 (t +0.85); M5 -15.31 bps/day (t -6.46); gross +0.44 bps, turnover 3.15
+[13:55:18]            G2 N=10 a=inf (benchmark): S +nan (t +nan); raw +0.00131 (t +0.42); IC +0.00197 (t +0.55); M5 -15.32 bps/day (t -7.07); gross +0.42 bps, turnover 3.15
+[13:55:18]            G2 N=21 a=inf (benchmark): S +nan (t +nan); raw -0.00365 (t -1.17); IC -0.00283 (t -0.86); M5 -16.05 bps/day (t -7.99); gross -0.40 bps, turnover 3.13
+[13:55:18]                           G2 N=5 a=0: S -0.00146 (t -0.47); raw -0.00091 (t -0.29); IC -0.00066 (t -0.20); M5 -6.44 bps/day (t -3.36); gross -0.86 bps, turnover 1.11
+[13:55:18]                          G2 N=10 a=0: S -0.00069 (t -0.24); raw -0.00035 (t -0.11); IC +0.00157 (t +0.52); M5 -3.05 bps/day (t -1.57); gross +0.88 bps, turnover 0.79
+[13:55:18]                          G2 N=21 a=0: S -0.00578 (t -1.38); raw -0.00597 (t -1.38); IC -0.00236 (t -0.54); M5 -2.79 bps/day (t -1.06); gross -0.26 bps, turnover 0.51
+[13:55:18]               G3 N=5 a=1 p=1 eps=0.3: S -0.00271 (t -0.71); raw -0.00596 (t -1.79); IC -0.00068 (t -0.18); M5 -5.93 bps/day (t -2.92); gross +2.28 bps, turnover 1.64
+[13:55:18]   G3 N=5 a=1 p=1 eps=0.3 closes only: S -0.00134 (t -0.35); raw -0.00350 (t -1.04); IC +0.00040 (t +0.11); M5 -1.83 bps/day (t -0.96); gross +4.01 bps, turnover 1.17
+[13:55:18]               G3 N=5 a=2 p=1 eps=0.3: S -0.00362 (t -1.02); raw -0.00612 (t -1.93); IC -0.00094 (t -0.26); M5 -6.50 bps/day (t -3.16); gross +1.95 bps, turnover 1.69
+[13:55:18]   G3 N=5 a=2 p=1 eps=0.3 closes only: S -0.00149 (t -0.42); raw -0.00350 (t -1.10); IC +0.00037 (t +0.10); M5 -3.29 bps/day (t -1.85); gross +3.23 bps, turnover 1.31
+[13:55:18]              G3 N=21 a=1 p=1 eps=0.3: S -0.00280 (t -0.61); raw -0.00556 (t -1.55); IC -0.00230 (t -0.60); M5 -6.99 bps/day (t -3.31); gross +0.16 bps, turnover 1.43
+[13:55:18]   G3 N=21 a=1 p=1 eps=0.3 closes only: S -0.00105 (t -0.22); raw -0.00320 (t -0.86); IC -0.00119 (t -0.31); M5 -3.83 bps/day (t -1.93); gross +0.64 bps, turnover 0.90
+[13:55:18]              G3 N=21 a=2 p=1 eps=0.3: S -0.00159 (t -0.39); raw -0.00505 (t -1.48); IC -0.00185 (t -0.52); M5 -6.78 bps/day (t -3.48); gross +0.48 bps, turnover 1.45
+[13:55:18]   G3 N=21 a=2 p=1 eps=0.3 closes only: S +0.00035 (t +0.08); raw -0.00281 (t -0.78); IC -0.00072 (t -0.20); M5 -4.38 bps/day (t -2.28); gross +1.05 bps, turnover 1.09
+[13:55:18]               G3 N=5 a=1 p=2 eps=0.3: S -0.00655 (t -2.28); raw -0.00776 (t -2.59); IC -0.00239 (t -0.65); M5 -10.08 bps/day (t -4.80); gross +0.73 bps, turnover 2.16
+[13:55:18]   G3 N=5 a=1 p=2 eps=0.3 closes only: S -0.00102 (t -0.38); raw -0.00247 (t -0.88); IC +0.00017 (t +0.05); M5 -4.69 bps/day (t -2.89); gross +3.55 bps, turnover 1.65
+[13:55:18]               G3 N=5 a=2 p=2 eps=0.3: S -0.00680 (t -2.61); raw -0.00780 (t -2.78); IC -0.00279 (t -0.78); M5 -11.32 bps/day (t -5.50); gross -0.35 bps, turnover 2.19
+[13:55:18]   G3 N=5 a=2 p=2 eps=0.3 closes only: S -0.00068 (t -0.28); raw -0.00213 (t -0.82); IC +0.00024 (t +0.08); M5 -6.54 bps/day (t -4.20); gross +2.67 bps, turnover 1.84
+[13:55:18]              G3 N=21 a=1 p=2 eps=0.3: S -0.00509 (t -1.49); raw -0.00672 (t -2.07); IC -0.00330 (t -0.90); M5 -10.44 bps/day (t -5.36); gross -0.39 bps, turnover 2.01
+[13:55:18]   G3 N=21 a=1 p=2 eps=0.3 closes only: S -0.00120 (t -0.36); raw -0.00245 (t -0.78); IC -0.00156 (t -0.45); M5 -5.42 bps/day (t -3.13); gross +0.74 bps, turnover 1.23
+[13:55:18]              G3 N=21 a=2 p=2 eps=0.3: S -0.00470 (t -1.54); raw -0.00628 (t -2.10); IC -0.00324 (t -0.98); M5 -10.56 bps/day (t -6.39); gross -0.73 bps, turnover 1.97
+[13:55:18]   G3 N=21 a=2 p=2 eps=0.3 closes only: S -0.00130 (t -0.44); raw -0.00268 (t -0.92); IC -0.00160 (t -0.51); M5 -6.41 bps/day (t -3.98); gross +1.24 bps, turnover 1.53
+[13:55:18] --- 2008-2025-06 (2008-03-26..2025-06-25, 4341 days)
+[13:55:18]                G1 spring (benchmark): S +nan (t +nan); raw -0.00489 (t -2.73); IC -0.00098 (t -0.51); M5 +0.41 bps/day (t +0.34); gross +3.48 bps, turnover 0.61
+[13:55:18]                               G1 p=0: S +0.00471 (t +1.70); raw -0.00391 (t -2.40); IC -0.00126 (t -0.69); M5 +0.26 bps/day (t +0.22); gross +3.11 bps, turnover 0.57
+[13:55:18]                   G1 p=0 closes only: S +0.00471 (t +1.70); raw -0.00391 (t -2.40); IC -0.00126 (t -0.69); M5 +0.26 bps/day (t +0.22); gross +3.11 bps, turnover 0.57
+[13:55:18]                       G1 p=1 eps=0.1: S -0.00260 (t -2.30); raw -0.00457 (t -3.70); IC -0.00052 (t -0.33); M5 -8.94 bps/day (t -9.84); gross +1.80 bps, turnover 2.15
+[13:55:18]           G1 p=1 eps=0.1 closes only: S +0.00057 (t +0.60); raw -0.00267 (t -2.28); IC -0.00166 (t -1.22); M5 -8.18 bps/day (t -11.77); gross +0.79 bps, turnover 1.79
+[13:55:18]                       G1 p=1 eps=0.3: S -0.00192 (t -1.53); raw -0.00427 (t -3.20); IC -0.00097 (t -0.60); M5 -6.31 bps/day (t -6.92); gross +2.21 bps, turnover 1.70
+[13:55:18]           G1 p=1 eps=0.3 closes only: S +0.00026 (t +0.22); raw -0.00329 (t -2.52); IC -0.00207 (t -1.35); M5 -5.73 bps/day (t -6.80); gross +1.33 bps, turnover 1.41
+[13:55:18]                         G1 p=1 eps=1: S -0.00032 (t -0.21); raw -0.00387 (t -2.70); IC -0.00117 (t -0.69); M5 -3.23 bps/day (t -3.26); gross +2.85 bps, turnover 1.22
+[13:55:18]             G1 p=1 eps=1 closes only: S +0.00052 (t +0.35); raw -0.00362 (t -2.53); IC -0.00208 (t -1.24); M5 -3.30 bps/day (t -3.36); gross +1.93 bps, turnover 1.05
+[13:55:18]                       G1 p=2 eps=0.1: S -0.00284 (t -2.69); raw -0.00437 (t -3.90); IC +0.00023 (t +0.16); M5 -10.84 bps/day (t -11.64); gross +1.68 bps, turnover 2.50
+[13:55:18]           G1 p=2 eps=0.1 closes only: S +0.00066 (t +0.92); raw -0.00104 (t -1.28); IC -0.00072 (t -0.80); M5 -11.72 bps/day (t -25.81); gross +0.86 bps, turnover 2.52
+[13:55:18]                       G1 p=2 eps=0.3: S -0.00252 (t -2.34); raw -0.00435 (t -3.74); IC -0.00036 (t -0.24); M5 -9.23 bps/day (t -10.55); gross +1.78 bps, turnover 2.20
+[13:55:18]           G1 p=2 eps=0.3 closes only: S +0.00033 (t +0.41); raw -0.00206 (t -2.10); IC -0.00158 (t -1.41); M5 -10.01 bps/day (t -18.12); gross +0.58 bps, turnover 2.12
+[13:55:18]                         G1 p=2 eps=1: S -0.00172 (t -1.41); raw -0.00412 (t -3.13); IC -0.00110 (t -0.69); M5 -6.20 bps/day (t -6.92); gross +1.93 bps, turnover 1.63
+[13:55:18]             G1 p=2 eps=1 closes only: S -0.00002 (t -0.02); raw -0.00323 (t -2.55); IC -0.00228 (t -1.54); M5 -6.22 bps/day (t -7.67); gross +0.99 bps, turnover 1.44
+[13:55:18]                       G1 p=3 eps=0.1: S -0.00290 (t -2.73); raw -0.00434 (t -3.88); IC +0.00034 (t +0.23); M5 -11.02 bps/day (t -11.72); gross +1.81 bps, turnover 2.57
+[13:55:18]           G1 p=3 eps=0.1 closes only: S +0.00074 (t +1.09); raw -0.00049 (t -0.67); IC -0.00026 (t -0.33); M5 -12.21 bps/day (t -27.41); gross +0.81 bps, turnover 2.60
+[13:55:18]                       G1 p=3 eps=0.3: S -0.00269 (t -2.57); raw -0.00428 (t -3.84); IC +0.00010 (t +0.07); M5 -10.34 bps/day (t -11.45); gross +1.71 bps, turnover 2.41
+[13:55:18]           G1 p=3 eps=0.3 closes only: S +0.00042 (t +0.59); raw -0.00120 (t -1.50); IC -0.00096 (t -1.08); M5 -11.65 bps/day (t -24.44); gross +0.73 bps, turnover 2.48
+[13:55:18]                         G1 p=3 eps=1: S -0.00221 (t -1.99); raw -0.00426 (t -3.48); IC -0.00089 (t -0.59); M5 -7.64 bps/day (t -8.81); gross +1.83 bps, turnover 1.89
+[13:55:18]             G1 p=3 eps=1 closes only: S +0.00008 (t +0.09); raw -0.00264 (t -2.39); IC -0.00207 (t -1.62); M5 -8.28 bps/day (t -12.36); gross +0.59 bps, turnover 1.77
+[13:55:18]                         G2 N=5 a=0.5: S +0.00012 (t +0.09); raw +0.00016 (t +0.12); IC -0.00045 (t -0.30); M5 -5.48 bps/day (t -5.98); gross -0.52 bps, turnover 0.99
+[13:55:18]                           G2 N=5 a=1: S +0.00021 (t +0.16); raw +0.00025 (t +0.19); IC -0.00054 (t -0.37); M5 -6.72 bps/day (t -7.06); gross -0.06 bps, turnover 1.33
+[13:55:18]                           G2 N=5 a=2: S +0.00032 (t +0.23); raw +0.00027 (t +0.22); IC -0.00034 (t -0.24); M5 -11.24 bps/day (t -11.78); gross +0.03 bps, turnover 2.25
+[13:55:18]                           G2 N=5 a=3: S +0.00255 (t +1.51); raw +0.00064 (t +0.53); IC -0.00000 (t -0.00); M5 -13.53 bps/day (t -14.47); gross +0.19 bps, turnover 2.74
+[13:55:18]                        G2 N=10 a=0.5: S +0.00229 (t +1.72); raw +0.00246 (t +1.81); IC +0.00278 (t +1.91); M5 -1.86 bps/day (t -1.96); gross +1.73 bps, turnover 0.72
+[13:55:18]                          G2 N=10 a=1: S +0.00294 (t +2.26); raw +0.00330 (t +2.52); IC +0.00341 (t +2.39); M5 -3.74 bps/day (t -3.78); gross +2.30 bps, turnover 1.21
+[13:55:18]                          G2 N=10 a=2: S +0.00303 (t +2.11); raw +0.00347 (t +2.91); IC +0.00386 (t +2.82); M5 -9.24 bps/day (t -9.26); gross +2.00 bps, turnover 2.25
+[13:55:18]                          G2 N=10 a=3: S +0.00276 (t +1.54); raw +0.00313 (t +2.61); IC +0.00347 (t +2.53); M5 -11.49 bps/day (t -11.89); gross +2.21 bps, turnover 2.74
+[13:55:18]                        G2 N=21 a=0.5: S -0.00305 (t -2.07); raw -0.00340 (t -2.25); IC -0.00276 (t -1.72); M5 -4.61 bps/day (t -4.70); gross -1.94 bps, turnover 0.53
+[13:55:18]                          G2 N=21 a=1: S -0.00177 (t -1.26); raw -0.00229 (t -1.59); IC -0.00212 (t -1.39); M5 -7.31 bps/day (t -7.75); gross -1.61 bps, turnover 1.14
+[13:55:18]                          G2 N=21 a=2: S -0.00075 (t -0.53); raw -0.00176 (t -1.35); IC -0.00180 (t -1.25); M5 -11.70 bps/day (t -12.48); gross -0.50 bps, turnover 2.24
+[13:55:18]                          G2 N=21 a=3: S +0.00158 (t +0.89); raw -0.00129 (t -1.03); IC -0.00132 (t -0.92); M5 -13.98 bps/day (t -14.16); gross -0.32 bps, turnover 2.73
+[13:55:18]             G2 N=5 a=inf (benchmark): S +nan (t +nan); raw -0.00012 (t -0.10); IC -0.00076 (t -0.56); M5 -15.94 bps/day (t -16.97); gross -0.18 bps, turnover 3.15
+[13:55:18]            G2 N=10 a=inf (benchmark): S +nan (t +nan); raw +0.00277 (t +2.28); IC +0.00303 (t +2.20); M5 -14.27 bps/day (t -15.44); gross +1.49 bps, turnover 3.15
+[13:55:18]            G2 N=21 a=inf (benchmark): S +nan (t +nan); raw -0.00196 (t -1.63); IC -0.00215 (t -1.55); M5 -17.06 bps/day (t -17.41); gross -1.33 bps, turnover 3.15
+[13:55:18]                           G2 N=5 a=0: S +0.00120 (t +0.91); raw +0.00123 (t +0.92); IC +0.00074 (t +0.51); M5 -5.27 bps/day (t -5.72); gross +0.22 bps, turnover 1.10
+[13:55:18]                          G2 N=10 a=0: S +0.00233 (t +1.73); raw +0.00234 (t +1.71); IC +0.00274 (t +1.86); M5 -2.97 bps/day (t -3.14); gross +0.84 bps, turnover 0.76
+[13:55:18]                          G2 N=21 a=0: S -0.00319 (t -2.11); raw -0.00329 (t -2.13); IC -0.00228 (t -1.36); M5 -3.82 bps/day (t -3.86); gross -1.32 bps, turnover 0.50
+[13:55:18]               G3 N=5 a=1 p=1 eps=0.3: S -0.00325 (t -1.97); raw -0.00432 (t -3.09); IC -0.00007 (t -0.04); M5 -5.63 bps/day (t -5.09); gross +2.89 bps, turnover 1.70
+[13:55:18]   G3 N=5 a=1 p=1 eps=0.3 closes only: S -0.00170 (t -1.03); raw -0.00269 (t -1.96); IC -0.00039 (t -0.24); M5 -3.17 bps/day (t -3.25); gross +2.95 bps, turnover 1.23
+[13:55:18]               G3 N=5 a=2 p=1 eps=0.3: S -0.00262 (t -1.74); raw -0.00410 (t -3.05); IC -0.00011 (t -0.07); M5 -5.96 bps/day (t -5.58); gross +2.80 bps, turnover 1.75
+[13:55:18]   G3 N=5 a=2 p=1 eps=0.3 closes only: S -0.00109 (t -0.73); raw -0.00245 (t -1.86); IC -0.00021 (t -0.13); M5 -3.97 bps/day (t -4.38); gross +2.86 bps, turnover 1.37
+[13:55:18]              G3 N=21 a=1 p=1 eps=0.3: S -0.00415 (t -2.28); raw -0.00505 (t -3.30); IC -0.00248 (t -1.46); M5 -7.43 bps/day (t -7.45); gross +0.09 bps, turnover 1.51
+[13:55:18]   G3 N=21 a=1 p=1 eps=0.3 closes only: S -0.00193 (t -1.00); raw -0.00286 (t -1.82); IC -0.00233 (t -1.35); M5 -4.50 bps/day (t -4.38); gross +0.27 bps, turnover 0.95
+[13:55:18]              G3 N=21 a=2 p=1 eps=0.3: S -0.00315 (t -1.94); raw -0.00461 (t -3.12); IC -0.00258 (t -1.57); M5 -7.61 bps/day (t -8.07); gross -0.05 bps, turnover 1.51
+[13:55:18]   G3 N=21 a=2 p=1 eps=0.3 closes only: S -0.00132 (t -0.76); raw -0.00263 (t -1.72); IC -0.00217 (t -1.28); M5 -5.81 bps/day (t -5.90); gross -0.08 bps, turnover 1.15
+[13:55:18]               G3 N=5 a=1 p=2 eps=0.3: S -0.00431 (t -3.31); raw -0.00537 (t -4.14); IC -0.00053 (t -0.32); M5 -9.27 bps/day (t -8.74); gross +1.82 bps, turnover 2.22
+[13:55:18]   G3 N=5 a=1 p=2 eps=0.3 closes only: S -0.00227 (t -2.04); raw -0.00262 (t -2.32); IC -0.00132 (t -0.98); M5 -6.80 bps/day (t -8.96); gross +1.71 bps, turnover 1.70
+[13:55:18]               G3 N=5 a=2 p=2 eps=0.3: S -0.00336 (t -2.84); raw -0.00486 (t -3.97); IC -0.00053 (t -0.34); M5 -9.70 bps/day (t -9.68); gross +1.52 bps, turnover 2.24
+[13:55:18]   G3 N=5 a=2 p=2 eps=0.3 closes only: S -0.00186 (t -1.82); raw -0.00234 (t -2.21); IC -0.00116 (t -0.91); M5 -8.22 bps/day (t -11.99); gross +1.28 bps, turnover 1.90
+[13:55:18]              G3 N=21 a=1 p=2 eps=0.3: S -0.00641 (t -4.47); raw -0.00698 (t -4.99); IC -0.00338 (t -2.11); M5 -11.00 bps/day (t -11.74); gross -0.72 bps, turnover 2.06
+[13:55:18]   G3 N=21 a=1 p=2 eps=0.3 closes only: S -0.00267 (t -1.97); raw -0.00297 (t -2.27); IC -0.00330 (t -2.21); M5 -7.33 bps/day (t -8.26); gross -0.88 bps, turnover 1.29
+[13:55:18]              G3 N=21 a=2 p=2 eps=0.3: S -0.00529 (t -4.13); raw -0.00615 (t -4.72); IC -0.00362 (t -2.42); M5 -10.89 bps/day (t -13.02); gross -0.89 bps, turnover 2.00
+[13:55:18]   G3 N=21 a=2 p=2 eps=0.3 closes only: S -0.00204 (t -1.66); raw -0.00246 (t -2.01); IC -0.00272 (t -1.95); M5 -8.56 bps/day (t -10.55); gross -0.65 bps, turnover 1.58

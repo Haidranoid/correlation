@@ -1,0 +1,8 @@
+Code checks for P1 (old): 200 noise series of each kind built like dS (five daily changes ending t - 1); AR(1) uses the daily spread changes' lag-1 autocorrelation, 0.095. Fits checked: {'fits': 131781, 'lstsq_checks': 5642}
+leaky oracle (y + noise, sd 0.0469), early: 1 - MSE ratio +48.4%, CW t +6.30
+leaky oracle (y + noise, sd 0.0469), dev: 1 - MSE ratio +50.2%, CW t +4.45
+leaky oracle (y + noise, sd 0.0469), check: 1 - MSE ratio +53.9%, CW t +3.07
+iid dev: CW t mean -0.36 sd 0.94 (95th pct +1.48, max +2.06); share t >= 1.645 0.025, >= 3 0.000; bootstrap p < 0.05 0.020, < 0.0013 0.000; full P1 pass 0.000; lower error in 0.195 (median -0.09%, 95th pct +0.16%)
+iid check: CW t mean -0.21 sd 0.96 (95th pct +1.55, max +2.47); share t >= 1.645 0.030, >= 3 0.000; bootstrap p < 0.05 0.060, < 0.0013 0.000; full P1 pass 0.000; lower error in 0.325 (median -0.04%, 95th pct +0.27%)
+ar1 dev: CW t mean -0.33 sd 0.98 (95th pct +1.49, max +2.68); share t >= 1.645 0.025, >= 3 0.000; bootstrap p < 0.05 0.030, < 0.0013 0.000; full P1 pass 0.000; lower error in 0.210 (median -0.10%, 95th pct +0.18%)
+ar1 check: CW t mean -0.09 sd 0.93 (95th pct +1.51, max +2.07); share t >= 1.645 0.020, >= 3 0.000; bootstrap p < 0.05 0.080, < 0.0013 0.000; full P1 pass 0.000; lower error in 0.340 (median -0.04%, 95th pct +0.28%)

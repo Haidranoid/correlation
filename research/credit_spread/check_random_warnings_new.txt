@@ -1,0 +1,7 @@
+Warning rules against rule B put in cash for the same number of random months (10,000 draws, 5 bps; after results)
+| Period | Rule | Warning months | Sharpe | Rule B | Median random-cash Sharpe | p | SPY next 21 d, warning / other months |
+|---|---|---|---|---|---|---|---|
+| unseen months | dS > 0 and R >= 0 | 3 | 1.526 | 1.324 | 1.175 | 0.0807 | -0.48% / +1.91% |
+| unseen months | dS > 0, no stock condition | 7 | 0.918 | 1.324 | 0.944 | 0.5218 | +1.43% / +1.42% |
+| unseen months | dS >= 80th pct, no stock condition | 3 | 0.909 | 1.324 | 1.172 | 0.8349 | +2.69% / +1.11% |
+| unseen months | C2 default spread, top fifth and R >= 0 | 2 | 1.102 | 1.324 | 1.225 | 0.7524 | +1.93% / +1.35% |

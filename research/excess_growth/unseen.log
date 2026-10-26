@@ -1,0 +1,91 @@
+Running as unit: run-p2442020-i31791255.scope; invocation ID: c6ae4fd1199d43ad9cd2ae8ad36fee3d
+[    1.3s] new export (9508, 6240) 2001-12-31 .. 2026-10-19
+[    3.4s] raw store: 0 stock-days differ from the export where both exist; 103 stock-days have a raw close the export blanked
+[    3.7s] 2025H2: n 500 (eligible 4906, dropped at purchase 0), days 129, ends inside 0, untradeable stock-days 0, gamma* 0.0818/yr
+[    3.8s] 2026: n 500 (eligible 5197, dropped at purchase 0), days 199, ends inside 1, untradeable stock-days 13, gamma* 0.0949/yr
+[    4.0s] E1 2025H2: pred 0.0419 EG_d 0.0347 J 0.0384 gap_d0 -0.0038 RW gap -0.0031
+[    4.3s] E1 2026: pred 0.0750 EG_d 0.0885 J 0.0733 gap_d0 +0.0151 RW gap -0.0041
+Excess growth: rebalanced equal weight minus buy-and-hold of the same stocks (new export)
+Log points a year (mean daily log difference x 252). p = the larger of the bootstrap p and the NW-21 normal p.
+
+== unseen
+comparison                  days  per year  NW t21  NW t63  p boot       p       boot 5..95%
+P1                           328   +0.548%   +0.20   +0.26  0.4001  0.4205  -3.778.. +5.143
+P2                           328   +0.195%   +0.08   +0.12  0.4491  0.4685  -3.816.. +4.365
+P1 gross                     328   +0.764%   +0.28   +0.36  0.3683  0.3900  -3.566.. +5.368
+P2 gross                     328   +0.239%   +0.10   +0.14  0.4436  0.4615  -3.773.. +4.410
+P1 20 bps                    328   -0.100%   -0.04   -0.05  0.4871  0.5147  -4.407.. +4.478
+P2 20 bps                    328   +0.065%   +0.03   +0.04  0.4695  0.4895  -3.951.. +4.232
+quarterly 5 bps              328   +0.416%   +0.20   +0.34  0.4191  0.4194  -3.007.. +3.752
+quarterly gross              328   +0.439%   +0.21   +0.36  0.4145  0.4151  -2.984.. +3.785
+delay 0 daily 5 bps          328   +0.657%   +0.26   +0.33  0.3784  0.3969  -3.315.. +4.801
+delay 0 monthly 5 bps        328   +0.286%   +0.13   +0.17  0.4267  0.4496  -3.340.. +4.111
+delay 0 daily gross          328   +0.873%   +0.35   +0.43  0.3434  0.3643  -3.099.. +5.018
+delay 0 monthly gross        328   +0.329%   +0.15   +0.20  0.4195  0.4421  -3.293.. +4.152
+P1 raw closes                328   +0.548%   +0.20   +0.26  0.4001  0.4205  -3.778.. +5.143
+P2 raw closes                328   +0.195%   +0.08   +0.12  0.4491  0.4685  -3.816.. +4.365
+P1 raw closes gross          328   +0.764%   +0.28   +0.36  0.3683  0.3900  -3.566.. +5.368
+P2 raw closes gross          328   +0.239%   +0.10   +0.14  0.4436  0.4615  -3.773.. +4.410
+turnover a year (sum |trade| / value, both sides): R1d 5.40, R1m 1.95, R1q 1.54, B1 1.08, R0d 5.40, R0m 1.95, B0 1.08, R1d_raw 5.40, R1m_raw 1.95, B1_raw 1.08, R1d_nodiv 5.40, B1_nodiv 1.08
+
+Holm (family 0.0228; thresholds 0.0114, 0.0228): p P1 0.4205, P2 0.4685 -> pass None; t >= 3 (p < 0.00135): [False, False]
+Break-even cost per side: P1: gross +0.764%/yr, extra turnover 4.32/yr -> +17.68 bps; P2: gross +0.239%/yr, extra turnover 0.87/yr -> +27.44 bps; quarterly: gross +0.439%/yr, extra turnover 0.46/yr -> +94.81 bps
+
+== E1 (development periods; log points summed over the periods)
+predicted sum gamma*.n 0.1168; realized EG daily 0.1231 (ratio 1.054), monthly 0.1161 (ratio 0.993); buy-and-hold J 0.1118 (ratio 0.957)
+slope of EG on predicted across periods: daily 1.626 (95% nan..nan), monthly 1.502 (nan..nan) -> gamma* predicts EG: False
+gap (daily, delay 0, gross) +0.0114; claim's prediction 0.1168; NW t of (e_t - gamma*/2) -1.44 -> claim rejected (t <= -3): False
+random walk: simulated total mean -0.0072, 2.5..97.5% -0.1060..+0.0366; realized at the 65.5th percentile -> consistent: True
+monthly gap (delay 0, gross) +0.0043; RW -0.0047 (-0.1000..+0.0435), percentile 53.0
+L: second-order gap +0.0141 by lag band 1 / 2-5 / 6-21 / 22-63 / 64+: +0.0020 / +0.0079 / -0.0003 / +0.0075 / -0.0030; remainder -0.0027
+
+20-stock subsets (mean over periods of the mean over 1,000 subsets, log points per period): gross gap daily +0.0054, net daily +0.0039 (sd across subsets 0.0264, rebalancing ahead in 59.2%), net monthly +0.0017 (ahead 56.2%); predicted gamma*.n 0.0559, EG/pred 1.050, J/pred 0.942, delay-0 gap +0.0061
+
+== Periods (log points over the period)
+period  span                       K ends  untr    pred    EG_d    EG_m       J   gap_d0   gap_d1   gap_m1   RW gap     gap2     lag1 sub net d sub win
+2025H2  2025-06-30..2026-01-02   500    0     0  0.0419  0.0347  0.0332  0.0384  -0.0038  -0.0034  -0.0044  -0.0031  -0.0027  -0.0001   -0.0044   41.4%
+2026    2026-01-02..2026-10-19   500    1    13  0.0750  0.0885  0.0829  0.0733  +0.0151  +0.0133  +0.0075  -0.0041  +0.0168  +0.0021   +0.0122   77.0%
+
+== Calendar years (percent, compounded by return date)
+year  days R1d gross  B1 gross  R1d net5  R1m net5   B1 net5 P1 net log P2 net log R1d turn
+2025   128     +8.41     +8.53     +8.26     +8.23     +8.48     -0.205     -0.231     2.84
+2026   200     +9.97     +8.76     +9.74     +9.26     +8.73     +0.918     +0.486     4.18
+
+[    4.4s] S3 done
+S3: the nine SPDR sector funds (new store), rebalanced equal weight minus buy-and-hold, reset each year
+  unseen:
+    daily gross              +0.292%/yr  NW t  +0.51  p 0.3048  (328 days)
+    daily 5 bps              +0.205%/yr  NW t  +0.36  p 0.3593  (328 days)
+    monthly gross            +0.202%/yr  NW t  +0.40  p 0.3462  (328 days)
+    monthly 5 bps            +0.186%/yr  NW t  +0.36  p 0.3580  (328 days)
+    delay 0 daily gross      +0.320%/yr  NW t  +0.57  p 0.2854  (328 days)
+    delay 0 daily 5 bps      +0.233%/yr  NW t  +0.41  p 0.3393  (328 days)
+    E1 sums (log points): pred 0.0115, EG daily 0.0147, J 0.0106, gap delay 0 +0.0042; random walk -0.0002 (-0.0129..+0.0077), percentile 78.5
+  by period: 2025H2 gap +0.0019 (pred 0.0047); 2026 gap +0.0019 (pred 0.0067)
+
+S5: RSP - SPY (store, both price-only after about 2022-12), beside P1 without div_fix minus the store SPY
+  2025: RSP   +5.40 SPY  +10.37 RSP-SPY  -4.97 | same days: P1   +7.47 RSP   +5.40 SPY  +10.37 P1-SPY  -2.90 P1-RSP  +2.06
+  2026: RSP  +11.40 SPY  +12.40 RSP-SPY  -1.00 | same days: P1   +8.55 RSP  +11.40 SPY  +12.40 P1-SPY  -3.85 P1-RSP  -2.85
+  means: RSP-SPY all years -2.98; over P1's years RSP-SPY -2.98, P1-SPY -3.38, P1-RSP -0.39
+  Dividends in the store (checked against Yahoo for SPY, TLT, LQD, IWM): funds are price-only before 2011 and adjusted from 2011; in 2023-2025 SPY is adjusted, LQD and IWM are not. RSP has no Yahoo series here.
+
+After costs and before costs vs random (new): calendar years by return date, percent
+year  span                     days     SPY R1d net5 R1m net5  B1 net5  R1d-SPY   B1-SPY R1d-B1 gross
+2025  2025-06-30..2025-12-31  128  +11.00    +8.26    +8.23    +8.48    -2.74    -2.52        -0.12
+2026  2025-12-31..2026-10-19  200  +13.28    +9.74    +9.26    +8.73    -3.54    -4.54        +1.21
+After costs (P1's rebalanced portfolio at 5 bps minus SPY, mean of 2 years): -3.14 (buy-and-hold -3.53, monthly -3.39); portfolio +9.00, SPY +12.14
+Before costs, vs random (rebalanced minus buy-and-hold, gross): +0.54 points a year (se 0.67; ahead in 1 of 2 years)
+
+Frozen hashes before the run: all match
+New export: (9508, 6240), first 5911 days equal the old export's: True
+Tickers in both exports: 6593; stock-days with a close in both: 16483078; equal to 1e-6: 94.7448%; differing by more than 1%: 846245 (re-adjustments of the history in the later download)
+
+Unseen months, rebalanced minus buy-and-hold (log points a year):
+  P1                     +0.548%  NW t +0.20  p 0.4205  (328 days)
+  P2                     +0.195%  NW t +0.08  p 0.4685  (328 days)
+  P1 gross               +0.764%  NW t +0.28  p 0.3900  (328 days)
+  P2 gross               +0.239%  NW t +0.10  p 0.4615  (328 days)
+  delay 0 daily gross    +0.873%  NW t +0.35  p 0.3643  (328 days)
+After costs, the unseen months (mean of the two partial calendar years): -3.14; buy-and-hold -3.53; before costs vs random +0.54
+Frozen hashes after the run: all match
+

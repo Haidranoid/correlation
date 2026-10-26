@@ -1,0 +1,12 @@
+Running as unit: run-p2432230-i31810143.scope; invocation ID: 131f6efa476d497d951db8391fb16462
+unseen months dS > 0 and R >= 0 {'warning_months': 3, 'sharpe': 1.525607723658799, 'sharpe_B': 1.3241213887875525, 'random_median': 1.1749827169668288, 'p': 0.0806919308069193, 'spy_next21_warning': -0.004777499646717476, 'spy_next21_other': 0.019050279459218267}
+unseen months dS > 0, no stock condition {'warning_months': 7, 'sharpe': 0.9184561662312828, 'sharpe_B': 1.3241213887875525, 'random_median': 0.9437194368231343, 'p': 0.5218478152184781, 'spy_next21_warning': 0.014346494084604358, 'spy_next21_other': 0.014230674497279536}
+unseen months dS >= 80th pct, no stock condition {'warning_months': 3, 'sharpe': 0.9087903928432987, 'sharpe_B': 1.3241213887875525, 'random_median': 1.1719073695983637, 'p': 0.8349165083491651, 'spy_next21_warning': 0.026861402921939836, 'spy_next21_other': 0.011140553817053941}
+unseen months C2 default spread, top fifth and R >= 0 {'warning_months': 2, 'sharpe': 1.1018489431089966, 'sharpe_B': 1.3241213887875525, 'random_median': 1.2252214043405403, 'p': 0.7524247575242475, 'spy_next21_warning': 0.0193336610049597, 'spy_next21_other': 0.01350796404311903}
+Warning rules against rule B put in cash for the same number of random months (10,000 draws, 5 bps; after results)
+| Period | Rule | Warning months | Sharpe | Rule B | Median random-cash Sharpe | p | SPY next 21 d, warning / other months |
+|---|---|---|---|---|---|---|---|
+| unseen months | dS > 0 and R >= 0 | 3 | 1.526 | 1.324 | 1.175 | 0.0807 | -0.48% / +1.91% |
+| unseen months | dS > 0, no stock condition | 7 | 0.918 | 1.324 | 0.944 | 0.5218 | +1.43% / +1.42% |
+| unseen months | dS >= 80th pct, no stock condition | 3 | 0.909 | 1.324 | 1.172 | 0.8349 | +2.69% / +1.11% |
+| unseen months | C2 default spread, top fifth and R >= 0 | 2 | 1.102 | 1.324 | 1.225 | 0.7524 | +1.93% / +1.35% |

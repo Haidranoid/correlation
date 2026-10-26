@@ -1,0 +1,130 @@
+Decisions for experiments/untested-brandon-gravity.md, logged as made (local time, 2026-10-24).
+
+13:22  Before any test: novelty check (web searches)
+- Searched for force laws on pair or residual spreads that strengthen near equilibrium, gravity models of stock
+  prices, nonlinear or threshold mean reversion of spreads, and power-law lag kernels between stocks.
+- Found: nonlinear spread models (Zhang 2020, arXiv 2005.09794; ESTAR and band-of-inaction models in exchange rates)
+  revert FASTER far from equilibrium, the opposite of gravity; "gravity" indicators on TradingView are moving-average
+  reversion; a patent and a 2010 blog post speculate about inverse-square price forces with no test. Power-law
+  kernels appear for high-frequency Hawkes cross-excitation (e.g. arXiv 2303.02038, kernels decaying like 1/t), not
+  as a daily lead-lag kernel between stocks. No prior test of a near-equilibrium force law on peer spreads or of a
+  power-law kernel centred on an offset was found. It changed no rules.
+
+13:25  Before any result: environment
+- research/gravity/.venv (git-ignored by its own .gitignore): Python 3.12.12, numpy 2.2.6, numba 0.61.2,
+  llvmlite 0.44.0 (the pins of an earlier test's environment). Every script under systemd-run --user --scope
+  -p MemoryMax=5G with 4 threads.
+
+13:33  Before any result: the pilot (out/pilot.txt)
+- Load average 11 at the time (lower than the usual 40-46). One year (12 refits of 2012), 50 stocks: attractor
+  selection (G1, random and the 18 G2 kernels, all 500 stocks) 15.5 s -> 4.5 min for the full run; G3 at N = 21
+  (and N = 5 in the same pass) with numba 0.2 s for 48 stocks -> 1.1 min for both worlds; plain numpy 122 min.
+  numpy and numba agree on 1,680 stock-day values to 6e-8 (float32 output).
+- Decision by the pilot's fixed rule: G3 with numba, in chunks of one refit; no lagged spread is materialized.
+  Every grid, the universe and the period are as the plan says.
+
+13:47  Before any result: choices the plan leaves open (the panel, attractors and forces)
+- Closes: the export's before 2008 (history only), the store's on bad-print-valid days from 2008 (the export's close is
+  repaired with a look one day ahead). Store and export closes agree on all 4,481,821 valid stock-days from 2008.
+- sigma[t] covers t-62..t; "sigma through t - 1" is sigma[t-1]. The close-to-close fallback also needs 57 of 63
+  returns. z(t) uses sigma[t-1]; the force law divides the next return by sigma[t] (known at the close of t).
+- D0 ("sigma exists for most of the universe"): the first day with GK sigma[t-1] for >= 90% of that day's universe:
+  2008-03-26. Every stage's forces start that day.
+- Universe: an earlier test's rule (the plan's text; no twin required), including a finite export close on the refit
+  day, inherited from -6.2. 211 refits, 1,219 distinct stocks, 161 bad prints (0.007%).
+- Attractors: pairwise-complete correlation and slope on common valid days; a stock keeps fewer than 10 attractors
+  when fewer than 10 have rho > 0 and 227 common days (0.9% of stock-refits have fewer than 5, so no force).
+- beta_M for z: 252 days t-252..t-1, >= 227 valid.
+- Random attractors: drawn without replacement from the refit's universe (sorted by store id, B excluded), seeded by
+  (SEED, refit date, B's store id), so a truncated build or the new export draws the same ones. One random set per
+  stock-refit, shared by G1, G2 and G3. A random attractor with rho < 0 has mass 0 and still counts as a valid term
+  (zero pull); one with fewer than 227 common days is no attractor.
+- Missing data in kernel sums (G2's f_A, G3's sum over tau): missing terms count 0, and the sum is valid only when
+  >= 90% of the kernel's weight has data (so the sharp offset needs its one day).
+- G3's gaps at lag tau use B's close, high and low on t and A's close on t - tau.
+- A force is NaN unless >= 5 attractor terms are valid, B is in the universe that day and t >= D0.
+
+13:47  Before any result: the checks (out/checks_old.txt) all pass on the first full run
+- Truncation: 12 stocks, each cut at a random day; the panel was rebuilt from the raw data through the cut (universe,
+  sigma, z, attractors, masses, beta) and all 110 force variants recomputed over the 2 refits up to the cut: 0 of
+  43,340 values differ; attractor tables, sigma and z identical 12/12.
+- Slow recomputation: 40 random stock-days x 110 variants in plain Python: 0 mismatches (worst relative difference
+  6e-8, the float32 storage); sigma, beta_M and z in plain Python 40/40; attractor selection for 6 stock-refits
+  recomputed pair by pair with numpy.corrcoef (G1, random and all 18 G2 kernels): 6/6 identical.
+- Hand prints: AAPL 2016-05-02, XOM 2015-12-08, JPM 2011-08-08 (out/checks_old.txt).
+- No bug was found; nothing was changed after the checks.
+
+13:55  Before any result: the tests (tests.py), written before any outcome was computed
+- Returns: simple returns from the store's prices, both days valid: open t+1 -> open t+2 (primary), close t+1 ->
+  close t+2, close t -> close t+1. B's 1- and 5-day returns: log close-to-close through t.
+- Daily statistics are assigned to the decision day t; periods cut by decision day. Days run from D0 to the
+  third-last day of the export.
+- S: universe stocks with the force, the benchmark, both reversal controls and the return; all five re-ranked
+  within that sample each day (average ranks, centred (rank - 1) / (n - 1) - 0.5); >= 50 stocks a day. Raw: the
+  same without the benchmark. IC: the rank correlation of force and return over stocks with both.
+- M: n // 5 names a side among universe stocks with a force (ties broken by row order); a picked stock without a
+  return that day is left out of its leg's mean (drop and renormalize); turnover = sum |w_t - w_{t-1}| over all
+  stocks, with no drift adjustment; cost = c bps x turnover.
+- Benchmarks: G1 -> the spring; G2 (N, a) -> the sharp offset at the same N with its own attractors; G3 (N, a, p)
+  -> G1's force at (p, 0.3). Closes-only candidates are controlled for the closes-only benchmark (the spring is
+  the same; G3 closes only -> G1 closes only).
+- The random null is a parallel world: the random-attractor candidate force, controlled for the random-attractor
+  benchmark, and its own book. Reported, not a primary.
+- t = estimate / bootstrap sd; the p used for Romano-Wolf is the bootstrap max-t; Holm on the six stage p's at
+  0.0027, each also needing the best candidate's t >= 3. The bootstrap: one set of 10,000 circular 21-day block
+  draws per period (seed 20261024), shared by every series.
+- Romano-Wolf: step-down max-t (studentized by each candidate's bootstrap sd); a stage's p is its best candidate's
+  adjusted p.
+- Alphas: the candidate's net 5 bps daily series regressed on the gross daily series of 5-day reversal's long-short
+  (bottom fifth of the 5-day return long, same universe, same open-to-open execution) and, separately, on its
+  benchmark's gross book, Newey-West (10 lags).
+
+13:58  Before the force law, the kernel or the judge were computed (tests.py was running; none of its output read)
+- Force law (shape.py): unweighted means over pair-days (not weighted by mass); the outcome is B's next
+  open-to-open simple return divided by sigma[t] (known at the close of t), signed by -sign(g_C); pair-days need the
+  gap and the return; date-block bootstrap from per-date sums and counts. The closes-only distance (r = |g_C|) is
+  reported beside it. Predicted shapes: each law's mean 1/(r + eps)^p in the bin, and the spring's mean |g_C|.
+- Kernel (shape.py): the plan says "the cross-sectional slope of z_B(t+1) on z_A(t+1-tau)". With attractors chosen by
+  |m|, half the masses are negative, so an unsigned slope would mix the two directions. The primary reading is the
+  slope on sign(m) z_A(t+1-tau) (the direction the mass predicts); the unsigned slope is reported beside it. Slopes
+  per day over all (B, A) pairs with an intercept (>= 100 pairs), averaged over days, real minus random.
+- Judge (judge.py): scores are the force's centred rank among the day's universe stocks with a force (the judge buys
+  the top 20 with a positive score). The judge's walk-forward (start 2024-06-28) runs its years 2007-08 .. 2024-25 and
+  skips 2006-07; its year 2008-09 exists, so no per-year stitching is needed. The 17 years with start >= 2008-06-28 are
+  graded; 2007-08 (forces only from 2008-03-26) is dropped. SPY: Yahoo total return over each year's first..last day
+  (after_costs/group_a/spy.py). Random accounts uniform, 1,000. RAYON_NUM_THREADS=4.
+- Unseen months: the new export's universe from the refit in force on 2025-01-01 (so attractors, G2 masses, kernels
+  and 63-day spread windows are full on 2025-06-30); statistics and books from 2025-06-30. The judge's single holdout
+  starts 2025-06-30; its returns are over the 16 months, not annualized.
+- Intraday (intraday.py), fixed now: the cached 5-minute bars with intraday_lead_lag/build.py's filters (high and
+  low read from the same CSVs); full days (SPY has all 78 bars) inside the new export; attractors of the last refit
+  before the first bar day; each symbol-day scaled to the store by f = store close(d-1) / Yahoo daily close(d-1),
+  kept only if its last bar x f is within 2% of the store's close on d and Yahoo shows no split on d-1 or d; the
+  outcome is the next 5-minute bar's log return in the attractor's direction over sigma[d-1] / sqrt(78); days
+  bootstrapped in 5-day blocks (60 days are too few for 21-day blocks).
+
+14:12  After the development results were seen (tests, shape, judge on the old export), before the unseen months
+- No rule, grid or code that computes a result was changed after any result was seen. The hashes of every script
+  as they stand before the unseen months are in out/sha256_before_unseen.txt.
+- Two wait loops of this session matched their own command line and never ended; they were killed. No script was
+  affected.
+- The judge took about 5 s an account here, not the 1.5 minutes expected, so all 34 walk-forwards ran in 3 minutes.
+
+14:11  The unseen months, once, with the code of out/sha256_before_unseen.txt (unseen.py: data, peers, forces, tests,
+       shape and judge on the new export). The new export's days start with the old export's (same refit calendar);
+       forces cover >= 98.2% of the universe on 2025-06-30.
+14:14  The 5-minute check, once (intraday.py): 58 full days inside the new export, 443 of the 500 universe stocks of
+       the 2026-07-17 refit have bars (88.6%), so it ran; no symbol-day failed the 2% or split rule.
+
+14:15  After all results were seen
+- artifact.py was given its page text (the verdict, key numbers and the "can and can't show" points), filled from
+  the result files; it computes no test. Its hash before the unseen months is in out/sha256_before_unseen.txt.
+- forward.py prepare wrote out/forward_frozen.json with the final hashes. forward.py log and score were dry-run once
+  on already-seen data (the old export as the "download", forward from 2024-06-28, universe from 2023-06-01) to test
+  the code path: 250 days logged, 248 scored (G1-S t +0.64, every Holm p 1). All their outputs were deleted.
+       (The 14:11 and 14:14 entries above were written at 14:19, after the runs they describe.)
+
+14:40  After all results were seen: a page-data fix in artifact.py
+- The worked examples' "G2 N=21 sharp" percentile read the flat N = 5 kernel (g2_15) instead of the N = 21 sharp
+  offset (g2_14). Fixed and artifact.py rerun; it computes no test. forward.py prepare and out/sha256_final.txt were
+  rerun with the new hash.

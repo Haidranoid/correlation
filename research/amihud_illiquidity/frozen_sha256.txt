@@ -1,0 +1,19 @@
+# sha256 of the procedure, frozen 2026-10-25 before the unseen months were run (experiments/untested-amihud-illiquidity.md)
+6b75e493be1f0c06798dbc57a380d2406d8fb325ddc4ee5a4f26e38ce74da7c6  common.py
+28e849b92d659829d405661ef8f1e70b6c47c3dc7ae305b8458365515743b3e9  check_splits.py
+2cfbda73ad17d9ffa8ba5eea0a2691dac73abef8c44ccfa2fe5b5e240de6ee77  panels.py
+0d62450686ebcad9b55622572bdfd9aff7f2c4f2b46f75e26edc2d74478a0766  tests.py
+404a1fd8cc1a5bf37fd5855a46d37780f1e300037a727af6ed2213ac15482df5  timeseries.py
+4855fab365c8b6a03a17f5f2dfaf8a27fa5331631261175b298ebefac1630730  money.py
+991dbe855301416ea3a764b915f7f86a752a78819faf7cc8ea618bd734d512e3  sanity_reversal.py
+354398f819a4917289389dc14e80d11ff26879fae8b979797773147fbdda79b2  unseen.py
+f396ada3b16fd318228bc0f668468d1b15bc3974159681c88629c0eb1fb529ca  forward.py
+# Deviation (2026-10-25, during the unseen run): timeseries.py first frozen as b2924c5e7c623d901b73d30bd41722c27f639080e7b04fd23c8dd1f762cceda8;
+# it failed on the 15 unseen periods (no January period: a constant dummy, a singular matrix) and was changed to drop a
+# constant January dummy. Its old-export output is byte-identical. The unseen run was then repeated with this hash.
+# 2026-10-25, after the run: comments, docstrings and printed labels anonymized at Brandon's request (references to tests held outside the repo). Each edited file's syntax tree, with string constants masked, is identical to before, so the procedure is unchanged. Previous hashes:
+# b618f4ac2361c737ef2cb1e1d20ac855812db5534aca606984eb22b0431eb9de  check_splits.py (before 2026-10-25 anonymizing)
+# 283cb48fbf1ae6147a62df78946d43183d7e4857dd747cc8e01e36902273636a  common.py (before 2026-10-25 anonymizing)
+# 9b6b5faca3f98fd2973750a9a7c5b2f77d8a2b70fdaa5c9b9d3484fe30f2b8c3  money.py (before 2026-10-25 anonymizing)
+# 07813b46157e071b8ad39a9f5583f3f037bf9f539eb743441a076038f58cc3f1  panels.py (before 2026-10-25 anonymizing)
+# 05cbc01bfff91d5c88c4739f5c0efceef37779bcb3720af27552f13155018013  tests.py (before 2026-10-25 anonymizing)

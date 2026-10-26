@@ -1,0 +1,16 @@
+S3: the nine SPDR sector funds (new store), rebalanced equal weight minus buy-and-hold, reset each year
+  unseen:
+    daily gross              +0.292%/yr  NW t  +0.51  p 0.3048  (328 days)
+    daily 5 bps              +0.205%/yr  NW t  +0.36  p 0.3593  (328 days)
+    monthly gross            +0.202%/yr  NW t  +0.40  p 0.3462  (328 days)
+    monthly 5 bps            +0.186%/yr  NW t  +0.36  p 0.3580  (328 days)
+    delay 0 daily gross      +0.320%/yr  NW t  +0.57  p 0.2854  (328 days)
+    delay 0 daily 5 bps      +0.233%/yr  NW t  +0.41  p 0.3393  (328 days)
+    E1 sums (log points): pred 0.0115, EG daily 0.0147, J 0.0106, gap delay 0 +0.0042; random walk -0.0002 (-0.0129..+0.0077), percentile 78.5
+  by period: 2025H2 gap +0.0019 (pred 0.0047); 2026 gap +0.0019 (pred 0.0067)
+
+S5: RSP - SPY (store, both price-only after about 2022-12), beside P1 without div_fix minus the store SPY
+  2025: RSP   +5.40 SPY  +10.37 RSP-SPY  -4.97 | same days: P1   +7.47 RSP   +5.40 SPY  +10.37 P1-SPY  -2.90 P1-RSP  +2.06
+  2026: RSP  +11.40 SPY  +12.40 RSP-SPY  -1.00 | same days: P1   +8.55 RSP  +11.40 SPY  +12.40 P1-SPY  -3.85 P1-RSP  -2.85
+  means: RSP-SPY all years -2.98; over P1's years RSP-SPY -2.98, P1-SPY -3.38, P1-RSP -0.39
+  Dividends in the store (checked against Yahoo for SPY, TLT, LQD, IWM): funds are price-only before 2011 and adjusted from 2011; in 2023-2025 SPY is adjusted, LQD and IWM are not. RSP has no Yahoo series here.

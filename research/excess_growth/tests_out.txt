@@ -1,0 +1,10 @@
+1. EG identity (delay 0, daily), 20 random cases: worst |engine - formula| = 1.54e-14
+2. Two-stock example: rebalanced 1.125000 (expected 1.125), held 1.000000 (expected 1.0), rebalancing turnover 0.333333 (expected 1/3: sell 0.25 of A and buy 0.25 of B, sum |trade| 0.5 over the value 1.5)
+3. Buy-and-hold turnover nonzero only on offsets [25] (the forced sale is at offset 25)
+4. Engine against a plain loop (daily, monthly, hold; delay 0 and 1; missing and untradeable days; a forced sale): worst difference 5.55e-17
+5. iid returns, equal means (40000 draws, 5 stocks, 30 days): mean wealth rebalanced 1.03124, held 1.03125, theory 1.03044; difference z = -0.09. Mean log gap +2.41e-05
+   unequal means: mean wealth held - rebalanced +0.00193 (theory +0.00201)
+6. Chain turnover: [1.0, 0.0, 1.2, 0.0, 0.0] (expected [1, 0, 1.2, 0, 0]: 0.6 + |0.5 - 0.4| + 0.5)
+7. Lag decomposition identity: worst |difference| 1.11e-16
+8. Noise: NW t +0.87 (plain t +0.88), bootstrap p 0.187; noise + 0.1 sd: NW t +6.21, bootstrap p 0.0001, normal p 0.0000
+All checks passed.

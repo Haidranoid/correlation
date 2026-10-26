@@ -1,0 +1,23 @@
+
+== R1 on unseen (2025-06-30..2026-10-19) ==
+C2_delta: -0.0089 (90% -0.0265..+0.0075), bootstrap t -0.86, p 0.8045 (percentile p 0.8043); plain t over periods +nan; positive in 0 of 1
+C2_slope: +0.0141 (90% -0.0109..+0.0398), bootstrap t +0.91, p 0.1816 (percentile p 0.1837); plain t over periods +nan; positive in 1 of 1
+stocks 3324; C2 low +0.0020, middle -0.0017, high +0.0109
+
+== Item 6, U_J ==
+C2_delta: -0.0158 (90% -0.0321..-0.0021), bootstrap t -1.73, p 0.9579 (percentile p 0.9543); plain t over periods +nan; positive in 0 of 1
+
+== Item 6, the 500 largest ==
+C2_delta: +0.0133 (90% -0.0166..+0.0298), bootstrap t +0.94, p 0.1729 (percentile p 0.1718); plain t over periods +nan; positive in 1 of 1
+
+== Item 3, up and down moves apart (2,000 draws) ==
+C2u_delta: -0.0111 (90% -0.0403..+0.0184), bootstrap t -0.62, p 0.7317 (percentile p 0.7255); plain t over periods +nan; positive in 0 of 1
+C2d_delta: -0.0022 (90% -0.0278..+0.0357), bootstrap t -0.12, p 0.5470 (percentile p 0.5530); plain t over periods +nan; positive in 0 of 1
+
+== Dividends: div_fix applied to every return ==
+C2_delta: -0.0093 (90% -0.0268..+0.0079), bootstrap t -0.88, p 0.8102 (percentile p 0.8081); plain t over periods +nan; positive in 0 of 1
+
+== Dividends: ex-dividend days dropped from the signal ==
+C2_delta: -0.0088 (90% -0.0266..+0.0077), bootstrap t -0.84, p 0.8003 (percentile p 0.7989); plain t over periods +nan; positive in 0 of 1
+
+done in 49 s

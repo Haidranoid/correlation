@@ -1,0 +1,13 @@
+# sha256 of the procedure, recorded 2026-10-25 17:47 CDT before the unseen months were run
+5cd8fc419f8efc56eff210d4189528f5a1d76522ed99b6dc8740458afc2445d9  eg_common.py
+a9db58e9fadaf21b5c978bd9cbc54d135a8a5fe2dae3a81f8e9f09259269b9c6  run.py
+725607a1d1d1059a7042e01ae5810f1e1487f2230369d0b39da47d9fb4689abd  survivorship.py
+260748d7fb57c8bebed976e0db7717e6040441e4a94917f402deee703ad52ea6  funds.py
+911c3c2be18ff480864c0e59a76464937a046f723122d66d8224a1b4b57f7ba2  after_costs.py
+ddd1b5de73e7fbc515abddf7592d7a03bcaeaab00ecd5340738ab4cc2e757031  unseen.py
+b18aabe28a4aded216cc843d02f707b2ad3848649d9b36f01fba81e201d74e40  forward.py
+ff9440115fd43965aeebce4f39fe67d8e58ca7310d302cd426e3871c987798d3  tests.py
+# shared code imported read-only (informational; not checked by unseen.py/forward.py):
+# b33740df1db324a0cf2f6fa5bec91a9c07cfdc2a53b0cbf1c1647e3b77882365  /home/bhoult/programming/correlation/research/lib/c2eval.py
+# ba5b3f9052a5886ab3da43c3e3fdda22b71dd4cbeb5893a1a68c83c36d000953  /home/bhoult/programming/correlation/research/published_data/pubdata.py
+# 27dfee10226113e38fbc1e11e4501a3e3032209af94d3bac99a466a8cddde14f  /home/bhoult/programming/correlation/research/after_costs/group_b/ac.py

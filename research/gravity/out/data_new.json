@@ -1,0 +1,28 @@
+{
+ "tag": "new",
+ "T": 6240,
+ "rows": 725,
+ "refits": 23,
+ "size_min": 500,
+ "size_max": 500,
+ "d0": 5790,
+ "d0_date": "2025-01-02",
+ "universe_stock_days": 225000,
+ "with_store_row": 224993,
+ "bad_prints": {
+  "(H-L)/C>0.5": 6,
+  "H<max(O,C)": 0,
+  "L>min(O,C)": 0,
+  "H=L": 0,
+  "any": 6
+ },
+ "store_vs_export_close": {
+  "days": 2721572,
+  "max_rel": 0.0,
+  "share_exact": 1.0
+ },
+ "sigma_gk_share_universe": 0.9999955555555555,
+ "sigma_missing_universe": 1,
+ "z_missing_universe": 1930,
+ "sigma_median": 0.018488429989170763
+}

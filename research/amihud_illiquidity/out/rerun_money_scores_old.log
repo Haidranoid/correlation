@@ -1,0 +1,3 @@
+Running as unit: run-p2443315-i31803017.scope; invocation ID: 49da4852ef9043e49e72745b6a030a5b
+[    0.9s] saved /home/bhoult/.local/share/correlation2/experiments/amihud_illiquidity/illiq_money_A_old.npy first scored day 2004-12-31 mean scored per day 1257.0585838991271
+[    1.0s] saved /home/bhoult/.local/share/correlation2/experiments/amihud_illiquidity/illiq_money_B_old.npy first scored day 2004-12-31 mean scored per day 1257.0768186226965

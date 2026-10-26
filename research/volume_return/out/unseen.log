@@ -1,0 +1,18 @@
+hashes before: all match
+running build.py new
+running r1.py new
+running m1.py new
+running money.py new
+
+== Overlap ==
+6593 tickers in both of 8503 old; stock-days differing (NaN pattern or > 1e-6 relative): closes 930535, dollar volume 428468; largest close difference 1.00e+06
+
+== R1 on the unseen months ==
+Delta -0.0089, bootstrap t -0.86, p 0.8045
+
+== M1 on the unseen months ==
+D gross -1.94 bps a day (t -1.65, p 0.9507); net -1.54
+
+== The judge, single holdout ==
+P_full: +60.7% vs random +18.9% (p 0.010), change +41.8; at 5 bps +20.0% vs SPY +26.3%: after costs -6.3 over the period (-4.6 a year)
+hashes after: all match

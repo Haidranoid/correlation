@@ -1,0 +1,28 @@
+{
+ "tag": "old",
+ "T": 5911,
+ "rows": 1219,
+ "refits": 211,
+ "size_min": 500,
+ "size_max": 500,
+ "d0": 1568,
+ "d0_date": "2008-03-26",
+ "universe_stock_days": 2200000,
+ "with_store_row": 2199709,
+ "bad_prints": {
+  "(H-L)/C>0.5": 125,
+  "H<max(O,C)": 10,
+  "L>min(O,C)": 10,
+  "H=L": 17,
+  "any": 161
+ },
+ "store_vs_export_close": {
+  "days": 4481821,
+  "max_rel": 0.0,
+  "share_exact": 1.0
+ },
+ "sigma_gk_share_universe": 0.9999493437715865,
+ "sigma_missing_universe": 109,
+ "z_missing_universe": 20163,
+ "sigma_median": 0.01547789885504342
+}

@@ -1,0 +1,55 @@
+Forecast (new). Day axis 1993-01-29..2026-10-19. First fit 2007-12-03 on 3655 eligible origins (from 1993-03-02). Eligibility assertion (s + 1 + h <= t) held on all 9988 fits.
+
+P1: the VRP model against the historical mean (h = 63; CW t with Newey-West at 126 lags; bootstrap with 126-day blocks):
+| Period | Origins | First..last | MSE mean | MSE VRP | R2_oos (95%) | CW t | p normal | p bootstrap |
+|---|---|---|---|---|---|---|---|---|
+| unseen | 265 | 2025-06-30..2026-07-20 | 0.00187 | 0.00179 | +4.41% (+1.05%..+5.17%) | +2.13 | 0.0165 | 0.0000 |
+Bootstrap p with other blocks (unseen): 63 days 0.1156, 189 days n/a, 252 days n/a
+
+G: mean squared error of each model (x 1e3), same origins:
+| Period | Origins | Historical mean | VRP | (a) log VIX + log RV | (b) log VIX | (c) log RV | (d) IV, RV levels | Gate |
+|---|---|---|---|---|---|---|---|---|
+| unseen | 265 | 1.8722 | 1.7896 | 1.5941 | 1.7494 | 1.8815 | 1.7018 | fail |
+
+Reported with G (R2_oos, CW t, p bootstrap):
+| Period | (a) vs mean | (b) vs mean | (c) vs mean | (d) vs mean | (d) vs VRP (BTZ's restriction) | (a) + VRP vs (a) (functional form) |
+|---|---|---|---|---|---|---|
+| unseen | +14.85%, +2.38, 0.000 | +6.56%, +1.44, 0.269 | -0.50%, -0.20, 0.983 | +9.10%, +1.56, 0.226 | +4.90%, +1.19, 0.350 | +0.19%, +0.22, 0.670 |
+
+Code checks (P1 pipeline):
+  pure noise: unseen R2_oos -0.13%, CW t -3.01, p boot 1.0000
+  leaky oracle (future target + noise): unseen R2_oos +49.30%, CW t +2.90, p boot 0.0000
+
+Reported (each against the historical mean; R2_oos, CW t, p bootstrap):
+  h = 21: unseen n 307 +0.73%, t +1.17, p 0.137
+  h = 42: unseen n 286 +0.16%, t +1.84, p 0.100
+  h = 126: unseen n 202 -0.38%, t -1.99, p n/a
+  h = 252: unseen n 76 -6.72%, t -23.31, p n/a
+  volatility form sqrt(IV) - sqrt(RV): unseen n 265 +9.26%, t +2.68, p 0.000
+  log ratio ln(IV / RV): unseen n 265 +4.32%, t +3.13, p 0.000
+  expected premium IV - HAR forecast: unseen n 265 +7.94%, t +1.39, p 0.295
+  RV over 22 days: unseen n 265 +4.03%, t +2.19, p 0.000
+  Campbell-Thompson restrictions: unseen n 265 +4.41%, t +2.13, p 0.000
+  the store's SPY: unseen n 265 +3.11%, t +2.07, p 0.000
+  (HAR fits for the expected premium: 391; it starts 1994-03-30)
+
+Non-overlapping phases (origins 63 days apart on the calendar; R2_oos, plain t of the CW mean):
+  unseen: phase 2 n 5 from 2025-07-16: +5.66%, t +0.73
+
+By origin year: R2_oos, CW t; gate
+| Year | Origins | R2_oos | CW t | MSE VRP below all four | 
+|---|---|---|---|---|
+| 2025 | 129 | +2.07% | +1.94 | no |
+| 2026 | 136 | +5.53% | +2.62 | no |
+
+VRP slope (decimal 63-day log excess return per monthly %^2), every 12th fit: 2007-12-03 +0.508e-3, 2008-12-02 +0.595e-3, 2009-12-02 +0.574e-3, 2010-12-02 +0.588e-3, 2011-12-01 +0.580e-3, 2012-12-04 +0.581e-3, 2013-12-04 +0.576e-3, 2014-12-04 +0.574e-3, 2015-12-04 +0.577e-3, 2016-12-05 +0.573e-3, 2017-12-05 +0.571e-3, 2018-12-06 +0.565e-3, 2019-12-06 +0.536e-3, 2020-12-07 +0.137e-3, 2021-12-07 +0.169e-3, 2022-12-07 +0.161e-3, 2023-12-08 +0.165e-3, 2024-12-10 +0.165e-3, 2025-12-12 +0.122e-3; last 2026-10-15 +0.131e-3
+Overlap: unseen: corr(VRP, log VIX) +0.76, corr(VRP, log RV) -0.18, corr(VRP, IV) +0.82, VRP mean 14.98 sd 10.85, negative 4.5%
+
+Replications (origins from 2004-02-03):
+  VXN with QQQ: first fit on 902 origins (from 2004-02-03); last-fit slope -0.181e-3
+    unseen: n 265, R2_oos -4.54% (-5.71%..+0.59%), CW t -1.54, p boot 0.747; gate fail (MSE x1e3: mean 5.7712, VRP 6.0335, a 5.4037, b 5.4995, c 5.8599, d 5.8337)
+  RVX with IWM: first fit on 902 origins (from 2004-02-03); last-fit slope +0.055e-3
+    unseen: n 265, R2_oos +1.30% (+1.27%..+1.66%), CW t +3.17, p boot 0.000; gate fail (MSE x1e3: mean 4.5918, VRP 4.5321, a 3.8280, b 3.9066, c 4.5155, d 4.2087)
+
+Forecasts over the previous run's span: {'yhat_mean': {'equal': True, 'max_abs_diff': 0.0}, 'yhat_vrp': {'equal': True, 'max_abs_diff': 0.0}, 'yhat_a': {'equal': True, 'max_abs_diff': 0.0}, 'qqq_yhat_vrp': {'equal': True, 'corr': 1.0, 'max_abs_diff': 0.0}, 'iwm_yhat_vrp': {'equal': True, 'corr': 0.9999999999999999, 'max_abs_diff': 0.0}}
+Runtime 1 s

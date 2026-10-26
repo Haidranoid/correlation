@@ -1,0 +1,40 @@
+{
+ "unseen months": {
+  "dS > 0 and R >= 0": {
+   "warning_months": 3,
+   "sharpe": 1.525607723658799,
+   "sharpe_B": 1.3241213887875525,
+   "random_median": 1.1749827169668288,
+   "p": 0.0806919308069193,
+   "spy_next21_warning": -0.004777499646717476,
+   "spy_next21_other": 0.019050279459218267
+  },
+  "dS > 0, no stock condition": {
+   "warning_months": 7,
+   "sharpe": 0.9184561662312828,
+   "sharpe_B": 1.3241213887875525,
+   "random_median": 0.9437194368231343,
+   "p": 0.5218478152184781,
+   "spy_next21_warning": 0.014346494084604358,
+   "spy_next21_other": 0.014230674497279536
+  },
+  "dS >= 80th pct, no stock condition": {
+   "warning_months": 3,
+   "sharpe": 0.9087903928432987,
+   "sharpe_B": 1.3241213887875525,
+   "random_median": 1.1719073695983637,
+   "p": 0.8349165083491651,
+   "spy_next21_warning": 0.026861402921939836,
+   "spy_next21_other": 0.011140553817053941
+  },
+  "C2 default spread, top fifth and R >= 0": {
+   "warning_months": 2,
+   "sharpe": 1.1018489431089966,
+   "sharpe_B": 1.3241213887875525,
+   "random_median": 1.2252214043405403,
+   "p": 0.7524247575242475,
+   "spy_next21_warning": 0.0193336610049597,
+   "spy_next21_other": 0.01350796404311903
+  }
+ }
+}

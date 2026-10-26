@@ -1,0 +1,84 @@
+[old] axis 1993-01-29..2025-06-27 (8159 days); calendar 389 dates; fills {'vix': ['1997-01-31', '1997-11-26'], 'vxn': ['2003-08-22', '2004-09-10'], 'rvx': ['2005-10-10', '2005-11-11']}; RF from DGS3MO on 0 days after 2026-08-31 and 0 inside
+Forecast (old). Day axis 1993-01-29..2025-06-27. First fit 2007-12-03 on 3655 eligible origins (from 1993-03-02). Eligibility assertion (s + 1 + h <= t) held on all 9284 fits.
+
+P1: the VRP model against the historical mean (h = 63; CW t with Newey-West at 126 lags; bootstrap with 126-day blocks):
+| Period | Origins | First..last | MSE mean | MSE VRP | R2_oos (95%) | CW t | p normal | p bootstrap |
+|---|---|---|---|---|---|---|---|---|
+| dev | 2957 | 2008-01-02..2019-09-30 | 0.00677 | 0.00641 | +5.31% (-0.66%..+11.21%) | +1.43 | 0.0763 | 0.1020 |
+| conf | 1315 | 2020-01-02..2025-03-26 | 0.00590 | 0.00758 | -28.47% (-62.98%..+4.29%) | -0.99 | 0.8394 | 0.9251 |
+| all_2008_2025 | 4336 | 2008-01-02..2025-03-26 | 0.00675 | 0.00702 | -3.96% (-23.51%..+7.39%) | +0.35 | 0.3625 | 0.3620 |
+| dev without 2008-2009 | 2452 | None..None | 0.00322 | 0.00325 | -1.11% (-4.68%..+3.00%) | +0.46 | 0.3214 | 0.3375 |
+| conf without 2020 | 1062 | None..None | 0.00423 | 0.00420 | +0.65% (-1.03%..+2.05%) | +0.99 | 0.1617 | 0.0150 |
+Bootstrap p with other blocks (dev): 63 days 0.0723, 189 days 0.1164, 252 days 0.1009
+P1 pass (2008-2019: CW t >= 2, bootstrap p < 0.023, R2_oos > 0): FAIL; clears t >= 3: no; 2020-2025-06 consistent (R2_oos > 0 and normal p < 0.05): no
+
+G: mean squared error of each model (x 1e3), same origins:
+| Period | Origins | Historical mean | VRP | (a) log VIX + log RV | (b) log VIX | (c) log RV | (d) IV, RV levels | Gate |
+|---|---|---|---|---|---|---|---|---|
+| dev | 2957 | 6.7670 | 6.4078 | 6.9486 | 6.9507 | 6.9555 | 6.7147 | pass |
+| conf | 1315 | 5.9016 | 7.5820 | 5.8700 | 5.8436 | 6.0095 | 7.3574 | fail |
+| all_2008_2025 | 4336 | 6.7510 | 7.0182 | 6.8791 | 6.8571 | 6.9166 | 7.1568 | fail |
+
+Reported with G (R2_oos, CW t, p bootstrap):
+| Period | (a) vs mean | (b) vs mean | (c) vs mean | (d) vs mean | (d) vs VRP (BTZ's restriction) | (a) + VRP vs (a) (functional form) |
+|---|---|---|---|---|---|---|
+| dev | -2.68%, -0.25, 0.602 | -2.71%, -1.47, 0.904 | -2.79%, -0.89, 0.809 | +0.77%, +1.59, 0.081 | -4.79%, -1.31, 0.887 | +5.28%, +1.65, 0.077 |
+| conf | +0.54%, +0.58, 0.319 | +0.98%, +0.62, 0.189 | -1.83%, -1.40, 0.978 | -24.67%, -0.88, 0.916 | +2.96%, +1.21, 0.033 | -29.22%, -1.04, 0.927 |
+| all_2008_2025 | -1.90%, -0.11, 0.507 | -1.57%, -1.02, 0.829 | -2.45%, -1.17, 0.864 | -6.01%, -0.18, 0.601 | -1.97%, -0.32, 0.621 | -3.70%, +0.33, 0.375 |
+
+Code checks (P1 pipeline):
+  pure noise: dev R2_oos -0.04%, CW t -0.83, p boot 0.7985; conf R2_oos -0.00%, CW t -0.28, p boot 0.8457; all_2008_2025 R2_oos -0.03%, CW t -0.80, p boot 0.7959
+  leaky oracle (future target + noise): dev R2_oos +82.11%, CW t +2.76, p boot 0.0133; conf R2_oos +80.82%, CW t +3.82, p boot 0.0000; all_2008_2025 R2_oos +82.26%, CW t +3.78, p boot 0.0015
+
+Reported (each against the historical mean; R2_oos, CW t, p bootstrap):
+  h = 21: dev n 2999 +2.03%, t +1.44, p 0.104; conf n 1357 -11.08%, t -1.13, p 0.897
+  h = 42: dev n 2978 +0.42%, t +1.48, p 0.097; conf n 1336 -14.20%, t -1.08, p 0.928
+  h = 126: dev n 2894 -0.39%, t +1.29, p 0.111; conf n 1252 -11.59%, t -1.02, p 0.992
+  h = 252: dev n 2768 -2.69%, t -0.96, p 0.988; conf n 1126 +1.20%, t +1.98, p 0.036
+  volatility form sqrt(IV) - sqrt(RV): dev n 2957 +2.05%, t +1.34, p 0.112; conf n 1315 -9.27%, t -0.78, p 0.914
+  log ratio ln(IV / RV): dev n 2957 -0.87%, t +0.33, p 0.362; conf n 1315 -1.82%, t -0.74, p 0.937
+  expected premium IV - HAR forecast: dev n 2957 +1.88%, t +1.35, p 0.112; conf n 1315 -8.21%, t -0.59, p 0.896
+  RV over 22 days: dev n 2957 +5.18%, t +1.38, p 0.106; conf n 1315 -28.33%, t -1.00, p 0.926
+  Campbell-Thompson restrictions: dev n 2957 +3.42%, t +2.00, p 0.041; conf n 1315 -0.59%, t -0.09, p 0.779
+  the store's SPY: dev n 2957 -4.24%, t +0.24, p 0.481; conf n 1315 -29.33%, t -1.01, p 0.935
+  (HAR fits for the expected premium: 375; it starts 1994-03-30)
+
+Non-overlapping phases (origins 63 days apart on the calendar; R2_oos, plain t of the CW mean):
+  dev: phase 0 n 47 from 2008-02-04: +13.29%, t +1.20; phase 1 n 47 from 2008-03-05: +9.78%, t +1.22; phase 2 n 47 from 2008-01-03: +7.54%, t +1.44
+  conf: phase 0 n 21 from 2020-02-07: -0.62%, t -0.46; phase 1 n 21 from 2020-03-10: -0.70%, t -0.12; phase 2 n 21 from 2020-01-08: -87.35%, t -0.98
+Monthly origins (the calendar), dev: n 141, R2_oos +10.05%, CW t (NW 6) +1.39
+Monthly origins (the calendar), conf: n 63, R2_oos -35.50%, CW t (NW 6) -1.01
+
+By origin year: R2_oos, CW t; gate
+| Year | Origins | R2_oos | CW t | MSE VRP below all four | 
+|---|---|---|---|---|
+| 2008 | 253 | +8.51% | +1.46 | yes |
+| 2009 | 252 | +12.53% | +3.37 | yes |
+| 2010 | 252 | +6.65% | +1.57 | no |
+| 2011 | 252 | -2.26% | +0.49 | no |
+| 2012 | 250 | +2.12% | +1.54 | yes |
+| 2013 | 252 | -4.26% | -0.95 | no |
+| 2014 | 252 | -1.74% | -0.00 | no |
+| 2015 | 252 | +1.69% | +2.19 | no |
+| 2016 | 252 | +0.70% | +1.17 | no |
+| 2017 | 251 | -5.52% | -2.30 | no |
+| 2018 | 251 | -1.47% | -0.07 | no |
+| 2019 | 252 | -6.80% | -1.71 | no |
+| 2020 | 253 | -68.41% | -1.32 | no |
+| 2021 | 252 | +3.31% | +1.19 | no |
+| 2022 | 251 | -0.34% | -0.19 | yes |
+| 2023 | 250 | +0.58% | +1.06 | yes |
+| 2024 | 252 | -0.02% | +0.44 | yes |
+| 2025 | 57 | +0.67% | +2.12 | no |
+
+VRP slope (decimal 63-day log excess return per monthly %^2), every 12th fit: 2007-12-03 +0.508e-3, 2008-12-02 +0.595e-3, 2009-12-02 +0.574e-3, 2010-12-02 +0.588e-3, 2011-12-01 +0.580e-3, 2012-12-04 +0.581e-3, 2013-12-04 +0.576e-3, 2014-12-04 +0.574e-3, 2015-12-04 +0.577e-3, 2016-12-05 +0.573e-3, 2017-12-05 +0.571e-3, 2018-12-06 +0.565e-3, 2019-12-06 +0.536e-3, 2020-12-07 +0.137e-3, 2021-12-07 +0.169e-3, 2022-12-07 +0.161e-3, 2023-12-08 +0.165e-3, 2024-12-10 +0.165e-3; last 2025-06-13 +0.167e-3
+Overlap: dev: corr(VRP, log VIX) -0.14, corr(VRP, log RV) -0.33, corr(VRP, IV) -0.34, VRP mean 6.77 sd 33.86, negative 15.6%; conf: corr(VRP, log VIX) -0.23, corr(VRP, log RV) -0.50, corr(VRP, IV) -0.41, VRP mean 7.09 sd 50.77, negative 13.8%; all_2008_2025: corr(VRP, log VIX) -0.16, corr(VRP, log RV) -0.37, corr(VRP, IV) -0.36, VRP mean 6.90 sd 39.55, negative 14.9%
+
+Replications (origins from 2004-02-03):
+  VXN with QQQ: first fit on 902 origins (from 2004-02-03); last-fit slope -0.135e-3
+    dev: n 2957, R2_oos -0.03% (-4.86%..+4.47%), CW t +0.97, p boot 0.208; gate pass (MSE x1e3: mean 9.3688, VRP 9.3721, a 10.6597, b 10.5520, c 10.3058, d 12.9229)
+    conf: n 1315, R2_oos -17.56% (-35.18%..-0.31%), CW t -1.16, p boot 0.978; gate fail (MSE x1e3: mean 10.4374, VRP 12.2701, a 10.5619, b 10.4922, c 10.6972, d 12.1492)
+  RVX with IWM: first fit on 902 origins (from 2004-02-03); last-fit slope +0.058e-3
+    dev: n 2957, R2_oos +3.31% (-2.76%..+9.02%), CW t +1.56, p boot 0.091; gate pass (MSE x1e3: mean 11.1243, VRP 10.7556, a 12.2299, b 12.2018, c 12.1260, d 13.7158)
+    conf: n 1315, R2_oos -24.86% (-63.23%..-0.08%), CW t -1.11, p boot 0.974; gate fail (MSE x1e3: mean 14.0656, VRP 17.5622, a 13.5039, b 13.1215, c 13.5653, d 16.8233)
+Runtime 1 s

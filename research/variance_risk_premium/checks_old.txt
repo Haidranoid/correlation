@@ -1,0 +1,21 @@
+Checks (old): day axis 1993-01-29..2025-06-27, 8159 Yahoo SPY days; the export's 5911 days equal the axis over its span (asserted), and export day 252 is 2002-12-31.
+Calendar: 389 dates on the axis; around the first fit: 2007-10-03, 2007-11-01, 2007-12-03, 2008-01-03, 2008-02-04
+Filled from the previous day (<= 3 back): {'vix': ['1997-01-31', '1997-11-26'], 'vxn': ['2003-08-22', '2004-09-10'], 'rvx': ['2005-10-10', '2005-11-11']}
+Store closes forward-filled: {'QQQ': [np.str_('1999-11-16')], 'SPY': [np.str_('2011-02-17')]}
+Risk-free: French's RF through 2026-08-31; days inside French's span without a value (DGS3MO used): none; after it: 0
+
+Yahoo vs store SPY, daily log returns 2005-02-28..2025-06-27 (5116 days): correlation 0.998923 (0.998936 without the store's filled day and the day after); mean |difference| 1.18 bp
+  largest differences (store - Yahoo, bp): [(np.str_('2015-03-13'), np.float64(200.2)), (np.str_('2009-07-16'), np.float64(111.2)), (np.str_('2009-07-17'), np.float64(-111.0)), (np.str_('2015-03-16'), np.float64(-109.6)), (np.str_('2015-03-12'), np.float64(-90.1)), (np.str_('2008-12-19'), np.float64(-81.6)), (np.str_('2009-03-20'), np.float64(-71.4)), (np.str_('2005-12-16'), np.float64(-58.6))]
+  ex-div days 2005..2022-06: 70 days, mean store - Yahoo -17.2 bp
+  ex-div days 2022-07..2022-12-19: 2 days, mean store - Yahoo +0.1 bp
+  ex-div days 2022-12-20..: 10 days, mean store - Yahoo -3.0 bp
+  other days: mean |difference| 0.94 bp
+  yearly total return, Yahoo minus store (points): {'2005': np.float64(1.81), '2006': np.float64(2.14), '2007': np.float64(1.89), '2008': np.float64(1.48), '2009': np.float64(2.88), '2010': np.float64(2.22), '2011': np.float64(0.02), '2012': np.float64(-0.02), '2013': np.float64(-0.02), '2014': np.float64(-0.0), '2015': np.float64(0.0), '2016': np.float64(0.02), '2017': np.float64(-0.01), '2018': np.float64(0.0), '2019': np.float64(0.0), '2020': np.float64(-0.0), '2021': np.float64(-0.0), '2022': np.float64(-0.0), '2023': np.float64(-0.0), '2024': np.float64(0.0), '2025': np.float64(0.31)}
+
+Fidelity, in sample, on -3.2's calendar origins (every 21 trading days) from 1993-03 with targets ending by 2007-12-31; slope in BTZ's units, Hodrick (1992) 1B t:
+| Horizon | Origins | Slope | Hodrick t | Adj. R2 | BTZ, 5-minute RV (Table 2) | BTZ, VIX with daily RV (4.2.1) |
+|---|---|---|---|---|---|---|
+| 21 days | 177 | 0.00 | 0.02 | -0.57% | 0.39 (1.76), 1.07% | not reported |
+| 63 days | 175 | 0.02 | 0.16 | -0.56% | 0.47 (2.86), 6.82% | t 2.34, 4.45% |
+Means 1993-03..2007-12 on the calendar (178 dates): IV 33.20 (sd 22.37), RV 23.86 (sd 25.86), VRP 9.35 (sd 15.31); BTZ 1990-2007: 33.23 (23.73), 14.93 (15.25), 18.30 (15.13). VRP first-order autocorrelation on the 21-day grid -0.03 (BTZ monthly 0.49); share negative 0.124
+VRP daily first-order autocorrelation 1993-03-02..2007-12-31 (the noise calibration's phi): 0.9125

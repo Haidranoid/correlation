@@ -1,0 +1,36 @@
+[    0.0s] judge A delay 1 uniform
+===== A_d1_uniform =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.011736144646758203, "ic_ret_t": 0.5615065513830196, "ls_bps_per_day": 6.983154571863308, "ls_t": 1.6597690412854875, "ls_turnover": 0.040318384032993135}
+CHANGE OVER RANDOM (A_d1_uniform, 0 bps): +42.19; per year [42.19]; ahead 1/1; se nan
+  at 5 / 20 bps: +41.98 / +41.35
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +33.88 points (strategy +60.22%, SPY +26.34%); at 20 bps +31.52
+[    1.9s] judge A delay 1 volatility
+===== A_d1_volatility =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.011736144646758203, "ic_ret_t": 0.5615065513830196, "ls_bps_per_day": 6.983154571863308, "ls_t": 1.6597690412854875, "ls_turnover": 0.040318384032993135}
+CHANGE OVER RANDOM (A_d1_volatility, 0 bps): +26.47; per year [26.47]; ahead 1/1; se nan
+  at 5 / 20 bps: +26.34 / +25.95
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +33.88 points (strategy +60.22%, SPY +26.34%); at 20 bps +31.52
+[    3.8s] judge A delay 0 uniform
+===== A_d0_uniform =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.011736144646758203, "ic_ret_t": 0.5615065513830196, "ls_bps_per_day": 6.983154571863308, "ls_t": 1.6597690412854875, "ls_turnover": 0.040318384032993135}
+CHANGE OVER RANDOM (A_d0_uniform, 0 bps): +44.74; per year [44.74]; ahead 1/1; se nan
+  at 5 / 20 bps: +44.52 / +43.87
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +36.27 points (strategy +62.61%, SPY +26.34%); at 20 bps +33.90
+[    5.7s] judge A delay 0 volatility
+===== A_d0_volatility =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.011736144646758203, "ic_ret_t": 0.5615065513830196, "ls_bps_per_day": 6.983154571863308, "ls_t": 1.6597690412854875, "ls_turnover": 0.040318384032993135}
+CHANGE OVER RANDOM (A_d0_volatility, 0 bps): +30.64; per year [30.64]; ahead 1/1; se nan
+  at 5 / 20 bps: +30.48 / +30.03
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +36.27 points (strategy +62.61%, SPY +26.34%); at 20 bps +33.90
+[    7.6s] judge B delay 1 uniform
+===== B_d1_uniform =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.008557644038126524, "ic_ret_t": 0.6872343809371171, "ls_bps_per_day": 4.231424430407505, "ls_t": 1.172764481402855, "ls_turnover": 0.22231648541061994}
+CHANGE OVER RANDOM (B_d1_uniform, 0 bps): +25.37; per year [25.37]; ahead 1/1; se nan
+  at 5 / 20 bps: +25.25 / +24.87
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +17.28 points (strategy +43.63%, SPY +26.34%); at 20 bps +15.38
+[    9.5s] judge B delay 1 volatility
+===== B_d1_volatility =====
+{"candidates": 2155, "days": 329, "ic_ret_mean": 0.008557644038126524, "ic_ret_t": 0.6872343809371171, "ls_bps_per_day": 4.231424430407505, "ls_t": 1.172764481402855, "ls_turnover": 0.22231648541061994}
+CHANGE OVER RANDOM (B_d1_volatility, 0 bps): +16.63; per year [16.63]; ahead 1/1; se nan
+  at 5 / 20 bps: +16.55 / +16.32
+  AFTER COSTS over the holdout (2025-06-30..2026-10-19): +17.28 points (strategy +43.63%, SPY +26.34%); at 20 bps +15.38

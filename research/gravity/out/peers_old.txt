@@ -1,0 +1,30 @@
+[13:33:16] peers old: 211 refits
+[13:33:33]   refit 24 (2009-12-02): 6s
+[13:33:40]   refit 48 (2011-12-01): 12s
+[13:33:46]   refit 72 (2013-12-04): 18s
+[13:33:52]   refit 96 (2015-12-04): 24s
+[13:33:58]   refit 120 (2017-12-05): 30s
+[13:34:04]   refit 144 (2019-12-06): 36s
+[13:34:10]   refit 168 (2021-12-07): 42s
+[13:34:16]   refit 192 (2023-12-08): 48s
+[13:34:21] G1: refits with attractors 208; attractors per stock: mean 9.91, share with 10 0.9906, share with < 5 0.0094
+[13:34:21] G1 masses (rho): median 0.615, 10th pct 0.403, 90th 0.802
+[13:34:21] random rho: median 0.325; share negative 0.029; missing 0.0185
+[13:34:21] G2 N=5 a=0.5: |m| median 0.160, share m > 0 0.477
+[13:34:21] G2 N=5 a=1: |m| median 0.162, share m > 0 0.484
+[13:34:21] G2 N=5 a=2: |m| median 0.166, share m > 0 0.494
+[13:34:21] G2 N=5 a=3: |m| median 0.167, share m > 0 0.497
+[13:34:21] G2 N=10 a=0.5: |m| median 0.153, share m > 0 0.474
+[13:34:21] G2 N=10 a=1: |m| median 0.158, share m > 0 0.487
+[13:34:21] G2 N=10 a=2: |m| median 0.164, share m > 0 0.494
+[13:34:21] G2 N=10 a=3: |m| median 0.165, share m > 0 0.494
+[13:34:21] G2 N=21 a=0.5: |m| median 0.144, share m > 0 0.464
+[13:34:21] G2 N=21 a=1: |m| median 0.153, share m > 0 0.486
+[13:34:21] G2 N=21 a=2: |m| median 0.159, share m > 0 0.492
+[13:34:21] G2 N=21 a=3: |m| median 0.160, share m > 0 0.493
+[13:34:21] G2 N=5 a=inf: |m| median 0.168, share m > 0 0.499
+[13:34:21] G2 N=10 a=inf: |m| median 0.166, share m > 0 0.494
+[13:34:21] G2 N=21 a=inf: |m| median 0.161, share m > 0 0.494
+[13:34:21] G2 N=5 a=0: |m| median 0.160, share m > 0 0.474
+[13:34:21] G2 N=10 a=0: |m| median 0.153, share m > 0 0.468
+[13:34:21] G2 N=21 a=0: |m| median 0.144, share m > 0 0.446

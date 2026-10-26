@@ -1,0 +1,131 @@
+S2 (old): 209 decisions 2008-01-03 .. 2025-05-14 (last hold ends 2025-06-16); held from the close of t0 + 1 to the close of t0 + 22; 5 bps on every SPY trade; Yahoo SPY. The warning fired on 24 decisions: 2008-02-04, 2008-10-31, 2008-12-02, 2009-12-02, 2010-09-02, 2011-12-01, 2014-12-04, 2015-10-06, 2016-08-05, 2018-03-08, 2018-05-08, 2018-12-06, 2019-06-10, 2020-01-08, 2020-05-08, 2021-01-07, 2021-07-09, 2021-10-07, 2021-11-05, 2022-09-08, 2023-01-09, 2023-05-10, 2023-10-10, 2024-07-12
+
+## 2008-01..2019-12 (pass window): 144 months, warning on 13
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +7.7% | 0.729 | -17.3% | 71% | 84 | +7.9% | +6.7% | +1.15 | 0.282 |
+| rule B (variance timing) | +8.7% | 0.791 | -17.3% | 75% | 84 | +8.8% | +7.2% | +1.56 | 0.183 |
+| buy and hold | +9.5% | 0.560 | -51.5% | 100% | 0 | +9.5% | | | |
+Sharpe spread rule - rule B: -0.062, bootstrap p 0.9250 (95%: -0.149..+0.023); 1-month blocks p 0.9138
+Sharpe spread rule - buy and hold: +0.169 (p 0.319); rule B - buy and hold: +0.231 (p 0.219)
+SPY's next 21 days (from the trade's close), mean: warning months +0.9%, others +0.9%
+
+## 2020-01..2025-06: 65 months, warning on 11
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +5.1% | 0.550 | -13.5% | 53% | 50 | +5.3% | +7.2% | -1.91 | 0.726 |
+| rule B (variance timing) | +6.9% | 0.653 | -13.5% | 66% | 46 | +7.1% | +9.0% | -1.93 | 0.746 |
+| buy and hold | +13.6% | 0.700 | -33.7% | 100% | 0 | +13.6% | | | |
+Sharpe spread rule - rule B: -0.103, bootstrap p 0.7107 (95%: -0.406..+0.282); 1-month blocks p 0.7292
+Sharpe spread rule - buy and hold: -0.151 (p 0.708); rule B - buy and hold: -0.047 (p 0.640)
+SPY's next 21 days (from the trade's close), mean: warning months +1.5%, others +1.1%
+
+## 2008-01..2025-06: 209 months, warning on 24
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +6.9% | 0.676 | -17.3% | 66% | 135 | +7.1% | +7.0% | +0.02 | 0.495 |
+| rule B (variance timing) | +8.1% | 0.749 | -17.3% | 73% | 130 | +8.2% | +7.8% | +0.45 | 0.387 |
+| buy and hold | +10.7% | 0.606 | -51.5% | 100% | 0 | +10.7% | | | |
+Sharpe spread rule - rule B: -0.072, bootstrap p 0.8880 (95%: -0.187..+0.047); 1-month blocks p 0.8823
+Sharpe spread rule - buy and hold: +0.070 (p 0.422); rule B - buy and hold: +0.142 (p 0.233)
+SPY's next 21 days (from the trade's close), mean: warning months +1.2%, others +0.9%
+
+## 2008-2009: 24 months, warning on 4
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | -0.7% | -0.053 | -14.6% | 29% | 22 | -0.6% | -1.8% | +1.17 | 0.415 |
+| rule B (variance timing) | +0.6% | 0.118 | -14.6% | 33% | 23 | +0.7% | -2.0% | +2.71 | 0.310 |
+| buy and hold | -8.2% | -0.074 | -51.5% | 100% | 0 | -8.2% | | | |
+Sharpe spread rule - rule B: -0.171, bootstrap p 0.9227 (95%: -0.336..+0.027); 1-month blocks p 0.7129
+Sharpe spread rule - buy and hold: +0.021 (p 0.598); rule B - buy and hold: +0.192 (p 0.396)
+SPY's next 21 days (from the trade's close), mean: warning months -0.4%, others -0.3%
+
+## 2010-2014: 60 months, warning on 3
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +11.2% | 0.868 | -17.3% | 86% | 23 | +11.2% | +12.4% | -1.14 | 0.731 |
+| rule B (variance timing) | +11.7% | 0.891 | -17.3% | 90% | 23 | +11.8% | +13.0% | -1.17 | 0.792 |
+| buy and hold | +14.5% | 0.933 | -18.6% | 100% | 0 | +14.5% | | | |
+Sharpe spread rule - rule B: -0.023, bootstrap p 0.6558 (95%: -0.133..+0.105); 1-month blocks p 0.6649
+Sharpe spread rule - buy and hold: -0.065 (p 0.810); rule B - buy and hold: -0.043 (p 0.798)
+SPY's next 21 days (from the trade's close), mean: warning months +2.0%, others +1.2%
+
+## 2015-2019: 60 months, warning on 6
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +7.9% | 0.825 | -14.1% | 73% | 37 | +8.1% | +8.8% | -0.70 | 0.652 |
+| rule B (variance timing) | +9.0% | 0.912 | -12.4% | 78% | 36 | +9.1% | +9.4% | -0.34 | 0.589 |
+| buy and hold | +12.2% | 0.930 | -19.3% | 100% | 0 | +12.2% | | | |
+Sharpe spread rule - rule B: -0.087, bootstrap p 0.9850 (95%: -0.151..-0.008); 1-month blocks p 0.9126
+Sharpe spread rule - buy and hold: -0.105 (p 0.716); rule B - buy and hold: -0.018 (p 0.554)
+SPY's next 21 days (from the trade's close), mean: warning months +1.2%, others +1.0%
+
+## 2010-2019 (without 2008-2009): 120 months, warning on 9
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +9.5% | 0.841 | -17.3% | 80% | 61 | +9.7% | +10.5% | -0.88 | 0.739 |
+| rule B (variance timing) | +10.3% | 0.890 | -17.3% | 84% | 60 | +10.4% | +11.1% | -0.69 | 0.730 |
+| buy and hold | +13.4% | 0.929 | -19.3% | 100% | 0 | +13.4% | | | |
+Sharpe spread rule - rule B: -0.049, bootstrap p 0.8713 (95%: -0.125..+0.044); 1-month blocks p 0.8531
+Sharpe spread rule - buy and hold: -0.088 (p 0.827); rule B - buy and hold: -0.039 (p 0.709)
+SPY's next 21 days (from the trade's close), mean: warning months +1.4%, others +1.1%
+
+## 2021-2025-06 (without 2020): 53 months, warning on 9
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +7.4% | 0.773 | -13.5% | 59% | 38 | +7.6% | +7.2% | +0.32 | 0.458 |
+| rule B (variance timing) | +8.8% | 0.803 | -13.5% | 73% | 34 | +8.9% | +9.0% | -0.12 | 0.518 |
+| buy and hold | +12.4% | 0.749 | -24.5% | 100% | 0 | +12.4% | | | |
+Sharpe spread rule - rule B: -0.030, bootstrap p 0.5663 (95%: -0.412..+0.401); 1-month blocks p 0.5580
+Sharpe spread rule - buy and hold: +0.024 (p 0.549); rule B - buy and hold: +0.054 (p 0.508)
+SPY's next 21 days (from the trade's close), mean: warning months +0.6%, others +1.2%
+
+S2 own bar (2008-2019: higher Sharpe than rule B, bootstrap p < 0.10): not met; warning share of 2008-2019 decisions 0.090
+Improvement over random (2008-01..2025-06, 0 bps): spread rule +0.02 pts/yr (p 0.495); rule B +0.45
+
+Threshold grid against rule B (2008-01..2019-12 (pass window); Romano-Wolf step-down max-t, one-sided):
+| Rule | Warning months | Sharpe | Sharpe - B | t | raw p | Romano-Wolf p |
+|---|---|---|---|---|---|---|
+| dS > 0 and R >= 0 | 28 | 0.801 | +0.010 | +0.11 | 0.4590 | 0.9422 |
+| dS > 0, no stock condition | 63 | 0.414 | -0.378 | -3.06 | 0.9961 | 1.0000 |
+| dS >= 80th pct and R >= 0 | 13 | 0.729 | -0.062 | -1.41 | 0.9208 | 1.0000 |
+| dS >= 80th pct, no stock condition | 38 | 0.466 | -0.325 | -3.21 | 0.9997 | 1.0000 |
+| dS >= 90th pct and R >= 0 | 5 | 0.766 | -0.026 | -1.53 | 0.9734 | 1.0000 |
+| dS >= 90th pct, no stock condition | 16 | 0.665 | -0.126 | -2.56 | 0.9998 | 1.0000 |
+
+Variants of the main rule (2008-01..2019-12 (pass window)):
+  C2 default spread (BAA - AAA): warning on 16 months, Sharpe 0.809, minus B +0.018 (p 0.349); 2020-2025-06 -0.168 (p 0.998)
+  C5 optimistic timing (spread through t): warning on 11 months, Sharpe 0.788, minus B -0.004 (p 0.548); 2020-2025-06 -0.077 (p 0.766)
+  C5 extra caution (spread through t - 2): warning on 14 months, Sharpe 0.774, minus B -0.017 (p 0.622); 2020-2025-06 -0.133 (p 0.884)
+
+Repeat on the store's SPY:
+  2008-01..2019-12 (pass window): 144 months, warning 13; Sharpe spread 0.721 vs B 0.778 (diff -0.057, p 0.920); hold 0.532; annual +7.7% vs +8.6%; exposure 72% / 76%
+  2020-01..2025-06: 65 months, warning 11; Sharpe spread 0.550 vs B 0.654 (diff -0.104, p 0.711); hold 0.700; annual +5.1% vs +6.9%; exposure 53% / 66%
+  2008-01..2025-06: 209 months, warning 24; Sharpe spread 0.671 vs B 0.740 (diff -0.069, p 0.884); hold 0.588; annual +6.9% vs +8.1%; exposure 66% / 73%
+  2008-2009: 24 months, warning 4; Sharpe spread -0.034 vs B 0.110 (diff -0.144, p 0.856); hold -0.141; annual -0.7% vs +0.6%; exposure 32% / 37%
+  2010-2014: 60 months, warning 3; Sharpe spread 0.858 vs B 0.876 (diff -0.017, p 0.634); hold 0.907; annual +11.0% vs +11.5%; exposure 86% / 90%
+  2015-2019: 60 months, warning 6; Sharpe spread 0.829 vs B 0.915 (diff -0.086, p 0.984); hold 0.931; annual +8.0% vs +9.0%; exposure 73% / 78%
+  2010-2019 (without 2008-2009): 120 months, warning 9; Sharpe spread 0.837 vs B 0.882 (diff -0.046, p 0.863); hold 0.915; annual +9.5% vs +10.2%; exposure 80% / 84%
+  2021-2025-06 (without 2020): 53 months, warning 9; Sharpe spread 0.773 vs B 0.803 (diff -0.030, p 0.566); hold 0.749; annual +7.4% vs +8.8%; exposure 59% / 73%
+
+Repeat on XLF (C3; the store, its own variance timing and R):
+  2008-01..2019-12 (pass window): 144 months, warning 14; Sharpe spread 0.602 vs B 0.618 (diff -0.016, p 0.676); hold 0.288; annual +8.1% vs +8.6%; exposure 69% / 74%
+  2020-01..2025-06: 65 months, warning 8; Sharpe spread 0.271 vs B 0.259 (diff +0.011, p 0.443); hold 0.517; annual +2.9% vs +2.9%; exposure 62% / 72%
+  2008-01..2025-06: 209 months, warning 22; Sharpe spread 0.500 vs B 0.505 (diff -0.005, p 0.563); hold 0.347; annual +6.4% vs +6.8%; exposure 67% / 74%
+  2008-2009: 24 months, warning 4; Sharpe spread 0.151 vs B 0.057 (diff +0.094, p 0.016); hold -0.106; annual +0.9% vs +0.1%; exposure 16% / 16%
+  2010-2014: 60 months, warning 3; Sharpe spread 0.633 vs B 0.632 (diff +0.001, p 0.522); hold 0.604; annual +10.3% vs +10.5%; exposure 88% / 92%
+  2015-2019: 60 months, warning 7; Sharpe spread 0.715 vs B 0.777 (diff -0.062, p 0.802); hold 0.732; annual +8.9% vs +10.2%; exposure 71% / 80%
+  2010-2019 (without 2008-2009): 120 months, warning 10; Sharpe spread 0.660 vs B 0.686 (diff -0.026, p 0.752); hold 0.655; annual +9.6% vs +10.3%; exposure 79% / 86%
+  2021-2025-06 (without 2020): 53 months, warning 7; Sharpe spread 0.561 vs B 0.523 (diff +0.038, p 0.366); hold 0.707; annual +7.1% vs +7.0%; exposure 70% / 80%
+
+After costs, spread rule: yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -4.66 points a year (whole span annualized -3.83)
+2008 -10.9 vs -34.6 (+23.7) | 2009 +10.6 vs +26.4 (-15.7) | 2010 +3.8 vs +15.1 (-11.2) | 2011 -2.6 vs +1.9 (-4.5) | 2012 +13.1 vs +16.0 (-2.9) | 2013 +32.2 vs +32.3 (-0.1) | 2014 +12.2 vs +13.5 (-1.3) | 2015 -4.2 vs +1.2 (-5.4) | 2016 +7.9 vs +12.0 (-4.1) | 2017 +21.7 vs +21.7 (-0.0) | 2018 +0.5 vs -4.6 (+5.1) | 2019 +14.1 vs +31.2 (-17.1) | 2020 -4.4 vs +18.3 (-22.7) | 2021 +8.3 vs +28.7 (-20.5) | 2022 -6.3 vs -18.2 (+11.9) | 2023 +13.9 vs +26.2 (-12.2) | 2024 +26.5 vs +24.9 (+1.6) | 2025 -5.2 vs +3.1 (-8.3)
+
+After costs, rule B: yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -3.42 points a year (whole span annualized -2.61)
+2008 -11.4 vs -34.6 (+23.3) | 2009 +12.2 vs +26.4 (-14.1) | 2010 +9.6 vs +15.1 (-5.4) | 2011 -2.1 vs +1.9 (-4.0) | 2012 +13.9 vs +16.0 (-2.1) | 2013 +32.2 vs +32.3 (-0.1) | 2014 +11.5 vs +13.5 (-2.0) | 2015 -3.9 vs +1.2 (-5.1) | 2016 +8.4 vs +12.0 (-3.6) | 2017 +21.7 vs +21.7 (-0.0) | 2018 +0.7 vs -4.6 (+5.3) | 2019 +16.6 vs +31.2 (-14.6) | 2020 -0.8 vs +18.3 (-19.1) | 2021 +16.0 vs +28.7 (-12.8) | 2022 -10.8 vs -18.2 (+7.4) | 2023 +22.8 vs +26.2 (-3.4) | 2024 +22.2 vs +24.9 (-2.7) | 2025 -5.2 vs +3.1 (-8.3)
+
+After costs, buy and hold: yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -0.00 points a year (whole span annualized -0.00)
+2008 -34.6 vs -34.6 (-0.0) | 2009 +26.4 vs +26.4 (+0.0) | 2010 +15.1 vs +15.1 (+0.0) | 2011 +1.9 vs +1.9 (+0.0) | 2012 +16.0 vs +16.0 (+0.0) | 2013 +32.3 vs +32.3 (+0.0) | 2014 +13.5 vs +13.5 (-0.0) | 2015 +1.2 vs +1.2 (+0.0) | 2016 +12.0 vs +12.0 (+0.0) | 2017 +21.7 vs +21.7 (-0.0) | 2018 -4.6 vs -4.6 (-0.0) | 2019 +31.2 vs +31.2 (+0.0) | 2020 +18.3 vs +18.3 (-0.0) | 2021 +28.7 vs +28.7 (+0.0) | 2022 -18.2 vs -18.2 (+0.0) | 2023 +26.2 vs +26.2 (-0.0) | 2024 +24.9 vs +24.9 (+0.0) | 2025 +3.1 vs +3.1 (-0.0)
+
+File-name number (spread rule): -4.7
+Runtime 7 s

@@ -1,0 +1,13 @@
+== R1 with V shuffled across days within each stock-year: 200 shuffles, 1,000 draws each ==
+20 shuffles (139 s): t so far: share >= 1.645 0.100, share >= 2 0.100, largest +2.03
+40 shuffles (299 s): t so far: share >= 1.645 0.075, share >= 2 0.075, largest +2.96
+60 shuffles (508 s): t so far: share >= 1.645 0.100, share >= 2 0.067, largest +2.96
+80 shuffles (668 s): t so far: share >= 1.645 0.100, share >= 2 0.062, largest +2.96
+100 shuffles (854 s): t so far: share >= 1.645 0.080, share >= 2 0.050, largest +2.96
+120 shuffles (1008 s): t so far: share >= 1.645 0.083, share >= 2 0.042, largest +2.96
+140 shuffles (1160 s): t so far: share >= 1.645 0.093, share >= 2 0.050, largest +3.03
+160 shuffles (1329 s): t so far: share >= 1.645 0.087, share >= 2 0.044, largest +3.03
+180 shuffles (1470 s): t so far: share >= 1.645 0.094, share >= 2 0.056, largest +3.03
+200 shuffles (1610 s): t so far: share >= 1.645 0.085, share >= 2 0.050, largest +3.03
+final: mean t +0.02, sd 1.11; share t >= 1.645: 0.085 (5% expected); share t >= 2: 0.050; t >= 3: 1; |t| >= 1.96: 0.075
+done in 1610 s

@@ -1,0 +1,11 @@
+The 16 unseen months, run once with the frozen code (reported, not confirming); hashes checked before and after
+Forecasts over the old span equal the old run's: {'yhat_mean': {'equal': True, 'max_abs_diff': 0.0}, 'yhat_vrp': {'equal': True, 'max_abs_diff': 0.0}, 'yhat_a': {'equal': True, 'max_abs_diff': 0.0}, 'qqq_yhat_vrp': {'equal': True, 'corr': 1.0, 'max_abs_diff': 0.0}, 'iwm_yhat_vrp': {'equal': True, 'corr': 0.9999999999999999, 'max_abs_diff': 0.0}}
+P1: 265 origins 2025-06-30 .. 2026-07-20; MSE mean 0.00187, VRP 0.00179; R2_oos +4.41% (95% +1.05..+5.17); CW t +2.13, normal p 0.017, bootstrap p 0.000
+G: MSE x1e3 mean 1.8722, VRP 1.7896, (a) 1.5941, (b) 1.7494, (c) 1.8815, (d) 1.7018: fail
+T: 15 decisions 2025-07-16 .. 2026-09-16 (hold ends 2026-10-16); VRP rule +15.9% Sharpe 1.299 (94%); VT +16.2% Sharpe 1.324 (94%); SPY +18.1% Sharpe 1.413; Sharpe VRP - VT -0.025, bootstrap p 0.959; VRP over random -1.09 (p 0.817)
+After costs, vrp: mean of the partial calendar years' differences -1.36 (2025 -0.1, 2026 -2.7); over the whole span, annualized: -2.28
+After costs, vt: mean of the partial calendar years' differences -1.17 (2025 -0.1, 2026 -2.3); over the whole span, annualized: -1.97
+Exposures over the old decisions equal the old run's: {'vt': True, 'vrp': True, 'a': True}
+Replication VXN with QQQ: R2_oos -4.54%, CW t -1.54; gate fail; rule Sharpe 1.119 vs VT 1.094 (p 0.072)
+Replication RVX with IWM: R2_oos +1.30%, CW t +3.17; gate fail; rule Sharpe 0.928 vs VT 0.943 (p 0.967)
+Old-span QQQ/IWM forecasts (different store for QQQ): {'qqq_yhat_vrp': {'equal': True, 'corr': 1.0, 'max_abs_diff': 0.0}, 'iwm_yhat_vrp': {'equal': True, 'corr': 0.9999999999999999, 'max_abs_diff': 0.0}}

@@ -1,0 +1,87 @@
+Running as unit: run-p2441329-i31787163.scope; invocation ID: c631914c9251413ba3085467dbdc43f7
+[    0.6s] S3 done
+[    5.7s] S4 done
+S3: the nine SPDR sector funds (old store), rebalanced equal weight minus buy-and-hold, reset each year
+  2007-2019:
+    daily gross              +0.134%/yr  NW t  +0.98  p 0.1688  (3272 days)
+    daily 5 bps              +0.073%/yr  NW t  +0.54  p 0.2952  (3272 days)
+    monthly gross            +0.078%/yr  NW t  +0.58  p 0.2801  (3272 days)
+    monthly 5 bps            +0.069%/yr  NW t  +0.51  p 0.3046  (3272 days)
+    delay 0 daily gross      +0.237%/yr  NW t  +1.71  p 0.0523  (3272 days)
+    delay 0 daily 5 bps      +0.176%/yr  NW t  +1.28  p 0.1072  (3272 days)
+    E1 sums (log points): pred 0.1017, EG daily 0.1015, J 0.0708, gap delay 0 +0.0308; random walk +0.0020 (-0.0843..+0.0450), percentile 82.5
+  2020-2025-06:
+    daily gross              -0.178%/yr  NW t  -0.32  p 0.6238  (1378 days)
+    daily 5 bps              -0.254%/yr  NW t  -0.45  p 0.6736  (1378 days)
+    monthly gross            -0.090%/yr  NW t  -0.17  p 0.5663  (1378 days)
+    monthly 5 bps            -0.103%/yr  NW t  -0.19  p 0.5760  (1378 days)
+    delay 0 daily gross      -0.197%/yr  NW t  -0.35  p 0.6381  (1378 days)
+    delay 0 daily 5 bps      -0.272%/yr  NW t  -0.49  p 0.6876  (1378 days)
+    E1 sums (log points): pred 0.0541, EG daily 0.0585, J 0.0693, gap delay 0 -0.0108; random walk -0.0005 (-0.0621..+0.0279), percentile 24.0
+  by period: 2007 gap -0.0085 (pred 0.0051); 2008 gap +0.0103 (pred 0.0053); 2009 gap +0.0073 (pred 0.0322); 2010 gap +0.0008 (pred 0.0203); 2011 gap +0.0006 (pred 0.0041); 2012 gap +0.0004 (pred 0.0055); 2013 gap -0.0004 (pred 0.0030); 2014 gap -0.0008 (pred 0.0023); 2015 gap +0.0011 (pred 0.0035); 2016 gap +0.0030 (pred 0.0049); 2017 gap -0.0002 (pred 0.0059); 2018 gap +0.0025 (pred 0.0032); 2019 gap +0.0012 (pred 0.0063); 2020 gap +0.0009 (pred 0.0046); 2021 gap +0.0041 (pred 0.0181); 2022 gap -0.0160 (pred 0.0084); 2023 gap -0.0049 (pred 0.0129); 2024 gap +0.0022 (pred 0.0070); 2025 gap +0.0040 (pred 0.0032)
+
+S4: French's 30 industry portfolios, daily (1926-07-01..2026-08-31, 26317 days, 0 missing values; sha256 04a7a74fcd7c12e90461718e5ba8490e99d18c3e9323182b6c7a7b320e6cd34a)
+  1927-1962:
+    daily gross              -0.051%/yr  NW t  -0.45  p 0.6736  (10145 days)
+    daily 5 bps              -0.123%/yr  NW t  -1.09  p 0.8643  (10145 days)
+    monthly gross            -0.058%/yr  NW t  -0.54  p 0.7040  (10145 days)
+    monthly 5 bps            -0.069%/yr  NW t  -0.64  p 0.7402  (10145 days)
+    delay 0 daily gross      +0.570%/yr  NW t  +3.30  p 0.0014  (10145 days)
+    delay 0 daily 5 bps      +0.499%/yr  NW t  +2.90  p 0.0036  (10145 days)
+    E1 sums: pred 0.6882, EG daily 0.6809, J 0.4512, gap delay 0 +0.2297
+  1963-2007:
+    daily gross              -0.240%/yr  NW t  -2.60  p 0.9953  (11327 days)
+    daily 5 bps              -0.301%/yr  NW t  -3.25  p 0.9994  (11327 days)
+    monthly gross            -0.212%/yr  NW t  -2.41  p 0.9920  (11327 days)
+    monthly 5 bps            -0.223%/yr  NW t  -2.54  p 0.9944  (11327 days)
+    delay 0 daily gross      -0.335%/yr  NW t  -3.56  p 0.9999  (11327 days)
+    delay 0 daily 5 bps      -0.395%/yr  NW t  -4.21  p 1.0000  (11327 days)
+    E1 sums: pred 0.3455, EG daily 0.3484, J 0.4988, gap delay 0 -0.1505
+  2008-2019:
+    daily gross              -0.102%/yr  NW t  -0.36  p 0.6392  (3021 days)
+    daily 5 bps              -0.175%/yr  NW t  -0.62  p 0.7310  (3021 days)
+    monthly gross            -0.172%/yr  NW t  -0.66  p 0.7460  (3021 days)
+    monthly 5 bps            -0.184%/yr  NW t  -0.71  p 0.7611  (3021 days)
+    delay 0 daily gross      -0.122%/yr  NW t  -0.44  p 0.6684  (3021 days)
+    delay 0 daily 5 bps      -0.196%/yr  NW t  -0.70  p 0.7581  (3021 days)
+    E1 sums: pred 0.1416, EG daily 0.1442, J 0.1589, gap delay 0 -0.0146
+  2020-2026-08:
+    daily gross              +0.002%/yr  NW t  +0.00  p 0.4986  (1673 days)
+    daily 5 bps              -0.099%/yr  NW t  -0.19  p 0.5772  (1673 days)
+    monthly gross            +0.015%/yr  NW t  +0.03  p 0.4875  (1673 days)
+    monthly 5 bps            -0.002%/yr  NW t  -0.00  p 0.5019  (1673 days)
+    delay 0 daily gross      -0.073%/yr  NW t  -0.14  p 0.5573  (1673 days)
+    delay 0 daily 5 bps      -0.174%/yr  NW t  -0.34  p 0.6347  (1673 days)
+    E1 sums: pred 0.1194, EG daily 0.1378, J 0.1426, gap delay 0 -0.0048
+  2025-07..2026-08 (reported separately):
+    daily gross              +1.171%/yr  NW t  +1.55  p 0.0677  (294 days)
+    daily 5 bps              +1.053%/yr  NW t  +1.41  p 0.0867  (294 days)
+    monthly gross            +1.014%/yr  NW t  +1.42  p 0.0969  (294 days)
+    monthly 5 bps            +0.994%/yr  NW t  +1.39  p 0.1009  (294 days)
+    delay 0 daily gross      +1.353%/yr  NW t  +1.93  p 0.0352  (294 days)
+    delay 0 daily 5 bps      +1.236%/yr  NW t  +1.78  p 0.0495  (294 days)
+
+S5: RSP - SPY (store, both price-only after about 2022-12), beside P1 without div_fix minus the store SPY
+  2006: RSP  +14.13 SPY  +13.71 RSP-SPY  +0.42
+  2007: RSP   -0.33 SPY   +3.26 RSP-SPY  -3.59
+  2008: RSP  -41.08 SPY  -38.28 RSP-SPY  -2.80 | same days: P1  -37.95 RSP  -40.17 SPY  -37.75 P1-SPY  -0.21 P1-RSP  +2.21
+  2009: RSP  +42.19 SPY  +23.48 RSP-SPY +18.72 | same days: P1  +47.47 RSP  +42.19 SPY  +23.48 P1-SPY +23.99 P1-RSP  +5.27
+  2010: RSP  +19.68 SPY  +12.83 RSP-SPY  +6.85 | same days: P1  +21.72 RSP  +19.68 SPY  +12.83 P1-SPY  +8.89 P1-RSP  +2.04
+  2011: RSP   -0.66 SPY   +1.90 RSP-SPY  -2.56 | same days: P1   -3.41 RSP   -0.66 SPY   +1.90 P1-SPY  -5.31 P1-RSP  -2.75
+  2012: RSP  +17.17 SPY  +16.01 RSP-SPY  +1.16 | same days: P1  +19.86 RSP  +17.17 SPY  +16.01 P1-SPY  +3.85 P1-RSP  +2.69
+  2013: RSP  +35.53 SPY  +32.33 RSP-SPY  +3.20 | same days: P1  +33.62 RSP  +35.53 SPY  +32.33 P1-SPY  +1.29 P1-RSP  -1.91
+  2014: RSP  +14.07 SPY  +13.46 RSP-SPY  +0.60 | same days: P1  +12.38 RSP  +14.07 SPY  +13.46 P1-SPY  -1.09 P1-RSP  -1.69
+  2015: RSP   -2.67 SPY   +1.23 RSP-SPY  -3.90 | same days: P1   -5.91 RSP   -2.67 SPY   +1.23 P1-SPY  -7.15 P1-RSP  -3.25
+  2016: RSP  +14.50 SPY  +11.98 RSP-SPY  +2.52 | same days: P1  +15.33 RSP  +14.50 SPY  +11.98 P1-SPY  +3.36 P1-RSP  +0.83
+  2017: RSP  +18.52 SPY  +21.71 RSP-SPY  -3.19 | same days: P1  +21.88 RSP  +18.52 SPY  +21.71 P1-SPY  +0.16 P1-RSP  +3.36
+  2018: RSP   -7.84 SPY   -4.57 RSP-SPY  -3.27 | same days: P1   -8.52 RSP   -7.84 SPY   -4.57 P1-SPY  -3.95 P1-RSP  -0.68
+  2019: RSP  +28.92 SPY  +31.22 RSP-SPY  -2.31 | same days: P1  +31.41 RSP  +28.92 SPY  +31.22 P1-SPY  +0.19 P1-RSP  +2.50
+  2020: RSP  +12.66 SPY  +18.34 RSP-SPY  -5.68 | same days: P1  +26.04 RSP  +12.66 SPY  +18.34 P1-SPY  +7.70 P1-RSP +13.39
+  2021: RSP  +29.40 SPY  +28.73 RSP-SPY  +0.67 | same days: P1  +21.39 RSP  +29.40 SPY  +28.73 P1-SPY  -7.34 P1-RSP  -8.01
+  2022: RSP  -11.98 SPY  -18.17 RSP-SPY  +6.19 | same days: P1  -19.63 RSP  -11.98 SPY  -18.17 P1-SPY  -1.46 P1-RSP  -7.65
+  2023: RSP  +11.72 SPY  +26.18 RSP-SPY -14.46 | same days: P1  +20.04 RSP  +11.72 SPY  +26.18 P1-SPY  -6.13 P1-RSP  +8.33
+  2024: RSP  +11.05 SPY  +24.89 RSP-SPY -13.84 | same days: P1  +12.14 RSP  +11.05 SPY  +24.89 P1-SPY -12.74 P1-RSP  +1.10
+  2025: RSP   +3.23 SPY   +5.23 RSP-SPY  -2.00 | same days: P1   +7.81 RSP   +3.23 SPY   +5.23 P1-SPY  +2.58 P1-RSP  +4.58
+  means: RSP-SPY all years -0.86; over P1's years RSP-SPY -0.76, P1-SPY +0.37, P1-RSP +1.13; 2008-2022 only: P1-RSP +0.42, RSP-SPY +1.11
+  Dividends in the store (checked against Yahoo for SPY, TLT, LQD, IWM): funds are price-only before 2011 and adjusted from 2011; in 2023-2025 SPY is adjusted, LQD and IWM are not. RSP has no Yahoo series here.
+

@@ -1,0 +1,119 @@
+[old] axis 1993-01-29..2025-06-27 (8159 days); calendar 389 dates; fills {'vix': ['1997-01-31', '1997-11-26'], 'vxn': ['2003-08-22', '2004-09-10'], 'rvx': ['2005-10-10', '2005-11-11']}; RF from DGS3MO on 0 days after 2026-08-31 and 0 inside
+T (old): 209 decisions 2008-01-03 .. 2025-05-14 (last hold ends 2025-06-16); each held from the close of t0 + 1 to the close of t0 + 22, 5 bps on every SPY trade, cash at 0.
+Weight log: {'mu_bar_nonpositive': [], 'carried': []}. VRP rule below VT in 54 months, above in 57, at 0 in 9; VT at 100% in 105 of 209
+
+## 2008-01..2019-12 (pass window): 144 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +10.4% | 0.854 | -24.7% | 76% | +10.6% | +7.2% | +3.39 | 0.037 | 0.873 |
+| VT (variance timing) | +8.7% | 0.791 | -17.3% | 75% | +8.8% | +7.2% | +1.56 | 0.183 | 0.812 |
+| Tilt from model (a) | +9.0% | 0.818 | -13.8% | 65% | +9.2% | +6.2% | +3.05 | 0.085 | 0.841 |
+| Buy and hold SPY | +9.5% | 0.560 | -51.5% | 100% | +9.5% | | | | 0.560 |
+Sharpe VRP - VT: +0.063, bootstrap p 0.2367 (95%: -0.097..+0.235)
+Sharpe tilt (a) - VT: +0.027, bootstrap p 0.4450 (95%: -0.223..+0.291)
+Sharpe VRP - buy and hold: +0.294, bootstrap p 0.0866 (95%: -0.066..+0.560)
+
+## 2020-01..2025-05: 65 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +7.0% | 0.658 | -13.4% | 67% | +7.2% | +9.0% | -1.85 | 0.746 | 0.701 |
+| VT (variance timing) | +6.9% | 0.653 | -13.5% | 66% | +7.1% | +9.0% | -1.93 | 0.746 | 0.694 |
+| Tilt from model (a) | +6.0% | 0.580 | -13.6% | 64% | +6.1% | +8.7% | -2.53 | 0.827 | 0.645 |
+| Buy and hold SPY | +13.6% | 0.700 | -33.7% | 100% | +13.6% | | | | 0.700 |
+Sharpe VRP - VT: +0.005, bootstrap p 0.4814 (95%: -0.032..+0.044)
+Sharpe tilt (a) - VT: -0.073, bootstrap p 0.6961 (95%: -0.333..+0.167)
+Sharpe VRP - buy and hold: -0.042, bootstrap p 0.6379 (95%: -0.555..+0.299)
+
+## 2008-01..2025-05: 209 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +9.4% | 0.797 | -24.7% | 73% | +9.5% | +7.9% | +1.63 | 0.150 | 0.823 |
+| VT (variance timing) | +8.1% | 0.749 | -17.3% | 73% | +8.2% | +7.8% | +0.45 | 0.387 | 0.776 |
+| Tilt from model (a) | +8.0% | 0.745 | -13.8% | 65% | +8.2% | +6.9% | +1.30 | 0.221 | 0.781 |
+| Buy and hold SPY | +10.7% | 0.606 | -51.5% | 100% | +10.7% | | | | 0.606 |
+Sharpe VRP - VT: +0.048, bootstrap p 0.2103 (95%: -0.066..+0.177)
+Sharpe tilt (a) - VT: -0.004, bootstrap p 0.5147 (95%: -0.198..+0.210)
+Sharpe VRP - buy and hold: +0.191, bootstrap p 0.1083 (95%: -0.085..+0.426)
+
+## 2008-2009: 24 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +5.9% | 0.484 | -24.7% | 52% | +6.1% | -4.1% | +10.20 | 0.115 | 0.522 |
+| VT (variance timing) | +0.6% | 0.118 | -14.6% | 33% | +0.7% | -2.0% | +2.71 | 0.310 | 0.191 |
+| Tilt from model (a) | +5.3% | 0.567 | -13.8% | 38% | +5.5% | -2.7% | +8.14 | 0.183 | 0.623 |
+| Buy and hold SPY | -8.2% | -0.074 | -51.5% | 100% | -8.2% | | | | -0.074 |
+Sharpe VRP - VT: +0.366, bootstrap p 0.0575 (95%: -0.107..+0.765)
+Sharpe tilt (a) - VT: +0.449, bootstrap p 0.0652 (95%: -0.144..+0.951)
+Sharpe VRP - buy and hold: +0.558, bootstrap p 0.1428 (95%: -0.366..+0.991)
+
+## 2010-2014: 60 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +13.4% | 0.958 | -15.1% | 88% | +13.6% | +12.7% | +0.89 | 0.313 | 0.958 |
+| VT (variance timing) | +11.7% | 0.891 | -17.3% | 90% | +11.8% | +13.0% | -1.17 | 0.792 | 0.891 |
+| Tilt from model (a) | +10.6% | 0.827 | -13.6% | 73% | +10.9% | +10.4% | +0.51 | 0.427 | 0.827 |
+| Buy and hold SPY | +14.5% | 0.933 | -18.6% | 100% | +14.5% | | | | 0.933 |
+Sharpe VRP - VT: +0.068, bootstrap p 0.2987 (95%: -0.120..+0.302)
+Sharpe tilt (a) - VT: -0.064, bootstrap p 0.6314 (95%: -0.498..+0.445)
+Sharpe VRP - buy and hold: +0.025, bootstrap p 0.4251 (95%: -0.174..+0.193)
+
+## 2015-2019: 60 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +9.2% | 0.950 | -11.9% | 74% | +9.4% | +9.0% | +0.48 | 0.392 | 0.985 |
+| VT (variance timing) | +9.0% | 0.912 | -12.4% | 78% | +9.1% | +9.4% | -0.34 | 0.589 | 0.944 |
+| Tilt from model (a) | +8.8% | 0.941 | -11.9% | 67% | +9.0% | +8.1% | +0.87 | 0.334 | 0.983 |
+| Buy and hold SPY | +12.2% | 0.930 | -19.3% | 100% | +12.2% | | | | 0.930 |
+Sharpe VRP - VT: +0.038, bootstrap p 0.1945 (95%: -0.048..+0.119)
+Sharpe tilt (a) - VT: +0.029, bootstrap p 0.3112 (95%: -0.081..+0.140)
+Sharpe VRP - buy and hold: +0.020, bootstrap p 0.4568 (95%: -0.326..+0.366)
+
+## 2010-2019 (without 2008-2009): 120 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +11.3% | 0.939 | -15.1% | 81% | +11.5% | +10.7% | +0.78 | 0.283 | 0.954 |
+| VT (variance timing) | +10.3% | 0.890 | -17.3% | 84% | +10.4% | +11.1% | -0.69 | 0.730 | 0.904 |
+| Tilt from model (a) | +9.7% | 0.862 | -13.6% | 70% | +10.0% | +9.3% | +0.71 | 0.334 | 0.879 |
+| Buy and hold SPY | +13.4% | 0.929 | -19.3% | 100% | +13.4% | | | | 0.929 |
+Sharpe VRP - VT: +0.050, bootstrap p 0.2392 (95%: -0.055..+0.186)
+Sharpe tilt (a) - VT: -0.028, bootstrap p 0.6004 (95%: -0.285..+0.262)
+Sharpe VRP - buy and hold: +0.011, bootstrap p 0.4434 (95%: -0.166..+0.162)
+
+## 2021-2025-05 (without 2020): 53 months
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Annual (0 bps) | Median random (0 bps) | Over random | Random p | Sharpe, cash at RF |
+|---|---|---|---|---|---|---|---|---|---|
+| VRP rule | +8.6% | 0.782 | -13.4% | 73% | +8.7% | +9.0% | -0.31 | 0.545 | 0.830 |
+| VT (variance timing) | +8.8% | 0.803 | -13.5% | 73% | +8.9% | +9.0% | -0.12 | 0.518 | 0.848 |
+| Tilt from model (a) | +6.4% | 0.618 | -13.6% | 68% | +6.6% | +8.5% | -1.92 | 0.784 | 0.692 |
+| Buy and hold SPY | +12.4% | 0.749 | -24.5% | 100% | +12.4% | | | | 0.749 |
+Sharpe VRP - VT: -0.020, bootstrap p 0.9365 (95%: -0.045..+0.006)
+Sharpe tilt (a) - VT: -0.185, bootstrap p 0.9116 (95%: -0.416..+0.034)
+Sharpe VRP - buy and hold: +0.034, bootstrap p 0.5386 (95%: -0.418..+0.373)
+
+T pass (2008-2019: higher Sharpe than VT, bootstrap p < 0.10): FAIL; 2020-2025-05 same sign: yes
+Improvement over random (VRP rule, 2008-01..2025-05, 0 bps): +1.63 pts/yr, p 0.150
+Diagnostic (after the fact): VT with c x1.035, mean exposure 73% (the VRP rule's): Sharpe 0.750 against the VRP rule's 0.797; bootstrap p 0.207
+
+Turnover: VRP rule 126 trades, 2.85 a year, cost 0.142% a year; VT (variance timing) 131 trades, 1.92 a year, cost 0.096% a year; Tilt from model (a) 145 trades, 4.01 a year, cost 0.201% a year; Buy and hold SPY 1 trades, 0.06 a year, cost 0.003% a year
+
+After costs, VRP rule: yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -2.20 points a year (span annualized -1.38)
+2008 -12.9 vs -34.6 (+21.7) | 2009 +26.4 vs +26.4 (+0.0) | 2010 +12.5 vs +15.1 (-2.6) | 2011 +7.7 vs +1.9 (+5.8) | 2012 +12.5 vs +16.0 (-3.5) | 2013 +28.8 vs +32.3 (-3.5) | 2014 +10.9 vs +13.5 (-2.6) | 2015 -4.3 vs +1.2 (-5.5) | 2016 +8.1 vs +12.0 (-3.9) | 2017 +20.9 vs +21.7 (-0.8) | 2018 +2.9 vs -4.6 (+7.5) | 2019 +17.2 vs +31.2 (-14.0) | 2020 +0.5 vs +18.3 (-17.9) | 2021 +17.0 vs +28.7 (-11.8) | 2022 -11.0 vs -18.2 (+7.2) | 2023 +22.4 vs +26.2 (-3.8) | 2024 +22.0 vs +24.9 (-2.9) | 2025 -6.0 vs +3.1 (-9.2)
+
+After costs, VT (variance timing): yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -3.42 points a year (span annualized -2.61)
+2008 -11.4 vs -34.6 (+23.3) | 2009 +12.2 vs +26.4 (-14.1) | 2010 +9.6 vs +15.1 (-5.4) | 2011 -2.1 vs +1.9 (-4.0) | 2012 +13.9 vs +16.0 (-2.1) | 2013 +32.2 vs +32.3 (-0.1) | 2014 +11.5 vs +13.5 (-2.0) | 2015 -3.9 vs +1.2 (-5.1) | 2016 +8.4 vs +12.0 (-3.6) | 2017 +21.7 vs +21.7 (-0.0) | 2018 +0.7 vs -4.6 (+5.3) | 2019 +16.6 vs +31.2 (-14.6) | 2020 -0.8 vs +18.3 (-19.1) | 2021 +16.0 vs +28.7 (-12.8) | 2022 -10.8 vs -18.2 (+7.4) | 2023 +22.8 vs +26.2 (-3.4) | 2024 +22.2 vs +24.9 (-2.7) | 2025 -5.2 vs +3.1 (-8.3)
+
+After costs, Tilt from model (a): yearly return at 5 bps a side minus SPY's, 2008-01-04 .. 2025-06-16: -3.64 points a year (span annualized -2.71)
+2008 -12.9 vs -34.6 (+21.7) | 2009 +24.9 vs +26.4 (-1.5) | 2010 +6.7 vs +15.1 (-8.3) | 2011 +14.4 vs +1.9 (+12.5) | 2012 +9.6 vs +16.0 (-6.4) | 2013 +19.0 vs +32.3 (-13.3) | 2014 +7.7 vs +13.5 (-5.7) | 2015 -5.0 vs +1.2 (-6.2) | 2016 +9.9 vs +12.0 (-2.1) | 2017 +18.7 vs +21.7 (-3.0) | 2018 +2.4 vs -4.6 (+6.9) | 2019 +16.4 vs +31.2 (-14.8) | 2020 +3.6 vs +18.3 (-14.8) | 2021 +17.9 vs +28.7 (-10.8) | 2022 -10.8 vs -18.2 (+7.4) | 2023 +17.7 vs +26.2 (-8.5) | 2024 +15.1 vs +24.9 (-9.8) | 2025 -5.9 vs +3.1 (-9.0)
+
+File-name number (VRP rule): -2.2
+
+Replication VXN with QQQ: weight log {'mu_bar_nonpositive': [np.str_('2008-10-31'), np.str_('2008-12-02'), np.str_('2009-01-02'), np.str_('2009-02-03'), np.str_('2009-03-05'), np.str_('2009-04-03'), np.str_('2009-05-05'), np.str_('2009-06-04'), np.str_('2009-07-06'), np.str_('2009-08-04'), np.str_('2009-09-02'), np.str_('2009-10-02')], 'carried': []}
+  2008-01..2019-12 (pass window): VRP rule +10.8% Sharpe 0.796 (72%) over random +0.64 (p 0.388); VT +11.9% Sharpe 0.874 (78%); buy and hold +14.5% Sharpe 0.753; Sharpe VRP - VT -0.077, p 0.775
+  2020-01..2025-05: VRP rule +11.9% Sharpe 0.823 (67%) over random -0.32 (p 0.535); VT +12.0% Sharpe 0.832 (67%); buy and hold +18.6% Sharpe 0.783; Sharpe VRP - VT -0.009, p 0.612
+  2008-01..2025-05: VRP rule +11.1% Sharpe 0.805 (71%) over random +0.29 (p 0.444); VT +11.9% Sharpe 0.860 (75%); buy and hold +15.7% Sharpe 0.759; Sharpe VRP - VT -0.055, p 0.799
+
+Replication RVX with IWM: weight log {'mu_bar_nonpositive': [np.str_('2008-12-02'), np.str_('2009-01-02'), np.str_('2009-02-03'), np.str_('2009-03-05'), np.str_('2009-04-03'), np.str_('2009-05-05'), np.str_('2009-06-04'), np.str_('2009-07-06'), np.str_('2009-08-04'), np.str_('2009-09-02'), np.str_('2009-10-02'), np.str_('2009-11-02'), np.str_('2009-12-02'), np.str_('2010-01-04'), np.str_('2010-02-03'), np.str_('2010-03-05')], 'carried': []}
+  2008-01..2019-12 (pass window): VRP rule +9.4% Sharpe 0.649 (74%) over random +3.09 (p 0.114); VT +8.1% Sharpe 0.577 (79%); buy and hold +8.7% Sharpe 0.467; Sharpe VRP - VT +0.072, p 0.061
+  2020-01..2025-05: VRP rule -2.1% Sharpe -0.042 (67%) over random -6.31 (p 0.973); VT -2.0% Sharpe -0.030 (67%); buy and hold +5.9% Sharpe 0.347; Sharpe VRP - VT -0.013, p 0.767
+  2008-01..2025-05: VRP rule +5.7% Sharpe 0.424 (72%) over random +0.05 (p 0.492); VT +4.9% Sharpe 0.376 (76%); buy and hold +7.8% Sharpe 0.426; Sharpe VRP - VT +0.048, p 0.106
+Runtime 17 s

@@ -1,0 +1,14 @@
+[    0.3s] cost of trading 55.3 bps; regrading at it
+{
+ "all_match": true,
+ "n_trades": 196,
+ "median_ratio": 122.50375849800233,
+ "p25": 106.07119554691033,
+ "p75": 164.47611742863268,
+ "cost_sqrt": 55.34070800459692,
+ "cost_linear": 612.5187924900116,
+ "cost_used": 55.3,
+ "after_cost_at_cost_total": 26.107438584836864,
+ "strat_at_cost": 52.45068232396686
+}
+rebuilt years matching the judge: 1 of 1

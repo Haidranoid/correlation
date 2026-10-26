@@ -1,6 +1,6 @@
 # Experiments
 
-**TL;DR:** 65 attempts to predict US stock moves, from correlations between stocks, outside data, machine learning and ten published strategies. None makes money reliably after trading costs. Each file is named by its result after costs: points a year above simply holding SPY, or a market-neutral book's own net return. The one open lead, the monthly top-10 picks, needs data that includes delisted companies. What works is risk: how stocks move together on the same day.
+**TL;DR:** 71 attempts to predict US stock moves, from correlations between stocks, outside data, machine learning and fourteen published strategies. None makes money reliably after trading costs. Each file is named by its result after costs: points a year above simply holding SPY, or a market-neutral book's own net return. The one open lead, the monthly top-10 picks, needs data that includes delisted companies. What works is risk: how stocks move together on the same day.
 
 ## How to read the file names
 
@@ -9,6 +9,7 @@ Each file is named `[after costs]-[description].md`. The number is the result af
 - **Market-neutral long-short books** (pairs, hedged books, overlays): the book's own net yearly return, since it is already market-neutral.
 - **No trading:** five files test something that isn't a trading strategy: the census, the lag spectrum, the forecast's accuracy, the outside-data leaders and the risk tools. They keep their own statistic, and the table says "no trading". Each names the file with its money test.
 - **`untested`:** anything not yet measured. There is none at the moment.
+  - Brandon's gravity file (run 2026-10-24) and the five published effects run on 2026-10-25 were named `untested-<topic>.md` until then. Some of their Rules sections, scripts and Decisions still use those names: the Rules are frozen, and the scripts' sha256 hashes are recorded for the forward tests.
 
 **Reading the numbers:**
 - **A positive number after costs isn't a success by itself.** Check the file's own tests, which the Verdict column summarizes. The positives here mostly rest on one of these, and most aren't statistically significant:
@@ -32,7 +33,8 @@ Each file is named `[after costs]-[description].md`. The number is the result af
   - for the risk tools, the percent lower next-year volatility than a random choice;
   - for free timing, the extra yearly return from timing trades the portfolio makes anyway, against making the same trades on a random day of the window;
   - for analog days, the judge's account on stocks mapped to the forecast sectors. It is a proxy; the real test is the sector-fund long-short in the file;
-  - for market timing, the yearly return above random timings that keep the rule's own exposure;
+  - for market timing, the yearly return above random timings that keep the rule's own exposure. The variance risk premium and credit-spread rules use the same comparison;
+  - for excess growth, the rebalanced portfolio's yearly return minus buy-and-hold of the same stocks, both before costs;
   - for the twin gap fade, 252 × the daily return of its own $1-long/$1-short book, minus the median of 1,000 random books with the same structure and costs. It is a daily long-short spread, not a 20-stock account, so it is far larger than the other numbers and can't be compared with them;
   - for overnight auctions, a 20-stock account held only overnight (bought in the closing auction, sold at the next open) against 1,000 random 20-stock overnight accounts. Volatile stocks' overnight moves are large, so it isn't comparable with the judge's close-to-close accounts;
   - for correlation portfolios, (Sharpe ratio of minimum variance − Sharpe ratio of inverse volatility) × 15: points of yearly return at 15% volatility, with no random accounts;
@@ -113,6 +115,12 @@ Each file is named `[after costs]-[description].md`. The number is the result af
 | −9.6 | +0.1 | [Turn of the month](-9.6-turn-of-month.md) (published, McConnell & Xu 2008; against random timings) | correlation2 (Python) | Reproduces 1926–2005 exactly (t 8.2), then nothing in 2006–2025 (t −0.07) |
 | +2.0 | +3.5 | [Frog in the pan](+2.0-frog-in-the-pan.md) (published, Da, Gurun & Warachka 2014) | correlation2 (Python) | −0.71% a month net, t −1.05, and continuous-information momentum did *worse* than discrete (t −1.30); the paper's six-month spread was +8.0% |
 | −5.6 | −0.4 | [Cost-aware trading on the weekly top 10](-5.6-cost-aware-trading.md) (published methods; follow-up to `+7.4-weekly-top10-picks.md`) | stockai + correlation2 (Python) | The weekly signal lasts one week (weeks 2–4 IC t ≤ 1.1). The chosen rule cut trading by two thirds but turned $10,000 into $10,520 against SPY's $25,375 at 20 bps (p 0.54 against random) |
+| −16.7 | +1.8 | [Gravity: correlated stocks as attractors in price, time and both](-16.7-brandon-gravity.md) (Brandon's idea; mean of 30 force laws, the judge's 20-stock accounts) | correlation2 (Python) | All six tests fail Holm (best t 1.85). The measured pull grows with distance, like pairs trading's spring, and random peers pull as hard; the time kernel has no peak at the offset |
+| −2.2 | +1.6 | [The variance risk premium](-2.2-variance-risk-premium.md) (published, Bollerslev, Tauchen & Zhou 2009; the premium's tilt on variance timing, against random reorderings of its own exposures) | correlation2 (Python) | Clark-West t 1.43 (needed 2). Its R² of +5.3% comes from 2008–2009 alone, and 2020–2025 was −28%. The tilt's Sharpe gain over variance timing is one trade (p 0.24) |
+| −4.7 | +0.0 | [Credit-spread timing](-4.7-credit-spread-timing.md) (the Baa spread's weekly change; a SPY-or-cash rule against random reorderings of its own exposures) | correlation2 (Python) | Wrong sign: a widening spread came before slightly higher returns, and forecasts got 1.7% worse (Clark-West t −1.52). Stocks lead the spread (t −4.3), not the reverse |
+| +0.3 | +0.5 | [Excess growth: rebalancing against buy-and-hold](+0.3-excess-growth.md) (published, Fernholz 2002; rebalanced minus buy-and-hold of the same stocks, both before costs) | correlation2 (Python) | Daily rebalancing +0.58 a year after costs (t 1.13), all from 2008–2009. γ* predicted the extra growth, but buy-and-hold collected 80% of it too. Survivor-free sector funds and a century of industries show no premium |
+| +3.7 | +5.4 | [Amihud illiquidity](+3.7-amihud-illiquidity.md) (published, Amihud 2002; the 20 least liquid stocks of the judge's liquid set) | correlation2 (Python) | Dollar volume and volatility are 98–99% of the measure; what is left has t 0.42 in the liquid set and 1.34 with no volume floor. The account's margin is 2008–09 and 2020–21 alone; its median year lost 2.2 |
+| −23.4 | −0.9 | [Volume–return dynamics](-23.4-volume-return.md) (published, Llorente, Michaely, Saar & Wang 2002; the judge's account traded daily, a day late) | correlation2 (Python) | Both primaries fail (t 0.72 and −1.49). Daily turnover costs over 20 points a year; weekly, −3.7. The pattern is real across stocks for the next day (t −6.9) but gone a day later, when a trader can act |
 
 ## Lessons from all of it
 
@@ -172,6 +180,7 @@ Each file is named `[after costs]-[description].md`. The number is the result af
 ## Still open
 
 - **Survivorship-free rerun** of the monthly picks (`+18.6-monthly-top10-picks.md`) on Sharadar data. This is the only lead left.
+- **Forward tests** of the gravity test (`-16.7-brandon-gravity.md`) and of the five published effects run on 2026-10-25 (`-2.2`, `-4.7`, `+0.3`, `+3.7`, `-23.4`) wait on a commit and git tag of their frozen scripts, then on closes after 2026-10-19.
 - **Collecting the opening-print effect** in `-16.2-twin-gap-fade.md` would take on-open orders placed from the exchanges' pre-open imbalance data, which is paid data. It is market-making economics rather than a signal, and its large-cap margin was already thin by 2023–2025.
 - **The accounting-based strategies, untested.** The best post-publication evidence online is for signals built from accounting and analyst data: profitability, earnings surprises and drift, analyst revisions. None can be tested without point-in-time fundamentals. Sharadar's $39 product covers prices including delisted companies, not financial statements; its fundamentals are a separate, pricier product. Letting SEC requests carry a contact email would give the XBRL financial data free. Both are the user's decision.
 - **Blocked without a contact email to SEC:**

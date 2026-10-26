@@ -1,0 +1,12 @@
+C1 (new): which market moves first. Coefficients with Newey-West t; "per sd" = the coefficient times the regressor's standard deviation (in the target's units: percentage points of spread, or log return).
+| Spread | k | Regression | Period | Origins | on R5: coef (t) | per sd | on dS5: coef (t) | per sd | R2 |
+|---|---|---|---|---|---|---|---|---|---|
+| BAA10Y | 5 | (a) spread follows stocks | unseen months | 322 | +0.1182 (+0.58) | +0.0019 | +0.0188 (+0.23) | +0.0008 | 0.002 |
+| BAA10Y | 5 | (b) stocks follow the spread | unseen months | 324 | -0.1417 (-1.09) | -0.0023 | -0.0230 (-0.85) | -0.0010 | 0.020 |
+| BAA10Y | 21 | (a) spread follows stocks | unseen months | 306 | -0.2161 (-0.45) | -0.0035 | -0.0105 (-0.07) | -0.0004 | 0.001 |
+| BAA10Y | 21 | (b) stocks follow the spread | unseen months | 308 | -0.1918 (-1.01) | -0.0031 | -0.0776 (-0.73) | -0.0033 | 0.018 |
+| BAA10Y - AAA10Y | 5 | (a) spread follows stocks | unseen months | 322 | -0.1621 (-1.37) | -0.0026 | -0.0671 (-0.79) | -0.0013 | 0.023 |
+| BAA10Y - AAA10Y | 5 | (b) stocks follow the spread | unseen months | 324 | -0.1144 (-0.88) | -0.0018 | -0.0802 (-0.80) | -0.0016 | 0.026 |
+| BAA10Y - AAA10Y | 21 | (a) spread follows stocks | unseen months | 306 | -0.8502 (-2.17) | -0.0137 | +0.2358 (+1.00) | +0.0047 | 0.110 |
+| BAA10Y - AAA10Y | 21 | (b) stocks follow the spread | unseen months | 308 | -0.1752 (-0.95) | -0.0028 | +0.2085 (+1.27) | +0.0041 | 0.025 |
+Runtime 0 s

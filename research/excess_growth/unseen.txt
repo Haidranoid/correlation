@@ -1,0 +1,12 @@
+Frozen hashes before the run: all match
+New export: (9508, 6240), first 5911 days equal the old export's: True
+Tickers in both exports: 6593; stock-days with a close in both: 16483078; equal to 1e-6: 94.7448%; differing by more than 1%: 846245 (re-adjustments of the history in the later download)
+
+Unseen months, rebalanced minus buy-and-hold (log points a year):
+  P1                     +0.548%  NW t +0.20  p 0.4205  (328 days)
+  P2                     +0.195%  NW t +0.08  p 0.4685  (328 days)
+  P1 gross               +0.764%  NW t +0.28  p 0.3900  (328 days)
+  P2 gross               +0.239%  NW t +0.10  p 0.4615  (328 days)
+  delay 0 daily gross    +0.873%  NW t +0.35  p 0.3643  (328 days)
+After costs, the unseen months (mean of the two partial calendar years): -3.14; buy-and-hold -3.53; before costs vs random +0.54
+Frozen hashes after the run: all match

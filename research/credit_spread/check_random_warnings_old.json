@@ -1,0 +1,197 @@
+{
+ "2008-01..2019-12": {
+  "dS > 0 and R >= 0": {
+   "warning_months": 28,
+   "sharpe": 0.8014830811815384,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.6974014713782208,
+   "p": 0.19488051194880512,
+   "spy_next21_warning": -0.0014276138921063514,
+   "spy_next21_other": 0.011180510826159283
+  },
+  "dS > 0, no stock condition": {
+   "warning_months": 63,
+   "sharpe": 0.4135075510084171,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.5681274891212206,
+   "p": 0.814018598140186,
+   "spy_next21_warning": 0.011754700843289802,
+   "spy_next21_other": 0.0063755544904721155
+  },
+  "dS >= 80th pct and R >= 0": {
+   "warning_months": 13,
+   "sharpe": 0.7288950252927265,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.7458284214515921,
+   "p": 0.5861413858614138,
+   "spy_next21_warning": 0.008707193967340987,
+   "spy_next21_other": 0.008731088131908902
+  },
+  "dS >= 80th pct, no stock condition": {
+   "warning_months": 38,
+   "sharpe": 0.46590457799460894,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.6586954155836381,
+   "p": 0.9331066893310669,
+   "spy_next21_warning": 0.01844104467705804,
+   "spy_next21_other": 0.005247229897427297
+  },
+  "dS >= 90th pct and R >= 0": {
+   "warning_months": 5,
+   "sharpe": 0.7656794361188894,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.7712050693838722,
+   "p": 0.5473452654734526,
+   "spy_next21_warning": 0.023415738214345106,
+   "spy_next21_other": 0.008200628602760959
+  },
+  "dS >= 90th pct, no stock condition": {
+   "warning_months": 16,
+   "sharpe": 0.6649036167574305,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.7345844631652658,
+   "p": 0.7955204479552045,
+   "spy_next21_warning": 0.025217957822286863,
+   "spy_next21_other": 0.006667802669522728
+  },
+  "C2 default spread, top fifth and R >= 0": {
+   "warning_months": 16,
+   "sharpe": 0.8092911968722054,
+   "sharpe_B": 0.7911856400393803,
+   "random_median": 0.7350489924196622,
+   "p": 0.2126787321267873,
+   "spy_next21_warning": -0.00351719784956904,
+   "spy_next21_other": 0.010259697128504715
+  }
+ },
+ "2020-01..2025-06": {
+  "dS > 0 and R >= 0": {
+   "warning_months": 20,
+   "sharpe": 0.24690081741824735,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.5261231547363527,
+   "p": 0.8959104089591041,
+   "spy_next21_warning": 0.017526484886138068,
+   "spy_next21_other": 0.009456245036356505
+  },
+  "dS > 0, no stock condition": {
+   "warning_months": 27,
+   "sharpe": 0.24291845650712202,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.47509015359598183,
+   "p": 0.8061193880611939,
+   "spy_next21_warning": 0.015097771304151674,
+   "spy_next21_other": 0.009695286819650232
+  },
+  "dS >= 80th pct and R >= 0": {
+   "warning_months": 11,
+   "sharpe": 0.549796822451026,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.576871533348189,
+   "p": 0.5620437956204379,
+   "spy_next21_warning": 0.015211449310416826,
+   "spy_next21_other": 0.01127286633230035
+  },
+  "dS >= 80th pct, no stock condition": {
+   "warning_months": 16,
+   "sharpe": 0.6062912846644487,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.5502962020859484,
+   "p": 0.39606039396060394,
+   "spy_next21_warning": 0.012493045251590743,
+   "spy_next21_other": 0.011758612251701064
+  },
+  "dS >= 90th pct and R >= 0": {
+   "warning_months": 2,
+   "sharpe": 0.5998830456534705,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.6311699873358219,
+   "p": 0.7087291270872913,
+   "spy_next21_warning": 0.057590523516298675,
+   "spy_next21_other": 0.010490153608352487
+  },
+  "dS >= 90th pct, no stock condition": {
+   "warning_months": 6,
+   "sharpe": 0.6492242903622235,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.6050367272505489,
+   "p": 0.3658634136586341,
+   "spy_next21_warning": 0.023642536243632273,
+   "spy_next21_other": 0.010749245879610346
+  },
+  "C2 default spread, top fifth and R >= 0": {
+   "warning_months": 7,
+   "sharpe": 0.48505205102614957,
+   "sharpe_B": 0.6530913146339525,
+   "random_median": 0.6009712289298558,
+   "p": 0.8232176782321767,
+   "spy_next21_warning": 0.03948592209105163,
+   "spy_next21_other": 0.008614814995197286
+  }
+ },
+ "2010-2019": {
+  "dS > 0 and R >= 0": {
+   "warning_months": 23,
+   "sharpe": 0.8905079958562782,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.7823110828290554,
+   "p": 0.20677932206779323,
+   "spy_next21_warning": 0.003565531273504529,
+   "spy_next21_other": 0.012894389788184763
+  },
+  "dS > 0, no stock condition": {
+   "warning_months": 50,
+   "sharpe": 0.49176891888768415,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.6549282443865283,
+   "p": 0.8142185781421858,
+   "spy_next21_warning": 0.014151449567587746,
+   "spy_next21_other": 0.008931293576644841
+  },
+  "dS >= 80th pct and R >= 0": {
+   "warning_months": 9,
+   "sharpe": 0.8406962348487298,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.8439061671057317,
+   "p": 0.5146485351464853,
+   "spy_next21_warning": 0.014438469331230793,
+   "spy_next21_other": 0.010836187430301344
+  },
+  "dS >= 80th pct, no stock condition": {
+   "warning_months": 27,
+   "sharpe": 0.5783949828746547,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.7650401385984249,
+   "p": 0.9247075292470753,
+   "spy_next21_warning": 0.021059818754499447,
+   "spy_next21_other": 0.00821664432659184
+  },
+  "dS >= 90th pct and R >= 0": {
+   "warning_months": 4,
+   "sharpe": 0.8621295001306801,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.867636275990767,
+   "p": 0.5408459154084592,
+   "spy_next21_warning": 0.011279016180730767,
+   "spy_next21_other": 0.011100404862255199
+  },
+  "dS >= 90th pct, no stock condition": {
+   "warning_months": 10,
+   "sharpe": 0.7648757013550228,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.8406249621763271,
+   "p": 0.835016498350165,
+   "spy_next21_warning": 0.020364768242947272,
+   "spy_next21_other": 0.010264684966500487
+  },
+  "C2 default spread, top fifth and R >= 0": {
+   "warning_months": 14,
+   "sharpe": 0.9132705477559112,
+   "sharpe_B": 0.8897913386283589,
+   "random_median": 0.8226632580915421,
+   "p": 0.1972802719728027,
+   "spy_next21_warning": -0.0019588656260706478,
+   "spy_next21_other": 0.012831954221787881
+  }
+ }
+}

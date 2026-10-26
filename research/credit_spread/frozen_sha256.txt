@@ -1,0 +1,10 @@
+be3470c678b7cf38d00324226f481b71e0168da371dc69accba4ce0ef6fe6a07  cs_common.py
+3b9d822b44f41fd46890a0ed5bd50cdf7d20ffd6e6a10e436795c31a53d76030  inputs.py
+4b72d4c18fecab5435b264ba8457e7cfdb4d9bdba3bda21f22fdc3c57c6b2db3  forecast.py
+bb9baf44049ee91d9814f9107a747ba1644ec6d5681fb1e339749a0d493ac135  timing.py
+f8ebf26f7265e625c5bd21cc9625b2ba097c70e21ea55ec9c677573c1c6ae9db  leadlag.py
+d726ab0d2ba2f70bcc2e90bf7d4462931ce081437c1ce5d53bc3ccf621c8b8f0  unseen.py
+27912c2a22ff5a69746ed4553ed990aedf43953d534fdf8702a5c826c3e751bd  forward.py
+# 2026-10-25, after the run: comments, docstrings and printed labels anonymized at Brandon's request (references to tests held outside the repo). Each edited file's syntax tree, with string constants masked, is identical to before, so the procedure is unchanged. Previous hashes:
+# d6fcb8797c4c7e53c62549cd49004fc7142f38950da569a6c7f2195498bb3395  cs_common.py (before 2026-10-25 anonymizing)
+# d4c9bdfb284f411e7699269559ed6a03843abbc6efc035228578a2f2929ce53d  timing.py (before 2026-10-25 anonymizing)

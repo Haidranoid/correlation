@@ -1,0 +1,12 @@
+[14:10:18] new: export /home/bhoult/.local/share/c2-sandbox-2026-10-19/export/full (6240 days, 2001-12-31..2026-10-19); store /home/bhoult/.local/share/correlation2/stores/stooq-2026-10-19
+[14:10:18] universe: 23 refits from 2024-12-10, size min 500 median 500 max 500; 725 distinct stocks; OHLC from 2008-01-02
+[14:10:18] D0 (first force day, GK sigma for >= 90% of the universe): 2025-01-02 (index 5790)
+[14:10:18] universe stock-days 225,000; with a store row 224,993
+[14:10:18]   bad print  (H-L)/C>0.5:         6 (0.0027%)
+[14:10:18]   bad print   H<max(O,C):         0 (0.0000%)
+[14:10:18]   bad print   L>min(O,C):         0 (0.0000%)
+[14:10:18]   bad print          H=L:         0 (0.0000%)
+[14:10:18]   bad print          any:         6 (0.0027%)
+[14:10:18] store close vs export close on valid days from 2008: 2,721,572 stock-days, max relative difference 0, exact 100.000%
+[14:10:18] from D0: sigma is Garman-Klass on 100.00% of universe stock-days; sigma missing on 1; z missing on 1,930
+[14:10:18] median sigma over universe stock-days from D0: 0.0185

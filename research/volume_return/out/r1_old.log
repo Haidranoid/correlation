@@ -1,0 +1,117 @@
+
+== R1 (primary): U_W, 2008-2019 ==
+C2_delta: +0.0057 (90% -0.0088..+0.0170), bootstrap t +0.72, p 0.2342 (percentile p 0.2378); plain t over periods +0.63; positive in 7 of 12
+C2_slope: -0.0066 (90% -0.0241..+0.0154), bootstrap t -0.55, p 0.7086 (percentile p 0.7034); plain t over periods -0.49; positive in 6 of 12
+by year: period | stocks (low/mid/high third) | C2 low | C2 mid | C2 high | Delta | slope on G | C1 low | C1 high | share C2<0 low/high
+2008 | 1571 (524/523/524) | +0.0054 | +0.0345 | -0.0075 | +0.0129 | -0.0148 | -0.0569 | -0.0555 | 0.43/0.51
+2009 | 1534 (511/512/511) | +0.0062 | -0.0219 | -0.0286 | +0.0348 | -0.0449 | -0.0772 | -0.0571 | 0.45/0.55
+2010 | 1419 (473/473/473) | +0.0229 | +0.0100 | -0.0236 | +0.0465 | -0.0649 | -0.0284 | -0.0247 | 0.42/0.56
+2011 | 1625 (542/541/542) | -0.0646 | -0.0975 | -0.1267 | +0.0621 | -0.0973 | -0.0711 | -0.0169 | 0.65/0.78
+2012 | 1745 (582/581/582) | -0.0104 | -0.0121 | +0.0007 | -0.0111 | +0.0226 | -0.0086 | +0.0228 | 0.54/0.50
+2013 | 1772 (591/590/591) | +0.0053 | -0.0016 | -0.0004 | +0.0057 | -0.0049 | -0.0382 | -0.0178 | 0.46/0.50
+2014 | 1928 (643/642/643) | +0.0050 | -0.0197 | +0.0041 | +0.0009 | +0.0018 | -0.0142 | -0.0118 | 0.46/0.49
+2015 | 2145 (715/715/715) | -0.0021 | +0.0068 | +0.0269 | -0.0289 | +0.0446 | -0.0288 | +0.0071 | 0.51/0.46
+2016 | 2231 (744/743/744) | +0.0216 | +0.0436 | +0.0674 | -0.0458 | +0.0671 | -0.0161 | -0.0309 | 0.45/0.31
+2017 | 2291 (764/763/764) | +0.0067 | +0.0147 | +0.0126 | -0.0059 | +0.0071 | -0.0458 | -0.0306 | 0.48/0.44
+2018 | 2481 (827/827/827) | +0.0048 | +0.0174 | +0.0242 | -0.0195 | +0.0257 | -0.0270 | -0.0135 | 0.50/0.44
+2019 | 2642 (881/880/881) | +0.0067 | +0.0122 | -0.0097 | +0.0164 | -0.0213 | -0.0157 | -0.0117 | 0.48/0.51
+
+Item 1, the paper's Table 3 form (means over the 12 years): third | C1 | C2 | share C2 < 0
+low DV | -0.0357 | +0.0006 | 0.49
+middle | -0.0205 | -0.0011 | 0.50
+high DV | -0.0200 | -0.0050 | 0.50
+
+Item 2, C1 + C2*V by third (means over the 12 years): third | V=0 | V=1 | V=2 | V=3
+low DV | -0.0357 | -0.0350 | -0.0344 | -0.0337
+middle | -0.0205 | -0.0216 | -0.0227 | -0.0239
+high DV | -0.0200 | -0.0251 | -0.0301 | -0.0352
+
+== R1 on the check period 2020-2025-06 (consistent if > 0 at one-sided p < 0.05) ==
+C2_delta: +0.0094 (90% -0.0176..+0.0242), bootstrap t +0.74, p 0.2292 (percentile p 0.2342); plain t over periods +1.32; positive in 4 of 6
+C2_slope: -0.0196 (90% -0.0414..+0.0227), bootstrap t -1.00, p 0.8411 (percentile p 0.8465); plain t over periods -1.93; positive in 1 of 6
+2020 | 2697 | -0.1186 | -0.1107 | -0.1429 | +0.0243 | -0.0466
+2021 | 2939 | -0.0200 | -0.0179 | -0.0164 | -0.0036 | -0.0019
+2022 | 3613 | -0.0177 | -0.0102 | -0.0100 | -0.0076 | +0.0080
+2023 | 3528 | -0.0049 | -0.0233 | -0.0415 | +0.0366 | -0.0520
+2024 | 3367 | -0.0272 | -0.0328 | -0.0273 | +0.0002 | -0.0045
+2025H1 | 3470 | -0.0088 | -0.0199 | -0.0154 | +0.0066 | -0.0203
+
+== Item 3, up and down moves apart, 2008-2019 (2,000 draws) ==
+C2u_delta: +0.0172 (90% -0.0070..+0.0411), bootstrap t +1.18, p 0.1188 (percentile p 0.1180); plain t over periods +1.27; positive in 8 of 12
+C2d_delta: +0.0024 (90% -0.0163..+0.0305), bootstrap t +0.17, p 0.4332 (percentile p 0.4345); plain t over periods +0.16; positive in 6 of 12
+
+== Item 4, without spike days (V >= 1.5), 2008-2019 ==
+C2_delta: +0.0091 (90% -0.0079..+0.0225), bootstrap t +0.98, p 0.1624 (percentile p 0.1622); plain t over periods +0.80; positive in 6 of 12
+
+== Item 5, market-adjusted returns, 2008-2019 ==
+C2_delta: +0.0084 (90% +0.0011..+0.0167), bootstrap t +1.77, p 0.0383 (percentile p 0.0374); plain t over periods +1.85; positive in 9 of 12
+
+== Item 6, U_J, 2008-2019 ==
+C2_delta: +0.0024 (90% -0.0090..+0.0141), bootstrap t +0.34, p 0.3660 (percentile p 0.3746); plain t over periods +0.26; positive in 5 of 12
+C2_slope: -0.0054 (90% -0.0231..+0.0116), bootstrap t -0.51, p 0.6961 (percentile p 0.6900); plain t over periods -0.41; positive in 6 of 12
+
+== Item 6, the 500 largest, 2008-2019 ==
+C2_delta: -0.0066 (90% -0.0182..+0.0069), bootstrap t -0.87, p 0.8078 (percentile p 0.8093); plain t over periods -0.87; positive in 6 of 12
+C2_slope: +0.0127 (90% -0.0068..+0.0298), bootstrap t +1.15, p 0.1247 (percentile p 0.1242); plain t over periods +1.16; positive in 8 of 12
+
+== Item 6, U_W at $1, 2008-2019 ==
+C2_delta: +0.0046 (90% -0.0097..+0.0156), bootstrap t +0.60, p 0.2757 (percentile p 0.2794); plain t over periods +0.51; positive in 6 of 12
+C2_slope: -0.0045 (90% -0.0216..+0.0178), bootstrap t -0.37, p 0.6453 (percentile p 0.6399); plain t over periods -0.33; positive in 6 of 12
+
+== Item 7, proxy amihud (C2 of the highest third minus the lowest), 2008-2019 ==
+C2_delta: +0.0052 (90% -0.0101..+0.0171), bootstrap t +0.62, p 0.2669 (percentile p 0.2766); plain t over periods +0.55; positive in 7 of 12
+
+== Item 7, proxy idio (C2 of the highest third minus the lowest), 2008-2019 ==
+C2_delta: +0.0009 (90% -0.0172..+0.0150), bootstrap t +0.09, p 0.4639 (percentile p 0.4805); plain t over periods +0.07; positive in 4 of 12
+
+== Item 7, proxy cs (C2 of the highest third minus the lowest), 2008-2019 ==
+C2_delta: +0.0073 (90% -0.0099..+0.0204), bootstrap t +0.78, p 0.2177 (percentile p 0.2297); plain t over periods +0.63; positive in 5 of 11
+
+== Item 3, up and down moves apart, 2020-2025-06 (2,000 draws) ==
+C2u_delta: +0.0141 (90% -0.0159..+0.0292), bootstrap t +1.01, p 0.1559 (percentile p 0.1545); plain t over periods +0.82; positive in 4 of 6
+C2d_delta: +0.0195 (90% -0.0079..+0.0579), bootstrap t +0.96, p 0.1679 (percentile p 0.1630); plain t over periods +1.47; positive in 4 of 6
+
+== Item 4, without spike days (V >= 1.5), 2020-2025-06 ==
+C2_delta: +0.0163 (90% -0.0141..+0.0310), bootstrap t +1.18, p 0.1183 (percentile p 0.1061); plain t over periods +2.11; positive in 5 of 6
+
+== Item 5, market-adjusted returns, 2020-2025-06 ==
+C2_delta: +0.0052 (90% -0.0039..+0.0190), bootstrap t +0.74, p 0.2290 (percentile p 0.2211); plain t over periods +0.55; positive in 3 of 6
+
+== Item 6, U_J, 2020-2025-06 ==
+C2_delta: +0.0123 (90% -0.0095..+0.0254), bootstrap t +1.14, p 0.1263 (percentile p 0.1174); plain t over periods +1.57; positive in 4 of 6
+C2_slope: -0.0211 (90% -0.0401..+0.0131), bootstrap t -1.29, p 0.9017 (percentile p 0.9136); plain t over periods -1.84; positive in 1 of 6
+
+== Item 6, the 500 largest, 2020-2025-06 ==
+C2_delta: +0.0258 (90% +0.0017..+0.0388), bootstrap t +2.28, p 0.0112 (percentile p 0.0026); plain t over periods +2.42; positive in 5 of 6
+C2_slope: -0.0436 (90% -0.0620..-0.0066), bootstrap t -2.57, p 0.9950 (percentile p 0.9994); plain t over periods -2.60; positive in 1 of 6
+
+== Item 6, U_W at $1, 2020-2025-06 ==
+C2_delta: +0.0156 (90% -0.0134..+0.0305), bootstrap t +1.14, p 0.1261 (percentile p 0.1142); plain t over periods +2.23; positive in 5 of 6
+C2_slope: -0.0266 (90% -0.0489..+0.0179), bootstrap t -1.29, p 0.9012 (percentile p 0.9180); plain t over periods -2.56; positive in 1 of 6
+
+== Item 7, proxy amihud (C2 of the highest third minus the lowest), 2020-2025-06 ==
+C2_delta: +0.0156 (90% -0.0157..+0.0305), bootstrap t +1.10, p 0.1358 (percentile p 0.1274); plain t over periods +1.69; positive in 5 of 6
+
+== Item 7, proxy idio (C2 of the highest third minus the lowest), 2020-2025-06 ==
+C2_delta: +0.0383 (90% -0.0032..+0.0520), bootstrap t +2.24, p 0.0126 (percentile p 0.0024); plain t over periods +1.39; positive in 4 of 6
+
+== Item 7, proxy cs (C2 of the highest third minus the lowest), 2020-2025-06 ==
+C2_delta: +0.0341 (90% -0.0030..+0.0468), bootstrap t +2.21, p 0.0136 (percentile p 0.0037); plain t over periods +1.45; positive in 4 of 6
+
+== Dividends: check period with div_fix applied to every return ==
+C2_delta: +0.0094 (90% -0.0182..+0.0241), bootstrap t +0.74, p 0.2284 (percentile p 0.2296); plain t over periods +1.34; positive in 4 of 6
+
+== Dividends: check period with ex-dividend days dropped from the signal ==
+C2_delta: +0.0093 (90% -0.0178..+0.0243), bootstrap t +0.73, p 0.2321 (percentile p 0.2352); plain t over periods +1.37; positive in 4 of 6
+
+== Dividends: 2008-2019 with ex-dividend days dropped from the signal ==
+C2_delta: +0.0055 (90% -0.0091..+0.0168), bootstrap t +0.70, p 0.2413 (percentile p 0.2438); plain t over periods +0.61; positive in 7 of 12
+
+== Dividends: 2008-2010 with ex-dividend days dropped from the signal ==
+C2_delta: +0.0311 (90% +0.0100..+0.0599), bootstrap t +2.06, p 0.0198 (percentile p 0.0241); plain t over periods +3.13; positive in 3 of 3
+
+== Dividends: 2008-2010 as run (for comparison) ==
+C2_delta: +0.0314 (90% +0.0104..+0.0597), bootstrap t +2.10, p 0.0178 (percentile p 0.0214); plain t over periods +3.19; positive in 3 of 3
+ex-dates among U_W member stock-days, by year: 2008 2984, 2009 2703, 2010 2882, 2011 3235, 2012 3527, 2013 3693, 2014 4081, 2015 4274, 2016 4340, 2017 4487, 2018 4679, 2019 4864, 2020 4451, 2021 4725, 2022 5265, 2023 5558, 2024 5686, 2025 2782
+
+done in 1265 s

@@ -1,0 +1,8 @@
+[14:13:36] unseen months 2025-06-30..2026-10-19: new export days start with the old export's: True; force coverage of the universe on 2025-06-30: min 0.982
+[14:13:36]   G1-S: best G1 p=3 eps=0.1: est -0.002669, t -0.60, RW p 0.9178
+[14:13:36]   G1-M: best G1 p=0: est -0.000366, t -0.62, RW p 0.8903
+[14:13:36]   G2-S: best G2 N=21 a=0.5: est +0.002179, t +0.44, RW p 0.9213
+[14:13:36]   G2-M: best G2 N=21 a=0.5: est +0.000309, t +0.53, RW p 0.8576
+[14:13:36]   G3-S: best G3 N=21 a=2 p=1 eps=0.3: est +0.003956, t +0.75, RW p 0.4867
+[14:13:36]   G3-M: best G3 N=21 a=2 p=1 eps=0.3: est -0.000243, t -0.49, RW p 0.8501
+[14:13:36]   judge: {'over_random0_mean_30': -10.377250344971646, 'after_cost_mean_30': -39.270439924654866, 'n_candidates': 30, 'G1': {'over_random0': -23.384661756345118, 'after_cost': -49.92338024057988, 'n': 10}, 'G2': {'over_random0': -1.9467233132055577, 'after_cost': -30.04417959965771, 'n': 12}, 'G3': {'over_random0': -6.763776628403949, 'after_cost': -39.79365501724435, 'n': 8}}

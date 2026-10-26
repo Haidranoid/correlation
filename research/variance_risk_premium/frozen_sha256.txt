@@ -1,0 +1,17 @@
+# Frozen procedure (sha256), recorded 2026-10-25 before the unseen months were run
+fe40abeb6688e0c6cbb1f0bf31d4772cfe5a00772ef2e6a4bf27cb3d471f2c16  vrp_common.py
+a1657ca62217766e6ce7696c1848da74766ecd64d89dbddc7150d3704ff59aa3  forecast.py
+af716f0909554f2e39678bb15b7f229badadf44c88fbf680a37e506356adcb64  timing.py
+02efc9f72cb2e1e81856dc8b75b7f5e3ea494b512e9277fa8967a8daa9cbbd15  unseen.py
+99b2901ccdf8fadeb73229d0dc7a4bd9641fbe6a829e42db32a756f1c1b92dd0  forward.py
+# Checks and reporting, not part of the procedure
+# 474d5e0fb7d3921eb2475c3a907096186c93dcf7795a1cfde8cc658eae162a90  checks.py
+# c28034ca06d753bba056fa99d2b3abdc9f2dfcf2adfd2fca3b19440d4192abc8  fidelity_diag.py
+# Shared code imported read-only
+# 20f30fe68267deefecbb3757d34069859cb2c2e80262fe73d4164867996c772d  market_timing/engine.py
+# 16c146f5610e82ce1acf9f515d4f3466c974b79ce09e6bc7db684bb7bd33d99e  market_timing/common.py
+# b33740df1db324a0cf2f6fa5bec91a9c07cfdc2a53b0cbf1c1647e3b77882365  lib/c2eval.py
+# ba5b3f9052a5886ab3da43c3e3fdda22b71dd4cbeb5893a1a68c83c36d000953  published_data/pubdata.py
+# 2026-10-25, after the run: comments, docstrings and printed labels anonymized at Brandon's request (references to tests held outside the repo). Each edited file's syntax tree, with string constants masked, is identical to before, so the procedure is unchanged. Previous hashes:
+# fafb8b69dadf453ebf5d12e28915b7f0c224fa1bcf2f4dc97493b5fa96b9e583  timing.py (before 2026-10-25 anonymizing)
+# 0e47021af9268a99bcf76524e4af33f907b63bf47e78e1e33f27f9c181659af7  vrp_common.py (before 2026-10-25 anonymizing)

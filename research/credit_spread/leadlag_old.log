@@ -1,0 +1,29 @@
+Running as unit: run-p2431012-i31770879.scope; invocation ID: 5388664919f74fef9f86a5b67914b4d6
+C1 (old): which market moves first. Coefficients with Newey-West t; "per sd" = the coefficient times the regressor's standard deviation (in the target's units: percentage points of spread, or log return).
+| Spread | k | Regression | Period | Origins | on R5: coef (t) | per sd | on dS5: coef (t) | per sd | R2 |
+|---|---|---|---|---|---|---|---|---|---|
+| BAA10Y | 5 | (a) spread follows stocks | 1993-2007 | 3754 | -0.2672 (-2.55) | -0.0059 | +0.0225 (+0.61) | +0.0014 | 0.010 |
+| BAA10Y | 5 | (a) spread follows stocks | 2008-2019 | 3021 | -0.6992 (-4.27) | -0.0173 | +0.3245 (+5.37) | +0.0277 | 0.186 |
+| BAA10Y | 5 | (a) spread follows stocks | 2020-2025-06 | 1374 | -0.9827 (-3.44) | -0.0271 | +0.1386 (+1.01) | +0.0147 | 0.121 |
+| BAA10Y | 5 | (b) stocks follow the spread | 1993-2007 | 3754 | -0.1391 (-3.85) | -0.0031 | -0.0129 (-1.15) | -0.0008 | 0.018 |
+| BAA10Y | 5 | (b) stocks follow the spread | 2008-2019 | 3021 | -0.1161 (-2.39) | -0.0029 | -0.0272 (-1.43) | -0.0023 | 0.016 |
+| BAA10Y | 5 | (b) stocks follow the spread | 2020-2025-06 | 1374 | -0.0659 (-1.22) | -0.0018 | -0.0206 (-0.63) | -0.0022 | 0.005 |
+| BAA10Y | 21 | (a) spread follows stocks | 1993-2007 | 3754 | -0.6424 (-3.41) | -0.0142 | +0.1795 (+1.55) | +0.0114 | 0.020 |
+| BAA10Y | 21 | (a) spread follows stocks | 2008-2019 | 3021 | -1.6736 (-4.04) | -0.0415 | +0.8044 (+3.24) | +0.0687 | 0.137 |
+| BAA10Y | 21 | (a) spread follows stocks | 2020-2025-06 | 1358 | -2.2072 (-3.15) | -0.0612 | -0.2137 (-1.15) | -0.0228 | 0.040 |
+| BAA10Y | 21 | (b) stocks follow the spread | 1993-2007 | 3754 | -0.1221 (-2.10) | -0.0027 | +0.0360 (+1.70) | +0.0023 | 0.009 |
+| BAA10Y | 21 | (b) stocks follow the spread | 2008-2019 | 3021 | -0.1212 (-1.73) | -0.0030 | -0.0305 (-0.45) | -0.0026 | 0.005 |
+| BAA10Y | 21 | (b) stocks follow the spread | 2020-2025-06 | 1358 | +0.0135 (+0.13) | +0.0004 | +0.0474 (+1.54) | +0.0051 | 0.007 |
+| BAA10Y - AAA10Y | 5 | (a) spread follows stocks | 1993-2007 | 3754 | -0.0435 (-0.84) | -0.0010 | +0.0691 (+1.81) | +0.0026 | 0.006 |
+| BAA10Y - AAA10Y | 5 | (a) spread follows stocks | 2008-2019 | 3021 | -0.4826 (-3.30) | -0.0120 | +0.3538 (+4.95) | +0.0199 | 0.196 |
+| BAA10Y - AAA10Y | 5 | (a) spread follows stocks | 2020-2025-06 | 1374 | -0.7171 (-3.28) | -0.0198 | +0.0816 (+0.81) | +0.0047 | 0.128 |
+| BAA10Y - AAA10Y | 5 | (b) stocks follow the spread | 1993-2007 | 3754 | -0.1303 (-3.67) | -0.0029 | -0.0041 (-0.24) | -0.0002 | 0.017 |
+| BAA10Y - AAA10Y | 5 | (b) stocks follow the spread | 2008-2019 | 3021 | -0.0938 (-1.94) | -0.0023 | -0.0147 (-0.52) | -0.0008 | 0.009 |
+| BAA10Y - AAA10Y | 5 | (b) stocks follow the spread | 2020-2025-06 | 1374 | -0.0285 (-0.44) | -0.0008 | -0.0191 (-0.53) | -0.0011 | 0.002 |
+| BAA10Y - AAA10Y | 21 | (a) spread follows stocks | 1993-2007 | 3754 | -0.1588 (-1.02) | -0.0035 | -0.0187 (-0.21) | -0.0007 | 0.002 |
+| BAA10Y - AAA10Y | 21 | (a) spread follows stocks | 2008-2019 | 3021 | -1.2538 (-3.89) | -0.0311 | +0.8183 (+3.62) | +0.0461 | 0.144 |
+| BAA10Y - AAA10Y | 21 | (a) spread follows stocks | 2020-2025-06 | 1358 | -1.9889 (-2.65) | -0.0552 | +0.0690 (+0.53) | +0.0040 | 0.173 |
+| BAA10Y - AAA10Y | 21 | (b) stocks follow the spread | 1993-2007 | 3754 | -0.1455 (-2.43) | -0.0032 | +0.0182 (+0.55) | +0.0007 | 0.006 |
+| BAA10Y - AAA10Y | 21 | (b) stocks follow the spread | 2008-2019 | 3021 | -0.1068 (-1.50) | -0.0027 | -0.0437 (-0.52) | -0.0025 | 0.005 |
+| BAA10Y - AAA10Y | 21 | (b) stocks follow the spread | 2020-2025-06 | 1358 | -0.0648 (-0.80) | -0.0018 | +0.0902 (+1.90) | +0.0052 | 0.010 |
+Runtime 0 s

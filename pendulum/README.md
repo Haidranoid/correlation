@@ -34,6 +34,8 @@ Hang a rod from a hinge, hang a second rod from the end of the first, and a thir
 
 This is chaos in the mathematical sense. The future is fully determined, but any error in the present grows exponentially. A forecast's horizon grows only with the *logarithm* of your precision, so better data buys almost nothing.
 
+Here that chaos is measured, not proven: the numbers above come from the simulation. Proving that even a simple mechanical system is chaotic across a whole region of starting points is hard. For the standard map, a pendulum kicked at regular intervals, it was a long-standing open problem (Sinai's conjecture) until a 2026 proof in OpenAI's machine-generated [`openai/math`](https://github.com/openai/math) collection (family 146, checked in the Lean proof assistant, not yet peer-reviewed).
+
 Read the three rods as the three layers of a stock's move:
 
 - **The first rod is the market:** everything moves with it.
@@ -85,7 +87,7 @@ The tip, where the stock price ends up, is the sum of all three swings.
 
 **5. Twenty years is fewer swings than it looks.**
 - Twenty years of daily data sounds like 5,000 observations per stock, but the market has a handful of genuinely independent episodes in that time: 2008, 2020, 2022 and a few rotations.
-- Many results in this project were mostly one crisis. With 65 tests at the usual bar, about three false passes are expected by luck, which is why every pass here had to survive 16 months of data it had never seen.
+- Many results in this project were mostly one crisis. With 71 tests at the usual bar, three or four false passes are expected by luck, which is why every pass here had to survive 16 months of data it had never seen.
 - In pendulum terms, you've watched only a few of its swings, and each one went somewhere new.
 
 ## What does work: knowing the reach

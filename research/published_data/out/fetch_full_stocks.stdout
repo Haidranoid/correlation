@@ -1,0 +1,516 @@
+18:00:09 full stocks: 3211 symbols in 65 batches -> /home/bhoult/.local/share/correlation2/experiments/published_data/raw/yahoo_full_stocks
+$ACCD: possibly delisted; no timezone found
+$ACLX: possibly delisted; no timezone found
+
+2 Failed downloads:
+['ACCD', 'ACLX']: possibly delisted; no timezone found
+18:00:13 batch 1/65: 48 of 50 symbols; failed so far 2
+$AHH: possibly delisted; no timezone found
+$ADAP: possibly delisted; no timezone found
+$ADVM: possibly delisted; no timezone found
+
+3 Failed downloads:
+['AHH', 'ADAP', 'ADVM']: possibly delisted; no timezone found
+18:00:19 batch 2/65: 47 of 50 symbols; failed so far 5
+$ALE: possibly delisted; no timezone found
+$AMBC: possibly delisted; no timezone found
+$ALEX: possibly delisted; no timezone found
+$ALTR: possibly delisted; no timezone found
+$AL: possibly delisted; no timezone found
+$AKRO: possibly delisted; no timezone found
+$ALLK: possibly delisted; no timezone found
+
+7 Failed downloads:
+['ALE', 'AMBC', 'ALEX', 'ALTR', 'AL', 'AKRO', 'ALLK']: possibly delisted; no timezone found
+18:00:24 batch 3/65: 43 of 50 symbols; failed so far 12
+$AMED: possibly delisted; no timezone found
+$AMWD: possibly delisted; no timezone found
+$AMPS: possibly delisted; no timezone found
+$ANSS: possibly delisted; no timezone found
+$AMRK: possibly delisted; no timezone found
+
+5 Failed downloads:
+['AMED', 'AMWD', 'AMPS', 'ANSS', 'AMRK']: possibly delisted; no timezone found
+18:00:30 batch 4/65: 45 of 50 symbols; failed so far 17
+$APLT: possibly delisted; no timezone found
+$ASGN: possibly delisted; no timezone found
+$APLS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['APLT', 'ASGN', 'APLS']: possibly delisted; no timezone found
+18:00:35 batch 5/65: 47 of 50 symbols; failed so far 20
+$AVNS: possibly delisted; no timezone found
+$ATSG: possibly delisted; no timezone found
+$AVDX: possibly delisted; no timezone found
+$ATGE: possibly delisted; no timezone found
+$AVDL: possibly delisted; no timezone found
+$ATUS: possibly delisted; no timezone found
+
+6 Failed downloads:
+['AVNS', 'ATSG', 'AVDX', 'ATGE', 'AVDL', 'ATUS']: possibly delisted; no timezone found
+18:00:41 batch 6/65: 44 of 50 symbols; failed so far 26
+$AXDXQ: possibly delisted; no timezone found
+$AYRO: possibly delisted; no timezone found
+$AZPN: possibly delisted; no timezone found
+$BASE: possibly delisted; no timezone found
+$AZEK: possibly delisted; no timezone found
+$AXL: possibly delisted; no timezone found
+$AZULQ: possibly delisted; no timezone found
+
+7 Failed downloads:
+['AXDXQ', 'AYRO', 'AZPN', 'BASE', 'AZEK', 'AXL', 'AZULQ']: possibly delisted; no timezone found
+18:00:47 batch 7/65: 43 of 50 symbols; failed so far 33
+$BEST: possibly delisted; no timezone found
+$BGFV: possibly delisted; no timezone found
+$BECN: possibly delisted; no timezone found
+$BERY: possibly delisted; no timezone found
+
+4 Failed downloads:
+['BEST', 'BGFV', 'BECN', 'BERY']: possibly delisted; no timezone found
+18:00:54 batch 8/65: 46 of 50 symbols; failed so far 37
+$BLD: possibly delisted; no timezone found
+$BHLB: possibly delisted; no timezone found
+$BIGC: possibly delisted; no timezone found
+$BLUE: possibly delisted; no timezone found
+$BK: possibly delisted; no timezone found
+
+5 Failed downloads:
+['BLD', 'BHLB', 'BIGC', 'BLUE', 'BK']: possibly delisted; no timezone found
+18:00:59 batch 9/65: 45 of 50 symbols; failed so far 42
+$BPMC: possibly delisted; no timezone found
+$BRFS: possibly delisted; no timezone found
+$BRY: possibly delisted; no timezone found
+$BTCM: possibly delisted; no timezone found
+$BPT: possibly delisted; no timezone found
+
+5 Failed downloads:
+['BPMC', 'BRFS', 'BRY', 'BTCM', 'BPT']: possibly delisted; no timezone found
+18:01:05 batch 10/65: 45 of 50 symbols; failed so far 47
+$CADE: possibly delisted; no timezone found
+$BYON: possibly delisted; no timezone found
+
+2 Failed downloads:
+['CADE', 'BYON']: possibly delisted; no timezone found
+18:01:11 batch 11/65: 48 of 50 symbols; failed so far 49
+$CCRN: possibly delisted; no timezone found
+$CDMO: possibly delisted; no timezone found
+$CCCS: possibly delisted; no timezone found
+$CFLT: possibly delisted; no timezone found
+
+4 Failed downloads:
+['CCRN', 'CDMO', 'CCCS', 'CFLT']: possibly delisted; no timezone found
+18:01:17 batch 12/65: 46 of 50 symbols; failed so far 53
+$CIVI: possibly delisted; no timezone found
+$CHX: possibly delisted; no timezone found
+
+2 Failed downloads:
+['CIVI', 'CHX']: possibly delisted; no timezone found
+18:01:23 batch 13/65: 48 of 50 symbols; failed so far 55
+$CNTA: possibly delisted; no timezone found
+$CMPO: possibly delisted; no timezone found
+$CMBM: possibly delisted; no timezone found
+$CMRX: possibly delisted; no timezone found
+$CMA: possibly delisted; no timezone found
+
+5 Failed downloads:
+['CNTA', 'CMPO', 'CMBM', 'CMRX', 'CMA']: possibly delisted; no timezone found
+18:01:30 batch 14/65: 45 of 50 symbols; failed so far 60
+$CPRX: possibly delisted; no timezone found
+$COMM: possibly delisted; no timezone found
+$COOP: possibly delisted; no timezone found
+
+3 Failed downloads:
+['CPRX', 'COMM', 'COOP']: possibly delisted; no timezone found
+18:01:35 batch 15/65: 47 of 50 symbols; failed so far 63
+$CTRA: possibly delisted; no timezone found
+$CUK: possibly delisted; no timezone found
+$CVGW: possibly delisted; no timezone found
+$CSGS: possibly delisted; no timezone found
+
+4 Failed downloads:
+['CTRA', 'CUK', 'CVGW', 'CSGS']: possibly delisted; no timezone found
+18:01:41 batch 16/65: 46 of 50 symbols; failed so far 67
+$CWEN-A: possibly delisted; no timezone found
+$DADA: possibly delisted; no timezone found
+$DAWN: possibly delisted; no timezone found
+$CWAN: possibly delisted; no price data found  (1d 1927-11-19 -> 2026-10-25)
+$CYBR: possibly delisted; no timezone found
+$DAY: possibly delisted; no timezone found
+
+6 Failed downloads:
+['CWEN-A', 'DADA', 'DAWN', 'CYBR', 'DAY']: possibly delisted; no timezone found
+['CWAN']: possibly delisted; no price data found  (1d 1927-11-19 -> 2026-10-25)
+18:01:47 batch 17/65: 44 of 50 symbols; failed so far 73
+$DFS: possibly delisted; no timezone found
+$DNB: possibly delisted; no timezone found
+$DENN: possibly delisted; no timezone found
+$DESP: possibly delisted; no timezone found
+$DGLY: possibly delisted; no timezone found
+$DM: possibly delisted; no timezone found
+
+6 Failed downloads:
+['DFS', 'DNB', 'DENN', 'DESP', 'DGLY', 'DM']: possibly delisted; no timezone found
+18:01:53 batch 18/65: 44 of 50 symbols; failed so far 79
+$DOOO: possibly delisted; no timezone found
+$EB: possibly delisted; no timezone found
+$EBR: possibly delisted; no timezone found
+$DVAX: possibly delisted; no timezone found
+
+4 Failed downloads:
+['DOOO', 'EB', 'EBR', 'DVAX']: possibly delisted; no timezone found
+18:01:58 batch 19/65: 46 of 50 symbols; failed so far 83
+$ELP: possibly delisted; no timezone found
+$EDR: possibly delisted; no timezone found
+
+2 Failed downloads:
+['ELP', 'EDR']: possibly delisted; no timezone found
+18:02:05 batch 20/65: 48 of 50 symbols; failed so far 85
+$ESGR: possibly delisted; no timezone found
+$ETWO: possibly delisted; no timezone found
+$ESPR: possibly delisted; no timezone found
+$EVRI: possibly delisted; no timezone found
+$ERJ: possibly delisted; no timezone found
+$ETNB: possibly delisted; no timezone found
+
+6 Failed downloads:
+['ESGR', 'ETWO', 'ESPR', 'EVRI', 'ERJ', 'ETNB']: possibly delisted; no timezone found
+18:02:10 batch 21/65: 44 of 50 symbols; failed so far 91
+$FDP: possibly delisted; no timezone found
+$EXPI: possibly delisted; no timezone found
+$FARO: possibly delisted; no timezone found
+$EXAS: possibly delisted; no timezone found
+$EWCZ: possibly delisted; no timezone found
+
+5 Failed downloads:
+['FDP', 'EXPI', 'FARO', 'EXAS', 'EWCZ']: possibly delisted; no timezone found
+18:02:16 batch 22/65: 45 of 50 symbols; failed so far 96
+$FGEN: possibly delisted; no timezone found
+$FL: possibly delisted; no timezone found
+$FFWM: possibly delisted; no timezone found
+$FI: possibly delisted; no timezone found
+$FNA: possibly delisted; no timezone found
+
+5 Failed downloads:
+['FGEN', 'FL', 'FFWM', 'FI', 'FNA']: possibly delisted; no timezone found
+18:02:22 batch 23/65: 45 of 50 symbols; failed so far 101
+$FOLD: possibly delisted; no timezone found
+$FYBR: possibly delisted; no timezone found
+
+2 Failed downloads:
+['FOLD', 'FYBR']: possibly delisted; no timezone found
+18:02:28 batch 24/65: 48 of 50 symbols; failed so far 103
+$GDEN: possibly delisted; no timezone found
+$GCI: possibly delisted; no timezone found
+$GES: possibly delisted; no timezone found
+
+3 Failed downloads:
+['GDEN', 'GCI', 'GES']: possibly delisted; no timezone found
+18:02:34 batch 25/65: 47 of 50 symbols; failed so far 106
+$GREE: possibly delisted; no timezone found
+$GMS: possibly delisted; no timezone found
+$GLPG: possibly delisted; no timezone found
+$GMRE: possibly delisted; no timezone found
+
+4 Failed downloads:
+['GREE', 'GMS', 'GLPG', 'GMRE']: possibly delisted; no timezone found
+18:02:40 batch 26/65: 46 of 50 symbols; failed so far 110
+$HEES: possibly delisted; no timezone found
+$HCP: possibly delisted; no timezone found
+$HBI: possibly delisted; no timezone found
+$GTLS: possibly delisted; no timezone found
+
+4 Failed downloads:
+['HEES', 'HCP', 'HBI', 'GTLS']: possibly delisted; no timezone found
+18:02:46 batch 27/65: 46 of 50 symbols; failed so far 114
+$HMST: possibly delisted; no timezone found
+$HOUS: possibly delisted; no timezone found
+$HES: possibly delisted; no timezone found
+$HOLX: possibly delisted; no timezone found
+$HI: possibly delisted; no timezone found
+
+5 Failed downloads:
+['HMST', 'HOUS', 'HES', 'HOLX', 'HI']: possibly delisted; no timezone found
+18:02:52 batch 28/65: 45 of 50 symbols; failed so far 119
+$IAC: possibly delisted; no timezone found
+$HSII: possibly delisted; no timezone found
+
+2 Failed downloads:
+['IAC', 'HSII']: possibly delisted; no timezone found
+18:02:59 batch 29/65: 48 of 50 symbols; failed so far 121
+$INFA: possibly delisted; no timezone found
+$IMAB: possibly delisted; no timezone found
+$IGMS: possibly delisted; no timezone found
+$INFN: possibly delisted; no timezone found
+$IGT: possibly delisted; no timezone found
+
+5 Failed downloads:
+['INFA', 'IMAB', 'IGMS', 'INFN', 'IGT']: possibly delisted; no timezone found
+18:03:04 batch 30/65: 45 of 50 symbols; failed so far 126
+$IVAC: possibly delisted; no timezone found
+$ITRM: possibly delisted; no timezone found
+$IPG: possibly delisted; no timezone found
+$ITOS: possibly delisted; no timezone found
+$IRBT: possibly delisted; no timezone found
+$ITCI: possibly delisted; no timezone found
+
+6 Failed downloads:
+['IVAC', 'ITRM', 'IPG', 'ITOS', 'IRBT', 'ITCI']: possibly delisted; no timezone found
+18:03:11 batch 31/65: 44 of 50 symbols; failed so far 132
+$K: possibly delisted; no timezone found
+$JNPR: possibly delisted; no timezone found
+$JAMF: possibly delisted; no timezone found
+$KAR: possibly delisted; no timezone found
+$JWN: possibly delisted; no timezone found
+$JHG: possibly delisted; no timezone found
+
+6 Failed downloads:
+['K', 'JNPR', 'JAMF', 'KAR', 'JWN', 'JHG']: possibly delisted; no timezone found
+18:03:17 batch 32/65: 44 of 50 symbols; failed so far 138
+$KIRK: possibly delisted; no timezone found
+
+1 Failed download:
+['KIRK']: possibly delisted; no timezone found
+18:03:23 batch 33/65: 49 of 50 symbols; failed so far 139
+$LC: possibly delisted; no timezone found
+$KW: possibly delisted; no timezone found
+$KZR: possibly delisted; no timezone found
+$LANC: possibly delisted; no timezone found
+
+4 Failed downloads:
+['LC', 'KW', 'KZR', 'LANC']: possibly delisted; no timezone found
+18:03:29 batch 34/65: 46 of 50 symbols; failed so far 143
+$LGF-A: possibly delisted; no timezone found
+$LGF-B: possibly delisted; no timezone found
+
+2 Failed downloads:
+['LGF-A', 'LGF-B']: possibly delisted; no timezone found
+18:03:35 batch 35/65: 48 of 50 symbols; failed so far 145
+$MAG: possibly delisted; no timezone found
+$MAXN: possibly delisted; no timezone found
+$MASI: possibly delisted; no timezone found
+
+3 Failed downloads:
+['MAG', 'MAXN', 'MASI']: possibly delisted; no timezone found
+18:03:41 batch 36/65: 47 of 50 symbols; failed so far 148
+$MESA: possibly delisted; no timezone found
+$MCW: possibly delisted; no timezone found
+$MEG: possibly delisted; no timezone found
+
+3 Failed downloads:
+['MESA', 'MCW', 'MEG']: possibly delisted; no timezone found
+18:03:48 batch 37/65: 47 of 50 symbols; failed so far 151
+$MODG: possibly delisted; no timezone found
+$MODV: possibly delisted; no timezone found
+$MPW: possibly delisted; no timezone found
+$MNMD: possibly delisted; no timezone found
+$ML: possibly delisted; no timezone found
+$MRC: possibly delisted; no timezone found
+$MOGO: possibly delisted; no timezone found
+$MMC: possibly delisted; no timezone found
+
+8 Failed downloads:
+['MODG', 'MODV', 'MPW', 'MNMD', 'ML', 'MRC', 'MOGO', 'MMC']: possibly delisted; no timezone found
+18:03:54 batch 38/65: 42 of 50 symbols; failed so far 159
+$MRSN: possibly delisted; no timezone found
+$MULN: possibly delisted; no timezone found
+$MRUS: possibly delisted; no timezone found
+
+3 Failed downloads:
+['MRSN', 'MULN', 'MRUS']: possibly delisted; no timezone found
+18:04:01 batch 39/65: 47 of 50 symbols; failed so far 162
+$NGD: possibly delisted; no timezone found
+$NARI: possibly delisted; no timezone found
+
+2 Failed downloads:
+['NGD', 'NARI']: possibly delisted; no timezone found
+18:04:07 batch 40/65: 48 of 50 symbols; failed so far 164
+$NSA: possibly delisted; no timezone found
+$NOVAQ: possibly delisted; no timezone found
+
+2 Failed downloads:
+['NSA', 'NOVAQ']: possibly delisted; no timezone found
+18:04:13 batch 41/65: 48 of 50 symbols; failed so far 166
+$NVRO: possibly delisted; no timezone found
+$NVEE: possibly delisted; no timezone found
+$ODP: possibly delisted; no timezone found
+$NYMT: possibly delisted; no timezone found
+
+4 Failed downloads:
+['NVRO', 'NVEE', 'ODP', 'NYMT']: possibly delisted; no timezone found
+18:04:20 batch 42/65: 46 of 50 symbols; failed so far 170
+$OMI: possibly delisted; no timezone found
+$OLO: possibly delisted; no timezone found
+
+2 Failed downloads:
+['OMI', 'OLO']: possibly delisted; no timezone found
+18:04:25 batch 43/65: 48 of 50 symbols; failed so far 172
+$OTRK: possibly delisted; no timezone found
+
+1 Failed download:
+['OTRK']: possibly delisted; no timezone found
+18:04:31 batch 44/65: 49 of 50 symbols; failed so far 173
+$PCH: possibly delisted; no timezone found
+$PGRE: possibly delisted; no timezone found
+$PDCO: possibly delisted; no timezone found
+
+3 Failed downloads:
+['PCH', 'PGRE', 'PDCO']: possibly delisted; no timezone found
+18:04:38 batch 45/65: 47 of 50 symbols; failed so far 176
+$PLYA: possibly delisted; no timezone found
+$PLYM: possibly delisted; no timezone found
+$PLL: possibly delisted; no timezone found
+$PPBI: possibly delisted; no timezone found
+
+4 Failed downloads:
+['PLYA', 'PLYM', 'PLL', 'PPBI']: possibly delisted; no timezone found
+18:04:44 batch 46/65: 46 of 50 symbols; failed so far 180
+$PRA: possibly delisted; no timezone found
+$PSTG: possibly delisted; no timezone found
+$PRO: possibly delisted; no timezone found
+
+3 Failed downloads:
+['PRA', 'PSTG', 'PRO']: possibly delisted; no timezone found
+18:04:50 batch 47/65: 47 of 50 symbols; failed so far 183
+$QVCGA: possibly delisted; no timezone found
+$RDUS: possibly delisted; no timezone found
+$RDFN: possibly delisted; no timezone found
+$PYCR: possibly delisted; no timezone found
+$PX: possibly delisted; no timezone found
+$RAPT: possibly delisted; no timezone found
+
+6 Failed downloads:
+['QVCGA', 'RDUS', 'RDFN', 'PYCR', 'PX', 'RAPT']: possibly delisted; no timezone found
+18:04:55 batch 48/65: 44 of 50 symbols; failed so far 189
+$REVG: possibly delisted; no timezone found
+$RGLS: possibly delisted; no timezone found
+
+2 Failed downloads:
+['REVG', 'RGLS']: possibly delisted; no timezone found
+18:05:01 batch 49/65: 48 of 50 symbols; failed so far 191
+$RYI: possibly delisted; no timezone found
+$RVNC: possibly delisted; no timezone found
+$ROIC: possibly delisted; no timezone found
+
+3 Failed downloads:
+['RYI', 'RVNC', 'ROIC']: possibly delisted; no timezone found
+18:05:08 batch 50/65: 47 of 50 symbols; failed so far 194
+$SAGE: possibly delisted; no timezone found
+$SCVL: possibly delisted; no timezone found
+$SCS: possibly delisted; no timezone found
+$SASR: possibly delisted; no timezone found
+$SAVA: possibly delisted; no timezone found
+$SAND: possibly delisted; no timezone found
+$SEE: possibly delisted; no timezone found
+
+7 Failed downloads:
+['SAGE', 'SCVL', 'SCS', 'SASR', 'SAVA', 'SAND', 'SEE']: possibly delisted; no timezone found
+18:05:14 batch 51/65: 43 of 50 symbols; failed so far 201
+$SEM: possibly delisted; no timezone found
+$SEMR: possibly delisted; no timezone found
+$SHYF: possibly delisted; no timezone found
+$SKLZ: possibly delisted; no timezone found
+$SGMO: possibly delisted; no timezone found
+
+5 Failed downloads:
+['SEM', 'SEMR', 'SHYF', 'SKLZ', 'SGMO']: possibly delisted; no timezone found
+18:05:20 batch 52/65: 45 of 50 symbols; failed so far 206
+$SKX: possibly delisted; no timezone found
+$SMLR: possibly delisted; no timezone found
+$SNCY: possibly delisted; no timezone found
+$SLNO: possibly delisted; no timezone found
+$SNBR: possibly delisted; no timezone found
+$SNV: possibly delisted; no timezone found
+$SOL: possibly delisted; no timezone found
+
+7 Failed downloads:
+['SKX', 'SMLR', 'SNCY', 'SLNO', 'SNBR', 'SNV', 'SOL']: possibly delisted; no timezone found
+18:05:26 batch 53/65: 43 of 50 symbols; failed so far 213
+$SPR: possibly delisted; no timezone found
+$SPTN: possibly delisted; no timezone found
+$SRDX: possibly delisted; no timezone found
+$STKL: possibly delisted; no timezone found
+
+4 Failed downloads:
+['SPR', 'SPTN', 'SRDX', 'STKL']: possibly delisted; no timezone found
+18:05:32 batch 54/65: 46 of 50 symbols; failed so far 217
+$SWI: possibly delisted; no timezone found
+$SUM: possibly delisted; no timezone found
+$STR: possibly delisted; no timezone found
+$SUP: possibly delisted; no timezone found
+$SWTX: possibly delisted; no timezone found
+
+5 Failed downloads:
+['SWI', 'SUM', 'STR', 'SUP', 'SWTX']: possibly delisted; no timezone found
+18:05:39 batch 55/65: 45 of 50 symbols; failed so far 222
+$TEF: possibly delisted; no timezone found
+$TBRG: possibly delisted; no timezone found
+$TGI: possibly delisted; no timezone found
+$TGNA: possibly delisted; no timezone found
+$TERN: possibly delisted; no timezone found
+
+5 Failed downloads:
+['TEF', 'TBRG', 'TGI', 'TGNA', 'TERN']: possibly delisted; no timezone found
+18:05:44 batch 56/65: 45 of 50 symbols; failed so far 227
+$TMHC: possibly delisted; no timezone found
+$THS: possibly delisted; no timezone found
+$THR: possibly delisted; no timezone found
+$TPH: possibly delisted; no timezone found
+$TPIC: possibly delisted; no timezone found
+
+5 Failed downloads:
+['TMHC', 'THS', 'THR', 'TPH', 'TPIC']: possibly delisted; no timezone found
+18:05:51 batch 57/65: 45 of 50 symbols; failed so far 232
+$TSE: possibly delisted; no timezone found
+$TRUE: possibly delisted; no timezone found
+
+2 Failed downloads:
+['TSE', 'TRUE']: possibly delisted; no timezone found
+18:05:57 batch 58/65: 48 of 50 symbols; failed so far 234
+$UDMY: possibly delisted; no timezone found
+
+1 Failed download:
+['UDMY']: possibly delisted; no timezone found
+18:06:04 batch 59/65: 49 of 50 symbols; failed so far 235
+$VERV: possibly delisted; no timezone found
+$VBTX: possibly delisted; no timezone found
+$USM: possibly delisted; no timezone found
+
+3 Failed downloads:
+['VERV', 'VBTX', 'USM']: possibly delisted; no timezone found
+18:06:09 batch 60/65: 47 of 50 symbols; failed so far 238
+$VRE: possibly delisted; no timezone found
+$VSCO: possibly delisted; no timezone found
+$VRN: possibly delisted; no timezone found
+$VRNA: possibly delisted; no timezone found
+$VMEO: possibly delisted; no timezone found
+
+5 Failed downloads:
+['VRE', 'VSCO', 'VRN', 'VRNA', 'VMEO']: possibly delisted; no timezone found
+18:06:15 batch 61/65: 45 of 50 symbols; failed so far 243
+$WGHTQ: possibly delisted; no timezone found
+$VTLE: possibly delisted; no timezone found
+$WBA: possibly delisted; no timezone found
+
+3 Failed downloads:
+['WGHTQ', 'VTLE', 'WBA']: possibly delisted; no timezone found
+18:06:21 batch 62/65: 47 of 50 symbols; failed so far 246
+$WOW: possibly delisted; no timezone found
+$WNS: possibly delisted; no timezone found
+
+2 Failed downloads:
+['WOW', 'WNS']: possibly delisted; no timezone found
+18:06:27 batch 63/65: 48 of 50 symbols; failed so far 248
+$YMAB: possibly delisted; no timezone found
+$X: possibly delisted; no timezone found
+$XOMA: possibly delisted; no timezone found
+$ZEUS: possibly delisted; no timezone found
+
+4 Failed downloads:
+['YMAB', 'X', 'XOMA', 'ZEUS']: possibly delisted; no timezone found
+18:06:32 batch 64/65: 46 of 50 symbols; failed so far 252
+$ZUO: possibly delisted; no timezone found
+
+1 Failed download:
+['ZUO']: possibly delisted; no timezone found
+18:06:36 batch 65/65: 10 of 11 symbols; failed so far 253
+18:06:39 DONE full stocks: failed 253 of 3211

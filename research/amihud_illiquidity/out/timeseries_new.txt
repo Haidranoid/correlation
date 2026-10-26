@@ -1,0 +1,29 @@
+# S1 (reported only): market illiquidity and the next period's excess return (new)
+
+Coefficients are % per 21-day period per unit of the regressor; Newey-West t (4 lags), plain t in brackets.
+
+L (log mean ratio, 500 largest): first 2005-02-01, 261 periods; its value fell from -22.28 (first 36 periods) to -23.83 (last 36).
+**500 largest, unseen, SPY** (14 periods; AR(1) slope 0.585, Kendall-corrected 0.781):
+- Amihud's form: L_k +2.275 (t +0.33; +0.27), unexpected U_(k+1) +13.727 (t +1.46; +1.34), January +nan (t +nan); R² 0.140. Amihud predicts L > 0 and U < 0.
+- D alone: -1.137 (t -0.55; -0.25); n 15.
+- D + log RV: -3.625 (t -2.69; -0.67); log RV +1.590 (t +2.44); n 15.
+- L level alone: -1.398 (t -0.34; -0.18); n 15.
+
+**500 largest, unseen, Equal-weight U_J** (14 periods; AR(1) slope 0.585, Kendall-corrected 0.781):
+- Amihud's form: L_k -4.241 (t -0.52; -0.35), unexpected U_(k+1) +23.011 (t +1.47; +1.57), January +nan (t +nan); R² 0.215. Amihud predicts L > 0 and U < 0.
+- D alone: -5.193 (t -1.32; -0.74); n 15.
+- D + log RV: -6.524 (t -1.06; -0.76); log RV +0.850 (t +0.41); n 15.
+- L level alone: -12.001 (t -1.31; -1.02); n 15.
+
+**U_J, unseen, SPY** (14 periods; AR(1) slope 0.344, Kendall-corrected 0.490):
+- Amihud's form: L_k +12.409 (t +2.48; +2.17), unexpected U_(k+1) -8.072 (t -0.94; -1.38), January +nan (t +nan); R² 0.410. Amihud predicts L > 0 and U < 0.
+- D alone: +8.456 (t +1.44; +1.70); n 15.
+- D + log RV: +9.329 (t +1.40; +1.53); log RV -0.461 (t -0.53); n 15.
+- L level alone: +13.462 (t +2.69; +2.46); n 15.
+
+**U_J, unseen, Equal-weight U_J** (14 periods; AR(1) slope 0.344, Kendall-corrected 0.490):
+- Amihud's form: L_k +11.803 (t +2.21; +1.31), unexpected U_(k+1) -16.815 (t -1.39; -1.83), January +nan (t +nan); R² 0.349. Amihud predicts L > 0 and U < 0.
+- D alone: +9.774 (t +1.58; +1.20); n 15.
+- D + log RV: +14.501 (t +1.64; +1.50); log RV -2.497 (t -1.02); n 15.
+- L level alone: +16.260 (t +3.74; +1.75); n 15.
+

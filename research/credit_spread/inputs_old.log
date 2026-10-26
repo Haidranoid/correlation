@@ -1,0 +1,47 @@
+Running as unit: run-p2429905-i31790576.scope; invocation ID: 3aa2370fabc54c0c9ac3f3b917fb4c77
+inputs (old): axis 1993-01-29 .. 2025-06-27, 8159 days; export from axis day 2248 (5911 days, equal to the axis)
+  cut: 2025-06-27
+  axis_first: 1993-01-29
+  axis_last: 2025-06-27
+  axis_days: 8159
+  export_first_index: 2248
+  export_days: 5911
+  baa10y_rows: 8873
+  baa10y_last_date: 2025-06-27
+  baa10y_carried_days: 66
+  baa10y_missing_after_start: []
+  baa10y_n_missing_after_start: 0
+  aaa10y_rows: 8873
+  aaa10y_last_date: 2025-06-27
+  aaa10y_carried_days: 66
+  aaa10y_missing_after_start: []
+  aaa10y_n_missing_after_start: 0
+  dgs10_rows: 8878
+  dgs10_last_date: 2025-06-27
+  dgs10_carried_days: 63
+  dgs10_missing_after_start: []
+  dgs10_n_missing_after_start: 0
+  vixcls_rows: 8960
+  vixcls_last_date: 2025-06-27
+  vixcls_carried_days: 2
+  vixcls_missing_after_start: []
+  vixcls_n_missing_after_start: 0
+  store_spy_filled_days: ['2011-02-17']
+  store_xlf_filled_days: ['2011-02-17']
+  lqd_first: 2002-07-30
+  ief_first: 2002-07-30
+  xlf_first: 2005-02-25
+  yahoo_vs_store_spy: {'days': 5116, 'corr': 0.9989232925752157, 'max_abs_diff': 0.020023956128328635, 'days_abs_diff_gt_0.5pct': 16, 'mean_diff_bps_per_day': 0.24056099809744255}
+  dS1_days_exactly_zero_share: 0.07776278670428063
+  seconds: 0
+  coverage (first finite day, finite days, missing after the first):
+    lrv22: 1993-03-03, 8137, 0
+    lvix: 1993-01-29, 8159, 0
+    R: 1993-02-08, 8153, 0
+    dS1: 1993-02-08, 8153, 0
+    dD1: 1993-02-08, 8153, 0
+    dG1: 1993-02-08, 8153, 0
+    L1: 1993-02-01, 8158, 0
+    cETF: 2002-08-06, 5761, 0
+    lrv22X: 2005-03-30, 5095, 0
+    RX: 2005-03-07, 5111, 0

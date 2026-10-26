@@ -1,0 +1,24 @@
+18:06:40 full funds: 1089 symbols in 22 batches -> /home/bhoult/.local/share/correlation2/experiments/published_data/raw/yahoo_full_funds
+18:06:42 batch 1/22: 50 of 50 symbols; failed so far 0
+18:06:47 batch 2/22: 48 of 50 symbols; failed so far 2
+18:06:51 batch 3/22: 50 of 50 symbols; failed so far 2
+18:06:56 batch 4/22: 50 of 50 symbols; failed so far 2
+18:07:01 batch 5/22: 50 of 50 symbols; failed so far 2
+18:07:07 batch 6/22: 50 of 50 symbols; failed so far 2
+18:07:12 batch 7/22: 50 of 50 symbols; failed so far 2
+18:07:17 batch 8/22: 50 of 50 symbols; failed so far 2
+18:07:23 batch 9/22: 50 of 50 symbols; failed so far 2
+18:07:28 batch 10/22: 48 of 50 symbols; failed so far 4
+18:07:34 batch 11/22: 50 of 50 symbols; failed so far 4
+18:07:39 batch 12/22: 50 of 50 symbols; failed so far 4
+18:07:44 batch 13/22: 50 of 50 symbols; failed so far 4
+18:07:49 batch 14/22: 48 of 50 symbols; failed so far 6
+18:07:54 batch 15/22: 50 of 50 symbols; failed so far 6
+18:08:00 batch 16/22: 50 of 50 symbols; failed so far 6
+18:08:05 batch 17/22: 50 of 50 symbols; failed so far 6
+18:08:11 batch 18/22: 49 of 50 symbols; failed so far 7
+18:08:16 batch 19/22: 50 of 50 symbols; failed so far 7
+18:08:22 batch 20/22: 50 of 50 symbols; failed so far 7
+18:08:27 batch 21/22: 50 of 50 symbols; failed so far 7
+18:08:32 batch 22/22: 39 of 39 symbols; failed so far 7
+18:08:35 DONE full funds: failed 7 of 1089

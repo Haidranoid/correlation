@@ -1,0 +1,12 @@
+[13:29:18] old: export /home/bhoult/.local/share/correlation2/export/full (5911 days, 2001-12-31..2025-06-27); store /home/bhoult/.local/share/correlation2/stores/stooq-2025-06-27
+[13:29:18] universe: 211 refits from 2007-12-03, size min 500 median 500 max 500; 1219 distinct stocks; OHLC from 2008-01-02
+[13:29:18] D0 (first force day, GK sigma for >= 90% of the universe): 2008-03-26 (index 1568)
+[13:29:18] universe stock-days 2,200,000; with a store row 2,199,709
+[13:29:18]   bad print  (H-L)/C>0.5:       125 (0.0057%)
+[13:29:18]   bad print   H<max(O,C):        10 (0.0005%)
+[13:29:18]   bad print   L>min(O,C):        10 (0.0005%)
+[13:29:18]   bad print          H=L:        17 (0.0008%)
+[13:29:18]   bad print          any:       161 (0.0073%)
+[13:29:18] store close vs export close on valid days from 2008: 4,481,821 stock-days, max relative difference 0, exact 100.000%
+[13:29:18] from D0: sigma is Garman-Klass on 99.99% of universe stock-days; sigma missing on 109; z missing on 20,163
+[13:29:18] median sigma over universe stock-days from D0: 0.0155

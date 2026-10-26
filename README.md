@@ -25,7 +25,7 @@ But if you are anything like me and had a similar idea once in your misspent you
 
 ## What it's useful for
 
-It doesn't predict prices; [65 experiments](experiments/README.md) say so. What it does well is measure, quickly and honestly, how stocks move *together*. That turns out to be useful, mostly for risk. Everything below is in the desktop app, `c2-gui`.
+It doesn't predict prices; [71 experiments](experiments/README.md) say so. What it does well is measure, quickly and honestly, how stocks move *together*. That turns out to be useful, mostly for risk. Everything below is in the desktop app, `c2-gui`.
 
 ### Knowing what you actually own
 
@@ -84,7 +84,7 @@ The engine computes all-pairs correlations with INT8 matrix multiplication on th
 
 ---
 
-**TL;DR:** Can correlations between stocks, or with outside data like weather and news, predict where US stocks go next? After 65 tests on two decades of prices, no: nothing makes money reliably after trading costs. Correlation describes how stocks move together on the same day. That's real and useful for managing risk, but it doesn't say where anything goes next. One lead is still open, and it needs better data to settle.
+**TL;DR:** Can correlations between stocks, or with outside data like weather and news, predict where US stocks go next? After 71 tests on two decades of prices, no: nothing makes money reliably after trading costs. Correlation describes how stocks move together on the same day. That's real and useful for managing risk, but it doesn't say where anything goes next. One lead is still open, and it needs better data to settle.
 
 | Question | Answer | Details |
 |---|---|---|

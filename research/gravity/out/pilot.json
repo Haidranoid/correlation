@@ -1,0 +1,26 @@
+{
+ "load": [
+  11.27197265625,
+  13.373046875,
+  21.19287109375
+ ],
+ "refits_year": 12,
+ "refits_full": 208,
+ "peers_year_s": 15.517335414886475,
+ "peers_full_min": 4.482785786522759,
+ "numba_compile_s": 1.4306025505065918,
+ "numba_g3_sample_s": 0.18266868591308594,
+ "stocks_in_universe_mean": 48.0,
+ "numba_g3_full_min": 1.0993948689213504,
+ "numpy_g3_sample_s": 0.35256123542785645,
+ "numpy_pairs": 100,
+ "numpy_g3_full_min": 122.2212282816569,
+ "numpy_vs_numba_max_rel_diff": 5.9215066144837425e-08,
+ "numpy_vs_numba_values": 1680,
+ "decision": "numba (kern.g3_accum), in refit chunks; no lagged spread is materialized",
+ "load_end": [
+  9.52490234375,
+  12.880859375,
+  20.90625
+ ]
+}

@@ -1,0 +1,10 @@
+The 16 unseen months, run once with the frozen code (reported, not confirming)
+Data checks: the new export continues the old one: True; overlaps with the old run: xlf {'days': 5117, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}; spy_store {'days': 5117, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}; spy_yahoo {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}; baa10y {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}; vix {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+P1: 307 origins 2025-06-30 .. 2026-09-17; 1 - MSE ratio -0.59% (95% -1.21..+1.67); CW t -0.74, normal p 0.769, bootstrap p 0.688; median dS coefficient +0.0151
+S1: 1 - MSE ratio -0.07%, CW t -0.01
+P1 forecasts, old vs new run over the old span: base {'corr': 1.0, 'max_abs_diff': 0.0, 'days': 6856}, spread {'corr': 1.0, 'max_abs_diff': 0.0, 'days': 6856}
+S2: 15 decisions 2025-07-16 .. 2026-09-16, warning on 0 (none); Sharpe spread rule 1.324 vs rule B 1.324 (bootstrap p 1.000); annual +16.2% vs +16.2%, SPY +18.1%; over random -0.82 (p 0.765); after costs minus SPY: mean of the calendar-year differences -1.2, whole span annualized -2.0 (rule B -1.2 / -2.0)
+C1 (a) spread follows stocks, k 5: on R5 +0.118 (t +0.58), on dS5 +0.019 (t +0.23), n 322
+C1 (b) stocks follow the spread, k 5: on R5 -0.142 (t -1.09), on dS5 -0.023 (t -0.85), n 324
+C1 (a) spread follows stocks, k 21: on R5 -0.216 (t -0.45), on dS5 -0.011 (t -0.07), n 306
+C1 (b) stocks follow the spread, k 21: on R5 -0.192 (t -1.01), on dS5 -0.078 (t -0.73), n 308

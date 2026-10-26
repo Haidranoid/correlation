@@ -1,0 +1,66 @@
+[13:41:33] 1. Look-ahead by truncation
+[13:41:49]   truncation  1:     CB cut 2012-04-09; forces 2562..2586 (2750 values, 2750 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:42:18]   truncation  2:  BRK-B cut 2019-08-07; forces 4389..4430 (4620 values, 4620 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:42:43]   truncation  3:     EL cut 2019-06-04; forces 4347..4385 (4290 values, 4290 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:43:07]   truncation  4:   NVDA cut 2019-08-28; forces 4410..4445 (3960 values, 3960 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:43:25]   truncation  5:    AVB cut 2014-04-29; forces 3066..3102 (4070 values, 4070 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:43:59]   truncation  6:    LUV cut 2024-06-13; forces 5628..5651 (2640 values, 2640 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:44:10]   truncation  7:     EL cut 2010-04-12; forces 2058..2083 (2860 values, 2860 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:44:25]   truncation  8:   LULU cut 2013-10-15; forces 2940..2968 (3190 values, 3190 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:44:49]   truncation  9:   SHOP cut 2018-10-16; forces 4200..4228 (3190 values, 3190 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:45:21]   truncation 10:    NOW cut 2025-03-24; forces 5817..5844 (3080 values, 3080 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:45:45]   truncation 11:   TLRY cut 2021-05-03; forces 4830..4867 (4180 values, 4180 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:45:55]   truncation 12:    AFL cut 2010-06-02; forces 2079..2119 (4510 values, 4510 finite): mismatches 0; attractor tables identical True; sigma and z identical True
+[13:45:55] 2. Slow recomputation
+[13:45:57]   slow forces: 40 stock-days x 110 variants = 4400 values (4364 finite): 0 mismatches (tolerance 1e-5 relative); worst relative difference by stage {'g1': 5.783919723175531e-08, 'g2': np.float64(5.732999728276375e-08), 'g3': np.float64(5.896226915788885e-08)}
+[13:45:57]   slow sigma, beta_M and z: 40 of 40 agree
+[13:46:01]   attractors    XYZ at 2020-10-07: G1 True, random True, G2 (18 kernels) True
+[13:46:05]   attractors  WGHTQ at 2011-12-01: G1 True, random True, G2 (18 kernels) True
+[13:46:10]   attractors    AEP at 2018-08-07: G1 True, random True, G2 (18 kernels) True
+[13:46:14]   attractors    HES at 2008-04-04: G1 True, random True, G2 (18 kernels) True
+[13:46:18]   attractors    FDX at 2024-03-12: G1 True, random True, G2 (18 kernels) True
+[13:46:23]   attractors   BLUE at 2015-06-08: G1 True, random True, G2 (18 kernels) True
+[13:46:23] 3. Hand prints
+[13:46:23]   HAND PRINT AAPL on 2016-05-02 (refit 2016-04-07): close 21.2977, high 21.3992, low 21.0197
+[13:46:23]       SWKS rho(mass) 0.672 beta 0.431: A close 60.1801; spread mean +1.36031 sd 0.02907; g_C -2.339 g_H -2.175 g_L -2.791; closest approach r 2.175; pull p=2 eps=0.3: +0.110
+[13:46:23]        HON rho(mass) 0.638 beta 0.843: A close 99.9406; spread mean -0.69412 sd 0.03579; g_C -3.665 g_H -3.532 g_L -4.032; closest approach r 3.532; pull p=2 eps=0.3: +0.043
+[13:46:23]         MA rho(mass) 0.625 beta 0.750: A close 94.0758; spread mean -0.20637 sd 0.03967; g_C -3.661 g_H -3.541 g_L -3.992; closest approach r 3.541; pull p=2 eps=0.3: +0.042
+[13:46:23]       MSFT rho(mass) 0.618 beta 0.609: A close 44.9631; spread mean +0.80090 sd 0.03957; g_C -1.538 g_H -1.418 g_L -1.870; closest approach r 1.418; pull p=2 eps=0.3: +0.209
+[13:46:23]         FI rho(mass) 0.601 beta 0.795: A close 49.5500; spread mean +0.05180 sd 0.04048; g_C -2.361 g_H -2.243 g_L -2.685; closest approach r 2.243; pull p=2 eps=0.3: +0.093
+[13:46:23]       ORCL rho(mass) 0.601 beta 0.719: A close 36.2368; spread mean +0.59284 sd 0.03054; g_C -3.811 g_H -3.655 g_L -4.241; closest approach r 3.655; pull p=2 eps=0.3: +0.038
+[13:46:23]      BRK-B rho(mass) 0.597 beta 0.930: A close 146.8900; spread mean -1.43563 sd 0.03667; g_C -4.017 g_H -3.887 g_L -4.375; closest approach r 3.887; pull p=2 eps=0.3: +0.034
+[13:46:23]       AVGO rho(mass) 0.595 beta 0.408: A close 11.4960; spread mean +2.15956 sd 0.03034; g_C -3.174 g_H -3.017 g_L -3.607; closest approach r 3.017; pull p=2 eps=0.3: +0.054
+[13:46:23]        ITW rho(mass) 0.595 beta 0.811: A close 90.0491; spread mean -0.45218 sd 0.03507; g_C -3.997 g_H -3.862 g_L -4.372; closest approach r 3.862; pull p=2 eps=0.3: +0.034
+[13:46:23]        STT rho(mass) 0.590 beta 0.569: A close 52.9567; spread mean +0.94195 sd 0.04801; g_C -2.916 g_H -2.817 g_L -3.190; closest approach r 2.817; pull p=2 eps=0.3: +0.061
+[13:46:23]     forces: spring +19.243; G1 p=0 +6.132; G1 p=1 eps=0.1 +2.159; G1 p=1 eps=0.3 +2.003; G1 p=1 eps=1 +1.607; G1 p=2 eps=0.1 +0.851; G1 p=2 eps=0.3 +0.719; G1 p=2 eps=1 +0.446; G1 p=3 eps=0.1 +0.380; G1 p=3 eps=0.3 +0.287; G1 p=3 eps=1 +0.132
+[13:46:23]     G2 N=5 a=0.5 +0.085; G2 N=5 a=1 -0.026; G2 N=5 a=2 +0.439; G2 N=5 a=3 +0.442; G2 N=10 a=0.5 +0.212; G2 N=10 a=1 +0.117; G2 N=10 a=2 +0.213; G2 N=10 a=3 +0.132; G2 N=21 a=0.5 -0.006; G2 N=21 a=1 +0.087; G2 N=21 a=2 +0.271; G2 N=21 a=3 +0.410; G2 N=5 a=inf +0.321; G2 N=10 a=inf -0.097; G2 N=21 a=inf +0.704; G2 N=5 a=0 -0.027; G2 N=10 a=0 +0.198; G2 N=21 a=0 +0.028
+[13:46:23]     G3 N=5 a=1 p=1 eps=0.3 +1.965; G3 N=5 a=2 p=1 eps=0.3 +1.984; G3 N=21 a=1 p=1 eps=0.3 +2.408; G3 N=21 a=2 p=1 eps=0.3 +2.249; G3 N=5 a=1 p=2 eps=0.3 +0.683; G3 N=5 a=2 p=2 eps=0.3 +0.692; G3 N=21 a=1 p=2 eps=0.3 +1.091; G3 N=21 a=2 p=2 eps=0.3 +0.905
+[13:46:23]   HAND PRINT XOM on 2015-12-08 (refit 2015-12-04): close 53.3925, high 54.6228, low 52.7896
+[13:46:23]        CVX rho(mass) 0.873 beta 0.715: A close 63.9215; spread mean +1.05969 sd 0.01215; g_C -4.342 g_H -2.467 g_L -5.276; closest approach r 2.467; pull p=2 eps=0.3: +0.114
+[13:46:23]        COP rho(mass) 0.806 beta 0.580: A close 39.6661; spread mean +1.84623 sd 0.02276; g_C -0.222 g_H +0.779 g_L -0.721; closest approach r 0.000; pull p=2 eps=0.3: +8.956
+[13:46:23]        OXY rho(mass) 0.765 beta 0.641: A close 52.9813; spread mean +1.44673 sd 0.02363; g_C -0.575 g_H +0.389 g_L -1.056; closest approach r 0.000; pull p=2 eps=0.3: +8.500
+[13:46:23]         BP rho(mass) 0.750 beta 0.588: A close 20.4680; spread mean +2.21292 sd 0.02038; g_C -0.479 g_H +0.639 g_L -1.036; closest approach r 0.000; pull p=2 eps=0.3: +8.338
+[13:46:23]        HES rho(mass) 0.748 beta 0.467: A close 45.6486; spread mean +2.19715 sd 0.02978; g_C -0.100 g_H +0.665 g_L -0.481; closest approach r 0.000; pull p=2 eps=0.3: +8.315
+[13:46:23]        EOG rho(mass) 0.737 beta 0.500: A close 63.4958; spread mean +1.92324 sd 0.03004; g_C -0.665 g_H +0.094 g_L -1.043; closest approach r 0.000; pull p=2 eps=0.3: +8.191
+[13:46:23]        DVN rho(mass) 0.737 beta 0.434: A close 28.0265; spread mean +2.49250 sd 0.03170; g_C +1.197 g_H +1.915 g_L +0.838; closest approach r 0.838; pull p=2 eps=0.3: -0.569
+[13:46:23]        MUR rho(mass) 0.726 beta 0.402: A close 18.0551; spread mean +2.79770 sd 0.03857; g_C +0.458 g_H +1.048 g_L +0.163; closest approach r 0.163; pull p=2 eps=0.3: -3.381
+[13:46:23]        LYB rho(mass) 0.703 beta 0.476: A close 60.7581; spread mean +2.05357 sd 0.03238; g_C -0.955 g_H -0.251 g_L -1.305; closest approach r 0.251; pull p=2 eps=0.3: +2.312
+[13:46:23]         DD rho(mass) 0.698 beta 0.565: A close 61.0352; spread mean +1.73538 sd 0.02526; g_C -3.128 g_H -2.226 g_L -3.578; closest approach r 2.226; pull p=2 eps=0.3: +0.109
+[13:46:23]     forces: spring +6.972; G1 p=0 +4.617; G1 p=1 eps=0.1 +37.168; G1 p=1 eps=0.3 +12.342; G1 p=1 eps=1 +3.812; G1 p=2 eps=0.1 +375.349; G1 p=2 eps=0.3 +40.885; G1 p=2 eps=1 +3.641; G1 p=3 eps=0.1 +3782.644; G1 p=3 eps=0.3 +137.481; G1 p=3 eps=1 +3.628
+[13:46:23]     G2 N=5 a=0.5 +0.393; G2 N=5 a=1 +0.824; G2 N=5 a=2 +0.641; G2 N=5 a=3 +0.789; G2 N=10 a=0.5 -0.083; G2 N=10 a=1 +0.028; G2 N=10 a=2 +0.292; G2 N=10 a=3 +0.846; G2 N=21 a=0.5 -0.074; G2 N=21 a=1 -0.103; G2 N=21 a=2 +0.153; G2 N=21 a=3 +0.133; G2 N=5 a=inf +0.779; G2 N=10 a=inf +1.484; G2 N=21 a=inf +0.120; G2 N=5 a=0 +0.144; G2 N=10 a=0 -0.021; G2 N=21 a=0 -0.093
+[13:46:23]     G3 N=5 a=1 p=1 eps=0.3 +5.914; G3 N=5 a=2 p=1 eps=0.3 +5.201; G3 N=21 a=1 p=1 eps=0.3 +5.824; G3 N=21 a=2 p=1 eps=0.3 +5.187; G3 N=5 a=1 p=2 eps=0.3 +7.736; G3 N=5 a=2 p=2 eps=0.3 +5.277; G3 N=21 a=1 p=2 eps=0.3 +5.769; G3 N=21 a=2 p=2 eps=0.3 +4.043
+[13:46:23]   HAND PRINT JPM on 2011-08-08 (refit 2011-08-03): close 24.8410, high 27.5104, low 24.5719
+[13:46:23]        WFC rho(mass) 0.804 beta 0.684: A close 16.6801; spread mean +1.35095 sd 0.02962; g_C -2.161 g_H +1.284 g_L -2.529; closest approach r 0.000; pull p=2 eps=0.3: +8.935
+[13:46:23]        BAC rho(mass) 0.789 beta 0.636: A close 5.4875; spread mean +2.00243 sd 0.03142; g_C +4.071 g_H +7.320 g_L +3.724; closest approach r 3.724; pull p=2 eps=0.3: -0.049
+[13:46:23]        USB rho(mass) 0.764 beta 0.772: A close 15.7994; spread mean +1.15540 sd 0.03487; g_C -2.136 g_H +0.791 g_L -2.448; closest approach r 0.000; pull p=2 eps=0.3: +8.492
+[13:46:23]         MS rho(mass) 0.760 beta 0.616: A close 13.5793; spread mean +1.61991 sd 0.01537; g_C -0.909 g_H +5.733 g_L -1.618; closest approach r 0.000; pull p=2 eps=0.3: +8.441
+[13:46:23]          C rho(mass) 0.729 beta 0.644: A close 23.1424; spread mean +1.15341 sd 0.02488; g_C +1.480 g_H +5.582 g_L +1.042; closest approach r 1.042; pull p=2 eps=0.3: -0.405
+[13:46:23]         GS rho(mass) 0.726 beta 0.827: A close 97.0982; spread mean -0.49808 sd 0.01649; g_C -4.476 g_H +1.713 g_L -5.137; closest approach r 0.000; pull p=2 eps=0.3: +8.063
+[13:46:23]         BK rho(mass) 0.724 beta 0.748: A close 15.9438; spread mean +1.15143 sd 0.01644; g_C -0.620 g_H +5.590 g_L -1.283; closest approach r 0.000; pull p=2 eps=0.3: +8.047
+[13:46:23]        TFC rho(mass) 0.717 beta 0.666: A close 15.0408; spread mean +1.46568 sd 0.02349; g_C -2.465 g_H +1.881 g_L -2.928; closest approach r 0.000; pull p=2 eps=0.3: +7.965
+[13:46:23]        STT rho(mass) 0.711 beta 0.680: A close 26.8496; spread mean +1.00560 sd 0.02637; g_C -1.195 g_H +2.674 g_L -1.608; closest approach r 0.000; pull p=2 eps=0.3: +7.897
+[13:46:23]       ZION rho(mass) 0.700 beta 0.561: A close 14.5049; spread mean +1.74483 sd 0.03023; g_C -1.044 g_H +2.332 g_L -1.404; closest approach r 0.000; pull p=2 eps=0.3: +7.777
+[13:46:23]     forces: spring +6.815; G1 p=0 +4.388; G1 p=1 eps=0.1 +58.211; G1 p=1 eps=0.3 +18.946; G1 p=1 eps=1 +5.382; G1 p=2 eps=0.1 +589.937; G1 p=2 eps=0.3 +65.163; G1 p=2 eps=1 +5.695; G1 p=3 eps=0.1 +5904.994; G1 p=3 eps=0.3 +218.408; G1 p=3 eps=1 +5.812
+[13:46:23]     G2 N=5 a=0.5 -0.108; G2 N=5 a=1 +0.138; G2 N=5 a=2 +0.100; G2 N=5 a=3 +0.054; G2 N=10 a=0.5 +0.116; G2 N=10 a=1 +0.007; G2 N=10 a=2 +0.069; G2 N=10 a=3 +0.084; G2 N=21 a=0.5 +0.199; G2 N=21 a=1 +0.291; G2 N=21 a=2 +0.139; G2 N=21 a=3 +0.070; G2 N=5 a=inf -0.585; G2 N=10 a=inf +0.148; G2 N=21 a=inf +0.170; G2 N=5 a=0 -0.066; G2 N=10 a=0 +0.297; G2 N=21 a=0 +0.084
+[13:46:23]     G3 N=5 a=1 p=1 eps=0.3 +6.357; G3 N=5 a=2 p=1 eps=0.3 +5.355; G3 N=21 a=1 p=1 eps=0.3 +5.510; G3 N=21 a=2 p=1 eps=0.3 +4.487; G3 N=5 a=1 p=2 eps=0.3 +10.718; G3 N=5 a=2 p=2 eps=0.3 +7.084; G3 N=21 a=1 p=2 eps=0.3 +7.337; G3 N=21 a=2 p=2 eps=0.3 +4.098
+[13:46:23] SUMMARY: truncation mismatches 0 of 43340 values (43340 finite), attractor tables identical 12/12, sigma and z identical 12/12; slow forces mismatches 0 of 4400; slow attractors bad 0 of 6

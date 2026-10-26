@@ -1,0 +1,45 @@
+S2 (new): 15 decisions 2025-07-16 .. 2026-09-16 (last hold ends 2026-10-16); held from the close of t0 + 1 to the close of t0 + 22; 5 bps on every SPY trade; Yahoo SPY. The warning fired on 0 decisions: 
+
+## unseen months: 15 months, warning on 0
+| Rule | Annual (5 bps) | Sharpe (5 bps) | Max drawdown | Avg exposure | Switches | Annual (0 bps) | Median random (0 bps) | Over random | Random p |
+|---|---|---|---|---|---|---|---|---|---|
+| spread rule | +16.2% | 1.324 | -8.7% | 94% | 6 | +16.3% | +17.1% | -0.82 | 0.765 |
+| rule B (variance timing) | +16.2% | 1.324 | -8.7% | 94% | 6 | +16.3% | +17.2% | -0.85 | 0.761 |
+| buy and hold | +18.1% | 1.413 | -8.9% | 100% | 0 | +18.2% | | | |
+Sharpe spread rule - rule B: +0.000, bootstrap p 1.0000 (95%: +0.000..+0.000); 1-month blocks p 1.0000
+Sharpe spread rule - buy and hold: -0.089 (p 0.845); rule B - buy and hold: -0.089 (p 0.845)
+SPY's next 21 days (from the trade's close), mean: warning months +nan%, others +1.4%
+Improvement over random (unseen months, 0 bps): spread rule -0.82 pts/yr (p 0.765); rule B -0.85
+
+Threshold grid against rule B (unseen months; Romano-Wolf step-down max-t, one-sided):
+| Rule | Warning months | Sharpe | Sharpe - B | t | raw p | Romano-Wolf p |
+|---|---|---|---|---|---|---|
+| dS > 0 and R >= 0 | 3 | 1.526 | +0.201 | +1.36 | 0.1583 | 0.0000 |
+| dS > 0, no stock condition | 7 | 0.918 | -0.406 | -1.87 | 0.9680 | 0.0000 |
+| dS >= 80th pct and R >= 0 | 0 | 1.324 | +0.000 | +nan | 1.0000 | 0.0000 |
+| dS >= 80th pct, no stock condition | 3 | 0.909 | -0.415 | -1.58 | 0.8709 | 0.0000 |
+| dS >= 90th pct and R >= 0 | 0 | 1.324 | +0.000 | +nan | 1.0000 | 0.0000 |
+| dS >= 90th pct, no stock condition | 0 | 1.324 | +0.000 | +nan | 1.0000 | 0.0000 |
+
+Variants of the main rule (unseen months):
+  C2 default spread (BAA - AAA): warning on 2 months, Sharpe 1.102, minus B -0.222 (p 1.000)
+  C5 optimistic timing (spread through t): warning on 2 months, Sharpe 1.524, minus B +0.200 (p 0.158)
+  C5 extra caution (spread through t - 2): warning on 0 months, Sharpe 1.324, minus B +0.000 (p 1.000)
+
+Repeat on the store's SPY:
+  unseen months: 15 months, warning 0; Sharpe spread 1.234 vs B 1.234 (diff +0.000, p 1.000); hold 1.326; annual +14.9% vs +14.9%; exposure 94% / 94%
+
+Repeat on XLF (C3; the store, its own variance timing and R):
+  unseen months: 15 months, warning 0; Sharpe spread 0.350 vs B 0.350 (diff +0.000, p 1.000); hold 0.383; annual +3.8% vs +3.8%; exposure 95% / 95%
+
+After costs, spread rule: yearly return at 5 bps a side minus SPY's, 2025-07-17 .. 2026-10-16: -1.17 points a year (whole span annualized -1.97)
+2025 +9.1 vs +9.2 (-0.1) | 2026 +10.5 vs +12.8 (-2.3)
+
+After costs, rule B: yearly return at 5 bps a side minus SPY's, 2025-07-17 .. 2026-10-16: -1.17 points a year (whole span annualized -1.97)
+2025 +9.1 vs +9.2 (-0.1) | 2026 +10.5 vs +12.8 (-2.3)
+
+After costs, buy and hold: yearly return at 5 bps a side minus SPY's, 2025-07-17 .. 2026-10-16: -0.03 points a year (whole span annualized -0.05)
+2025 +9.1 vs +9.2 (-0.1) | 2026 +12.8 vs +12.8 (+0.0)
+
+File-name number (spread rule): -1.2
+Runtime 0 s

@@ -1,0 +1,7 @@
+[13:32:45] pilot: load average 11.3 / 13.4 / 21.2 on 24 cores; 4 threads
+[13:32:45] one year: 12 refits (2012-01-03..2012-12-04); the full run has 208
+[13:33:01] attractor selection (G1 + random + 18 G2 kernels, 500 stocks): 15.5s for the year -> full run 4.5 min
+[13:33:03] G3 numba: compile+first refit 1.4s; one year x 48 stocks 0.2s -> full run (both worlds) 1.1 min
+[13:33:03] G3 plain numpy: 100 pair-refits in 0.4s -> full run (both worlds) 122.2 min; numpy vs numba on 1680 stock-day values: max relative difference 5.92e-08 (float32 output)
+[13:33:03] DECISION: numba (kern.g3_accum), in refit chunks; no lagged spread is materialized
+[13:33:03] load average at the end 9.5

@@ -1,0 +1,27 @@
+== 1. V recomputed by hand (plain loops) at 8 random finite stock-days ==
+VNET 2013-12-19: by hand +0.894460, panel +0.894460
+IPWR 2015-01-05: by hand +0.294659, panel +0.294659
+ALK 2014-07-14: by hand -0.503719, panel -0.503719
+VLY 2015-01-07: by hand -0.336714, panel -0.336714
+SLS 2014-07-28: by hand -0.753581, panel -0.753581
+BXP 2014-09-16: by hand +0.090654, panel +0.090654
+RAND 2014-07-24: by hand +0.827675, panel +0.827675
+KRC 2014-07-22: by hand +0.518685, panel +0.518685
+largest difference 2.91e-08 (float32 storage)
+
+== 2. One stock-year (2012) by numpy lstsq against R1's block sums ==
+NTWK: lstsq C1 +0.197066 C2 -0.167298; blocks C1 +0.197066 C2 -0.167298; pairs 250
+MAIN: lstsq C1 -0.052742 C2 -0.070757; blocks C1 -0.052742 C2 -0.070757; pairs 250
+HBM: lstsq C1 +0.043725 C2 -0.125195; blocks C1 +0.043725 C2 -0.125195; pairs 250
+
+== 3. Planted R1: target = c V(t) R(t) + N(0, 0.02^2), c = +0.03 low DV, 0 middle, -0.01 high ==
+planted Delta 0.04; recovered +0.0397, bootstrap t +14.2
+pure noise target: Delta -0.0026, bootstrap t -0.94
+
+== 4. Planted M1: R'(t) = R(t) + c V(t-2) R(t-2), c = +0.10 low, 0, -0.10 high (U_J) ==
+planted: D +15.57 bps a day, bootstrap t +13.4; fitted c by third in 2015: +0.141, +0.011, -0.151
+
+== 5. Oracles ==
+M1 book on the score R(t+2) itself: +680.8 bps a day, bootstrap t +34.1
+
+done in 24 s

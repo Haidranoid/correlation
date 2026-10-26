@@ -1,0 +1,4 @@
+6593 old tickers also in the new export (4200 of them ever in U_W or U_J); 1910 old tickers absent (757 ever in U_W or U_J)
+daily returns: 15290 of 16327371 common finite stock-days differ by more than 1e-4 (0.094%), in 82 tickers (68 ever in U_W or U_J)
+V: 45756 of 15257372 common finite stock-days differ by more than 1e-3 (0.300%), in 84 tickers
+U_W member stock-days 2008..2025-06: 6568 of 9505253 returns differ by more than 1e-4 (0.069%)

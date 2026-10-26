@@ -1,0 +1,95 @@
+{
+ "primary": {
+  "label": "P_full, rebalance 1, delay 1, uniform",
+  "path": "/home/bhoult/.local/share/correlation2/experiments/volume_return/new/scores_full.npy",
+  "kw": {
+   "rebalance": 1,
+   "delay": 1
+  },
+  "first": "2025-06-30",
+  "last": "2026-10-19",
+  "days": 329,
+  "pct0": 60.69993002879106,
+  "rand0": 18.899766274065954,
+  "p0": 0.01,
+  "pct5": 20.01913756303555,
+  "pct20": -50.080522797431115,
+  "spy": 26.343243739129996,
+  "change0": 41.800163754725105,
+  "after_cost_period": -6.324106176094446,
+  "after_cost_annual": -4.613455460176397,
+  "ic_ret_t": 1.8093728239898768,
+  "ls_bps": 5.017912705410131,
+  "ls_t": 0.7182548394891708
+ },
+ "primary_vol": {
+  "label": "P_full, volatility-matched",
+  "path": "/home/bhoult/.local/share/correlation2/experiments/volume_return/new/scores_full.npy",
+  "kw": {
+   "random_match": "volatility",
+   "rebalance": 1,
+   "delay": 1
+  },
+  "first": "2025-06-30",
+  "last": "2026-10-19",
+  "days": 329,
+  "pct0": 60.69993002879106,
+  "rand0": 19.731993084640308,
+  "p0": 0.024,
+  "pct5": 20.01913756303555,
+  "pct20": -50.080522797431115,
+  "spy": 26.343243739129996,
+  "change0": 40.96793694415075,
+  "after_cost_period": -6.324106176094446,
+  "after_cost_annual": -4.613455460176397,
+  "ic_ret_t": 1.8093728239898768,
+  "ls_bps": 5.017912705410131,
+  "ls_t": 0.7182548394891708
+ },
+ "negR": {
+  "label": "plain 1-day reversal -R, same cells",
+  "path": "/home/bhoult/.local/share/correlation2/experiments/volume_return/new/scores_negR.npy",
+  "kw": {
+   "rebalance": 1,
+   "delay": 1
+  },
+  "first": "2025-06-30",
+  "last": "2026-10-19",
+  "days": 329,
+  "pct0": 36.601199620599644,
+  "rand0": 19.205026322497076,
+  "p0": 0.114,
+  "pct5": 0.10477257807559592,
+  "pct20": -60.673756103155306,
+  "spy": 26.343243739129996,
+  "change0": 17.396173298102568,
+  "after_cost_period": -26.2384711610544,
+  "after_cost_annual": -19.534450984051066,
+  "ic_ret_t": 1.9414156792183959,
+  "ls_bps": 3.142183311337198,
+  "ls_t": 0.3755081001093581
+ },
+ "base": {
+  "label": "P_base, same cells",
+  "path": "/home/bhoult/.local/share/correlation2/experiments/volume_return/new/scores_base.npy",
+  "kw": {
+   "rebalance": 1,
+   "delay": 1
+  },
+  "first": "2025-06-30",
+  "last": "2026-10-19",
+  "days": 329,
+  "pct0": 48.45652113936987,
+  "rand0": 19.34588048545327,
+  "p0": 0.036,
+  "pct5": 9.61758651637652,
+  "pct20": -55.94591632783747,
+  "spy": 26.343243739129996,
+  "change0": 29.110640653916597,
+  "after_cost_period": -16.725657222753476,
+  "after_cost_annual": -12.327825372819712,
+  "ic_ret_t": 1.8634852389434504,
+  "ls_bps": 5.899718903705432,
+  "ls_t": 0.7804833489028994
+ }
+}

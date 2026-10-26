@@ -1,0 +1,11 @@
+# sha256 of the frozen procedure, recorded 2026-10-25 before the unseen months were run
+b33706d0f7c71bab3830cad802d93a5e9af9765a9d40e153146c957de5f29d1d  common.py
+c735d4f6c76747503f04b66836034e75674a594378e1b1f489b4fd82f86f44f6  build.py
+2038a2a1eae2fd301dc2b0143c2a2777841b72bf57b7833dfb2a86a8dbad4652  r1.py
+058eeed04d1e9e4fefdf02a957eebb94063c7ba1dd340fccd3203cd9e855ce4d  m1.py
+19d0dcc237e2ab6dabe55c8641e61db5705f6ff48b92fdd0a2476bcdfc6e1055  money.py
+f0834fdac215c72ea3c6c9966af2992f5ea9f520c2dce8292789ee11cc3be05b  report.py
+051607e27c0babc5c2635be00a0139190a45fafbaab14fef1ff051c81e6ed324  unseen.py
+9991ba3fb43e77e76427b77369b4fbc58b5900988ae1776bdb93c6962e40c1f1  forward.py
+# 2026-10-25, after the run: one comment anonymized at Brandon's request (a reference to a test held outside the repo); the syntax tree is unchanged. Previous hash:
+# d6d1fe10c0914721c3d179e5c4c25c71bf45feaa27bb0514b8fbd6b440e3627a  common.py

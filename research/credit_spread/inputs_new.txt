@@ -1,0 +1,52 @@
+inputs (new): axis 1993-01-29 .. 2026-10-19, 8488 days; export from axis day 2248 (6240 days, equal to the axis)
+  cut: 2026-10-19
+  axis_first: 1993-01-29
+  axis_last: 2026-10-19
+  axis_days: 8488
+  export_first_index: 2248
+  export_days: 6240
+  prev_export_overlap_equal: True
+  baa10y_rows: 9197
+  baa10y_last_date: 2026-10-15
+  baa10y_carried_days: 69
+  baa10y_missing_after_start: [np.str_('2026-10-16'), np.str_('2026-10-19')]
+  baa10y_n_missing_after_start: 2
+  aaa10y_rows: 9197
+  aaa10y_last_date: 2026-10-15
+  aaa10y_carried_days: 69
+  aaa10y_missing_after_start: [np.str_('2026-10-16'), np.str_('2026-10-19')]
+  aaa10y_n_missing_after_start: 2
+  dgs10_rows: 9203
+  dgs10_last_date: 2026-10-15
+  dgs10_carried_days: 66
+  dgs10_missing_after_start: [np.str_('2026-10-16'), np.str_('2026-10-19')]
+  dgs10_n_missing_after_start: 2
+  vixcls_rows: 9296
+  vixcls_last_date: 2026-10-15
+  vixcls_carried_days: 2
+  vixcls_missing_after_start: [np.str_('2026-10-16'), np.str_('2026-10-19')]
+  vixcls_n_missing_after_start: 2
+  store_spy_filled_days: ['2011-02-17']
+  store_xlf_filled_days: ['2011-02-17']
+  lqd_first: 2002-07-30
+  ief_first: 2002-07-30
+  xlf_first: 2005-02-25
+  yahoo_vs_store_spy: {'days': 5445, 'corr': 0.9989266545463795, 'max_abs_diff': 0.020023956128328635, 'days_abs_diff_gt_0.5pct': 16, 'mean_diff_bps_per_day': 0.2508181314223077}
+  overlap_xlf: {'days': 5117, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+  overlap_spy_store: {'days': 5117, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+  overlap_spy_yahoo: {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+  overlap_baa10y: {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+  overlap_vix: {'days': 8159, 'max_diff': 0.0, 'days_diff': 0, 'missing_now_not_before': 0}
+  dS1_days_exactly_zero_share: 0.07888220728687655
+  seconds: 0
+  coverage (first finite day, finite days, missing after the first):
+    lrv22: 1993-03-03, 8466, 0
+    lvix: 1993-01-29, 8486, 2
+    R: 1993-02-08, 8482, 0
+    dS1: 1993-02-08, 8481, 1
+    dD1: 1993-02-08, 8481, 1
+    dG1: 1993-02-08, 8481, 1
+    L1: 1993-02-01, 8486, 1
+    cETF: 2002-08-06, 6090, 0
+    lrv22X: 2005-03-30, 5424, 0
+    RX: 2005-03-07, 5440, 0

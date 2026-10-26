@@ -1,0 +1,123 @@
+fits done (8 s); first origin with >= 100 stocks per third: 2004-07-02, 2004-06-02, 2004-07-02
+first fit in use on 2008-01-02: calendar day 2007-12-03, eligible origins per third [855, 776, 860]
+books done (11 s)
+
+== M1 (primary, dev): D = book(P_full) - book(P_base), 2008-01-02..2019-12-31 decisions ==
+gross D: -1.49 bps a day (90% -3.19..+0.13), bootstrap t -1.49, p 0.9316 (percentile p 0.9267), Newey-West t -1.59, 3021 days
+net D at 5 bps a side: -1.59 bps a day (90% -3.26..+0.04), bootstrap t -1.59, p 0.9442 (percentile p 0.9415), Newey-West t -1.69, 3021 days
+book | gross bps/day (t) | net 5 bps | net 20 bps | turnover a side a day | break-even bps a side | long vs short leg (bps)
+P_full | +1.86 (+1.18) | -14.70 | -64.39 | 1.66 | 0.56 | +6.06 / +4.20
+P_base | +3.36 (+1.55) | -13.11 | -62.52 | 1.65 | 1.02 | +6.92 / +3.56
+plain reversal -R | +2.97 (+1.31) | -13.91 | -64.55 | 1.69 | 0.88 | +6.64 / +3.67
+P_full - plain reversal, gross: -1.11 bps a day (90% -2.92..+0.68), bootstrap t -1.02, p 0.8450 (percentile p 0.8490), Newey-West t -1.09, 3021 days
+P_base - plain reversal, gross: +0.39 bps a day (90% -0.36..+1.12), bootstrap t +0.86, p 0.1935 (percentile p 0.1825), Newey-West t +0.80, 3021 days
+names shared by the P_full and P_base books: 0.677; with plain reversal: 0.613
+stocks ranked a day: median 1183
+by year: year | days | D gross bps/day (t) | D net | P_full gross | P_base gross | -R gross
+2008 | 253 | -11.59 (-1.68) | -11.58 | +8.12 | +19.71 | +20.01
+2009 | 252 | -2.56 (-0.50) | -2.70 | -2.31 | +0.25 | -0.59
+2010 | 252 | +0.21 (+0.08) | -0.14 | +0.72 | +0.51 | +2.46
+2011 | 252 | -0.13 (-0.04) | -0.24 | +1.32 | +1.45 | -0.20
+2012 | 250 | -1.52 (-0.85) | -1.38 | +1.52 | +3.03 | +1.81
+2013 | 252 | +0.17 (+0.10) | +0.49 | +4.35 | +4.18 | +3.73
+2014 | 252 | +0.77 (+0.46) | +0.76 | -0.64 | -1.41 | -1.16
+2015 | 252 | -1.83 (-1.04) | -1.91 | +0.98 | +2.81 | +1.26
+2016 | 252 | -0.10 (-0.06) | -0.39 | +4.28 | +4.38 | +1.88
+2017 | 251 | +1.10 (+0.87) | +0.80 | -3.05 | -4.14 | -3.47
+2018 | 251 | -3.13 (-2.03) | -3.25 | +3.71 | +6.84 | +6.87
+2019 | 252 | +0.73 (+0.60) | +0.53 | +3.31 | +2.58 | +2.93
+
+== M1 (check): D = book(P_full) - book(P_base), 2020-01-02..2025-06-25 decisions ==
+gross D: -0.15 bps a day (90% -2.13..+1.86), bootstrap t -0.12, p 0.5491 (percentile p 0.5492), Newey-West t -0.11, 1377 days
+net D at 5 bps a side: -0.08 bps a day (90% -2.04..+1.88), bootstrap t -0.06, p 0.5255 (percentile p 0.5260), Newey-West t -0.05, 1377 days
+book | gross bps/day (t) | net 5 bps | net 20 bps | turnover a side a day | break-even bps a side | long vs short leg (bps)
+P_full | +3.21 (+0.98) | -13.01 | -61.66 | 1.62 | 0.99 | +5.37 / +2.16
+P_base | +3.36 (+0.91) | -12.93 | -61.80 | 1.63 | 1.03 | +5.79 / +2.44
+plain reversal -R | +1.81 (+0.47) | -14.97 | -65.31 | 1.68 | 0.54 | +4.09 / +2.28
+P_full - plain reversal, gross: +1.40 bps a day (90% -1.35..+4.29), bootstrap t +0.81, p 0.2080 (percentile p 0.2085), Newey-West t +0.72, 1377 days
+P_base - plain reversal, gross: +1.55 bps a day (90% -0.33..+3.44), bootstrap t +1.36, p 0.0872 (percentile p 0.0925), Newey-West t +1.45, 1377 days
+names shared by the P_full and P_base books: 0.724; with plain reversal: 0.569
+stocks ranked a day: median 2211
+by year: year | days | D gross bps/day (t) | D net | P_full gross | P_base gross | -R gross
+2020 | 253 | -1.42 (-0.20) | -1.41 | +11.68 | +13.10 | +7.89
+2021 | 252 | +4.46 (+2.18) | +4.54 | -2.93 | -7.40 | -7.36
+2022 | 251 | +0.10 (+0.04) | +0.19 | +13.59 | +13.49 | +11.76
+2023 | 250 | +0.11 (+0.05) | +0.24 | +0.27 | +0.16 | -1.36
+2024 | 252 | -4.00 (-2.27) | -3.94 | -0.10 | +3.91 | +3.05
+2025 | 119 | -0.11 (-0.03) | -0.07 | -10.50 | -10.39 | -8.65
+
+== Dividends, 2008-2019: M1 with ex-dates dropped from the signal ==
+ex-dates dropped: gross D -1.05 bps a day (90% -2.44..+0.24), bootstrap t -1.26, p 0.8953 (percentile p 0.8970), Newey-West t -1.41, 3021 days
+as run: gross D -1.49 bps a day (90% -3.18..+0.11), bootstrap t -1.48, p 0.9311 (percentile p 0.9310), Newey-West t -1.59, 3021 days
+
+== Dividends, 2008-2010: M1 with ex-dates dropped from the signal ==
+ex-dates dropped: gross D -3.60 bps a day (90% -8.35..+0.75), bootstrap t -1.31, p 0.9049 (percentile p 0.8990), Newey-West t -1.47, 757 days
+as run: gross D -4.66 bps a day (90% -10.51..+0.83), bootstrap t -1.35, p 0.9123 (percentile p 0.9100), Newey-West t -1.44, 757 days
+
+== Dividends, check: M1 with div_fix applied to every return; with ex-dates dropped from the signal ==
+div_fix: gross D -0.07 bps a day (90% -1.97..+1.95), bootstrap t -0.06, p 0.5241 (percentile p 0.5225), Newey-West t -0.05, 1377 days
+ex-dates dropped: gross D +0.08 bps a day (90% -1.59..+1.70), bootstrap t +0.08, p 0.4667 (percentile p 0.4685), Newey-West t +0.07, 1377 days
+
+== Item 10: coefficients in force (b on R, v on V, c on V*R), by third, first calendar day of each year ==
+2008: third 0: b -0.0165, v +0.00001, c +0.0056; third 1: b -0.0126, v +0.00001, c +0.0301; third 2: b -0.0015, v -0.00025, c -0.0156
+2009: third 0: b -0.0131, v +0.00006, c +0.0031; third 1: b -0.0127, v -0.00002, c +0.0237; third 2: b -0.0081, v -0.00009, c -0.0069
+2010: third 0: b -0.0100, v +0.00008, c +0.0029; third 1: b -0.0102, v +0.00007, c +0.0200; third 2: b -0.0095, v +0.00016, c -0.0038
+2011: third 0: b -0.0099, v +0.00006, c +0.0013; third 1: b -0.0089, v +0.00003, c +0.0186; third 2: b -0.0071, v +0.00007, c -0.0049
+2012: third 0: b -0.0081, v +0.00013, c -0.0011; third 1: b -0.0076, v +0.00004, c +0.0131; third 2: b -0.0062, v +0.00009, c -0.0088
+2013: third 0: b -0.0075, v +0.00016, c -0.0025; third 1: b -0.0075, v +0.00002, c +0.0112; third 2: b -0.0068, v +0.00010, c -0.0076
+2014: third 0: b -0.0059, v +0.00016, c -0.0017; third 1: b -0.0077, v +0.00005, c +0.0104; third 2: b -0.0089, v +0.00008, c -0.0060
+2015: third 0: b -0.0051, v +0.00012, c -0.0015; third 1: b -0.0076, v +0.00003, c +0.0104; third 2: b -0.0078, v +0.00011, c -0.0039
+2016: third 0: b -0.0041, v +0.00012, c -0.0018; third 1: b -0.0074, v -0.00001, c +0.0076; third 2: b -0.0081, v +0.00012, c -0.0042
+2017: third 0: b -0.0037, v +0.00013, c -0.0008; third 1: b -0.0070, v +0.00000, c +0.0077; third 2: b -0.0076, v +0.00012, c -0.0044
+2018: third 0: b -0.0032, v +0.00011, c +0.0002; third 1: b -0.0062, v -0.00001, c +0.0076; third 2: b -0.0060, v +0.00009, c -0.0049
+2019: third 0: b -0.0037, v +0.00010, c +0.0000; third 1: b -0.0068, v +0.00001, c +0.0066; third 2: b -0.0058, v +0.00011, c -0.0051
+2020: third 0: b -0.0035, v +0.00007, c +0.0001; third 1: b -0.0066, v +0.00002, c +0.0072; third 2: b -0.0060, v +0.00013, c -0.0046
+2021: third 0: b -0.0036, v +0.00007, c +0.0004; third 1: b -0.0062, v +0.00004, c +0.0074; third 2: b -0.0058, v +0.00017, c -0.0039
+2022: third 0: b -0.0031, v +0.00010, c -0.0004; third 1: b -0.0053, v +0.00007, c +0.0066; third 2: b -0.0044, v +0.00017, c -0.0041
+2023: third 0: b -0.0037, v +0.00011, c +0.0006; third 1: b -0.0061, v +0.00007, c +0.0072; third 2: b -0.0045, v +0.00019, c -0.0043
+2024: third 0: b -0.0029, v +0.00010, c +0.0006; third 1: b -0.0055, v +0.00006, c +0.0074; third 2: b -0.0044, v +0.00018, c -0.0027
+2025: third 0: b -0.0030, v +0.00007, c +0.0014; third 1: b -0.0060, v +0.00007, c +0.0069; third 2: b -0.0046, v +0.00017, c -0.0018
+daily full-model estimates over 2008-2019 origins (mean, Newey-West t): third | b | v | c
+0 | +0.00033 (+0.11) | +0.00009 (+1.21) | -0.00156 (-0.48)
+1 | -0.00498 (-1.38) | +0.00002 (+0.28) | +0.00105 (+0.29)
+2 | -0.00739 (-1.74) | +0.00025 (+2.08) | -0.00146 (-0.32)
+
+== Item 11, the paper's timing (fit on R(t+1), trade at the close of t), dev ==
+gross D: -2.13 bps a day (90% -3.96..-0.42), bootstrap t -1.92, p 0.9723 (percentile p 0.9660), Newey-West t -2.00, 3021 days; net D at 5 bps: -3.18 bps a day; P_full book gross +0.68
+
+== Item 11, the paper's timing (fit on R(t+1), trade at the close of t), check ==
+gross D: +2.86 bps a day (90% -2.06..+8.88), bootstrap t +0.85, p 0.1975 (percentile p 0.1880), Newey-West t +1.09, 1377 days; net D at 5 bps: +2.15 bps a day; P_full book gross +2.41
+
+== Item 12, weekly (decisions every 5 days, held close t+1 .. close t+6), dev ==
+D = weekly P_full - its base, gross: -1.80 bps a week (90% -6.02..+2.30), bootstrap t -0.72, p 0.7633 (percentile p 0.7680), Newey-West t -0.69, 605 days
+weekly P_full - 5-day reversal, gross: -3.44 bps a week (90% -8.11..+1.54), bootstrap t -1.15, p 0.8747 (percentile p 0.8735), Newey-West t -1.08, 605 days
+net D at 5 bps: -1.84 bps a week; P_full book gross +14.39, net 5 bps -2.61; 5-day reversal gross +17.83
+
+== Item 12, weekly (decisions every 5 days, held close t+1 .. close t+6), check ==
+D = weekly P_full - its base, gross: +1.98 bps a week (90% -4.57..+8.57), bootstrap t +0.48, p 0.3150 (percentile p 0.2995), Newey-West t +0.32, 274 days
+weekly P_full - 5-day reversal, gross: +4.67 bps a week (90% -3.67..+12.59), bootstrap t +0.96, p 0.1675 (percentile p 0.1575), Newey-West t +0.70, 274 days
+net D at 5 bps: +1.89 bps a week; P_full book gross +16.77, net 5 bps -0.35; 5-day reversal gross +12.10
+
+== Item 14, the 500 largest, dev ==
+gross D: -1.15 bps a day (90% -3.22..+0.77), bootstrap t -0.96, p 0.8319 (percentile p 0.8385), Newey-West t -0.95, 3021 days; net D 5 bps: -1.27
+
+== Item 14, the 500 largest, check ==
+gross D: -1.18 bps a day (90% -3.47..+1.02), bootstrap t -0.86, p 0.8064 (percentile p 0.8065), Newey-West t -0.75, 1377 days; net D 5 bps: -1.15
+
+== Item 13, per-stock coefficients, dev ==
+gross D: -0.07 bps a day (90% -1.01..+0.77), bootstrap t -0.13, p 0.5536 (percentile p 0.5690), Newey-West t -0.14, 3021 days; P_full book gross -1.06; stocks ranked a day median 1142
+
+== Item 13, per-stock coefficients, check ==
+gross D: +0.55 bps a day (90% -0.72..+1.81), bootstrap t +0.71, p 0.2394 (percentile p 0.2380), Newey-West t +0.62, 1377 days; P_full book gross +1.94; stocks ranked a day median 2069
+
+== Item 8: daily cross-sections, coefficient on G*V*R (expected negative) and on V*R ==
+UW, target R(t+1), dev: G*V*R -0.04 (90% -0.06..-0.03), bootstrap t -6.93, p 1.0000 (percentile p 1.0000), Newey-West t -7.13, 3021 days; V*R +0.0277 (t +8.50)
+UW, target R(t+1), check: G*V*R -0.02 (90% -0.04..-0.01), bootstrap t -3.05, p 0.9988 (percentile p 0.9985), Newey-West t -3.34, 1377 days; V*R +0.0228 (t +5.62)
+UW, target R(t+2), dev: G*V*R +0.01 (90% -0.00..+0.01), bootstrap t +1.12, p 0.1324 (percentile p 0.1365), Newey-West t +1.02, 3021 days; V*R -0.0015 (t -0.56)
+UW, target R(t+2), check: G*V*R +0.00 (90% -0.01..+0.01), bootstrap t +0.04, p 0.4838 (percentile p 0.4735), Newey-West t +0.04, 1377 days; V*R +0.0044 (t +1.39)
+UJ, target R(t+1), dev: G*V*R -0.02 (90% -0.03..-0.01), bootstrap t -2.68, p 0.9963 (percentile p 0.9970), Newey-West t -2.52, 3021 days; V*R +0.0063 (t +1.34)
+UJ, target R(t+1), check: G*V*R -0.03 (90% -0.05..-0.01), bootstrap t -2.96, p 0.9984 (percentile p 0.9980), Newey-West t -3.15, 1377 days; V*R +0.0223 (t +4.20)
+UJ, target R(t+2), dev: G*V*R +0.00 (90% -0.01..+0.02), bootstrap t +0.60, p 0.2729 (percentile p 0.2670), Newey-West t +0.61, 3021 days; V*R -0.0022 (t -0.59)
+UJ, target R(t+2), check: G*V*R -0.01 (90% -0.02..+0.00), bootstrap t -1.14, p 0.8720 (percentile p 0.8740), Newey-West t -1.15, 1377 days; V*R +0.0101 (t +2.10)
+
+done in 80 s
