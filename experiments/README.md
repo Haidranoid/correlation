@@ -126,6 +126,16 @@ Each file is named `[after costs]-[description].md`. The number is the result af
 | +1.2 | −2.2 | [Less speculative markets: alcohol stocks from the economy, trends and news](+1.2-luca-alcohol-demand.md) ([Luca Gaspari](https://www.facebook.com/storyofahurricane)'s idea; a basket-or-SPY rule against random reorderings of its own choices) | correlation2 (Python) | Six monthly fundamentals forecast five alcohol stocks against SPY worse than their average (R² −3.1%, Clark-West t −0.94). The basket was more volatile than SPY and no more forecastable than SPY, XLY or QQQ. Alcohol sales were forecastable; the stocks weren't. Cannabis legalizations and alcohol headlines moved nothing. The +1.2 is the basket's hindsight-picked premium, not timing |
 | no trading | −3.2 | [Forecasting the alcohol market itself](-3.2-luca-market-forecast.md) ([Luca Gaspari](https://www.facebook.com/storyofahurricane)'s idea; out-of-sample R² against the market's own history, %) | correlation2 (Python) | Nine public monthly inputs for his theses (economy, prices, search trends, new markets, age) forecast next year's US spending on wine, beer, spirits and restaurant alcohol worse than the market's own recent growth (t +0.69), and worse than 92% of random-noise models. No thesis worked alone. "Same growth as last year" beat every fitted forecast |
 
+## Explainer pages
+
+Each test of Luca Gaspari's ideas has a plain-language page written for him. The HTML is in the test's research folder, a single file with its charts' data built in. GitHub shows HTML files as source, so download the file (or clone the repo) and open it in a browser, or use the online copy.
+
+| Test | Page | HTML in the repo | Online |
+|---|---|---|---|
+| [Market geometry](-3.1-luca-market-geometry.md) | Curved Market Space | [`research/market_geometry/page.html`](../research/market_geometry/page.html) | [claude.ai](https://claude.ai/artifact/VUJo3enbNYE1QyAJvqMhu6) |
+| [Alcohol stocks](+1.2-luca-alcohol-demand.md) | Alcohol Demand Test | [`research/alcohol_demand/page.html`](../research/alcohol_demand/page.html) | [claude.ai](https://claude.ai/artifact/8316NxMF6Ep8r3VqK5VG2X) |
+| [The alcohol market itself](-3.2-luca-market-forecast.md) | Alcohol Market Forecast | [`research/market_forecast/page.html`](../research/market_forecast/page.html) | [claude.ai](https://claude.ai/artifact/HdGgWTv1wJZnBENthinYgS) |
+
 ## Lessons from all of it
 
 - **Same-day co-movement is the useful part.** It persists, and the tools built on it beat random choices the following year: 5.1% lower volatility from the diversifier pick, and 68% of a stock's risk left after the top hedge against 91% for a random fund.

@@ -64,7 +64,7 @@ Every relationship the app shows is set against what chance produces. Each one c
 The hard part of testing a trading idea isn't the idea; it's not fooling yourself. This repo has the machinery:
 - **A grader** that compares any strategy with random accounts holding as many stocks and trading as often.
 - **Walk-forward tests,** plus 16 months of data kept unseen until the end.
-- **Rules fixed before results,** a habit every one of the 66 [experiment write-ups](experiments/README.md) follows. Copy one as a template, and see [`research/lib/c2eval.py`](research/lib/c2eval.py) for the grader.
+- **Rules fixed before results,** a habit every one of the 75 [experiment write-ups](experiments/README.md) follows. Copy one as a template, and see [`research/lib/c2eval.py`](research/lib/c2eval.py) for the grader.
 - **The census** computes every lagged correlation among every pair of US stocks: 1.57 trillion correlations in about 13 minutes on one desktop GPU. Its chance baseline comes from sign-shuffled data.
 
 <table>
